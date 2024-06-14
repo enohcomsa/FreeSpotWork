@@ -15,9 +15,6 @@
         "outputPath": "dist/apps/FreeSpot",
         "index": "apps/FreeSpot/src/index.html",
         "browser": "apps/FreeSpot/src/main.ts",
-        "polyfills": [
-          "zone.js"
-        ],
         "tsConfig": "apps/FreeSpot/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": [

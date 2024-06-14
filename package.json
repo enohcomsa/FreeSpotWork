@@ -2,7 +2,9 @@
   "name": "@angular-monorepo/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "start": "nx serve FreeSpot"
+  },
   "private": true,
   "dependencies": {
     "@angular/animations": "~18.0.0",
