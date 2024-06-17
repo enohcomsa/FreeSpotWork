@@ -1,8 +1,13 @@
 <div class="min-h-screen flex items-center justify-center">
-  <form [formGroup]="authForm" class="flex flex-col w-1/4 bg-slate-100 p-4 space-y-4 rounded-lg">
+  <form
+    [formGroup]="authForm"
+    (ngSubmit)="onSubmit(authFormDirective)"
+    #authFormDirective="ngForm"
+    class="flex flex-col w-1/4 bg-slate-100 p-4 space-y-4 rounded-lg"
+  >
     <mat-form-field class="mt-4">
       <mat-label>Email</mat-label>
-      <input matInput formArrayName="email" />
+      <input matInput formControlName="email" />
     </mat-form-field>
 
     <mat-form-field>
@@ -10,9 +15,9 @@
       <input matInput formControlName="password" />
     </mat-form-field>
 
-    <button mat-raised-button color="primary">
+    <button mat-raised-button type="submit" color="primary" [disabled]="!authForm.valid">
       {{ isLoginMode ? 'Log In' : 'Sign Up' }}
     </button>
-    <button mat-flat-button type="button" (click)="onSwitchMode()">Switch to Login</button>
+    <button mat-flat-button type="button" (click)="onSwitchMode()">Switch to {{ isLoginMode ? 'Signup' : 'Login' }}</button>
   </form>
 </div>

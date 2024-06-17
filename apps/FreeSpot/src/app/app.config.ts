@@ -2,10 +2,15 @@ import { ApplicationConfig, provideExperimentalZonelessChangeDetection } from '@
 import { provideRouter } from '@angular/router';
 import { appRoutes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { authInterceptor } from './auth/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideExperimentalZonelessChangeDetection(),
-    provideRouter(appRoutes), provideAnimationsAsync(),
+    provideRouter(appRoutes),
+    provideAnimationsAsync(),
+    provideHttpClient(withInterceptors([authInterceptor])),
   ],
 };
+
