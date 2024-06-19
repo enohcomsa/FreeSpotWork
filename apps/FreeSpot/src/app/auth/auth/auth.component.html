@@ -3,8 +3,18 @@
     [formGroup]="authForm"
     (ngSubmit)="onSubmit(authFormDirective)"
     #authFormDirective="ngForm"
-    class="flex flex-col w-1/4 bg-slate-100 p-4 space-y-4 rounded-lg"
+    class="flex flex-col w-1/4 border-2 p-4 space-y-4 rounded-lg"
   >
+    <mat-form-field class="mt-4">
+      <mat-label>First name</mat-label>
+      <input matInput formControlName="firstName" />
+    </mat-form-field>
+
+    <mat-form-field class="mt-4">
+      <mat-label>Last name</mat-label>
+      <input matInput formControlName="familyName" />
+    </mat-form-field>
+
     <mat-form-field class="mt-4">
       <mat-label>Email</mat-label>
       <input matInput formControlName="email" />

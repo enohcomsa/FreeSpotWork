@@ -5,7 +5,8 @@ export const appRoutes: Route[] = [
     path: 'auth',
     loadComponent: () => import('./auth/auth/auth.component').then(),
   },
-  { path: '**', redirectTo: 'auth' },
+  // {path}
   { path: '', pathMatch: 'full', redirectTo: 'auth' },
+  { path: '**', redirectTo: 'auth' },
 ];
 

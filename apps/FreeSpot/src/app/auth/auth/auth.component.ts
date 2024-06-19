@@ -7,6 +7,7 @@ import { FormBuilder, FormGroup, FormGroupDirective, FormsModule, ReactiveFormsM
 import { AuthService } from '../auth.service';
 import { Observable } from 'rxjs';
 import { AuthResponse } from '../models/auth.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-auth',
@@ -19,10 +20,13 @@ import { AuthResponse } from '../models/auth.model';
 export class AuthComponent implements OnInit {
   private formBuilder: FormBuilder = inject(FormBuilder);
   private authService: AuthService = inject(AuthService);
+  private router: Router = inject(Router);
 
   isLoginMode = true;
 
   authForm: FormGroup = this.formBuilder.group({
+    firstName: ['', [Validators.required, Validators.minLength(3)]],
+    familyName: ['', [Validators.required, Validators.minLength(3)]],
     email: ['', [Validators.required, Validators.minLength(6), Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
   });
@@ -38,16 +42,26 @@ export class AuthComponent implements OnInit {
   onSubmit(formDirective: FormGroupDirective): void {
     let authObs: Observable<AuthResponse>;
     if (this.isLoginMode) {
-      authObs = this.authService.logIn(this.authForm.value);
+      authObs = this.authService.logIn({
+        email: this.authForm.controls['email'].value,
+        password: this.authForm.controls['password'].value,
+      });
       console.log('login');
     } else {
-      authObs = this.authService.signUp(this.authForm.value);
+      authObs = this.authService.signUp({
+        email: this.authForm.controls['email'].value,
+        password: this.authForm.controls['password'].value,
+      });
     }
 
-    authObs.subscribe(
-      (res) => console.log(res),
-      (error) => console.log(error)
-    );
+    authObs.subscribe({
+      next: (res) => {
+        console.log(res);
+
+        this.router.navigate(['/dashboard']);
+      },
+      error: (error) => console.log(error),
+    });
 
     this.authForm.reset();
     formDirective.resetForm();

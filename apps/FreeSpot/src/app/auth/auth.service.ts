@@ -2,8 +2,10 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { AuthResponse, UserData } from './models/auth.model';
-import { User } from './models/user.model';
+import { AuthUser } from './models/auth-user.model';
 import { Router } from '@angular/router';
+import { UserHttpRequestsService } from '../services/user-http-requests.service';
+// import { AppUser } from '../shared/models/user.model';
 
 @Injectable({
   providedIn: 'root',
@@ -11,8 +13,9 @@ import { Router } from '@angular/router';
 export class AuthService {
   private http: HttpClient = inject(HttpClient);
   private router: Router = inject(Router);
+  private userService: UserHttpRequestsService = inject(UserHttpRequestsService);
 
-  userSignal$: WritableSignal<User | null> = signal(null);
+  userSignal$: WritableSignal<AuthUser | null> = signal(null);
 
   signUp(user: UserData): Observable<AuthResponse> {
     return this.http
@@ -25,8 +28,9 @@ export class AuthService {
         }
       )
       .pipe(
-        tap((res) => {
+        tap((res: AuthResponse) => {
           this._handleAuth(res.email, res.localId, res.idToken, +res.expiresIn);
+          this._addUser(res.email);
         })
       );
   }
@@ -42,7 +46,7 @@ export class AuthService {
         }
       )
       .pipe(
-        tap((res) => {
+        tap((res: AuthResponse) => {
           this._handleAuth(res.email, res.localId, res.idToken, +res.expiresIn);
         })
       );
@@ -55,7 +59,7 @@ export class AuthService {
     if (!user) {
       return;
     }
-    const loadedUser: User = new User(user.email, user.id, user._token, new Date(user._tokenExpirationDate));
+    const loadedUser: AuthUser = new AuthUser(user.email, user.id, user._token, new Date(user._tokenExpirationDate));
     if (loadedUser.token) {
       this.userSignal$.set(loadedUser);
     }
@@ -76,9 +80,22 @@ export class AuthService {
 
   private _handleAuth(email: string, localId: string, idToken: string, expiresIn: number) {
     const exirationDate: Date = new Date(new Date().getTime() + expiresIn * 1000);
-    const user: User = new User(email, localId, idToken, exirationDate);
+    const user: AuthUser = new AuthUser(email, localId, idToken, exirationDate);
     this.userSignal$.set(user);
 
     localStorage.setItem('user', JSON.stringify(user));
+  }
+
+  private _addUser(email: string): void {
+    this.http
+      .get<string[]>('https://freespot-6e3c4-default-rtdb.europe-west1.firebasedatabase.app/userList/.json')
+      .pipe(
+        tap((userList: string[] | undefined) => {
+          const allUsers: string[] = userList || [];
+          allUsers.push(email);
+          this.userService.storeUsers(allUsers);
+        })
+      )
+      .subscribe();
   }
 }
