@@ -21,6 +21,11 @@ export const appRoutes: Route[] = [
     canActivate: [authGuard],
     loadChildren: () => import('@free-spot/my-bookings').then(),
   },
+  {
+    path: 'admin',
+    canActivate: [authGuard],
+    loadChildren: () => import('@free-spot/admin').then(),
+  },
   { path: '', pathMatch: 'full', redirectTo: 'auth' },
   { path: '**', redirectTo: 'auth' },
 ];
