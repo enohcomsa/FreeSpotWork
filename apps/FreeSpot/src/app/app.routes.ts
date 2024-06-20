@@ -9,7 +9,7 @@ export const appRoutes: Route[] = [
   {
     path: '',
     canActivate: [authGuard],
-    // loadComponent:()
+    loadComponent: () => import('./navigation/navigation.component'),
     children: [
       {
         path: 'dashboard',

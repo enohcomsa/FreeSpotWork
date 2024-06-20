@@ -1,1 +1,38 @@
-<p>navigation works!</p>
+<mat-toolbar class="!bg-slate-500 felx stikky top-0 z-2 justify-between items-center">
+  <div class="logo rounded-full bg-red-500 h-4 w-4"></div>
+  <div class="flex space-x-4 items-center">
+    <a class="hidden cursor-pointer tracking-wide hover:text-red-200 md:block" routerLink="/dashboard">Dashboard</a>
+    <a class="hidden cursor-pointer tracking-wide hover:text-red-200 md:block" routerLink="/schedule">Schedule</a>
+    <a class="hidden cursor-pointer tracking-wide hover:text-red-200 md:block" routerLink="/my-bookings">My bookings</a>
+    <a class="hidden cursor-pointer tracking-wide hover:text-red-200 md:block" routerLink="/admin">Admin</a>
+    <!-- <nav profile></nav> -->
+    <div class="flex pl-6 space-x-4">
+      <div class="hidden md:flex rounded-full bg-red-600 h-8 w-8"></div>
+      <div class="hidden lg:block">Comsa Enoh</div>
+    </div>
+  </div>
+  <button class="hamburger z-30 block md:hidden focus:outline-none" (click)="opened = !opened">
+    <span [ngClass]="{ open: opened }" class="bg-black hamburger-top"></span>
+    <span [ngClass]="{ open: opened }" class="bg-black hamburger-middle"></span>
+    <span [ngClass]="{ open: opened }" class="bg-black hamburger-bottom"></span>
+  </button>
+  <div
+    class="fixed inset-0 z-20 flex flex-col self-end w-full min-h-screen px-4 pt-24 pb-4 tracking-wideest opacity-95 bg-slate-900"
+    [ngClass]="{ hidden: !opened }"
+  >
+    <div class="w-full space-y-6 text-center">
+      <a class="block cursor-pointer hover:text-red-200 md:block" (click)="opened = false" routerLink="/dashboard">Dashboard</a>
+      <a class="block cursor-pointer hover:text-red-200 md:block" (click)="opened = false" routerLink="/schedule">Schedule</a>
+      <a class="block cursor-pointer hover:text-red-200 md:block" (click)="opened = false" routerLink="/my-bookings"
+        >My bookings</a
+      >
+      <mat-divider></mat-divider>
+      <a class="block cursor-pointer hover:text-red-200 md:block" (click)="opened = false" routerLink="/admin">Admin</a>
+    </div>
+  </div>
+</mat-toolbar>
+
+<main class="h-[calc(100%-64px)]">
+  <p>navigation works!</p>
+  <router-outlet></router-outlet>
+</main>
