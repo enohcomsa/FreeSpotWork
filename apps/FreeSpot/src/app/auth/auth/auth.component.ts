@@ -10,7 +10,7 @@ import { AuthResponse } from '../models/auth.model';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-auth',
+  selector: 'free-spot-app-auth',
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatInputModule],
   templateUrl: './auth.component.html',

@@ -5,7 +5,7 @@ import { AuthService } from './auth/auth.service';
 @Component({
   standalone: true,
   imports: [RouterModule],
-  selector: 'app-root',
+  selector: 'free-spot-app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
