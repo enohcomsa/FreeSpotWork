@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { AuthService } from './auth/auth.service';
 
 @Component({
   standalone: true,
@@ -8,7 +9,12 @@ import { RouterModule } from '@angular/router';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'FreeSpot';
+  private authService: AuthService = inject(AuthService);
+
+  ngOnInit(): void {
+    this.authService.autoLogIn();
+  }
 }
 

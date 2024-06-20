@@ -9,7 +9,7 @@ export const appRoutes: Route[] = [
   {
     path: 'dashboard',
     canActivate: [authGuard],
-    loadComponent: () => import('@free-spot/dashboard').then((m) => m.FreeSpotDashboardComponent),
+    loadChildren: () => import('@free-spot/dashboard').then(),
   },
   { path: '', pathMatch: 'full', redirectTo: 'auth' },
   { path: '**', redirectTo: 'auth' },

@@ -4,13 +4,11 @@
   "projectType": "application",
   "prefix": "app",
   "sourceRoot": "apps/FreeSpot/src",
-  "tags": [],
+  "tags": ["scope:app"],
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:application",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/apps/FreeSpot",
         "index": "apps/FreeSpot/src/index.html",
@@ -23,10 +21,7 @@
             "input": "apps/FreeSpot/public"
           }
         ],
-        "styles": [
-          "@angular/material/prebuilt-themes/cyan-orange.css",
-          "apps/FreeSpot/src/styles.scss"
-        ],
+        "styles": ["@angular/material/prebuilt-themes/cyan-orange.css", "apps/FreeSpot/src/styles.scss"],
         "scripts": []
       },
       "configurations": {
@@ -76,9 +71,7 @@
     },
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": [
-        "{workspaceRoot}/coverage/{projectRoot}"
-      ],
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
         "jestConfig": "apps/FreeSpot/jest.config.ts"
       }

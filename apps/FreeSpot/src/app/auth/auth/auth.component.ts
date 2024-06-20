@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -17,7 +17,7 @@ import { Router } from '@angular/router';
   styleUrl: './auth.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AuthComponent implements OnInit {
+export class AuthComponent {
   private formBuilder: FormBuilder = inject(FormBuilder);
   private authService: AuthService = inject(AuthService);
   private router: Router = inject(Router);
@@ -30,10 +30,6 @@ export class AuthComponent implements OnInit {
     email: ['', [Validators.required, Validators.minLength(6), Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
   });
-
-  ngOnInit(): void {
-    this.authService.autoLogIn();
-  }
 
   onSwitchMode(): void {
     this.isLoginMode = !this.isLoginMode;
