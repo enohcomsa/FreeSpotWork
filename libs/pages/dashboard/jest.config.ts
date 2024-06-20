@@ -1,9 +1,9 @@
 /* eslint-disable */
 export default {
-  displayName: 'free-spot-dashboard',
-  preset: '../../jest.preset.js',
+  displayName: 'dashboard',
+  preset: '../../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  coverageDirectory: '../../coverage/libs/pages',
+  coverageDirectory: '../../../coverage/libs/pages/dashboard',
   transform: {
     '^.+\\.(ts|mjs|js|html)$': [
       'jest-preset-angular',

@@ -1,6 +1,6 @@
 import { Route } from '@angular/router';
 
-export const DASHBOARD_ROUTES: Route[] = [
+export const dashboardRoutes: Route[] = [
   {
     path: '',
     children: [
@@ -8,8 +8,8 @@ export const DASHBOARD_ROUTES: Route[] = [
         path: '',
         // canActivate:[]
         loadComponent: async () => {
-          const mod = await import('./components/free-spot-dashboard/free-spot-dashboard.component');
-          return mod.FreeSpotDashboardComponent;
+          const mod = await import('./components/dashboard.component');
+          return mod.DashboardComponent;
         },
       },
       { path: '**', redirectTo: '/' },

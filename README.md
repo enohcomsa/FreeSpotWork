@@ -60,4 +60,10 @@ It will show tasks that you can run with Nx.
 - [Join the community](https://nx.dev/community)
 - [Subscribe to the Nx Youtube Channel](https://www.youtube.com/@nxdevtools)
 - [Follow us on Twitter](https://twitter.com/nxdevtools)
+
 # FreeSpot
+
+### Generate lib
+
+run `npx nx generate @nx/angular:library --name=LIB_NAME --buildable=true --directory=libs/pages/LIB_NAME --publishable=true --routing=true --changeDetection=OnPush --compilationMode=full --flat=true --importPath=@free-spot/LIB_NAME --prefix=free-spot --projectNameAndRootFormat=as-provided --selector=free-spot-LIB_NAME --simpleName=true --skipModule=true --skipTests=true --style=sass --tags=scope:lib --no-interactive`
+

@@ -11,6 +11,11 @@ export const appRoutes: Route[] = [
     canActivate: [authGuard],
     loadChildren: () => import('@free-spot/dashboard').then(),
   },
+  {
+    path: 'schedule',
+    canActivate: [authGuard],
+    loadChildren: () => import('@free-spot/schedule').then(),
+  },
   { path: '', pathMatch: 'full', redirectTo: 'auth' },
   { path: '**', redirectTo: 'auth' },
 ];

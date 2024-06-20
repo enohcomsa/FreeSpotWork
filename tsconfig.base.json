@@ -15,7 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@free-spot/dashboard": ["libs/pages/src/index.ts"]
+      "@free-spot/dashboard": ["libs/pages/dashboard/src/index.ts"],
+      "@free-spot/schedule": ["libs/pages/schedule/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

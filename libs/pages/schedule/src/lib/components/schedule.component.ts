@@ -2,11 +2,11 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'free-spot-dashboard',
+  selector: 'free-spot-schedule',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './free-spot-dashboard.component.html',
-  styleUrl: './free-spot-dashboard.component.scss',
+  templateUrl: './schedule.component.html',
+  styleUrl: './schedule.component.sass',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FreeSpotDashboardComponent {}
+export class ScheduleComponent {}
