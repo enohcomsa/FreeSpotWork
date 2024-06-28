@@ -16,7 +16,7 @@
     "baseUrl": ".",
     "paths": {
       "@free-spot/admin": ["libs/pages/admin/src/index.ts"],
-      "@free-spot/auth": ["libs/service/auth/src/index.ts"],
+      "@free-spot-service/auth": ["libs/service/auth/src/index.ts"],
       "@free-spot/dashboard": ["libs/pages/dashboard/src/index.ts"],
       "@free-spot/my-bookings": ["libs/pages/my-bookings/src/index.ts"],
       "@free-spot/schedule": ["libs/pages/schedule/src/index.ts"]

@@ -1,5 +1,5 @@
 import { Route } from '@angular/router';
-import { authGuard } from '@free-spot/auth';
+import { authGuard } from '@free-spot-service/auth';
 
 export const appRoutes: Route[] = [
   {

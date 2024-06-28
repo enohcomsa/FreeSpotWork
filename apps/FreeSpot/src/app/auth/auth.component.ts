@@ -6,7 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { FormBuilder, FormGroup, FormGroupDirective, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
-import { AuthResponse, AuthService } from '@free-spot/auth';
+import { AuthResponse, AuthService } from '@free-spot-service/auth';
 
 @Component({
   selector: 'free-spot-app-auth',
