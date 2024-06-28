@@ -5,7 +5,7 @@ import { inject, Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'root',
 })
-export class UserHttpRequestsService {
+export class UserHttpService {
   private http: HttpClient = inject(HttpClient);
 
   storeUsers(userList: string[]): void {

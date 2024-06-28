@@ -4,6 +4,7 @@ import { Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { AuthUser } from './models/auth-user.model';
 import { AuthResponse, UserData } from './models/auth.model';
+import { UserHttpService } from '@http-free-spot/user';
 // import { AppUser } from '../shared/models/user.model';
 
 @Injectable({
@@ -12,6 +13,7 @@ import { AuthResponse, UserData } from './models/auth.model';
 export class AuthService {
   private http: HttpClient = inject(HttpClient);
   private router: Router = inject(Router);
+  private _userHttpService: UserHttpService = inject(UserHttpService);
 
   userSignal$: WritableSignal<AuthUser | null> = signal(null);
 
@@ -91,13 +93,9 @@ export class AuthService {
         tap((userList: string[] | undefined) => {
           const allUsers: string[] = userList || [];
           allUsers.push(email);
-          this._storeUsers(allUsers);
+          this._userHttpService.storeUsers(allUsers);
         })
       )
       .subscribe();
-  }
-
-  private _storeUsers(userList: string[]): void {
-    this.http.put('https://freespot-6e3c4-default-rtdb.europe-west1.firebasedatabase.app/userList.json/', userList).subscribe();
   }
 }
