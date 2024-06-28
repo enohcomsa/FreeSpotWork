@@ -21,7 +21,7 @@
             "input": "apps/FreeSpot/public"
           }
         ],
-        "styles": ["@angular/material/prebuilt-themes/cyan-orange.css", "apps/FreeSpot/src/styles.scss"],
+        "styles": ["apps/FreeSpot/src/styles.scss"],
         "scripts": []
       },
       "configurations": {

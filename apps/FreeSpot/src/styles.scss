@@ -1,7 +1,11 @@
+@use '@angular/material' as mat;
+@use './free-spot-m3-theme.scss';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+@include mat.core();
 /* You can add global styles to this file, and also import other style files */
 
 html,
@@ -9,6 +13,7 @@ body {
   height: 100%;
 }
 body {
+  @include mat.all-component-themes(free-spot-m3-theme.$dark-theme);
   margin: 0;
   font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
