@@ -4,10 +4,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { FormBuilder, FormGroup, FormGroupDirective, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuthService } from '../auth.service';
 import { Observable } from 'rxjs';
-import { AuthResponse } from '../models/auth.model';
 import { Router } from '@angular/router';
+import { AuthResponse, AuthService } from '@free-spot/auth';
 
 @Component({
   selector: 'free-spot-app-auth',

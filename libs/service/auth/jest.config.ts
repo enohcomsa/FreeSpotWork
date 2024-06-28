@@ -1,9 +1,9 @@
 /* eslint-disable */
 export default {
-  displayName: 'FreeSpot',
-  preset: '../../jest.preset.js',
+  displayName: 'auth',
+  preset: '../../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  coverageDirectory: '../../coverage/apps/FreeSpot',
+  coverageDirectory: '../../../coverage/libs/service/auth',
   transform: {
     '^.+\\.(ts|mjs|js|html)$': [
       'jest-preset-angular',
@@ -20,4 +20,3 @@ export default {
     'jest-preset-angular/build/serializers/html-comment',
   ],
 };
-

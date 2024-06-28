@@ -1,10 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { Observable, tap } from 'rxjs';
-import { AuthResponse, UserData } from './models/auth.model';
-import { AuthUser } from './models/auth-user.model';
 import { Router } from '@angular/router';
-import { UserHttpRequestsService } from '../services/user-http-requests.service';
+import { AuthUser } from './models/auth-user.model';
+import { AuthResponse, UserData } from './models/auth.model';
 // import { AppUser } from '../shared/models/user.model';
 
 @Injectable({
@@ -13,7 +12,6 @@ import { UserHttpRequestsService } from '../services/user-http-requests.service'
 export class AuthService {
   private http: HttpClient = inject(HttpClient);
   private router: Router = inject(Router);
-  private userService: UserHttpRequestsService = inject(UserHttpRequestsService);
 
   userSignal$: WritableSignal<AuthUser | null> = signal(null);
 
@@ -93,9 +91,13 @@ export class AuthService {
         tap((userList: string[] | undefined) => {
           const allUsers: string[] = userList || [];
           allUsers.push(email);
-          this.userService.storeUsers(allUsers);
+          this._storeUsers(allUsers);
         })
       )
       .subscribe();
+  }
+
+  private _storeUsers(userList: string[]): void {
+    this.http.put('https://freespot-6e3c4-default-rtdb.europe-west1.firebasedatabase.app/userList.json/', userList).subscribe();
   }
 }
