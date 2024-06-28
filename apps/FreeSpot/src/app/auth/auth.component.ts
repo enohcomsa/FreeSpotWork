@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 import { FormBuilder, FormGroup, FormGroupDirective, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
@@ -11,7 +12,16 @@ import { AuthResponse, AuthService } from '@free-spot-service/auth';
 @Component({
   selector: 'free-spot-app-auth',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatInputModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatInputModule,
+    MatCardModule,
+  ],
   templateUrl: './auth.component.html',
   styleUrl: './auth.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

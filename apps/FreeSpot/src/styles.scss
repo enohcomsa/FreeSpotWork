@@ -15,7 +15,6 @@ body {
 body {
   @include mat.all-component-themes(free-spot-m3-theme.$dark-theme);
   margin: 0;
-  font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
 
 //hamburger style

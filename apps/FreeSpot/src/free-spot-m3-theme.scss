@@ -4,7 +4,7 @@
 @use 'sass:map';
 @use '@angular/material' as mat;
 
-// Note: Color palettes are generated from primary: #AEBAF5, secondary: #EDDD8F, tertiary: #8FCEED, neutral: #929093
+// Note: Color palettes are generated from primary: #AEBAF5, secondary: #EDDD8F, tertiary: #8FCEED
 $_palettes: (
   primary: (
     0: #000000,
@@ -62,31 +62,31 @@ $_palettes: (
   ),
   neutral: (
     0: #000000,
-    4: #000527,
-    6: #00073a,
-    10: #000c61,
-    12: #051166,
-    17: #121e71,
-    20: #1a2678,
-    22: #1f2b7d,
-    24: #243082,
-    25: #273384,
-    30: #333f90,
-    35: #404b9c,
-    40: #4c57a9,
-    50: #6570c4,
-    60: #7f8ae0,
-    70: #9aa5fd,
-    80: #bcc2ff,
-    87: #d5d7ff,
-    90: #dfe0ff,
-    92: #e6e6ff,
-    94: #edecff,
-    95: #f0efff,
-    96: #f4f2ff,
-    98: #fbf8ff,
-    99: #fffbff,
+    10: #1b1b1f,
+    20: #303034,
+    25: #3b3b3f,
+    30: #47464a,
+    35: #525256,
+    40: #5e5e62,
+    50: #77767a,
+    60: #919094,
+    70: #acaaaf,
+    80: #c8c6ca,
+    90: #e4e1e6,
+    95: #f2f0f4,
+    98: #fbf8fd,
+    99: #fefbff,
     100: #ffffff,
+    4: #0e0e11,
+    6: #131316,
+    12: #1f1f23,
+    17: #2a2a2d,
+    22: #343438,
+    24: #39393c,
+    87: #dbd9de,
+    92: #eae7ec,
+    94: #f0edf1,
+    96: #f5f3f7,
   ),
   neutral-variant: (
     0: #000000,
@@ -142,6 +142,10 @@ $light-theme: mat.define-theme(
       primary: $_primary,
       tertiary: $_tertiary,
     ),
+    typography: (
+      plain-family: 'Rubik',
+      brand-family: 'Rubik',
+    ),
   )
 );
 $dark-theme: mat.define-theme(
@@ -150,6 +154,10 @@ $dark-theme: mat.define-theme(
       theme-type: dark,
       primary: $_primary,
       tertiary: $_tertiary,
+    ),
+    typography: (
+      plain-family: 'Rubik',
+      brand-family: 'Rubik',
     ),
   )
 );
