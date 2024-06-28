@@ -24,14 +24,19 @@ export class AuthComponent {
   isLoginMode = true;
 
   authForm: FormGroup = this._formBuilder.group({
-    firstName: ['', [Validators.required, Validators.minLength(3)]],
-    familyName: ['', [Validators.required, Validators.minLength(3)]],
+    firstName: ['', [Validators.minLength(3)]],
+    familyName: ['', [Validators.minLength(3)]],
     email: ['', [Validators.required, Validators.minLength(6), Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
   });
 
   onSwitchMode(): void {
     this.isLoginMode = !this.isLoginMode;
+    if (this.isLoginMode) {
+      this.authForm.get('firstName')?.setValidators([Validators.minLength(3)]);
+    } else {
+      this.authForm.get('firstName')?.setValidators([Validators.required, Validators.minLength(3)]);
+    }
   }
 
   onSubmit(formDirective: FormGroupDirective): void {
@@ -41,7 +46,6 @@ export class AuthComponent {
         email: this.authForm.controls['email'].value,
         password: this.authForm.controls['password'].value,
       });
-      console.log('login');
     } else {
       authObs = this._authService.signUp({
         email: this.authForm.controls['email'].value,
