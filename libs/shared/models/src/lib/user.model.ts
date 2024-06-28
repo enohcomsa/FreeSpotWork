@@ -1,4 +1,4 @@
-export interface AppUser {
+export interface FreeSpotUser {
   familyName?: string;
   firstName?: string;
   email: string;

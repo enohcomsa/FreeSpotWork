@@ -1,1 +1,1 @@
-export * from './lib/free-spot-models.component';
+export { FreeSpotUser } from './lib/user.model';

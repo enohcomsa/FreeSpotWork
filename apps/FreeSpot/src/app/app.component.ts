@@ -10,10 +10,10 @@ import { AuthService } from '@free-spot-service/auth';
 })
 export class AppComponent implements OnInit {
   title = 'FreeSpot';
-  private authService: AuthService = inject(AuthService);
+  private _authService: AuthService = inject(AuthService);
 
   ngOnInit(): void {
-    this.authService.autoLogIn();
+    this._authService.autoLogIn();
   }
 }
 

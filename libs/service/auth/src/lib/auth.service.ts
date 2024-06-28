@@ -11,14 +11,14 @@ import { UserHttpService } from '@http-free-spot/user';
   providedIn: 'root',
 })
 export class AuthService {
-  private http: HttpClient = inject(HttpClient);
-  private router: Router = inject(Router);
+  private _http: HttpClient = inject(HttpClient);
+  private _router: Router = inject(Router);
   private _userHttpService: UserHttpService = inject(UserHttpService);
 
   userSignal$: WritableSignal<AuthUser | null> = signal(null);
 
   signUp(user: UserData): Observable<AuthResponse> {
-    return this.http
+    return this._http
       .post<AuthResponse>(
         'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyA977pOtBh69mOV1wna0adyXcszT7uffYs',
         {
@@ -36,7 +36,7 @@ export class AuthService {
   }
 
   logIn(user: UserData): Observable<AuthResponse> {
-    return this.http
+    return this._http
       .post<AuthResponse>(
         'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyA977pOtBh69mOV1wna0adyXcszT7uffYs',
         {
@@ -68,7 +68,7 @@ export class AuthService {
   logOut(): void {
     this.userSignal$.set(null);
     localStorage.clear();
-    this.router.navigate(['/auth']);
+    this._router.navigate(['/auth']);
   }
 
   // to do some auto logout logic
@@ -87,7 +87,7 @@ export class AuthService {
   }
 
   private _addUser(email: string): void {
-    this.http
+    this._http
       .get<string[]>('https://freespot-6e3c4-default-rtdb.europe-west1.firebasedatabase.app/userList/.json')
       .pipe(
         tap((userList: string[] | undefined) => {

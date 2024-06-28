@@ -6,9 +6,9 @@ import { inject, Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class UserHttpService {
-  private http: HttpClient = inject(HttpClient);
+  private _http: HttpClient = inject(HttpClient);
 
   storeUsers(userList: string[]): void {
-    this.http.put('https://freespot-6e3c4-default-rtdb.europe-west1.firebasedatabase.app/userList.json/', userList).subscribe();
+    this._http.put('https://freespot-6e3c4-default-rtdb.europe-west1.firebasedatabase.app/userList.json/', userList).subscribe();
   }
 }

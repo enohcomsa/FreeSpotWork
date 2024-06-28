@@ -17,13 +17,13 @@ import { AuthResponse, AuthService } from '@free-spot-service/auth';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthComponent {
-  private formBuilder: FormBuilder = inject(FormBuilder);
-  private authService: AuthService = inject(AuthService);
-  private router: Router = inject(Router);
+  private _formBuilder: FormBuilder = inject(FormBuilder);
+  private _authService: AuthService = inject(AuthService);
+  private _router: Router = inject(Router);
 
   isLoginMode = true;
 
-  authForm: FormGroup = this.formBuilder.group({
+  authForm: FormGroup = this._formBuilder.group({
     firstName: ['', [Validators.required, Validators.minLength(3)]],
     familyName: ['', [Validators.required, Validators.minLength(3)]],
     email: ['', [Validators.required, Validators.minLength(6), Validators.email]],
@@ -37,13 +37,13 @@ export class AuthComponent {
   onSubmit(formDirective: FormGroupDirective): void {
     let authObs: Observable<AuthResponse>;
     if (this.isLoginMode) {
-      authObs = this.authService.logIn({
+      authObs = this._authService.logIn({
         email: this.authForm.controls['email'].value,
         password: this.authForm.controls['password'].value,
       });
       console.log('login');
     } else {
-      authObs = this.authService.signUp({
+      authObs = this._authService.signUp({
         email: this.authForm.controls['email'].value,
         password: this.authForm.controls['password'].value,
       });
@@ -51,7 +51,7 @@ export class AuthComponent {
 
     authObs.subscribe({
       next: () => {
-        this.router.navigate(['/dashboard']);
+        this._router.navigate(['/dashboard']);
       },
       error: (error) => console.log(error),
     });
