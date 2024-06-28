@@ -1,5 +1,5 @@
 {
-  "name": "schedule",
+  "name": "free-spot-schedule",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/pages/schedule/src",
   "prefix": "free-spot",

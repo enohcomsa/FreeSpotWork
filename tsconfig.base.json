@@ -20,6 +20,7 @@
       "@free-spot/dashboard": ["libs/pages/dashboard/src/index.ts"],
       "@free-spot/my-bookings": ["libs/pages/my-bookings/src/index.ts"],
       "@free-spot/schedule": ["libs/pages/schedule/src/index.ts"],
+      "@free-spot/ui": ["libs/ui/src/index.ts"],
       "@http-free-spot/user": ["libs/http-free-spot/users/src/index.ts"]
     }
   },

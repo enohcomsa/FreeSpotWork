@@ -1,5 +1,5 @@
 {
-  "name": "admin",
+  "name": "free-spot-admin",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/pages/admin/src",
   "prefix": "free-spot",

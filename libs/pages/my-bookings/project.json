@@ -1,5 +1,5 @@
 {
-  "name": "my-bookings",
+  "name": "free-spot-my-bookings",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/pages/my-bookings/src",
   "prefix": "free-spot",

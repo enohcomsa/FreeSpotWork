@@ -1,5 +1,5 @@
 {
-  "name": "dashboard",
+  "name": "free-spot-dashboard",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/pages/dashboard/src",
   "prefix": "free-spot",
