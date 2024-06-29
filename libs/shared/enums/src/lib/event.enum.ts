@@ -1,0 +1,5 @@
+export enum Event {
+  LABORATORY = 'LABORATORY',
+  COURSE = 'COURSE',
+  SPECIAL_EVENT = 'SPECIAL_EVENT',
+}

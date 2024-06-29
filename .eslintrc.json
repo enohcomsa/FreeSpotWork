@@ -31,6 +31,10 @@
               {
                 "sourceTag": "scope:util",
                 "onlyDependOnLibsWithTags": ["scope:util","scope:model"]
+              },
+              {
+                "sourceTag": "scope:model",
+                "onlyDependOnLibsWithTags": ["scope:model"]
               }
             ]
           }
