@@ -5,6 +5,6 @@ export interface Building {
   adress: string;
   floorList: Floor[];
   specialEvent: boolean;
-  building: string;
-  room: string;
+  building?: string;
+  date?: Date;
 }

@@ -8,7 +8,7 @@ export const dashboardRoutes: Route[] = [
         path: '',
         // canActivate:[]
         loadComponent: async () => {
-          const mod = await import('./components/dashboard.component');
+          const mod = await import('./components/dashboard/dashboard.component');
           return mod.DashboardComponent;
         },
       },

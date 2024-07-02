@@ -1,0 +1,84 @@
+<mat-card appearance="outlined">
+  @if(cardData.specialEvent){
+  <ng-container [ngTemplateOutlet]="specialEvent"></ng-container>
+  }@else{
+  <mat-card-header>
+    <mat-card-title>{{ cardData.name }}</mat-card-title>
+    <mat-card-subtitle class="!flex items-end !text-sm">
+      <mat-icon class="scale-50 -ml-2 -mr-1">location_on</mat-icon> {{ cardData.adress }}
+    </mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-list class="!pb-0">
+      <mat-list-item class="!p-0">
+        <div class="flex justify-between text-xs tracking-tighter">
+          <p class="min-w-24">Floor</p>
+          <div class="[&>p]:w-14 flex gap-4">
+            <p>Free desk</p>
+            <p>Assigned</p>
+            <p>Unavabile</p>
+          </div>
+        </div>
+      </mat-list-item>
+      <mat-divider></mat-divider>
+
+      @for( floor of cardData.floorList;track floor;let last=$last){
+      <mat-list-item class="!p-0 !cursor-pointer">
+        <div class="flex justify-between text-xs tracking-tighter">
+          <p class="min-w-24 truncate">{{ floor.name }}</p>
+          <div class="[&>p]:w-14 [&>p]:text-center flex gap-4">
+            <p>{{ floor.freeSpots }}</p>
+            <p>{{ floor.busySpots }}</p>
+            <p>{{ floor.unavailableSpots }}</p>
+          </div>
+        </div>
+      </mat-list-item>
+      @if(!last){
+      <mat-divider></mat-divider>
+      } }
+    </mat-list>
+  </mat-card-content>
+  }
+</mat-card>
+
+<ng-template #specialEvent>
+  <mat-card-header class="!block">
+    <mat-card-title class="!flex justify-between items-center">
+      <p>{{ eventData.name }}</p>
+      <p class="text-sm tracking-tight">{{ eventData.date | date : 'MMM dd, yyyy HH:mm' }}</p>
+    </mat-card-title>
+    <mat-card-subtitle class="!flex flex-col !text-xs sm:flex-row sm:!text-sm sm:items-end">
+      <div class="flex items-end !text-sm gap-1">
+        <mat-icon class="scale-50 -ml-2 -mr-1">location_on</mat-icon>
+        <p>{{ eventData.building }}<span class="hidden sm:inline sm:mx-1">|</span></p>
+      </div>
+      <p>{{ eventData.adress }}</p>
+    </mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-list class="!pb-0">
+      <mat-list-item class="!p-0">
+        <div class="flex justify-between text-xs tracking-tighter">
+          <p class="min-w-24">Room</p>
+          <div class="[&>p]:w-14 flex gap-4">
+            <p>Free desk</p>
+            <p>Assigned</p>
+            <p>Unavabile</p>
+          </div>
+        </div>
+      </mat-list-item>
+      <mat-divider></mat-divider>
+
+      <mat-list-item class="!p-0 !cursor-pointer">
+        <div class="flex justify-between text-xs tracking-tighter">
+          <p class="min-w-24 truncate">{{ eventData.floorList[0].name }}</p>
+          <div class="[&>p]:w-14 [&>p]:text-center flex gap-4">
+            <p>{{ eventData.floorList[0].freeSpots }}</p>
+            <p>{{ eventData.floorList[0].busySpots }}</p>
+            <p>{{ eventData.floorList[0].unavailableSpots }}</p>
+          </div>
+        </div>
+      </mat-list-item>
+    </mat-list>
+  </mat-card-content>
+</ng-template>
