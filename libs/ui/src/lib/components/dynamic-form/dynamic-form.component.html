@@ -1,0 +1,40 @@
+<mat-card appearance="outlined">
+  <mat-card-content>
+    <form [formGroup]="searchForm" (ngSubmit)="onSubmit()" class="flex flex-col justify-center items-center md:flex-row md:gap-4">
+      <mat-form-field class="w-full">
+        <mat-label>Select booking</mat-label>
+        <mat-select formControlName="eventBooking">
+          <mat-option [value]="EVENT.LABORATORY">Laboratory</mat-option>
+          <mat-option [value]="EVENT.COURSE">Course</mat-option>
+          <mat-option [value]="EVENT.SPECIAL_EVENT">Event</mat-option>
+        </mat-select>
+      </mat-form-field>
+      @if(event===EVENT.SPECIAL_EVENT){
+      <mat-form-field class="w-full">
+        <mat-label>Event name</mat-label>
+        <mat-select formControlName="event">
+          @for(event of eventNames;track event){
+          <mat-option [value]="event">{{ event }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      }@else{
+      <mat-form-field class="w-full">
+        <mat-label>Subject</mat-label>
+        <mat-select formControlName="subject">
+          @for(subject of materieNames;track subject){
+          <mat-option [value]="subject">{{ subject }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      }
+
+      <button mat-flat-button type="submit" [disabled]="!searchForm.valid || searchActive$()" class="w-full md:mb-5">
+        Search
+      </button>
+    </form>
+  </mat-card-content>
+  <mat-card-footer>
+    <p class="px-4 my-4 tracking-tighter text-sm md:mt-0">Select a booking and search.</p>
+  </mat-card-footer>
+</mat-card>
