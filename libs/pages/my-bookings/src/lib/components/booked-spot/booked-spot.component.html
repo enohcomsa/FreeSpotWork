@@ -1,0 +1,34 @@
+<mat-card appearance="outlined">
+  <mat-card-header>
+    <mat-card-title>
+      <div class="flex gap-4 items-start">
+        <mat-icon class="scale-125">event_available</mat-icon>
+        <div class="flex-col">
+          @if(event.eventType===EVENT.SPECIAL_EVENT){
+          <p class="grow text-lg font-bold -mt-2">{{ event.subjectName }}</p>
+          }@else {
+          <p class="grow text-lg font-bold -mt-2">
+            {{ event.eventType | lowercase }}<span class="mx-1">:</span>{{ event.subjectName }}
+          </p>
+          }
+          <div class="flex items-center text-sm tracking-tighter">
+            <p class="max-w-48 truncate sm:max-w-fit md:max-w-48 lg:max-w-44 xl:max-w-fit">{{ event.buildingName }}</p>
+            <p><span class="mx-1">|</span>{{ event.floorName }}<span class="mx-1">|</span></p>
+            <p>{{ event.roomName }}</p>
+          </div>
+        </div>
+      </div>
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="!flex flex-col gap-2 !pt-2">
+    <mat-divider></mat-divider>
+    <div class="flex items-center font-bold">
+      <p>{{ event.date | date : 'EEEE, dd MMM, yyyy' }}<span class="mx-1">|</span></p>
+      <p>{{ event.startHour }}-</p>
+      <p>{{ event.endHour }}</p>
+    </div>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-flat-button class="ml-2 mb-4">Reschedule spot</button>
+  </mat-card-actions>
+</mat-card>

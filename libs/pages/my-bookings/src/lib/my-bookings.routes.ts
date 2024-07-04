@@ -8,7 +8,7 @@ export const myBookingsRoutes: Route[] = [
         path: '',
         // canActivate:[]
         loadComponent: async () => {
-          const mod = await import('./components/my-bookings.component');
+          const mod = await import('./components/my-bookings/my-bookings.component');
           return mod.MyBookingsComponent;
         },
       },

@@ -35,10 +35,12 @@
     </form>
 
     @if(searchActive$()){
-    <free-spot-booking-item></free-spot-booking-item>
-    <free-spot-booking-item></free-spot-booking-item>
-    <free-spot-booking-item></free-spot-booking-item>
-    <free-spot-booking-item></free-spot-booking-item>
+    <div class="flex flex-col space-y-4">
+      <free-spot-booking-item></free-spot-booking-item>
+      <free-spot-booking-item></free-spot-booking-item>
+      <free-spot-booking-item></free-spot-booking-item>
+      <free-spot-booking-item></free-spot-booking-item>
+    </div>
     }
   </mat-card-content>
   @if(!searchActive$()){
