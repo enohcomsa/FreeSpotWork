@@ -1,7 +1,11 @@
+export { BookedEvent } from './lib/booked-event.model';
 export { Building } from './lib/building.model';
 export { DynamicSerach } from './lib/dynamic-search.model';
 export { Floor } from './lib/floor.model';
 export { FreeSpotUser } from './lib/free-spot-user.model';
+export { Group } from './lib/group.model';
 export { Room } from './lib/room.model';
+export { SemiGroup } from './lib/semi-group.model';
 export { SubjectItem } from './lib/subject.model';
 export { TimeTableItem } from './lib/timetable-item.model';
+export { Year } from './lib/year.model';

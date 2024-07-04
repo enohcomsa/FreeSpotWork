@@ -1,0 +1,20 @@
+<mat-card appearance="outlined" class="my-4">
+  <mat-card-content class="!flex flex-col justify-center md:flex-row md:justify-between md:items-baseline">
+    <p class="grow text-lg font-bold tracking-tight">{{ event_special.subjectName }}</p>
+    <div
+      class="flex flex-col grow justify-center text-sm tracking-tighter sm:flex-row sm:justify-between sm:items-center lg:tracking-tight lg:text-base"
+    >
+      <div class="flex items-center">
+        <p class="max-w-40 truncate">{{ event_special.buildingName }}<span class="mx-1">|</span></p>
+        <p>{{ event_special.floorName }}<span class="mx-1">|</span></p>
+        <p>{{ event_special.roomName }}</p>
+      </div>
+      <div class="flex items-center">
+        <p>{{ event_special.date | date : 'EEEE, dd MMM, yyyy' }}<span class="mx-1">|</span></p>
+        <p>{{ event_special.startHour }}-</p>
+        <p>{{ event_special.endHour }}</p>
+      </div>
+      <button mat-flat-button class="mt-2">Book spot</button>
+    </div>
+  </mat-card-content>
+</mat-card>

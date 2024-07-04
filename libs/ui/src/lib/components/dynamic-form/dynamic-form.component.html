@@ -33,8 +33,14 @@
         Search
       </button>
     </form>
+
+    @if(searchActive$()){
+    <free-spot-booking-item></free-spot-booking-item>
+    <free-spot-booking-item></free-spot-booking-item>
+    <free-spot-booking-item></free-spot-booking-item>
+    <free-spot-booking-item></free-spot-booking-item>
+    }
   </mat-card-content>
-  <mat-card-footer>
-    <p class="px-4 my-4 tracking-tighter text-sm md:mt-0">Select a booking and search.</p>
-  </mat-card-footer>
+  @if(!searchActive$()){
+  <mat-card-footer> <p class="px-4 my-4 tracking-tighter text-sm md:mt-0">Select a booking and search.</p> </mat-card-footer>}
 </mat-card>

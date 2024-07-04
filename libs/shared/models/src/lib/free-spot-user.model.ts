@@ -5,6 +5,7 @@ export interface FreeSpotUser {
   familyName?: string;
   firstName?: string;
   email: string;
+  year: string;
   group?: string;
   semiGroup?: string;
   faculty?: string;
