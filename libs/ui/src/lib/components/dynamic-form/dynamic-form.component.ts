@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal, WritableSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, input, OnInit, signal, WritableSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -20,20 +20,23 @@ export class DynamicFormComponent implements OnInit {
   private _formBuilder: FormBuilder = inject(FormBuilder);
   private _destroyRef = inject(DestroyRef);
 
+  eventBookingSelectedSig = input<Event>(Event.LABORATORY);
+
   eventNames: string[] = ['event_efeffe', 'event_deww', 'event_eeeee', 'event_ertty', 'event_xzxz'];
   materieNames: string[] = ['materie_efeffe', 'materie_deww', 'materie_eeeee', 'materie_ertty', 'materie_xzxz'];
 
   EVENT = Event;
+  searchForm!: FormGroup;
 
   searchActive$: WritableSignal<boolean> = signal(false);
 
-  searchForm = this._formBuilder.group({
-    eventBooking: [this.EVENT.LABORATORY],
-    subject: [this.materieNames[0]],
-    event: [this.eventNames[0]],
-  });
-
   ngOnInit(): void {
+    this.searchForm = this._formBuilder.group({
+      eventBooking: [this.eventBookingSelectedSig()],
+      subject: [this.materieNames[0]],
+      event: [this.eventNames[0]],
+    });
+
     this.searchForm.valueChanges.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(() => this.searchActive$.set(false));
   }
 

@@ -23,7 +23,7 @@
       <mat-divider></mat-divider>
 
       @for( floor of cardData.floorList;track floor;let last=$last){
-      <mat-list-item class="!p-0 !cursor-pointer">
+      <mat-list-item class="!p-0 !cursor-pointer" (click)="onFloorClick(floor.name)">
         <div class="flex justify-between text-xs tracking-tighter">
           <p class="min-w-24 truncate">{{ floor.name }}</p>
           <div class="[&>p]:w-14 [&>p]:text-center flex gap-4">

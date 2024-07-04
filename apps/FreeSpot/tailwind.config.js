@@ -9,7 +9,13 @@ module.exports = {
       fontFamily: {
         sans: ['Rubik', 'sans-serif'],
       },
+      containers: {
+        sm: '640px',
+        md: '768px',
+        lg: '1024px',
+        xl: '1280px',
+      },
     },
   },
-  plugins: [],
+  plugins: [require('@tailwindcss/container-queries')],
 };

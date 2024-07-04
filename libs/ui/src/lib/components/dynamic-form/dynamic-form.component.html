@@ -1,6 +1,10 @@
-<mat-card appearance="outlined">
+<mat-card appearance="outlined" class="@container">
   <mat-card-content>
-    <form [formGroup]="searchForm" (ngSubmit)="onSubmit()" class="flex flex-col justify-center items-center md:flex-row md:gap-4">
+    <form
+      [formGroup]="searchForm"
+      (ngSubmit)="onSubmit()"
+      class="flex flex-col justify-center items-center mb-4 @md:flex-row @md:gap-4"
+    >
       <mat-form-field class="w-full">
         <mat-label>Select booking</mat-label>
         <mat-select formControlName="eventBooking">
@@ -29,7 +33,7 @@
       </mat-form-field>
       }
 
-      <button mat-flat-button type="submit" [disabled]="!searchForm.valid || searchActive$()" class="w-full md:mb-5">
+      <button mat-flat-button type="submit" [disabled]="!searchForm.valid || searchActive$()" class="w-full @md:mb-5">
         Search
       </button>
     </form>
@@ -40,9 +44,11 @@
       <free-spot-booking-item></free-spot-booking-item>
       <free-spot-booking-item></free-spot-booking-item>
       <free-spot-booking-item></free-spot-booking-item>
+      <free-spot-booking-item></free-spot-booking-item>
+      <free-spot-booking-item></free-spot-booking-item>
     </div>
     }
   </mat-card-content>
   @if(!searchActive$()){
-  <mat-card-footer> <p class="px-4 my-4 tracking-tighter text-sm md:mt-0">Select a booking and search.</p> </mat-card-footer>}
+  <mat-card-footer> <p class="px-4 my-4 tracking-tighter text-sm @md:mt-0">Select a booking and search.</p> </mat-card-footer>}
 </mat-card>
