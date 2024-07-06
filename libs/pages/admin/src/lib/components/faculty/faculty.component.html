@@ -1,0 +1,59 @@
+<h2 class="pb-2 pt-4 text-xl font-bold md:pb-4 md:pt-8">Subjects</h2>
+<mat-chip-set>
+  @for (subject of facultySig().subjectList; track subject) {
+    <mat-chip>
+      <p>{{ subject.name }}</p>
+      <button matChipRemove>
+        <mat-icon>cancel</mat-icon>
+      </button>
+    </mat-chip>
+  }
+  <button mat-icon-button class="ml-2" (click)="adingSubject = true">
+    <mat-icon class="mb-2">add </mat-icon>
+  </button>
+</mat-chip-set>
+
+@if (adingSubject) {
+  <form class="flex flex-col py-4 sm:flex-row sm:items-center sm:gap-4" (ngSubmit)="onAddSubject()">
+    <mat-form-field>
+      <mat-label>New subject</mat-label>
+      <input type="text" matInput [formControl]="addSubjectControl" [matAutocomplete]="auto" />
+      <mat-autocomplete #auto="matAutocomplete">
+        @for (subject of facultySig().subjectList; track subject) {
+          <mat-option [value]="subject">{{ subject }}</mat-option>
+        }
+      </mat-autocomplete>
+    </mat-form-field>
+    <button mat-flat-button type="submit" class="sm:mb-5">Add subject</button>
+  </form>
+}
+
+<h2 class="pb-2 pt-4 text-xl font-bold md:pb-4 md:pt-8">Years</h2>
+@for (year of facultySig().yearList; track year) {
+  <mat-list>
+    <div mat-subheader class="text-lg font-bold">{{ year.name }}</div>
+    <mat-chip-set>
+      @for (group of year.yearGroupList; track group) {
+        <mat-chip>
+          <p>{{ group.name }}</p>
+          <button matChipRemove>
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </mat-chip>
+      }
+      <button mat-icon-button class="ml-2" (click)="adingGroup = true">
+        <mat-icon class="mb-2">add </mat-icon>
+      </button>
+    </mat-chip-set>
+    @if (adingGroup) {
+      <form class="flex flex-col py-4 sm:flex-row sm:items-center sm:gap-4" (ngSubmit)="onAddGroup()">
+        <mat-form-field>
+          <mat-label>New group</mat-label>
+          <input type="text" matInput [formControl]="addGroupControl" />
+        </mat-form-field>
+        <button mat-flat-button type="submit" class="sm:mb-5">Add group</button>
+      </form>
+    }
+    <mat-divider></mat-divider>
+  </mat-list>
+}

@@ -1,0 +1,16 @@
+<div class="container">
+  <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Admin List</h1>
+  <free-spot-admin-user-list></free-spot-admin-user-list>
+
+  <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Faculties</h1>
+  <mat-accordion>
+    @for (faculty of facultyList; track faculty.name) {
+      <mat-expansion-panel outline="true">
+        <mat-expansion-panel-header>
+          <mat-panel-title> {{ faculty.name }} </mat-panel-title>
+        </mat-expansion-panel-header>
+        <free-spot-faculty [facultySig]="faculty"></free-spot-faculty>
+      </mat-expansion-panel>
+    }
+  </mat-accordion>
+</div>

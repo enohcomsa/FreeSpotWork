@@ -1,4 +1,4 @@
-export enum Faculty {
+export enum FacultyName {
   ETTI = 'ETTI',
   AC = 'AC',
 }

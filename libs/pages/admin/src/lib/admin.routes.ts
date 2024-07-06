@@ -8,7 +8,7 @@ export const adminRoutes: Route[] = [
         path: '',
         // canActivate:[]
         loadComponent: async () => {
-          const mod = await import('./components/admin.component');
+          const mod = await import('./components/admin/admin.component');
           return mod.AdminComponent;
         },
       },

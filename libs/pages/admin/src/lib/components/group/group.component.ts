@@ -2,11 +2,11 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'free-spot-admin',
+  selector: 'free-spot-group',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './admin.component.html',
-  styleUrl: './admin.component.sass',
+  templateUrl: './group.component.html',
+  styleUrl: './group.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AdminComponent {}
+export class GroupComponent {}

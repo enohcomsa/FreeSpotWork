@@ -1,5 +1,5 @@
 export { Event } from './lib/event.enum';
-export { Faculty } from './lib/faculty.ecum';
+export { FacultyName } from './lib/faculty.enum';
 export { Language } from './lib/language.enum';
 export { Role } from './lib/role.enum';
 export { Specialization } from './lib/specialization.enum';
