@@ -1,4 +1,4 @@
-import { SubjectName, WeekDay } from '@free-spot/enums';
+import { Event, SubjectName, WeekDay } from '@free-spot/enums';
 
 export interface TimeTableItem {
   startHour: number;
@@ -6,4 +6,5 @@ export interface TimeTableItem {
   weekDay: WeekDay;
   subjectName: SubjectName;
   roomName: string;
+  activiteType: Event;
 }

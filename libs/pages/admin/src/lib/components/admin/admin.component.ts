@@ -1,19 +1,21 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AdminUserListComponent } from '../admin-user-list/admin-user-list.component';
 import { FacultyComponent } from '../faculty/faculty.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { Faculty, SubjectItem } from '@free-spot/models';
+import { DynamicChipListComponent } from '@free-spot/ui';
 
 @Component({
   selector: 'free-spot-admin',
   standalone: true,
-  imports: [CommonModule, AdminUserListComponent, FacultyComponent, MatExpansionModule],
+  imports: [CommonModule, FacultyComponent, MatExpansionModule, DynamicChipListComponent],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.sass',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminComponent {
+  admminUserList: string[] = ['enoh', 'dsada', 'dsggggg', 'bbbbbbbb', 'ffffffff', 'zzzzzzz'];
+
   subjectItem: SubjectItem = {
     name: 'subject 1',
     shortName: 'subj1',

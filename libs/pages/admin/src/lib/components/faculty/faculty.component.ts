@@ -10,6 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatDividerModule } from '@angular/material/divider';
+import { DynamicChipListComponent } from '@free-spot/ui';
 
 @Component({
   selector: 'free-spot-faculty',
@@ -27,6 +28,7 @@ import { MatDividerModule } from '@angular/material/divider';
     MatListModule,
     MatDividerModule,
     MatIconModule,
+    DynamicChipListComponent,
   ],
   templateUrl: './faculty.component.html',
   styleUrl: './faculty.component.scss',
