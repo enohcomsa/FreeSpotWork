@@ -1,10 +1,7 @@
-import { Event, SubjectName, WeekDay } from '@free-spot/enums';
+import { WeekDay } from '@free-spot/enums';
+import { TimetableActivityItem } from './timetable-activity-item.model';
 
 export interface TimeTableItem {
-  startHour: number;
-  endHour: number;
+  activities: TimetableActivityItem[];
   weekDay: WeekDay;
-  subjectName: SubjectName;
-  roomName: string;
-  activiteType: Event;
 }

@@ -6,3 +6,4 @@ export { Specialization } from './lib/specialization.enum';
 export { Theme } from './lib/theme.enum';
 export { WeekDay } from './lib/week-day.enum';
 export { SubjectName } from './lib/subject-name.enum';
+export { WeekParity } from './lib/week-parity.enum';

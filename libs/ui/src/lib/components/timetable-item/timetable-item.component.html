@@ -1,0 +1,54 @@
+<mat-card appearance="outlined" class="w-full">
+  <mat-card-header class="justify-center font-bold">
+    <mat-card-title>{{ timetableItemSig().weekDay }}</mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="!p-0">
+    <mat-list class="!pb-0">
+      <mat-divider></mat-divider>
+      @for (day of dayItems; track day) {
+        <mat-divider></mat-divider>
+        <mat-list-item class="!px-2">
+          <div class="flex w-full">
+            @if (timetableItemSig().weekDay === weekDay.MONDAY) {
+              <div class="flex w-10 text-xs font-bold tracking-tighter">
+                <p class="w-[39px] self-center">{{ day.hourInterval }}</p>
+                <mat-divider class="h-12 justify-self-end" vertical="true"></mat-divider>
+              </div>
+            } @else {
+              <div class="flex w-10 text-xs font-bold tracking-tighter lg:hidden">
+                <p class="w-[39px] self-center">{{ day.hourInterval }}</p>
+                <mat-divider class="h-12 justify-self-end" vertical="true"></mat-divider>
+              </div>
+            }
+
+            @if (day.bothWeekActivity) {
+              <div class="flex w-full items-center justify-center gap-1 text-sm font-light tracking-tighter">
+                <p>{{ day.bothWeekActivity.subjectName }}</p>
+                <p>{{ getEventInitial(day.bothWeekActivity.activiteType) }}</p>
+                <p>{{ day.bothWeekActivity.roomName }}</p>
+              </div>
+            } @else {
+              <div class="flex w-full min-w-40 text-sm font-light tracking-tighter">
+                <div class="flex w-1/2 items-center justify-center gap-1">
+                  @if (day.oddWeekActivity) {
+                    <p>{{ day.oddWeekActivity.subjectName }}</p>
+                    <p>{{ getEventInitial(day.oddWeekActivity.activiteType) }}</p>
+                    <p>{{ day.oddWeekActivity.roomName }}</p>
+                  }
+                </div>
+                <mat-divider vertical class="h-12"></mat-divider>
+                <div class="flex w-1/2 items-center justify-center gap-1">
+                  @if (day.evenWeekActivity) {
+                    <p>{{ day.evenWeekActivity.subjectName }}</p>
+                    <p>{{ getEventInitial(day.evenWeekActivity.activiteType) }}</p>
+                    <p>{{ day.evenWeekActivity.roomName }}</p>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        </mat-list-item>
+      }
+    </mat-list>
+  </mat-card-content>
+</mat-card>

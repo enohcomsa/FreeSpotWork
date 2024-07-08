@@ -5,14 +5,32 @@
     <mat-tab label="Group">
       <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Students</h1>
       <free-spot-dynamic-chip-list [itemListSig]="groupData.studentList" itemLabelSig="student"> </free-spot-dynamic-chip-list>
+      <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Timetable</h1>
+      <div class="flex flex-wrap gap-4 lg:gap-0">
+        @for (timetableItem of groupData.timeTable; track timetableItem) {
+          <free-spot-timetable-item class="grow" [timetableItemSig]="timetableItem"></free-spot-timetable-item>
+        }
+      </div>
     </mat-tab>
     <mat-tab label="Semigroup 1">
       <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Students</h1>
       <free-spot-dynamic-chip-list [itemListSig]="groupData.studentList" itemLabelSig="student"> </free-spot-dynamic-chip-list>
+      <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Timetable</h1>
+      <div class="flex flex-wrap gap-4 lg:gap-0">
+        @for (timetableItem of groupData.timeTable; track timetableItem) {
+          <free-spot-timetable-item class="grow" [timetableItemSig]="timetableItem"></free-spot-timetable-item>
+        }
+      </div>
     </mat-tab>
     <mat-tab label="Semigroup 2">
       <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Students</h1>
       <free-spot-dynamic-chip-list [itemListSig]="groupData.studentList" itemLabelSig="student"> </free-spot-dynamic-chip-list>
+      <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Timetable</h1>
+      <div class="flex flex-wrap gap-4 lg:gap-0">
+        @for (timetableItem of groupData.timeTable; track timetableItem) {
+          <free-spot-timetable-item class="grow" [timetableItemSig]="timetableItem"></free-spot-timetable-item>
+        }
+      </div>
     </mat-tab>
   </mat-tab-group>
 </div>
