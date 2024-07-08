@@ -1,0 +1,7 @@
+<div class="container">
+  <div class="flex flex-wrap gap-4 lg:items-center lg:gap-0">
+    @for (timetableItem of groupData.timeTable; track timetableItem) {
+      <free-spot-timetable-item class="grow" [timetableItemSig]="timetableItem"></free-spot-timetable-item>
+    }
+  </div>
+</div>

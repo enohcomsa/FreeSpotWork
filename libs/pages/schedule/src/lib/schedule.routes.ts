@@ -8,7 +8,7 @@ export const scheduleRoutes: Route[] = [
         path: '',
         // canActivate:[]
         loadComponent: async () => {
-          const mod = await import('./components/schedule.component');
+          const mod = await import('./components/schedule/schedule.component');
           return mod.ScheduleComponent;
         },
       },
