@@ -18,10 +18,10 @@ import { MatButtonModule } from '@angular/material/button';
   imports: [
     CommonModule,
     FormsModule,
-    MatButtonModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
+    MatButtonModule,
     FacultyComponent,
     MatExpansionModule,
     DynamicChipListComponent,

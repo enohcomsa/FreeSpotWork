@@ -4,7 +4,7 @@
 
   <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Faculties</h1>
   <mat-accordion>
-    @for (faculty of facultyList; track faculty.name) {
+    @for (faculty of facultyList; track $index) {
       <mat-expansion-panel outline="true">
         <mat-expansion-panel-header>
           <mat-panel-title> {{ faculty.name }} </mat-panel-title>
