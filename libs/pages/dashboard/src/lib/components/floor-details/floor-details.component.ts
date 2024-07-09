@@ -51,6 +51,7 @@ export class FloorDetailsComponent {
       freeSpots: 50,
       busySpots: 10,
       unavailableSpots: 5,
+      totalSpotsNumber: 10,
     };
   }
   roomExp: Room = {
@@ -60,5 +61,6 @@ export class FloorDetailsComponent {
     freeSpots: 50,
     busySpots: 10,
     unavailableSpots: 5,
+    totalSpotsNumber: 10,
   };
 }
