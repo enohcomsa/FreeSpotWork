@@ -1,1 +1,53 @@
-<p>admin-event-card works!</p>
+<mat-card appearance="outlined" class="@container">
+  <mat-card-header class="!block">
+    <mat-card-title class="!flex items-center justify-between">
+      <p>{{ adminEventSig().name }}</p>
+      <p class="text-sm tracking-tight">{{ adminEventSig().date | date: 'MMM dd, yyyy HH:mm' }}</p>
+    </mat-card-title>
+    <mat-card-subtitle class="!flex flex-col !text-xs sm:flex-row sm:items-end sm:!text-sm">
+      <div class="flex items-end gap-1 !text-sm">
+        <mat-icon class="-ml-2 -mr-1 scale-50">location_on</mat-icon>
+        <p>{{ adminEventSig().building }}<span class="hidden sm:mx-1 sm:inline">|</span></p>
+      </div>
+      <p>{{ adminEventSig().adress }}</p>
+    </mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <mat-list class="!pb-0">
+      <mat-list-item class="!p-0">
+        <div class="flex justify-between text-xs tracking-tighter">
+          <p class="min-w-24">Room</p>
+          <div class="flex gap-4 [&>p]:w-14">
+            <p>Free desk</p>
+            <p>Assigned</p>
+            <p>Unavabile</p>
+          </div>
+        </div>
+      </mat-list-item>
+      <mat-divider></mat-divider>
+
+      <mat-list-item class="!cursor-pointer !p-0">
+        <div class="flex justify-between text-xs tracking-tighter">
+          <p class="min-w-24 truncate">{{ adminEventSig().floorList[0].name }}</p>
+          <div class="flex gap-4 [&>p]:w-14 [&>p]:text-center">
+            <p>{{ adminEventSig().floorList[0].freeSpots }}</p>
+            <p>{{ adminEventSig().floorList[0].busySpots }}</p>
+            <p>{{ adminEventSig().floorList[0].unavailableSpots }}</p>
+          </div>
+        </div>
+      </mat-list-item>
+    </mat-list>
+  </mat-card-content>
+  <mat-card-actions class="justify-between gap-4">
+    <button mat-flat-button class="grow" (click)="addingEventSig.set(true); editBuilding.emit(true)">
+      <mat-icon class="@2xs:!mr-2 @2xs:!-ml-2 !m-0">edit</mat-icon> <span class="@2xs:inline-block hidden">Edit</span>
+    </button>
+    <button mat-flat-button class="grow">
+      <mat-icon class="@2xs:!mr-2 @2xs:!-ml-2 !m-0">open_in_browser</mat-icon> <span class="@2xs:inline-block hidden">Open</span>
+    </button>
+    <button mat-flat-button class="grow">
+      <mat-icon class="@2xs:!mr-2 @2xs:!-ml-2 !m-0">delete</mat-icon> <span class="@2xs:inline-block hidden">Delete</span>
+    </button>
+  </mat-card-actions>
+</mat-card>
