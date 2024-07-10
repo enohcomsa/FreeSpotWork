@@ -1,4 +1,6 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, input, OnInit, signal, WritableSignal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -11,7 +13,15 @@ import { BookingItemComponent } from '../booking-item/booking-item.component';
 @Component({
   selector: 'free-spot-dynamic-form',
   standalone: true,
-  imports: [ReactiveFormsModule, MatCardModule, MatFormFieldModule, MatSelectModule, MatButtonModule, BookingItemComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatButtonModule,
+    BookingItemComponent,
+  ],
   templateUrl: './dynamic-form.component.html',
   styleUrl: './dynamic-form.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,11 +31,12 @@ export class DynamicFormComponent implements OnInit {
   private _destroyRef = inject(DestroyRef);
 
   eventBookingSelectedSig = input<Event>(Event.LABORATORY);
+  EVENT = Event;
 
   eventNames: string[] = ['event_efeffe', 'event_deww', 'event_eeeee', 'event_ertty', 'event_xzxz'];
   materieNames: string[] = ['materie_efeffe', 'materie_deww', 'materie_eeeee', 'materie_ertty', 'materie_xzxz'];
 
-  EVENT = Event;
+  eventList: Event[] = [Event.COURSE, Event.LABORATORY, Event.PROJECT, Event.SEMINAR, Event.SPECIAL_EVENT];
   searchForm!: FormGroup;
 
   searchActive$: WritableSignal<boolean> = signal(false);
