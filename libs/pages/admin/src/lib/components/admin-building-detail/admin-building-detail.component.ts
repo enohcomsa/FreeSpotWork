@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, ElementRef, inject, input, viewChil
 import { CommonModule } from '@angular/common';
 import { Floor, Building } from '@free-spot/models';
 import { AdminFloorCardComponent } from '../admin-floor-card/admin-floor-card.component';
-import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -25,8 +24,6 @@ import { MatInputModule } from '@angular/material/input';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminBuildingDetailComponent {
-  private _router: Router = inject(Router);
-  private _activatedRoute = inject(ActivatedRoute);
   private _formBuilder: FormBuilder = inject(FormBuilder);
 
   editFloor = viewChild<ElementRef>('editFloor');
@@ -34,7 +31,7 @@ export class AdminBuildingDetailComponent {
   buildingNameSig = input.required<string>();
 
   addingFloor = false;
-  addfloorFormControl = this._formBuilder.control('');
+  addFloorFormControl = this._formBuilder.control('');
 
   floorExp: Floor = {
     name: 'UTCN Obs ground Floor',

@@ -1,5 +1,5 @@
 <mat-chip-set>
-  @for (item of itemListSig(); track item; let last = $last) {
+  @for (item of itemListSig(); track $index; let last = $last) {
     @if (last) {
       <div class="relative flex">
         <mat-chip (click)="onDynamicNavigation(item)">
@@ -37,8 +37,8 @@
       <mat-label>New {{ itemLabelSig() }}</mat-label>
       <input type="text" matInput [formControl]="addItemFormControl" [matAutocomplete]="auto" />
       <mat-autocomplete #auto="matAutocomplete">
-        @for (user of itemListSig(); track user) {
-          <mat-option [value]="user">{{ user }}</mat-option>
+        @for (item of itemListSig(); track $index) {
+          <mat-option [value]="item">{{ item }}</mat-option>
         }
       </mat-autocomplete>
     </mat-form-field>

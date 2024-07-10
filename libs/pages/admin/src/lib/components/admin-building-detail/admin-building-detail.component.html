@@ -15,10 +15,10 @@
     @if (addingFloor) {
       <form class="flex flex-col py-4 sm:flex-row sm:items-center sm:gap-4" (ngSubmit)="onAddFloor()">
         <mat-form-field>
-          <mat-label>New building</mat-label>
-          <input type="text" matInput [formControl]="addfloorFormControl" />
+          <mat-label>New floor</mat-label>
+          <input type="text" matInput [formControl]="addFloorFormControl" />
         </mat-form-field>
-        <button mat-flat-button type="submit" class="sm:mb-5">Add building</button>
+        <button mat-flat-button type="submit" class="sm:mb-5">Add floor</button>
       </form>
     }
   </div>

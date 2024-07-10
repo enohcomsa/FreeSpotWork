@@ -1,1 +1,37 @@
-<p>admin-floor-detail works!</p>
+<div class="container">
+  <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Floor: {{ floorNameSig() }}</h1>
+  <h2 class="pb-4 pt-8 text-2xl font-bold md:pb-8 md:pt-12">Floor Rooms</h2>
+  <div class="flex flex-col gap-8 pb-4 md:grid md:grid-cols-2 xl:grid-cols-3">
+    @for (room of floorExp.roomList; track $index) {
+      <free-spot-admin-room-card
+        [adminRoomSig]="room"
+        [addingRoomSig]="addingRoom"
+        (addingRoomSigChange)="addingRoom = $event"
+        (editRoom)="onEditRoom()"
+      ></free-spot-admin-room-card>
+    }
+  </div>
+  <div #editRoom>
+    @if (addingRoom) {
+      <form
+        [formGroup]="addRoomFormGroup"
+        class="flex flex-col py-4 sm:flex-row sm:items-center sm:gap-4"
+        (ngSubmit)="onAddRoom()"
+      >
+        <mat-form-field>
+          <mat-label>New room</mat-label>
+          <input type="text" matInput formControlName="roomName" />
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Total spots</mat-label>
+          <input type="text" matInput formControlName="totalSpotsNumber" />
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Unavailable spots</mat-label>
+          <input type="text" matInput formControlName="unavailableSpots" />
+        </mat-form-field>
+        <button mat-flat-button type="submit" class="sm:mb-5">Add room</button>
+      </form>
+    }
+  </div>
+</div>

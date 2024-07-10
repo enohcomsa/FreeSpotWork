@@ -5,6 +5,7 @@
       <p><span>Rooms: </span>{{ adminFloorSig().roomList.length }}</p>
     </div>
   </mat-card-content>
+  <mat-divider></mat-divider>
   <mat-card-actions class="justify-between gap-4">
     <button mat-flat-button class="grow" (click)="addingFloorSig.set(true); editFloor.emit(true)">
       <mat-icon class="@2xs:!mr-2 @2xs:!-ml-2 !m-0">edit</mat-icon> <span class="@2xs:inline-block hidden">Edit</span>
