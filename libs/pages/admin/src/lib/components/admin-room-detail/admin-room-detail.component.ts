@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, OnInit, signal, WritableSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DynamicChipListComponent, TimetableItemComponent } from '@free-spot/ui';
 import { AdminRoomTimetableItemComponent } from '../admin-room-timetable-item/admin-room-timetable-item.component';
 import { SubjectName, WeekParity, Event, WeekDay } from '@free-spot/enums';
-import { TimetableActivityItem, TimeTableItem } from '@free-spot/models';
+import { Room, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
 
 @Component({
   selector: 'free-spot-admin-room-detail',
@@ -13,8 +13,19 @@ import { TimetableActivityItem, TimeTableItem } from '@free-spot/models';
   styleUrl: './admin-room-detail.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AdminRoomDetailComponent {
+export class AdminRoomDetailComponent implements OnInit {
   roomNameSig = input.required<string>();
+  newRoom: Room = {
+    name: '',
+    subjectList: ['aaaa' as SubjectName, 'bbb' as SubjectName, 'cccccc' as SubjectName],
+    timetable: [],
+    totalSpotsNumber: 20,
+    freeSpots: 10,
+    busySpots: 0,
+    unavailableSpots: 1,
+  };
+  roomSig: WritableSignal<Room> = signal(this.newRoom);
+
   timetableActivityMonday1: TimetableActivityItem = {
     startHour: 8,
     endHour: 10,
@@ -41,24 +52,18 @@ export class AdminRoomDetailComponent {
   ];
 
   subjectList = [
-    'enoh',
-    'dsada',
-    'dsggggg',
-    'bbbbbbbb',
-    'ffffffff',
-    'zzzzzzz',
-    'enoh',
-    'dsada',
-    'dsggggg',
-    'bbbbbbbb',
-    'ffffffff',
-    'zzzzzzz',
-    'enoh',
-    'dsada',
-    'dsggggg',
-    'bbbbbbbb',
-    'ffffffff',
-    'zzzzzzz',
+    'aaaa',
+    'bbb',
+    'cccccc',
+    'dddddddd',
+    'eeeeeee',
+    'fffff',
+    'gggg',
+    'hhhhhhhh',
+    'iiiiiii',
+    'jjjjjjj',
+    'kkkkkkk',
+    'llllllll',
   ];
 
   timetableActivityItem1: TimetableActivityItem = {
@@ -78,10 +83,29 @@ export class AdminRoomDetailComponent {
     this.getTimetableActivity(WeekDay.FRIDAY),
   ];
 
+  ngOnInit(): void {
+    this.roomSig.set({
+      name: this.roomNameSig(),
+      subjectList: ['aaaa' as SubjectName, 'bbb' as SubjectName, 'cccccc' as SubjectName],
+      timetable: [],
+      totalSpotsNumber: 20,
+      freeSpots: 10,
+      busySpots: 0,
+      unavailableSpots: 1,
+    });
+  }
+
   getTimetableActivity(weekDay: WeekDay): TimeTableItem {
     return {
       weekDay: weekDay,
       activities: [this.timetableActivityItem1],
     };
+  }
+
+  addSubject(addedSubject: string): void {
+    this.roomSig.set({
+      ...this.roomSig(),
+      subjectList: [...this.roomSig().subjectList, addedSubject as SubjectName],
+    });
   }
 }

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -34,13 +34,18 @@ export class DynamicChipListComponent<T> {
 
   itemListSig = input.required<T[]>();
   itemLabelSig = input.required<string>();
+  optionListSig = input<T[]>();
   itemKeyDysplay = input<keyof T>();
   itemDinamicRoute = input<string>('');
+  addItem = output<T>();
   addItemFormControl = this._formBuilder.control('');
   addingItem = false;
 
   onAddItem(): void {
     this.addingItem = false;
+
+    this.addItem.emit(this.getAddedItem(this.addItemFormControl.value || ''));
+    this.addItemFormControl.reset();
   }
 
   getDisplayName(item: T): string {
@@ -54,6 +59,14 @@ export class DynamicChipListComponent<T> {
   onDynamicNavigation(item: T): void {
     if (this.itemDinamicRoute() !== '') {
       this._router.navigate([this.itemDinamicRoute() + this.getDisplayName(item)], { relativeTo: this._activatedRoute });
+    }
+  }
+
+  getAddedItem(itemName: string): T {
+    if (this.itemKeyDysplay()) {
+      return this.optionListSig()?.find((addedItem) => this.getDisplayName(addedItem) === itemName) as T;
+    } else {
+      return this.optionListSig()?.find((addedItem) => addedItem === itemName) as T;
     }
   }
 }

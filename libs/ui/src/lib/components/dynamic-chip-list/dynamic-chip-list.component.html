@@ -37,8 +37,14 @@
       <mat-label>New {{ itemLabelSig() }}</mat-label>
       <input type="text" matInput [formControl]="addItemFormControl" [matAutocomplete]="auto" />
       <mat-autocomplete #auto="matAutocomplete">
-        @for (item of itemListSig(); track $index) {
-          <mat-option [value]="item">{{ getDisplayName(item) }}</mat-option>
+        @for (option of optionListSig(); track $index) {
+          <mat-option [value]="option">
+            @if (itemKeyDysplay()) {
+              {{ getDisplayName(option) }}
+            } @else {
+              {{ option }}
+            }
+          </mat-option>
         }
       </mat-autocomplete>
     </mat-form-field>
