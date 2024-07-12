@@ -25,6 +25,7 @@
       "@free-spot/schedule": ["libs/pages/schedule/src/index.ts"],
       "@free-spot/ui": ["libs/ui/src/index.ts"],
       "@free-spot/util": ["libs/util/src/index.ts"],
+      "@http-free-spot/room": ["libs/http-free-spot/room/src/index.ts"],
       "@http-free-spot/user": ["libs/http-free-spot/users/src/index.ts"]
     }
   },
