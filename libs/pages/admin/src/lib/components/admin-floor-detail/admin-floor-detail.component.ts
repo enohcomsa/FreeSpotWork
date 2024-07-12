@@ -6,6 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Floor, Room } from '@free-spot/models';
 import { AdminRoomCardComponent } from '../admin-room-card/admin-room-card.component';
+import { AdminRoomService } from '@free-spot-service/room';
 
 @Component({
   selector: 'free-spot-admin-floor-detail',
@@ -25,16 +26,17 @@ import { AdminRoomCardComponent } from '../admin-room-card/admin-room-card.compo
 })
 export class AdminFloorDetailComponent {
   private _formBuilder: FormBuilder = inject(FormBuilder);
+  private _adminRoomService: AdminRoomService = inject(AdminRoomService);
 
   editRoom = viewChild.required<ElementRef>('editRoom');
 
   floorNameSig = input.required<string>();
 
   addingRoom = false;
-  addRoomFormGroup = this._formBuilder.group({
+  addRoomFormGroup = this._formBuilder.nonNullable.group({
     roomName: [''],
-    totalSpotsNumber: [''],
-    unavailableSpots: [''],
+    totalSpotsNumber: [0],
+    unavailableSpots: [0],
   });
 
   roomList: Room[] = [
@@ -76,9 +78,30 @@ export class AdminFloorDetailComponent {
     };
   }
   onAddRoom(): void {
+    this._adminRoomService.addRoom(
+      this._createRoom(
+        this.addRoomFormGroup.controls['roomName'].value as string,
+        this.addRoomFormGroup.controls['totalSpotsNumber'].value as number,
+        this.addRoomFormGroup.controls['unavailableSpots'].value as number,
+      ),
+    );
+    this.addRoomFormGroup.reset();
     this.addingRoom = false;
   }
+
   onEditRoom(): void {
     this.editRoom()?.nativeElement.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  }
+
+  private _createRoom(roomName: string, totalSpotsNumber: number, unavailableSpots: number): Room {
+    return {
+      name: roomName,
+      subjectList: [],
+      timetable: [],
+      totalSpotsNumber: totalSpotsNumber,
+      freeSpots: totalSpotsNumber - unavailableSpots,
+      busySpots: 0,
+      unavailableSpots: unavailableSpots,
+    };
   }
 }
