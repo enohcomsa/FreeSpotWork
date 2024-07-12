@@ -1,5 +1,5 @@
 {
-  "name": "room",
+  "name": "free-spot-room-service",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/service/room/src",
   "prefix": "free-spot",
