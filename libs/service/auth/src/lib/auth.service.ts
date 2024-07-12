@@ -4,7 +4,7 @@ import { Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { AuthUser } from './models/auth-user.model';
 import { AuthResponse, UserData } from './models/auth.model';
-import { UserHttpService } from '@http-free-spot/user';
+import { HttpUserService } from '@http-free-spot/user';
 // import { AppUser } from '../shared/models/user.model';
 
 @Injectable({
@@ -13,7 +13,7 @@ import { UserHttpService } from '@http-free-spot/user';
 export class AuthService {
   private _http: HttpClient = inject(HttpClient);
   private _router: Router = inject(Router);
-  private _userHttpService: UserHttpService = inject(UserHttpService);
+  private _userHttpService: HttpUserService = inject(HttpUserService);
 
   userSignal$: WritableSignal<AuthUser | null> = signal(null);
 
@@ -25,13 +25,13 @@ export class AuthService {
           email: user.email,
           password: user.password,
           returnSecureToken: true,
-        }
+        },
       )
       .pipe(
         tap((res: AuthResponse) => {
           this._handleAuth(res.email, res.localId, res.idToken, +res.expiresIn);
           this._addUser(res.email);
-        })
+        }),
       );
   }
 
@@ -43,18 +43,18 @@ export class AuthService {
           email: user.email,
           password: user.password,
           returnSecureToken: true,
-        }
+        },
       )
       .pipe(
         tap((res: AuthResponse) => {
           this._handleAuth(res.email, res.localId, res.idToken, +res.expiresIn);
-        })
+        }),
       );
   }
 
   autoLogIn(): void {
     const user: { email: string; id: string; _token: string; _tokenExpirationDate: Date } = JSON.parse(
-      localStorage.getItem('user') as string
+      localStorage.getItem('user') as string,
     );
     if (!user) {
       return;
@@ -94,7 +94,7 @@ export class AuthService {
           const allUsers: string[] = userList || [];
           allUsers.push(email);
           this._userHttpService.storeUsers(allUsers);
-        })
+        }),
       )
       .subscribe();
   }
