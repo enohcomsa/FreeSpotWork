@@ -1,6 +1,6 @@
 {
   "$schema": "../../../node_modules/ng-packagr/ng-package.schema.json",
-  "dest": "../../../dist/libs/http-free-spot/users",
+  "dest": "../../../dist/libs/http-free-spot/user",
   "lib": {
     "entryFile": "src/index.ts"
   }

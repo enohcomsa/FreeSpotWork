@@ -1,5 +1,5 @@
 {
-  "name": "@http-free-spot/auth",
+  "name": "@http-free-spot/user",
   "version": "0.0.1",
   "peerDependencies": {
     "@angular/common": "^18.0.0",

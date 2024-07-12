@@ -1,9 +1,9 @@
 /* eslint-disable */
 export default {
-  displayName: 'http-free-spot-users',
+  displayName: 'http-free-spot-user',
   preset: '../../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  coverageDirectory: '../../../coverage/libs/http-free-spot/users',
+  coverageDirectory: '../../../coverage/libs/http-free-spot/user',
   transform: {
     '^.+\\.(ts|mjs|js|html)$': [
       'jest-preset-angular',
