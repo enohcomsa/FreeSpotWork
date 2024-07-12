@@ -1,6 +1,6 @@
 import { WritableSignal } from '@angular/core';
 
-export class SubjectArray {
+export class SignalArray {
   static addItem<T>(itemToAdd: T, signalToUpdate: WritableSignal<T[]>): void {
     signalToUpdate.set([...signalToUpdate(), itemToAdd]);
   }

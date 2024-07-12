@@ -13,7 +13,7 @@ import { HttpUserService } from '@http-free-spot/user';
 export class AuthService {
   private _http: HttpClient = inject(HttpClient);
   private _router: Router = inject(Router);
-  private _userHttpService: HttpUserService = inject(HttpUserService);
+  private _httpUserService: HttpUserService = inject(HttpUserService);
 
   userSignal$: WritableSignal<AuthUser | null> = signal(null);
 
@@ -93,7 +93,7 @@ export class AuthService {
         tap((userList: string[] | undefined) => {
           const allUsers: string[] = userList || [];
           allUsers.push(email);
-          this._userHttpService.storeUsers(allUsers);
+          this._httpUserService.storeUserList(allUsers);
         }),
       )
       .subscribe();

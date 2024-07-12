@@ -1,1 +1,1 @@
-export { SubjectArray } from './lib/subject-array.util';
+export { SignalArray } from './lib/signal-array.util';

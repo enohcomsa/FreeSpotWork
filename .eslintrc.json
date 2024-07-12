@@ -14,23 +14,34 @@
             "depConstraints": [
               {
                 "sourceTag": "scope:app",
-                "onlyDependOnLibsWithTags": ["scope:lib","scope:service","scope:http-service","scope:ui","scope:util","scope:model"]
+                "onlyDependOnLibsWithTags": [
+                  "scope:lib",
+                  "scope:service",
+                  "scope:http-service",
+                  "scope:ui",
+                  "scope:util",
+                  "scope:model"
+                ]
               },
               {
                 "sourceTag": "scope:lib",
-                "onlyDependOnLibsWithTags": ["scope:service","scope:http-service","scope:ui","scope:util","scope:model"]
+                "onlyDependOnLibsWithTags": ["scope:service", "scope:http-service", "scope:ui", "scope:util", "scope:model"]
               },
               {
                 "sourceTag": "scope:service",
-                "onlyDependOnLibsWithTags": ["scope:http-service","scope:util","scope:model"]
+                "onlyDependOnLibsWithTags": ["scope:http-service", "scope:util", "scope:model"]
+              },
+              {
+                "sourceTag": "scope:http-service",
+                "onlyDependOnLibsWithTags": ["scope:model"]
               },
               {
                 "sourceTag": "scope:ui",
-                "onlyDependOnLibsWithTags": ["scope:service","scope:ui","scope:util","scope:model"]
+                "onlyDependOnLibsWithTags": ["scope:service", "scope:ui", "scope:util", "scope:model"]
               },
               {
                 "sourceTag": "scope:util",
-                "onlyDependOnLibsWithTags": ["scope:util","scope:model"]
+                "onlyDependOnLibsWithTags": ["scope:util", "scope:model"]
               },
               {
                 "sourceTag": "scope:model",
@@ -60,3 +71,4 @@
     }
   ]
 }
+

@@ -17,7 +17,6 @@ import { AdminRoomCardComponent } from '../admin-room-card/admin-room-card.compo
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-
     AdminRoomCardComponent,
   ],
   templateUrl: './admin-floor-detail.component.html',
