@@ -1,6 +1,8 @@
 {
   "name": "@free-spot/util",
   "version": "0.0.1",
-  "peerDependencies": {},
+  "peerDependencies": {
+    "@angular/core": "~18.0.0"
+  },
   "sideEffects": false
 }
