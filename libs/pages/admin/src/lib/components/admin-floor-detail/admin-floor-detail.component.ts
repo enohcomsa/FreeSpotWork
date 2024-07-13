@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, inject, input, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, input, OnInit, viewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -8,6 +8,7 @@ import { Floor, Room, TimeTableItem } from '@free-spot/models';
 import { AdminRoomCardComponent } from '../admin-room-card/admin-room-card.component';
 import { AdminRoomService } from '@free-spot-service/room';
 import { WeekDay } from '@free-spot/enums';
+import { AddItemCardComponent } from '@free-spot/ui';
 
 @Component({
   selector: 'free-spot-admin-floor-detail',
@@ -20,12 +21,13 @@ import { WeekDay } from '@free-spot/enums';
     MatInputModule,
     MatButtonModule,
     AdminRoomCardComponent,
+    AddItemCardComponent,
   ],
   templateUrl: './admin-floor-detail.component.html',
   styleUrl: './admin-floor-detail.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AdminFloorDetailComponent {
+export class AdminFloorDetailComponent implements OnInit {
   private _formBuilder: FormBuilder = inject(FormBuilder);
   private _adminRoomService: AdminRoomService = inject(AdminRoomService);
 
@@ -75,6 +77,10 @@ export class AdminFloorDetailComponent {
     unavailableSpots: 10,
   };
 
+  ngOnInit(): void {
+    this._adminRoomService.init();
+  }
+
   getRoom(number: number): Room {
     return {
       name: 'Observator 51' + number,
@@ -86,6 +92,12 @@ export class AdminFloorDetailComponent {
       totalSpotsNumber: 10,
     };
   }
+
+  onCreateRoom(): void {
+    this.addingRoom = true;
+    this.editRoom()?.nativeElement.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  }
+
   onAddRoom(): void {
     // console.log(
     //   this._createRoom(
