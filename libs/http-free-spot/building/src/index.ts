@@ -1,1 +1,1 @@
-export * from './lib/http-free-spot-building/http-free-spot-building.component';
+export { HttpBuildingService } from './lib/http-building.service';

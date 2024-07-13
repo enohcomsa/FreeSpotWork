@@ -1,1 +1,1 @@
-export * from './lib/http-free-spot-floor/http-free-spot-floor.component';
+export { HttpFloorService } from './lib/http-floor.service';
