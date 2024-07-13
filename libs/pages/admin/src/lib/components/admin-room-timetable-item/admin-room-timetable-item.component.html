@@ -1,15 +1,17 @@
 <mat-chip-set>
-  @for (timetableItem of timetableItemSig().activities; track $index; let last = $last) {
+  @for (timetableItemActivity of timetableItemSig().activities; track $index; let last = $last) {
     @if (last) {
       <div class="relative flex">
         <mat-chip removable="true">
           <div class="flex gap-2">
-            <p>{{ getTimeInterval(timetableItem.startHour) }}</p>
-            <p>{{ timetableItem.subjectName }}</p>
-            <p>{{ timetableItem.activiteType }}</p>
-            <p>{{ timetableItem.roomName }}</p>
+            <p>{{ getTimeInterval(timetableItemActivity.startHour) }}</p>
+            <p>{{ timetableItemActivity.subjectName }}</p>
+            <p>{{ timetableItemActivity.activiteType }}</p>
+            <p>{{ timetableItemActivity.roomName }}</p>
           </div>
-          <mat-icon matChipRemove>cancel</mat-icon>
+          <button matChipRemove (click)="onRemoveTimetableActivity(timetableItemActivity)">
+            <mat-icon>cancel</mat-icon>
+          </button>
         </mat-chip>
         <button mat-icon-button class="ml-2" (click)="addingTimetableActivity = true">
           <mat-icon class="mb-2">add </mat-icon>
@@ -18,10 +20,10 @@
     } @else {
       <mat-chip removable="true">
         <div class="flex gap-2">
-          <p>{{ getTimeInterval(timetableItem.startHour) }}</p>
-          <p>{{ timetableItem.subjectName }}</p>
-          <p>{{ timetableItem.activiteType }}</p>
-          <p>{{ timetableItem.roomName }}</p>
+          <p>{{ getTimeInterval(timetableItemActivity.startHour) }}</p>
+          <p>{{ timetableItemActivity.subjectName }}</p>
+          <p>{{ timetableItemActivity.activiteType }}</p>
+          <p>{{ timetableItemActivity.roomName }}</p>
         </div>
         <mat-icon matChipRemove>cancel</mat-icon>
       </mat-chip>

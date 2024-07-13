@@ -4,9 +4,10 @@ import { FormsModule, ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { Floor, Room } from '@free-spot/models';
+import { Floor, Room, TimeTableItem } from '@free-spot/models';
 import { AdminRoomCardComponent } from '../admin-room-card/admin-room-card.component';
 import { AdminRoomService } from '@free-spot-service/room';
+import { WeekDay } from '@free-spot/enums';
 
 @Component({
   selector: 'free-spot-admin-floor-detail',
@@ -27,6 +28,14 @@ import { AdminRoomService } from '@free-spot-service/room';
 export class AdminFloorDetailComponent {
   private _formBuilder: FormBuilder = inject(FormBuilder);
   private _adminRoomService: AdminRoomService = inject(AdminRoomService);
+
+  roomEmptyTimetable: TimeTableItem[] = [
+    { weekDay: WeekDay.MONDAY, activities: [] },
+    { weekDay: WeekDay.TUESDAY, activities: [] },
+    { weekDay: WeekDay.WEDNESDAY, activities: [] },
+    { weekDay: WeekDay.THURSDAY, activities: [] },
+    { weekDay: WeekDay.FRIDAY, activities: [] },
+  ];
 
   editRoom = viewChild.required<ElementRef>('editRoom');
 
@@ -78,23 +87,23 @@ export class AdminFloorDetailComponent {
     };
   }
   onAddRoom(): void {
-    console.log(
-      this._createRoom(
-        this.addRoomFormGroup.controls['roomName'].value as string,
-        this.addRoomFormGroup.controls['totalSpotsNumber'].value as number,
-        this.addRoomFormGroup.controls['unavailableSpots'].value as number,
-      ),
-    );
-
-    // this._adminRoomService.addRoom(
+    // console.log(
     //   this._createRoom(
     //     this.addRoomFormGroup.controls['roomName'].value as string,
     //     this.addRoomFormGroup.controls['totalSpotsNumber'].value as number,
     //     this.addRoomFormGroup.controls['unavailableSpots'].value as number,
     //   ),
     // );
-    // this.addRoomFormGroup.reset();
-    // this.addingRoom = false;
+
+    this._adminRoomService.addRoom(
+      this._createRoom(
+        this.addRoomFormGroup.controls['roomName'].value as string,
+        this.addRoomFormGroup.controls['totalSpotsNumber'].value as number,
+        this.addRoomFormGroup.controls['unavailableSpots'].value as number,
+      ),
+    );
+    this.addRoomFormGroup.reset();
+    this.addingRoom = false;
   }
 
   onEditRoom(): void {
@@ -105,7 +114,7 @@ export class AdminFloorDetailComponent {
     return {
       name: roomName,
       subjectList: [],
-      timetable: [],
+      timetable: this.roomEmptyTimetable,
       totalSpotsNumber: totalSpotsNumber,
       freeSpots: totalSpotsNumber - unavailableSpots,
       busySpots: 0,

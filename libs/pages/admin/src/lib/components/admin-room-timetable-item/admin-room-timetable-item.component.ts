@@ -8,7 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { TimeTableItem } from '@free-spot/models';
+import { TimetableActivityItem, TimeTableItem } from '@free-spot/models';
 import { Event, WeekParity } from '@free-spot/enums';
 
 @Component({
@@ -33,17 +33,18 @@ import { Event, WeekParity } from '@free-spot/enums';
 export class AdminRoomTimetableItemComponent implements OnInit {
   private _formBuilder: FormBuilder = inject(FormBuilder);
 
+  roomNameSig = input.required<string>();
   timetableItemSig = model.required<TimeTableItem>();
   subjectListSig = input.required<string[]>();
 
   startHourList: number[] = [8, 10, 12, 14, 16, 18];
-  eventList: Event[] = [Event.COURSE, Event.LABORATORY, Event.PROJECT];
-  weekParityList: WeekParity[] = [WeekParity.ODD, WeekParity.EVEN, WeekParity.BOTH];
+  eventList: Event[] = Object.values(Event).filter((event: Event) => event !== Event.SPECIAL_EVENT);
+  weekParityList: WeekParity[] = Object.values(WeekParity);
   addTimetableActivityFormGroup!: FormGroup;
   addingTimetableActivity = false;
 
   ngOnInit(): void {
-    this.addTimetableActivityFormGroup = this._formBuilder.group({
+    this.addTimetableActivityFormGroup = this._formBuilder.nonNullable.group({
       startHour: [this.startHourList[0]],
       subjectName: [this.subjectListSig()[0]],
       activiteType: [Event.COURSE],
@@ -71,6 +72,31 @@ export class AdminRoomTimetableItemComponent implements OnInit {
   }
 
   onAddTimetableActivity(): void {
+    const newTimetableActivity: TimetableActivityItem = {
+      startHour: this.addTimetableActivityFormGroup.controls['startHour'].value,
+      endHour: this.addTimetableActivityFormGroup.controls['startHour'].value + 2,
+      subjectName: this.addTimetableActivityFormGroup.controls['subjectName'].value,
+      roomName: this.roomNameSig(),
+      activiteType: this.addTimetableActivityFormGroup.controls['activiteType'].value,
+      weekParity: this.addTimetableActivityFormGroup.controls['weekParity'].value,
+    };
+
+    this.timetableItemSig.set({
+      ...this.timetableItemSig(),
+      activities: this.timetableItemSig().activities
+        ? [...this.timetableItemSig().activities, newTimetableActivity]
+        : [newTimetableActivity],
+    });
+    this.addTimetableActivityFormGroup.reset();
     this.addingTimetableActivity = false;
+  }
+
+  onRemoveTimetableActivity(removedTimetableActivity: TimetableActivityItem): void {
+    this.timetableItemSig.set({
+      ...this.timetableItemSig(),
+      activities: this.timetableItemSig().activities.filter(
+        (timetableActivity: TimetableActivityItem) => timetableActivity !== removedTimetableActivity,
+      ),
+    });
   }
 }

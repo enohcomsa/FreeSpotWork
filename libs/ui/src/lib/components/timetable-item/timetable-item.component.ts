@@ -28,28 +28,30 @@ export class TimetableItemComponent implements OnInit {
   ];
 
   ngOnInit(): void {
-    this.timetableItemSig().activities.forEach((activity: TimetableActivityItem) => {
-      switch (activity.startHour) {
-        case 8:
-          this._addActivity(activity, 0);
-          break;
-        case 10:
-          this._addActivity(activity, 1);
-          break;
-        case 12:
-          this._addActivity(activity, 2);
-          break;
-        case 14:
-          this._addActivity(activity, 3);
-          break;
-        case 16:
-          this._addActivity(activity, 4);
-          break;
-        case 18:
-          this._addActivity(activity, 5);
-          break;
-      }
-    });
+    if (this.timetableItemSig().activities) {
+      this.timetableItemSig().activities.forEach((activity: TimetableActivityItem) => {
+        switch (activity.startHour) {
+          case 8:
+            this._addActivity(activity, 0);
+            break;
+          case 10:
+            this._addActivity(activity, 1);
+            break;
+          case 12:
+            this._addActivity(activity, 2);
+            break;
+          case 14:
+            this._addActivity(activity, 3);
+            break;
+          case 16:
+            this._addActivity(activity, 4);
+            break;
+          case 18:
+            this._addActivity(activity, 5);
+            break;
+        }
+      });
+    }
   }
 
   getEventInitial(event: Event): string {

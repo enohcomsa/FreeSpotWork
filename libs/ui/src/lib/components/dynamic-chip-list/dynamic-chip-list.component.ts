@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, model } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -32,21 +32,24 @@ export class DynamicChipListComponent<T> {
   private _router: Router = inject(Router);
   private _activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 
-  itemListSig = input.required<T[]>();
+  itemListSig = model.required<T[]>();
   itemLabelSig = input.required<string>();
   optionListSig = input<T[]>();
   itemKeyDysplay = input<keyof T>();
   itemDinamicRoute = input<string>('');
-  addItem = output<T>();
-  removeItem = output<T>();
-  addItemFormControl = this._formBuilder.control('');
+  // addItem = output<T>();
+  // removeItem = output<T>();
+  addItemFormControl = this._formBuilder.nonNullable.control('');
   addingItem = false;
 
   onAddItem(): void {
     this.addingItem = false;
-
-    this.addItem.emit(this.getAddedItem(this.addItemFormControl.value || ''));
+    this.itemListSig.set([...this.itemListSig(), this.addItemFormControl.value as T]);
     this.addItemFormControl.reset();
+  }
+
+  onRemoveItem(removedItem: T): void {
+    this.itemListSig.set(this.itemListSig().filter((item: T) => item !== removedItem));
   }
 
   getDisplayName(item: T): string {
