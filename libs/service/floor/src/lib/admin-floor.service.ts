@@ -35,4 +35,9 @@ export class AdminFloorService {
     SignalArrayUtil.replaceItem(oldFloor, this._floorListSig, updatedFloor);
     this._httpFloorService.storeFloorList(this._floorListSig());
   }
+
+  deleteFloor(deletedFloor: Floor): void {
+    SignalArrayUtil.deleteItem(deletedFloor, this._floorListSig);
+    this._httpFloorService.storeFloorList(this._floorListSig());
+  }
 }

@@ -2,23 +2,31 @@
   <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Building: {{ buildingNameSig() }}</h1>
   <h2 class="pb-4 pt-8 text-2xl font-bold md:pb-8 md:pt-12">Building floors</h2>
   <div class="flex flex-col gap-8 pb-4 md:grid md:grid-cols-2 xl:grid-cols-3">
-    @for (floor of buildig.floorList; track floor) {
+    @for (floor of buildingSig().floorList; track floor.name) {
       <free-spot-admin-floor-card
         [adminFloorSig]="floor"
         [addingFloorSig]="addingFloor"
         (addingFloorSigChange)="addingFloor = $event"
-        (editFloor)="onEditFloor()"
+        (editFloor)="onEditingFloor($event)"
+        (deleteFloor)="onDeleteFloor($event)"
       ></free-spot-admin-floor-card>
     }
+    <free-spot-add-item-card
+      class="h-24 md:h-full md:min-h-32 md:place-self-start"
+      (click)="onAddingFloor()"
+    ></free-spot-add-item-card>
   </div>
-  <div #editFloor>
+  <div #editFloor class="h-auto min-h-24">
     @if (addingFloor) {
-      <form class="flex flex-col py-4 sm:flex-row sm:items-center sm:gap-4" (ngSubmit)="onAddFloor()">
+      <form
+        class="flex flex-col py-4 sm:flex-row sm:items-center sm:gap-4"
+        (ngSubmit)="editingFloor ? onEditFloor() : onAddFloor()"
+      >
         <mat-form-field>
           <mat-label>New floor</mat-label>
           <input type="text" matInput [formControl]="addFloorFormControl" />
         </mat-form-field>
-        <button mat-flat-button type="submit" class="sm:mb-5">Add floor</button>
+        <button mat-flat-button type="submit" class="sm:mb-5">{{ editingFloor ? 'Edit floor' : 'Add floor' }}</button>
       </form>
     }
   </div>

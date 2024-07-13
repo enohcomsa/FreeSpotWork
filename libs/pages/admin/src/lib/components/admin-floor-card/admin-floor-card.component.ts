@@ -20,9 +20,9 @@ export class AdminFloorCardComponent {
   private _activatedRoute = inject(ActivatedRoute);
 
   adminFloorSig = input.required<Floor>();
-
   addingFloorSig = model.required<boolean>();
-  editFloor = output<boolean>();
+  editFloor = output<Floor>();
+  deleteFloor = output<Floor>();
 
   onOpenClick(): void {
     this._router.navigate([this.adminFloorSig().name], { relativeTo: this._activatedRoute });

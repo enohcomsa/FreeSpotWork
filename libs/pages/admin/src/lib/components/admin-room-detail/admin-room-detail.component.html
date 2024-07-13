@@ -8,7 +8,7 @@
     (itemListSigChange)="onSubjectListChange($event)"
   ></free-spot-dynamic-chip-list>
   <h2 class="pb-4 pt-8 text-2xl font-bold md:pb-8 md:pt-12">Room timetable items</h2>
-  @for (roomTimetableItem of roomSig().timetable; track $index) {
+  @for (roomTimetableItem of roomSig().timetable; track roomTimetableItem.weekDay) {
     <h2 class="pb-4 pt-8 text-xl font-bold md:pb-8 md:pt-12">{{ roomTimetableItem.weekDay }}</h2>
     <free-spot-admin-room-timetable-item
       class="grow"
@@ -21,7 +21,7 @@
 
   <h2 class="pb-4 pt-8 text-2xl font-bold md:pb-8 md:pt-12">Room timetable</h2>
   <div class="flex flex-wrap gap-4 lg:items-center lg:gap-0">
-    @for (timetableItem of roomSig().timetable; track timetableItem) {
+    @for (timetableItem of roomSig().timetable; track timetableItem.weekDay) {
       <free-spot-timetable-item class="grow" [timetableItemSig]="timetableItem"></free-spot-timetable-item>
     }
   </div>
