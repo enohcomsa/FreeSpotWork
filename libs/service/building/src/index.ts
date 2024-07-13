@@ -1,1 +1,1 @@
-export * from './lib/free-spot-building/free-spot-building.component';
+export { AdminBuildingService } from './lib/admin-building.service';

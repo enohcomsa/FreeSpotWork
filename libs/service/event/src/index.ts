@@ -1,1 +1,1 @@
-export * from './lib/free-spot-event/free-spot-event.component';
+export { AdminEventService } from './lib/admin-event.service';

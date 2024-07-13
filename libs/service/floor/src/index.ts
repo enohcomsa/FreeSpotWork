@@ -1,1 +1,1 @@
-export * from './lib/free-spot-floor/free-spot-floor.component';
+export { AdminFloorService } from './lib/admin-floor.service';
