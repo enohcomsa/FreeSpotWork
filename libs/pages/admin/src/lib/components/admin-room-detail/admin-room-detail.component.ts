@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, Component, input, OnInit, signal, WritableSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, OnInit, Signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DynamicChipListComponent, TimetableItemComponent } from '@free-spot/ui';
 import { AdminRoomTimetableItemComponent } from '../admin-room-timetable-item/admin-room-timetable-item.component';
 import { SubjectName, WeekParity, Event, WeekDay } from '@free-spot/enums';
 import { Room, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
+import { AdminRoomService } from '@free-spot-service/room';
 
 @Component({
   selector: 'free-spot-admin-room-detail',
@@ -14,7 +15,11 @@ import { Room, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminRoomDetailComponent implements OnInit {
+  private _adminRoomService: AdminRoomService = inject(AdminRoomService);
+
   roomNameSig = input.required<string>();
+  roomSig!: Signal<Room>;
+
   newRoom: Room = {
     name: '',
     subjectList: ['aaaa' as SubjectName, 'bbb' as SubjectName, 'cccccc' as SubjectName],
@@ -24,7 +29,6 @@ export class AdminRoomDetailComponent implements OnInit {
     busySpots: 0,
     unavailableSpots: 1,
   };
-  roomSig: WritableSignal<Room> = signal(this.newRoom);
 
   timetableActivityMonday1: TimetableActivityItem = {
     startHour: 8,
@@ -84,15 +88,18 @@ export class AdminRoomDetailComponent implements OnInit {
   ];
 
   ngOnInit(): void {
-    this.roomSig.set({
-      name: this.roomNameSig(),
-      subjectList: ['aaaa' as SubjectName, 'bbb' as SubjectName, 'cccccc' as SubjectName],
-      timetable: [],
-      totalSpotsNumber: 20,
-      freeSpots: 10,
-      busySpots: 0,
-      unavailableSpots: 1,
-    });
+    this._adminRoomService.init();
+    this.roomSig = this._adminRoomService.getRoomByName(this.roomNameSig());
+
+    // this.roomSig.set({
+    //   name: this.roomNameSig(),
+    //   subjectList: ['aaaa' as SubjectName, 'bbb' as SubjectName, 'cccccc' as SubjectName],
+    //   timetable: [],
+    //   totalSpotsNumber: 20,
+    //   freeSpots: 10,
+    //   busySpots: 0,
+    //   unavailableSpots: 1,
+    // });
   }
 
   getTimetableActivity(weekDay: WeekDay): TimeTableItem {
@@ -102,10 +109,21 @@ export class AdminRoomDetailComponent implements OnInit {
     };
   }
 
-  addSubject(addedSubject: string): void {
-    this.roomSig.set({
+  onAddSubject(addedSubject: string): void {
+    const updatedRoom: Room = {
       ...this.roomSig(),
-      subjectList: [...this.roomSig().subjectList, addedSubject as SubjectName],
-    });
+      subjectList: this.roomSig().subjectList
+        ? [...this.roomSig().subjectList, addedSubject as SubjectName]
+        : [addedSubject as SubjectName],
+    };
+    this._adminRoomService.updateRoom(this.roomSig(), updatedRoom);
+  }
+
+  onRemoveSubject(removedSubject: string): void {
+    const updatedRoom: Room = {
+      ...this.roomSig(),
+      subjectList: this.roomSig().subjectList.filter((subject: SubjectName) => subject !== (removedSubject as SubjectName)),
+    };
+    this._adminRoomService.updateRoom(this.roomSig(), updatedRoom);
   }
 }

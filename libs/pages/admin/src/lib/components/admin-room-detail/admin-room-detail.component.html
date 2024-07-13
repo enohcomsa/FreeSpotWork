@@ -5,7 +5,8 @@
     [optionListSig]="subjectList"
     [itemListSig]="roomSig().subjectList"
     itemLabelSig="subject"
-    (addItem)="addSubject($event)"
+    (addItem)="onAddSubject($event)"
+    (removeItem)="onRemoveSubject($event)"
   ></free-spot-dynamic-chip-list>
   <h2 class="pb-4 pt-8 text-2xl font-bold md:pb-8 md:pt-12">Room timetable items</h2>
   @for (roomTimetableItem of roomTimetable; track $index) {

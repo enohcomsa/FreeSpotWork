@@ -1,6 +1,6 @@
-import { inject, Injectable, signal, WritableSignal } from '@angular/core';
+import { computed, inject, Injectable, Signal, signal, WritableSignal } from '@angular/core';
 import { Room } from '@free-spot/models';
-import { SignalArray } from '@free-spot/util';
+import { SignalArrayUtil } from '@free-spot/util';
 import { HttpRoomService } from '@http-free-spot/room';
 import { take } from 'rxjs';
 
@@ -22,17 +22,17 @@ export class AdminRoomService {
       });
   }
 
-  getRoomByName(roomName: string): Room {
-    return this.roomListSig().find((room: Room) => room.name === roomName) || ({} as Room);
+  getRoomByName(roomName: string): Signal<Room> {
+    return computed(() => this.roomListSig().find((room: Room) => room.name === roomName) || ({} as Room));
   }
 
   addRoom(newRoom: Room): void {
-    SignalArray.addItem(newRoom, this._roomListSig);
+    SignalArrayUtil.addItem(newRoom, this._roomListSig);
     this._httpRoomService.storeRoomList(this._roomListSig());
   }
 
   updateRoom(oldRoom: Room, updatedRoom: Room): void {
-    SignalArray.replaceItem(oldRoom, this._roomListSig, updatedRoom);
+    SignalArrayUtil.replaceItem(oldRoom, this._roomListSig, updatedRoom);
     this._httpRoomService.storeRoomList(this._roomListSig());
   }
 }

@@ -1,1 +1,1 @@
-export { SignalArray } from './lib/signal-array.util';
+export { SignalArrayUtil } from './lib/signal-array.util';

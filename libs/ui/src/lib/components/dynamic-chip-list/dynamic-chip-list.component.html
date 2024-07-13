@@ -10,7 +10,9 @@
               <p>{{ item }}</p>
             }
           </div>
-          <mat-icon matChipRemove>cancel</mat-icon>
+          <button matChipRemove (click)="removeItem.emit(item)">
+            <mat-icon>cancel</mat-icon>
+          </button>
         </mat-chip>
         <button mat-icon-button class="ml-2" (click)="addingItem = true">
           <mat-icon class="mb-2">add </mat-icon>
@@ -25,9 +27,18 @@
             <p>{{ item }}</p>
           }
         </div>
-        <mat-icon matChipRemove>cancel</mat-icon>
+        <button matChipRemove (click)="removeItem.emit(item)">
+          <mat-icon>cancel</mat-icon>
+        </button>
       </mat-chip>
     }
+  } @empty {
+    <div class="relative flex">
+      <mat-chip> No items added yet </mat-chip>
+      <button mat-icon-button class="ml-2" (click)="addingItem = true">
+        <mat-icon class="mb-2">add </mat-icon>
+      </button>
+    </div>
   }
 </mat-chip-set>
 

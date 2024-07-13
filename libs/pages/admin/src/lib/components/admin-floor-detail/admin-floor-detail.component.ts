@@ -78,15 +78,23 @@ export class AdminFloorDetailComponent {
     };
   }
   onAddRoom(): void {
-    this._adminRoomService.addRoom(
+    console.log(
       this._createRoom(
         this.addRoomFormGroup.controls['roomName'].value as string,
         this.addRoomFormGroup.controls['totalSpotsNumber'].value as number,
         this.addRoomFormGroup.controls['unavailableSpots'].value as number,
       ),
     );
-    this.addRoomFormGroup.reset();
-    this.addingRoom = false;
+
+    // this._adminRoomService.addRoom(
+    //   this._createRoom(
+    //     this.addRoomFormGroup.controls['roomName'].value as string,
+    //     this.addRoomFormGroup.controls['totalSpotsNumber'].value as number,
+    //     this.addRoomFormGroup.controls['unavailableSpots'].value as number,
+    //   ),
+    // );
+    // this.addRoomFormGroup.reset();
+    // this.addingRoom = false;
   }
 
   onEditRoom(): void {
