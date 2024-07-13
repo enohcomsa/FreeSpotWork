@@ -37,8 +37,6 @@ export class DynamicChipListComponent<T> {
   optionListSig = input<T[]>();
   itemKeyDysplay = input<keyof T>();
   itemDinamicRoute = input<string>('');
-  // addItem = output<T>();
-  // removeItem = output<T>();
   addItemFormControl = this._formBuilder.nonNullable.control('');
   addingItem = false;
 

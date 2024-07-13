@@ -3,7 +3,7 @@
   <h2 class="pb-4 pt-8 text-2xl font-bold md:pb-8 md:pt-12">Room subjects</h2>
   <free-spot-dynamic-chip-list
     [optionListSig]="subjectList"
-    [itemListSig]="roomSig().subjectList"
+    [itemListSig]="roomSig().subjectList ? roomSig().subjectList : []"
     itemLabelSig="subject"
     (itemListSigChange)="onSubjectListChange($event)"
   ></free-spot-dynamic-chip-list>
@@ -13,7 +13,7 @@
     <free-spot-admin-room-timetable-item
       class="grow"
       [roomNameSig]="roomNameSig()"
-      [subjectListSig]="roomSig().subjectList"
+      [subjectListSig]="roomSig().subjectList ? roomSig().subjectList : []"
       [timetableItemSig]="roomTimetableItem"
       (timetableItemSigChange)="onTimetableItemChange($event)"
     ></free-spot-admin-room-timetable-item>
