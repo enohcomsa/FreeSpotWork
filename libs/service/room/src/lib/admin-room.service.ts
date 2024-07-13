@@ -35,4 +35,9 @@ export class AdminRoomService {
     SignalArrayUtil.replaceItem(oldRoom, this._roomListSig, updatedRoom);
     this._httpRoomService.storeRoomList(this._roomListSig());
   }
+
+  deleteRoom(deletedRoom: Room): void {
+    SignalArrayUtil.deleteItem(deletedRoom, this._roomListSig);
+    this._httpRoomService.storeRoomList(this._roomListSig());
+  }
 }

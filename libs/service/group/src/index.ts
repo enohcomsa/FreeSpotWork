@@ -1,1 +1,1 @@
-export { GroupService } from './lib/group.service';
+export { AdminGroupService } from './lib/admin-group.service';

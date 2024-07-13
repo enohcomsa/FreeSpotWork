@@ -20,9 +20,9 @@ export class AdminRoomCardComponent {
   private _activatedRoute = inject(ActivatedRoute);
 
   adminRoomSig = input.required<Room>();
-
   addingRoomSig = model.required<boolean>();
-  editRoom = output<boolean>();
+  editRoom = output<Room>();
+  deleteRoom = output<Room>();
 
   onOpenClick(): void {
     this._router.navigate([this.adminRoomSig().name], { relativeTo: this._activatedRoute });

@@ -2,17 +2,18 @@
   <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Floor: {{ floorNameSig() }}</h1>
   <h2 class="pb-4 pt-8 text-2xl font-bold md:pb-8 md:pt-12">Floor Rooms</h2>
   <div class="flex flex-col gap-8 pb-4 md:grid md:auto-rows-min md:grid-cols-2 xl:grid-cols-3">
-    @for (room of floorExp.roomList; track $index) {
+    @for (room of floorSig().roomList; track room.name) {
       <free-spot-admin-room-card
         [adminRoomSig]="room"
         [addingRoomSig]="addingRoom"
         (addingRoomSigChange)="addingRoom = $event"
-        (editRoom)="onEditRoom()"
+        (editRoom)="onEditingRoom($event)"
+        (deleteRoom)="onDeleteRoom($event)"
       ></free-spot-admin-room-card>
     }
     <free-spot-add-item-card
       class="h-24 md:h-full md:min-h-32 md:place-self-start"
-      (click)="onCreateRoom()"
+      (click)="onAddingRoom()"
     ></free-spot-add-item-card>
   </div>
   <div #editRoom class="h-auto min-h-24">
@@ -20,7 +21,7 @@
       <form
         [formGroup]="addRoomFormGroup"
         class="flex flex-col py-4 sm:flex-row sm:items-center sm:gap-4"
-        (ngSubmit)="onAddRoom()"
+        (ngSubmit)="editingRoom ? onEditRoom() : onAddRoom()"
       >
         <mat-form-field>
           <mat-label>New room</mat-label>
@@ -34,7 +35,7 @@
           <mat-label>Unavailable spots</mat-label>
           <input type="number" matInput formControlName="unavailableSpots" />
         </mat-form-field>
-        <button mat-flat-button type="submit" class="sm:mb-5">Add room</button>
+        <button mat-flat-button type="submit" class="sm:mb-5">{{ editingRoom ? 'Edit room' : 'Add room' }}</button>
       </form>
     }
   </div>

@@ -2,7 +2,7 @@ import { WritableSignal } from '@angular/core';
 
 export class SignalArrayUtil {
   static addItem<T>(itemToAdd: T, signalToUpdate: WritableSignal<T[]>): void {
-    signalToUpdate.set([...signalToUpdate(), itemToAdd]);
+    signalToUpdate.set(signalToUpdate() ? [...signalToUpdate(), itemToAdd] : [itemToAdd]);
   }
 
   static deleteItem<T>(itemToDelete: T, signalToUpdate: WritableSignal<T[]>): void {

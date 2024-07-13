@@ -1,4 +1,15 @@
-import { ChangeDetectionStrategy, Component, ElementRef, inject, input, OnInit, viewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  inject,
+  input,
+  OnInit,
+  signal,
+  Signal,
+  viewChild,
+  WritableSignal,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -9,6 +20,7 @@ import { AdminRoomCardComponent } from '../admin-room-card/admin-room-card.compo
 import { AdminRoomService } from '@free-spot-service/room';
 import { WeekDay } from '@free-spot/enums';
 import { AddItemCardComponent } from '@free-spot/ui';
+import { AdminFloorService } from '@free-spot-service/floor';
 
 @Component({
   selector: 'free-spot-admin-floor-detail',
@@ -30,7 +42,20 @@ import { AddItemCardComponent } from '@free-spot/ui';
 export class AdminFloorDetailComponent implements OnInit {
   private _formBuilder: FormBuilder = inject(FormBuilder);
   private _adminRoomService: AdminRoomService = inject(AdminRoomService);
+  private _adminFloorService: AdminFloorService = inject(AdminFloorService);
 
+  editRoom = viewChild.required<ElementRef>('editRoom');
+  floorNameSig = input.required<string>();
+  floorSig!: Signal<Floor>;
+  oldRoomSig: WritableSignal<Room> = signal({} as Room);
+
+  addingRoom = false;
+  editingRoom = false;
+  addRoomFormGroup = this._formBuilder.nonNullable.group({
+    roomName: [''],
+    totalSpotsNumber: [0],
+    unavailableSpots: [0],
+  });
   roomEmptyTimetable: TimeTableItem[] = [
     { weekDay: WeekDay.MONDAY, activities: [] },
     { weekDay: WeekDay.TUESDAY, activities: [] },
@@ -39,87 +64,86 @@ export class AdminFloorDetailComponent implements OnInit {
     { weekDay: WeekDay.FRIDAY, activities: [] },
   ];
 
-  editRoom = viewChild.required<ElementRef>('editRoom');
-
-  floorNameSig = input.required<string>();
-
-  addingRoom = false;
-  addRoomFormGroup = this._formBuilder.nonNullable.group({
-    roomName: [''],
-    totalSpotsNumber: [0],
-    unavailableSpots: [0],
-  });
-
-  roomList: Room[] = [
-    this.getRoom(1),
-    this.getRoom(2),
-    this.getRoom(3),
-    this.getRoom(4),
-    this.getRoom(5),
-    this.getRoom(6),
-    this.getRoom(7),
-    this.getRoom(8),
-    this.getRoom(9),
-    this.getRoom(10),
-    this.getRoom(11),
-    this.getRoom(12),
-    this.getRoom(13),
-    this.getRoom(14),
-    this.getRoom(15),
-  ];
-  floorExp: Floor = {
-    name: 'UTCN Obs ground Floor',
-    buildingName: 'Laboratoare Observator',
-    roomList: this.roomList,
-    totalSpotsNumber: 120,
-    freeSpots: 90,
-    busySpots: 20,
-    unavailableSpots: 10,
-  };
-
   ngOnInit(): void {
     this._adminRoomService.init();
+    this._adminFloorService.init();
+    this.floorSig = this._adminFloorService.getFloorByName(this.floorNameSig());
   }
 
-  getRoom(number: number): Room {
-    return {
-      name: 'Observator 51' + number,
-      subjectList: [],
-      timetable: [],
-      freeSpots: 50,
-      busySpots: 10,
-      unavailableSpots: 5,
-      totalSpotsNumber: 10,
-    };
-  }
-
-  onCreateRoom(): void {
+  onAddingRoom(): void {
+    this.addRoomFormGroup.reset();
+    this.editingRoom = false;
     this.addingRoom = true;
     this.editRoom()?.nativeElement.scrollIntoView({ block: 'center', behavior: 'smooth' });
   }
 
   onAddRoom(): void {
-    // console.log(
-    //   this._createRoom(
-    //     this.addRoomFormGroup.controls['roomName'].value as string,
-    //     this.addRoomFormGroup.controls['totalSpotsNumber'].value as number,
-    //     this.addRoomFormGroup.controls['unavailableSpots'].value as number,
-    //   ),
-    // );
+    const newRoom: Room = this._createRoom(
+      this.addRoomFormGroup.controls['roomName'].value as string,
+      this.addRoomFormGroup.controls['totalSpotsNumber'].value as number,
+      this.addRoomFormGroup.controls['unavailableSpots'].value as number,
+    );
+    const updatedFloor: Floor = this._createNewRoomFloor(newRoom);
 
-    this._adminRoomService.addRoom(
-      this._createRoom(
+    this._adminRoomService.addRoom(newRoom);
+    this._adminFloorService.updateFloor(this.floorSig(), updatedFloor);
+    this.addRoomFormGroup.reset();
+    this.addingRoom = false;
+    this.editingRoom = false;
+  }
+
+  onEditingRoom(roomToEdit: Room): void {
+    this.editingRoom = true;
+    this.oldRoomSig.set(roomToEdit);
+    this.addRoomFormGroup.setValue({
+      roomName: roomToEdit.name,
+      totalSpotsNumber: roomToEdit.totalSpotsNumber,
+      unavailableSpots: roomToEdit.unavailableSpots,
+    });
+    this.editRoom()?.nativeElement.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  }
+
+  onEditRoom(): void {
+    const newRoom: Room = {
+      ...this._createRoom(
         this.addRoomFormGroup.controls['roomName'].value as string,
         this.addRoomFormGroup.controls['totalSpotsNumber'].value as number,
         this.addRoomFormGroup.controls['unavailableSpots'].value as number,
       ),
-    );
+      subjectList: this.oldRoomSig().subjectList,
+      timetable: this.oldRoomSig().timetable,
+    };
+    const diffRoom: Room = {
+      ...this.oldRoomSig(),
+      totalSpotsNumber: newRoom.totalSpotsNumber - (this.oldRoomSig().totalSpotsNumber as number),
+      freeSpots: newRoom.freeSpots - (this.oldRoomSig().freeSpots as number),
+      busySpots: newRoom.busySpots - (this.oldRoomSig().busySpots as number),
+      unavailableSpots: newRoom.unavailableSpots - (this.oldRoomSig().unavailableSpots as number),
+    };
+    const updatedFloor: Floor = this._createEditRoomFloor(diffRoom, newRoom);
+
+    this._adminRoomService.updateRoom(this.oldRoomSig() as Room, newRoom);
+    this._adminFloorService.updateFloor(this.floorSig(), updatedFloor);
     this.addRoomFormGroup.reset();
     this.addingRoom = false;
+    this.editingRoom = false;
   }
 
-  onEditRoom(): void {
-    this.editRoom()?.nativeElement.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  onDeleteRoom(deletedRoom: Room): void {
+    const diffRoom: Room = {
+      ...this.oldRoomSig(),
+      totalSpotsNumber: -deletedRoom.totalSpotsNumber,
+      freeSpots: -deletedRoom.freeSpots,
+      busySpots: -deletedRoom.busySpots,
+      unavailableSpots: -deletedRoom.unavailableSpots,
+    };
+    const updatedFloor: Floor = this._createDeleteRoomFloor(diffRoom, deletedRoom);
+
+    this._adminRoomService.deleteRoom(deletedRoom);
+    this._adminFloorService.updateFloor(this.floorSig(), updatedFloor);
+    this.addRoomFormGroup.reset();
+    this.addingRoom = false;
+    this.editingRoom = false;
   }
 
   private _createRoom(roomName: string, totalSpotsNumber: number, unavailableSpots: number): Room {
@@ -132,5 +156,49 @@ export class AdminFloorDetailComponent implements OnInit {
       busySpots: 0,
       unavailableSpots: unavailableSpots,
     };
+  }
+
+  private _createNewRoomFloor(addedRoom: Room): Floor {
+    return {
+      ...this.floorSig(),
+      roomList: this.floorSig().roomList ? [...this.floorSig().roomList, addedRoom] : [addedRoom],
+      totalSpotsNumber: this._reduceSpotNumber('totalSpotsNumber', addedRoom),
+      freeSpots: this._reduceSpotNumber('freeSpots', addedRoom),
+      busySpots: this._reduceSpotNumber('busySpots', addedRoom),
+      unavailableSpots: this._reduceSpotNumber('unavailableSpots', addedRoom),
+    };
+  }
+
+  private _createEditRoomFloor(diffRoom: Room, newRoom: Room): Floor {
+    return {
+      ...this.floorSig(),
+      roomList: this.floorSig().roomList.map((room: Room) => (room === this.oldRoomSig() ? newRoom : room)),
+      totalSpotsNumber: this._reduceSpotNumber('totalSpotsNumber', diffRoom),
+      freeSpots: this._reduceSpotNumber('freeSpots', diffRoom),
+      busySpots: this._reduceSpotNumber('busySpots', diffRoom),
+      unavailableSpots: this._reduceSpotNumber('unavailableSpots', diffRoom),
+    };
+  }
+  private _createDeleteRoomFloor(diffRoom: Room, deletedRoom: Room): Floor {
+    return {
+      ...this.floorSig(),
+      roomList: this.floorSig().roomList.filter((room: Room) => room !== deletedRoom),
+      totalSpotsNumber: this._reduceSpotNumber('totalSpotsNumber', diffRoom),
+      freeSpots: this._reduceSpotNumber('freeSpots', diffRoom),
+      busySpots: this._reduceSpotNumber('busySpots', diffRoom),
+      unavailableSpots: this._reduceSpotNumber('unavailableSpots', diffRoom),
+    };
+  }
+
+  private _reduceSpotNumber(spotType: keyof Omit<Room, 'subjectList' | 'name' | 'timetable'>, newRoom?: Room): number {
+    if (this.floorSig().roomList) {
+      const totalNumber: number = this.floorSig().roomList.reduce<number>(
+        (totalNumber: number, room: Room) => (totalNumber += room[spotType]),
+        0,
+      );
+      return totalNumber + (newRoom ? newRoom[spotType] : 0);
+    } else {
+      return newRoom ? newRoom[spotType] : 0;
+    }
   }
 }
