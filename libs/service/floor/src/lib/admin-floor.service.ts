@@ -18,14 +18,12 @@ export class AdminFloorService {
       .getFloorList()
       .pipe(take(1))
       .subscribe((floorList: Floor[]) => {
-        this._floorListSig.set(floorList);
+        this._floorListSig.set(floorList.filter((floor: Floor) => floor !== null));
       });
   }
 
   getFloorByName(floorName: string): Signal<Floor> {
-    return computed(
-      () => this._floorListSig().find((floor: Floor) => (floor ? floor.name === floorName : false)) || ({} as Floor),
-    );
+    return computed(() => this._floorListSig().find((floor: Floor) => floor.name === floorName) || ({} as Floor));
   }
 
   addFloor(newFloor: Floor): void {

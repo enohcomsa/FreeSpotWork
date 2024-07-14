@@ -18,7 +18,7 @@ export class AdminBuildingService {
       .getBuildingList()
       .pipe(take(1))
       .subscribe((buildingList: Building[]) => {
-        this._buildingListSig.set(buildingList);
+        this._buildingListSig.set(buildingList.filter((building: Building) => building !== null));
       });
   }
 

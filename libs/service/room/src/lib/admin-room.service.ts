@@ -18,7 +18,7 @@ export class AdminRoomService {
       .getRoomList()
       .pipe(take(1))
       .subscribe((roomList: Room[]) => {
-        this._roomListSig.set(roomList);
+        this._roomListSig.set(roomList.filter((room: Room) => room !== null));
       });
   }
 
