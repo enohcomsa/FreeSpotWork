@@ -5,7 +5,5 @@ export interface Floor {
   buildingName: string;
   roomList: Room[];
   totalSpotsNumber: number;
-  freeSpots: number;
-  busySpots: number;
   unavailableSpots: number;
 }

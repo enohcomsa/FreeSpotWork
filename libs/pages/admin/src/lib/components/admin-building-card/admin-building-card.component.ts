@@ -22,7 +22,8 @@ export class AdminBuildingCardComponent {
 
   adminBuildingSig = input.required<Building>();
   addingBuildingSig = model.required<boolean>();
-  editBuilding = output<boolean>();
+  editBuilding = output<Building>();
+  deleteBuilding = output<Building>();
 
   onOpenClick(): void {
     this._router.navigate(['building/' + this.adminBuildingSig().name], { relativeTo: this._activatedRoute });

@@ -116,8 +116,8 @@ export class AdminFloorDetailComponent implements OnInit {
     const diffRoom: Room = {
       ...this.oldRoomSig(),
       totalSpotsNumber: newRoom.totalSpotsNumber - (this.oldRoomSig().totalSpotsNumber as number),
-      freeSpots: newRoom.freeSpots - (this.oldRoomSig().freeSpots as number),
-      busySpots: newRoom.busySpots - (this.oldRoomSig().busySpots as number),
+      // freeSpots: newRoom.freeSpots - (this.oldRoomSig().freeSpots as number),
+      // busySpots: newRoom.busySpots - (this.oldRoomSig().busySpots as number),
       unavailableSpots: newRoom.unavailableSpots - (this.oldRoomSig().unavailableSpots as number),
     };
     const updatedFloor: Floor = this._createEditRoomFloor(diffRoom, newRoom);
@@ -133,8 +133,8 @@ export class AdminFloorDetailComponent implements OnInit {
     const diffRoom: Room = {
       ...this.oldRoomSig(),
       totalSpotsNumber: -deletedRoom.totalSpotsNumber,
-      freeSpots: -deletedRoom.freeSpots,
-      busySpots: -deletedRoom.busySpots,
+      // freeSpots: -deletedRoom.freeSpots,
+      // busySpots: -deletedRoom.busySpots,
       unavailableSpots: -deletedRoom.unavailableSpots,
     };
     const updatedFloor: Floor = this._createDeleteRoomFloor(diffRoom, deletedRoom);
@@ -149,11 +149,12 @@ export class AdminFloorDetailComponent implements OnInit {
   private _createRoom(roomName: string, totalSpotsNumber: number, unavailableSpots: number): Room {
     return {
       name: roomName,
+      floorName: this.floorNameSig(),
       subjectList: [],
       timetable: this.roomEmptyTimetable,
       totalSpotsNumber: totalSpotsNumber,
-      freeSpots: totalSpotsNumber - unavailableSpots,
-      busySpots: 0,
+      // freeSpots: totalSpotsNumber - unavailableSpots,
+      // busySpots: 0,
       unavailableSpots: unavailableSpots,
     };
   }
@@ -163,8 +164,8 @@ export class AdminFloorDetailComponent implements OnInit {
       ...this.floorSig(),
       roomList: this.floorSig().roomList ? [...this.floorSig().roomList, addedRoom] : [addedRoom],
       totalSpotsNumber: this._reduceSpotNumber('totalSpotsNumber', addedRoom),
-      freeSpots: this._reduceSpotNumber('freeSpots', addedRoom),
-      busySpots: this._reduceSpotNumber('busySpots', addedRoom),
+      // freeSpots: this._reduceSpotNumber('freeSpots', addedRoom),
+      // busySpots: this._reduceSpotNumber('busySpots', addedRoom),
       unavailableSpots: this._reduceSpotNumber('unavailableSpots', addedRoom),
     };
   }
@@ -174,8 +175,8 @@ export class AdminFloorDetailComponent implements OnInit {
       ...this.floorSig(),
       roomList: this.floorSig().roomList.map((room: Room) => (room === this.oldRoomSig() ? newRoom : room)),
       totalSpotsNumber: this._reduceSpotNumber('totalSpotsNumber', diffRoom),
-      freeSpots: this._reduceSpotNumber('freeSpots', diffRoom),
-      busySpots: this._reduceSpotNumber('busySpots', diffRoom),
+      // freeSpots: this._reduceSpotNumber('freeSpots', diffRoom),
+      // busySpots: this._reduceSpotNumber('busySpots', diffRoom),
       unavailableSpots: this._reduceSpotNumber('unavailableSpots', diffRoom),
     };
   }
@@ -184,13 +185,16 @@ export class AdminFloorDetailComponent implements OnInit {
       ...this.floorSig(),
       roomList: this.floorSig().roomList.filter((room: Room) => room !== deletedRoom),
       totalSpotsNumber: this._reduceSpotNumber('totalSpotsNumber', diffRoom),
-      freeSpots: this._reduceSpotNumber('freeSpots', diffRoom),
-      busySpots: this._reduceSpotNumber('busySpots', diffRoom),
+      // freeSpots: this._reduceSpotNumber('freeSpots', diffRoom),
+      // busySpots: this._reduceSpotNumber('busySpots', diffRoom),
       unavailableSpots: this._reduceSpotNumber('unavailableSpots', diffRoom),
     };
   }
 
-  private _reduceSpotNumber(spotType: keyof Omit<Room, 'subjectList' | 'name' | 'timetable'>, newRoom?: Room): number {
+  private _reduceSpotNumber(
+    spotType: keyof Omit<Room, 'subjectList' | 'name' | 'timetable' | 'floorName'>,
+    newRoom?: Room,
+  ): number {
     if (this.floorSig().roomList) {
       const totalNumber: number = this.floorSig().roomList.reduce<number>(
         (totalNumber: number, room: Room) => (totalNumber += room[spotType]),

@@ -38,28 +38,30 @@ export class FloorDetailsComponent {
     buildingName: 'Laboratoare Observator',
     roomList: this.roomList,
     totalSpotsNumber: 120,
-    freeSpots: 90,
-    busySpots: 20,
+    // freeSpots: 90,
+    // busySpots: 20,
     unavailableSpots: 10,
   };
 
   getRoom(number: number): Room {
     return {
       name: 'Observator 51' + number,
+      floorName: 'UTCN Obs ground Floor',
       subjectList: [],
       timetable: [],
-      freeSpots: 50,
-      busySpots: 10,
+      // freeSpots: 50,
+      // busySpots: 10,
       unavailableSpots: 5,
       totalSpotsNumber: 10,
     };
   }
   roomExp: Room = {
     name: '513',
+    floorName: 'UTCN Obs ground Floor',
     subjectList: [],
     timetable: [],
-    freeSpots: 50,
-    busySpots: 10,
+    // freeSpots: 50,
+    // busySpots: 10,
     unavailableSpots: 5,
     totalSpotsNumber: 10,
   };

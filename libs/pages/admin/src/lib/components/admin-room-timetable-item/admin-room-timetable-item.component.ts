@@ -79,6 +79,8 @@ export class AdminRoomTimetableItemComponent implements OnInit {
       roomName: this.roomNameSig(),
       activiteType: this.addTimetableActivityFormGroup.controls['activiteType'].value,
       weekParity: this.addTimetableActivityFormGroup.controls['weekParity'].value,
+      freeSpots: 0,
+      busySpots: 0,
     };
 
     this.timetableItemSig.set({

@@ -116,8 +116,8 @@ export class AdminBuildingDetailComponent implements OnInit {
       buildingName: this.buildingNameSig(),
       roomList: [],
       totalSpotsNumber: 0,
-      freeSpots: 0,
-      busySpots: 0,
+      // freeSpots: 0,
+      // busySpots: 0,
       unavailableSpots: 0,
     };
   }

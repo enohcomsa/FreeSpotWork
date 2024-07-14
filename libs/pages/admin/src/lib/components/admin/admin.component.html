@@ -15,34 +15,37 @@
   </mat-accordion>
 
   <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Buildings</h1>
-  <div class="flex flex-col gap-8 pb-4 md:grid md:grid-cols-2 xl:grid-cols-3">
-    <free-spot-admin-building-card
-      [adminBuildingSig]="cardData"
-      [addingBuildingSig]="addingBuilding"
-      (addingBuildingSigChange)="addingBuilding = $event"
-      (editBuilding)="onEditBuilding()"
-    ></free-spot-admin-building-card>
-    <free-spot-admin-building-card
-      [adminBuildingSig]="cardData"
-      [addingBuildingSig]="addingBuilding"
-      (addingBuildingSigChange)="addingBuilding = $event"
-      (editBuilding)="onEditBuilding()"
-    ></free-spot-admin-building-card>
-    <free-spot-admin-building-card
-      [adminBuildingSig]="cardData"
-      [addingBuildingSig]="addingBuilding"
-      (addingBuildingSigChange)="addingBuilding = $event"
-      (editBuilding)="onEditBuilding()"
-    ></free-spot-admin-building-card>
+  <div class="flex w-full flex-col gap-8 pb-4 md:grid md:grid-cols-2 md:place-items-stretch xl:grid-cols-3">
+    @for (building of buildingListSig(); track building.name) {
+      <free-spot-admin-building-card
+        [adminBuildingSig]="building"
+        [addingBuildingSig]="addingBuilding"
+        (addingBuildingSigChange)="addingBuilding = $event"
+        (editBuilding)="onEditingBuilding($event)"
+        (deleteBuilding)="onDeleteBuilding($event)"
+      ></free-spot-admin-building-card>
+    }
+    <free-spot-add-item-card
+      class="h-24 w-full md:h-full md:min-h-32 md:place-self-start"
+      (click)="onAddingBuilding()"
+    ></free-spot-add-item-card>
   </div>
-  <div #editBuilding>
+  <div #editBuilding class="h-auto min-h-24">
     @if (addingBuilding) {
-      <form class="flex flex-col py-4 sm:flex-row sm:items-center sm:gap-4" (ngSubmit)="onAddBuilding()">
+      <form
+        [formGroup]="addBuildingFormGroup"
+        class="flex flex-col py-4 sm:flex-row sm:items-center sm:gap-4"
+        (ngSubmit)="editingBuilding ? onEditBuilding() : onAddBuilding()"
+      >
         <mat-form-field>
-          <mat-label>New building</mat-label>
-          <input type="text" matInput [formControl]="addBuildingFormControl" />
+          <mat-label>Building name</mat-label>
+          <input type="text" matInput formControlName="name" />
         </mat-form-field>
-        <button mat-flat-button type="submit" class="sm:mb-5">Add building</button>
+        <mat-form-field>
+          <mat-label>Building adress</mat-label>
+          <input type="text" matInput formControlName="adress" />
+        </mat-form-field>
+        <button mat-flat-button type="submit" class="sm:mb-5">{{ editingBuilding ? 'Edit building' : 'Add building' }}</button>
       </form>
     }
   </div>
@@ -67,14 +70,14 @@
       (editBuilding)="onEditEvent()"
     ></free-spot-admin-event-card>
   </div>
-  <div #editEvent>
+  <div #editEvent class="h-auto min-h-24">
     @if (addingEvent) {
       <form class="flex flex-col py-4 sm:flex-row sm:items-center sm:gap-4" (ngSubmit)="onAddEvent()">
         <mat-form-field>
           <mat-label>New event</mat-label>
           <input type="text" matInput [formControl]="addEventFormControl" />
         </mat-form-field>
-        <button mat-flat-button type="submit" class="sm:mb-5">Add event</button>
+        <button mat-flat-button type="submit" class="sm:mb-5">Add Event</button>
       </form>
     }
   </div>

@@ -7,4 +7,6 @@ export interface TimetableActivityItem {
   roomName: string;
   activiteType: Event;
   weekParity: WeekParity;
+  freeSpots: number;
+  busySpots: number;
 }

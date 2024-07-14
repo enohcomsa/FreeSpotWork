@@ -24,8 +24,8 @@ export class BuildingCardComponent {
     buildingName: 'Laboratoare Observator',
     roomList: [],
     totalSpotsNumber: 120,
-    freeSpots: 90,
-    busySpots: 20,
+    // freeSpots: 90,
+    // busySpots: 20,
     unavailableSpots: 10,
   };
   floorExp2: Floor = {
@@ -33,8 +33,8 @@ export class BuildingCardComponent {
     buildingName: 'Laboratoare Observator',
     roomList: [],
     totalSpotsNumber: 90,
-    freeSpots: 50,
-    busySpots: 30,
+    // freeSpots: 50,
+    // busySpots: 30,
     unavailableSpots: 10,
   };
   cardData: Building = {

@@ -1,31 +1,29 @@
-<mat-card appearance="outlined" class="@container">
+<mat-card appearance="outlined" class="@container h-full">
   <mat-card-header>
     <mat-card-title>{{ adminBuildingSig().name }}</mat-card-title>
     <mat-card-subtitle class="!flex items-end !text-sm">
       <mat-icon class="-ml-2 -mr-1 scale-50">location_on</mat-icon> {{ adminBuildingSig().adress }}
     </mat-card-subtitle>
   </mat-card-header>
-  <mat-card-content>
+  <mat-card-content class="h-full">
     <mat-list class="!pb-0">
       <mat-list-item class="!p-0">
         <div class="flex justify-between text-xs tracking-tighter">
           <p class="min-w-24">Floor</p>
-          <div class="flex gap-4 [&>p]:w-14">
-            <p>Free desk</p>
-            <p>Assigned</p>
+          <div class="flex gap-4 [&>p]:w-14 [&>p]:text-center">
+            <p>Total</p>
             <p>Unavabile</p>
           </div>
         </div>
       </mat-list-item>
       <mat-divider></mat-divider>
 
-      @for (floor of adminBuildingSig().floorList; track floor; let last = $last) {
+      @for (floor of adminBuildingSig().floorList; track floor.name; let last = $last) {
         <mat-list-item class="!cursor-pointer !p-0">
           <div class="flex justify-between text-xs tracking-tighter">
             <p class="min-w-24 truncate">{{ floor.name }}</p>
             <div class="flex gap-4 [&>p]:w-14 [&>p]:text-center">
-              <p>{{ floor.freeSpots }}</p>
-              <p>{{ floor.busySpots }}</p>
+              <p>{{ floor.totalSpotsNumber }}</p>
               <p>{{ floor.unavailableSpots }}</p>
             </div>
           </div>
@@ -33,17 +31,22 @@
         @if (!last) {
           <mat-divider></mat-divider>
         }
+      } @empty {
+        <div class="flex h-12 items-center justify-between text-xs tracking-tighter">
+          <p class="min-w-24">No floors added yet</p>
+        </div>
       }
     </mat-list>
   </mat-card-content>
-  <mat-card-actions class="justify-between gap-4">
-    <button mat-flat-button class="grow" (click)="addingBuildingSig.set(true); editBuilding.emit(true)">
+  <mat-divider></mat-divider>
+  <mat-card-actions class="justify-between gap-4 !p-4 lg:!p-8">
+    <button mat-flat-button class="grow" (click)="addingBuildingSig.set(true); editBuilding.emit(adminBuildingSig())">
       <mat-icon class="@2xs:!mr-2 @2xs:!-ml-2 !m-0">edit</mat-icon> <span class="@2xs:inline-block hidden">Edit</span>
     </button>
     <button mat-flat-button class="grow" (click)="onOpenClick()">
       <mat-icon class="@2xs:!mr-2 @2xs:!-ml-2 !m-0">open_in_browser</mat-icon><span class="@2xs:inline-block hidden">Open</span>
     </button>
-    <button mat-flat-button class="grow">
+    <button mat-flat-button class="grow" (click)="deleteBuilding.emit(adminBuildingSig())">
       <mat-icon class="@2xs:!mr-2 @2xs:!-ml-2 !m-0">delete</mat-icon><span class="@2xs:inline-block hidden">Delete</span>
     </button>
   </mat-card-actions>

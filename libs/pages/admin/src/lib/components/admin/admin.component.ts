@@ -1,16 +1,26 @@
-import { ChangeDetectionStrategy, Component, ElementRef, inject, viewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  inject,
+  OnInit,
+  Signal,
+  signal,
+  viewChild,
+  WritableSignal,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FacultyComponent } from '../faculty/faculty.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { Building, Faculty, Floor, SubjectItem } from '@free-spot/models';
-import { DynamicChipListComponent } from '@free-spot/ui';
+import { AddItemCardComponent, DynamicChipListComponent } from '@free-spot/ui';
 import { AdminBuildingCardComponent } from '../admin-building-card/admin-building-card.component';
 import { AdminEventCardComponent } from '../admin-event-card/admin-event-card.component';
-import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { AdminBuildingService } from '@free-spot-service/building';
 
 @Component({
   selector: 'free-spot-admin',
@@ -27,18 +37,30 @@ import { MatButtonModule } from '@angular/material/button';
     DynamicChipListComponent,
     AdminBuildingCardComponent,
     AdminEventCardComponent,
+    AddItemCardComponent,
   ],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.sass',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AdminComponent {
-  private _router: Router = inject(Router);
-  private _activatedRoute = inject(ActivatedRoute);
+export class AdminComponent implements OnInit {
   private _formBuilder: FormBuilder = inject(FormBuilder);
+  private _adminBuildingService: AdminBuildingService = inject(AdminBuildingService);
 
   editBuilding = viewChild<ElementRef>('editBuilding');
   editEvent = viewChild<ElementRef>('editEvent');
+  buildingListSig: Signal<Building[]> = this._adminBuildingService.buildingListSig;
+  oldbuildingSig: WritableSignal<Building> = signal({} as Building);
+
+  addingBuilding = false;
+  editingBuilding = false;
+  addBuildingFormGroup = this._formBuilder.nonNullable.group({
+    name: [''],
+    adress: [''],
+  });
+
+  addingEvent = false;
+  addEventFormControl = this._formBuilder.control('');
 
   admminUserList: string[] = ['enoh', 'dsada', 'dsggggg', 'bbbbbbbb', 'ffffffff', 'zzzzzzz'];
 
@@ -99,18 +121,13 @@ export class AdminComponent {
     this.facultyItem,
   ];
 
-  addingBuilding = false;
-  addingEvent = false;
-  addBuildingFormControl = this._formBuilder.control('');
-  addEventFormControl = this._formBuilder.control('');
-
   floorExp: Floor = {
     name: 'UTCN Obs ground Floor',
     buildingName: 'Laboratoare Observator',
     roomList: [],
     totalSpotsNumber: 120,
-    freeSpots: 90,
-    busySpots: 20,
+    // freeSpots: 90,
+    // busySpots: 20,
     unavailableSpots: 10,
   };
   floorExp2: Floor = {
@@ -118,8 +135,8 @@ export class AdminComponent {
     buildingName: 'Laboratoare Observator',
     roomList: [],
     totalSpotsNumber: 90,
-    freeSpots: 50,
-    busySpots: 30,
+    // freeSpots: 50,
+    // busySpots: 30,
     unavailableSpots: 10,
   };
   cardData: Building = {
@@ -137,23 +154,71 @@ export class AdminComponent {
     date: new Date('2024-08-14,16:30'),
   };
 
-  onEditBuilding(): void {
+  ngOnInit(): void {
+    this._adminBuildingService.init();
+  }
+
+  onAddingBuilding(): void {
+    this.addBuildingFormGroup.reset();
+    this.addingBuilding = true;
+    this.editingBuilding = false;
     this.editBuilding()?.nativeElement.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  }
+
+  onAddBuilding(): void {
+    const newBuilding: Building = this._createBuilding(
+      this.addBuildingFormGroup.controls['name'].value,
+      this.addBuildingFormGroup.controls['adress'].value,
+    );
+
+    this._adminBuildingService.addBuilding(newBuilding);
+    this.addingBuilding = false;
+    this.editingBuilding = false;
+  }
+
+  onEditingBuilding(buildingToEdit: Building): void {
+    this.editingBuilding = true;
+    this.oldbuildingSig.set(buildingToEdit);
+    this.addBuildingFormGroup.setValue({ name: buildingToEdit.name, adress: buildingToEdit.adress });
+    this.editBuilding()?.nativeElement.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  }
+
+  onEditBuilding(): void {
+    const updatedBuilding: Building = {
+      ...this._createBuilding(
+        this.addBuildingFormGroup.controls['name'].value,
+        this.addBuildingFormGroup.controls['adress'].value,
+      ),
+      floorList: this.oldbuildingSig().floorList ? this.oldbuildingSig().floorList : [],
+    };
+    this._adminBuildingService.updateBuilding(this.oldbuildingSig(), updatedBuilding);
+    this.addBuildingFormGroup.reset();
+    this.addingBuilding = false;
+    this.editingBuilding = false;
+  }
+  onDeleteBuilding(deletedBuilding: Building): void {
+    this._adminBuildingService.deleteBuilding(deletedBuilding);
+  }
+
+  ///////////////////////////EVENT
+  onAddEvent(): void {
+    this.addingEvent = false;
   }
 
   onEditEvent(): void {
     this.editEvent()?.nativeElement.scrollIntoView({ block: 'center', behavior: 'smooth' });
   }
 
-  onAddBuilding(): void {
-    this.addingBuilding = false;
-  }
+  // onFloorClick(florName: string): void {
+  //   this._router.navigate(['floor/' + florName], { relativeTo: this._activatedRoute });
+  // }
 
-  onAddEvent(): void {
-    this.addingEvent = false;
-  }
-
-  onFloorClick(florName: string): void {
-    this._router.navigate(['floor/' + florName], { relativeTo: this._activatedRoute });
+  private _createBuilding(buildingName: string, buildingAdress: string): Building {
+    return {
+      name: buildingName,
+      adress: buildingAdress,
+      floorList: [],
+      specialEvent: false,
+    };
   }
 }

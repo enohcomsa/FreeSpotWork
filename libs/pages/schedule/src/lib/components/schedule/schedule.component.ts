@@ -20,6 +20,8 @@ export class ScheduleComponent {
     roomName: '5432',
     activiteType: Event.LABORATORY,
     weekParity: WeekParity.ODD,
+    freeSpots: 0,
+    busySpots: 0,
   };
   timetableActivityItem2: TimetableActivityItem = {
     startHour: 12,
@@ -28,6 +30,8 @@ export class ScheduleComponent {
     roomName: '5432',
     activiteType: Event.COURSE,
     weekParity: WeekParity.BOTH,
+    freeSpots: 0,
+    busySpots: 0,
   };
   timetableActivityItem3: TimetableActivityItem = {
     startHour: 16,
@@ -36,6 +40,8 @@ export class ScheduleComponent {
     roomName: '5432',
     activiteType: Event.PROJECT,
     weekParity: WeekParity.EVEN,
+    freeSpots: 0,
+    busySpots: 0,
   };
   timetableActivityItem4: TimetableActivityItem = {
     startHour: 8,
@@ -44,6 +50,8 @@ export class ScheduleComponent {
     roomName: '542',
     activiteType: Event.PROJECT,
     weekParity: WeekParity.EVEN,
+    freeSpots: 0,
+    busySpots: 0,
   };
 
   groupData: Group = {
