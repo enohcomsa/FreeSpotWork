@@ -3,8 +3,10 @@ import { CommonModule } from '@angular/common';
 import { DynamicChipListComponent, TimetableItemComponent } from '@free-spot/ui';
 import { AdminRoomTimetableItemComponent } from '../admin-room-timetable-item/admin-room-timetable-item.component';
 import { SubjectName } from '@free-spot/enums';
-import { Room, TimeTableItem } from '@free-spot/models';
+import { Building, Floor, Room, TimeTableItem } from '@free-spot/models';
 import { AdminRoomService } from '@free-spot-service/room';
+import { AdminBuildingService } from '@free-spot-service/building';
+import { AdminFloorService } from '@free-spot-service/floor';
 
 @Component({
   selector: 'free-spot-admin-room-detail',
@@ -16,9 +18,15 @@ import { AdminRoomService } from '@free-spot-service/room';
 })
 export class AdminRoomDetailComponent implements OnInit {
   private _adminRoomService: AdminRoomService = inject(AdminRoomService);
+  private _adminFloorService: AdminFloorService = inject(AdminFloorService);
+  private _adminBuildingService: AdminBuildingService = inject(AdminBuildingService);
 
   roomNameSig = input.required<string>();
   roomSig!: Signal<Room>;
+  floorNameSig = input.required<string>();
+  floorSig!: Signal<Floor>;
+  buildingNameSig = input.required<string>();
+  buildingSig!: Signal<Building>;
 
   subjectList = [
     'aaaa',
@@ -37,7 +45,11 @@ export class AdminRoomDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this._adminRoomService.init();
+    this._adminFloorService.init();
+    this._adminBuildingService.init();
     this.roomSig = this._adminRoomService.getRoomByName(this.roomNameSig());
+    this.floorSig = this._adminFloorService.getFloorByName(this.floorNameSig());
+    this.buildingSig = this._adminBuildingService.getBuildingByName(this.buildingNameSig());
   }
 
   onSubjectListChange(changedSubjectList: string[]): void {
@@ -46,24 +58,7 @@ export class AdminRoomDetailComponent implements OnInit {
       subjectList: changedSubjectList as SubjectName[],
     };
     this._adminRoomService.updateRoom(this.roomSig(), updatedRoom);
-  }
-
-  onAddSubject(addedSubject: string): void {
-    const updatedRoom: Room = {
-      ...this.roomSig(),
-      subjectList: this.roomSig().subjectList
-        ? [...this.roomSig().subjectList, addedSubject as SubjectName]
-        : [addedSubject as SubjectName],
-    };
-    this._adminRoomService.updateRoom(this.roomSig(), updatedRoom);
-  }
-
-  onRemoveSubject(removedSubject: string): void {
-    const updatedRoom: Room = {
-      ...this.roomSig(),
-      subjectList: this.roomSig().subjectList.filter((subject: SubjectName) => subject !== (removedSubject as SubjectName)),
-    };
-    this._adminRoomService.updateRoom(this.roomSig(), updatedRoom);
+    this._updateFloorAndBuilding(updatedRoom);
   }
 
   onTimetableItemChange(changedTimetableItem: TimeTableItem): void {
@@ -73,64 +68,23 @@ export class AdminRoomDetailComponent implements OnInit {
 
     const updatedRoom: Room = { ...this.roomSig(), timetable: updatedRoomTimetable };
     this._adminRoomService.updateRoom(this.roomSig(), updatedRoom);
+    this._updateFloorAndBuilding(updatedRoom);
+  }
+
+  private _updateFloorAndBuilding(updatedRoom: Room): void {
+    const updatedFloor: Floor = {
+      ...this.floorSig(),
+      roomList: this.floorSig().roomList.map((room: Room) => (room.name === updatedRoom.name ? updatedRoom : room)),
+    };
+    this._adminFloorService.updateFloor(this.floorSig(), updatedFloor);
+    this._updateBuilding(updatedFloor);
+  }
+
+  private _updateBuilding(changedFloor: Floor): void {
+    const updatedBuilding: Building = {
+      ...this.buildingSig(),
+      floorList: this.buildingSig().floorList.map((floor: Floor) => (floor.name === changedFloor.name ? changedFloor : floor)),
+    };
+    this._adminBuildingService.updateBuilding(this.buildingSig(), updatedBuilding);
   }
 }
-
-// getTimetableActivity(weekDay: WeekDay): TimeTableItem {
-//   return {
-//     weekDay: weekDay,
-//     activities: [this.timetableActivityItem1],
-//   };
-// }
-
-// timetableActivityItem1: TimetableActivityItem = {
-//   startHour: 8,
-//   endHour: 10,
-//   subjectName: SubjectName.TLELEFONY,
-//   roomName: '5432',
-//   activiteType: Event.LABORATORY,
-//   weekParity: WeekParity.ODD,
-// };
-
-// timeTable = [
-//   this.getTimetableActivity(WeekDay.MONDAY),
-//   this.getTimetableActivity(WeekDay.TUESDAY),
-//   this.getTimetableActivity(WeekDay.WEDNESDAY),
-//   this.getTimetableActivity(WeekDay.THURSDAY),
-//   this.getTimetableActivity(WeekDay.FRIDAY),
-// ];
-
-// newRoom: Room = {
-//   name: '',
-//   subjectList: ['aaaa' as SubjectName, 'bbb' as SubjectName, 'cccccc' as SubjectName],
-//   timetable: [],
-//   totalSpotsNumber: 20,
-//   freeSpots: 10,
-//   busySpots: 0,
-//   unavailableSpots: 1,
-// };
-
-// timetableActivityMonday1: TimetableActivityItem = {
-//   startHour: 8,
-//   endHour: 10,
-//   subjectName: SubjectName.TLELEFONY,
-//   roomName: '5432',
-//   activiteType: Event.LABORATORY,
-//   weekParity: WeekParity.ODD,
-// };
-// timetableActivityMonday2: TimetableActivityItem = {
-//   startHour: 14,
-//   endHour: 16,
-//   subjectName: SubjectName.TLELEFONY,
-//   roomName: '5432',
-//   activiteType: Event.LABORATORY,
-//   weekParity: WeekParity.ODD,
-// };
-
-// roomTimetable: TimeTableItem[] = [
-//   { weekDay: WeekDay.MONDAY, activities: [this.timetableActivityMonday1, this.timetableActivityMonday2] },
-//   { weekDay: WeekDay.TUESDAY, activities: [] },
-//   { weekDay: WeekDay.WEDNESDAY, activities: [this.timetableActivityMonday1, this.timetableActivityMonday2] },
-//   { weekDay: WeekDay.THURSDAY, activities: [] },
-//   { weekDay: WeekDay.FRIDAY, activities: [this.timetableActivityMonday1, this.timetableActivityMonday2] },
-// ];

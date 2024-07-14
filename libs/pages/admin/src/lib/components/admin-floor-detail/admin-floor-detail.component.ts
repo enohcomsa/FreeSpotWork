@@ -47,10 +47,11 @@ export class AdminFloorDetailComponent implements OnInit {
   private _adminBuildingService: AdminBuildingService = inject(AdminBuildingService);
 
   editRoom = viewChild.required<ElementRef>('editRoom');
-  buildingNameSig = input.required<string>();
-  buildingSig!: Signal<Building>;
   floorNameSig = input.required<string>();
   floorSig!: Signal<Floor>;
+  buildingNameSig = input.required<string>();
+  buildingSig!: Signal<Building>;
+
   oldRoomSig: WritableSignal<Room> = signal({} as Room);
 
   addingRoom = false;
