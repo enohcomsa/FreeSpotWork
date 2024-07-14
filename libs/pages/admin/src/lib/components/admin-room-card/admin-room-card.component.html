@@ -1,6 +1,6 @@
 <mat-card appearance="outlined" class="@container">
   <mat-card-content class="@sm:flex-row @sm:justify-between @sm:items-center !flex flex-col justify-center gap-4">
-    <div class="flex flex-col gap-2">
+    <div class="flex flex-col gap-2 pb-4">
       <p class="font-bold">{{ adminRoomSig().name }}</p>
       <div class="flex gap-2 tracking-tighter">
         <p><span>total spots: </span>{{ adminRoomSig().totalSpotsNumber }}</p>
@@ -9,7 +9,7 @@
     </div>
   </mat-card-content>
   <mat-divider></mat-divider>
-  <mat-card-actions class="justify-between gap-4">
+  <mat-card-actions class="justify-between gap-4 !p-4 lg:!px-8">
     <button mat-flat-button class="grow" (click)="addingRoomSig.set(true); editRoom.emit(adminRoomSig())">
       <mat-icon class="@2xs:!mr-2 @2xs:!-ml-2 !m-0">edit</mat-icon> <span class="@2xs:inline-block hidden">Edit</span>
     </button>

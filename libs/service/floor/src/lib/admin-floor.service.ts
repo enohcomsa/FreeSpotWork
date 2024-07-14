@@ -23,7 +23,9 @@ export class AdminFloorService {
   }
 
   getFloorByName(floorName: string): Signal<Floor> {
-    return computed(() => this.floorListSig().find((floor: Floor) => floor.name === floorName) || ({} as Floor));
+    return computed(
+      () => this._floorListSig().find((floor: Floor) => (floor ? floor.name === floorName : false)) || ({} as Floor),
+    );
   }
 
   addFloor(newFloor: Floor): void {

@@ -15,12 +15,13 @@ import { FormsModule, ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { Floor, Room, TimeTableItem } from '@free-spot/models';
+import { Building, Floor, Room, TimeTableItem } from '@free-spot/models';
 import { AdminRoomCardComponent } from '../admin-room-card/admin-room-card.component';
 import { AdminRoomService } from '@free-spot-service/room';
 import { WeekDay } from '@free-spot/enums';
 import { AddItemCardComponent } from '@free-spot/ui';
 import { AdminFloorService } from '@free-spot-service/floor';
+import { AdminBuildingService } from '@free-spot-service/building';
 
 @Component({
   selector: 'free-spot-admin-floor-detail',
@@ -43,8 +44,11 @@ export class AdminFloorDetailComponent implements OnInit {
   private _formBuilder: FormBuilder = inject(FormBuilder);
   private _adminRoomService: AdminRoomService = inject(AdminRoomService);
   private _adminFloorService: AdminFloorService = inject(AdminFloorService);
+  private _adminBuildingService: AdminBuildingService = inject(AdminBuildingService);
 
   editRoom = viewChild.required<ElementRef>('editRoom');
+  buildingNameSig = input.required<string>();
+  buildingSig!: Signal<Building>;
   floorNameSig = input.required<string>();
   floorSig!: Signal<Floor>;
   oldRoomSig: WritableSignal<Room> = signal({} as Room);
@@ -67,7 +71,9 @@ export class AdminFloorDetailComponent implements OnInit {
   ngOnInit(): void {
     this._adminRoomService.init();
     this._adminFloorService.init();
+    this._adminBuildingService.init();
     this.floorSig = this._adminFloorService.getFloorByName(this.floorNameSig());
+    this.buildingSig = this._adminBuildingService.getBuildingByName(this.buildingNameSig());
   }
 
   onAddingRoom(): void {
@@ -87,6 +93,7 @@ export class AdminFloorDetailComponent implements OnInit {
 
     this._adminRoomService.addRoom(newRoom);
     this._adminFloorService.updateFloor(this.floorSig(), updatedFloor);
+    this._updateBuilding(updatedFloor);
     this.addRoomFormGroup.reset();
     this.addingRoom = false;
     this.editingRoom = false;
@@ -116,14 +123,13 @@ export class AdminFloorDetailComponent implements OnInit {
     const diffRoom: Room = {
       ...this.oldRoomSig(),
       totalSpotsNumber: newRoom.totalSpotsNumber - (this.oldRoomSig().totalSpotsNumber as number),
-      // freeSpots: newRoom.freeSpots - (this.oldRoomSig().freeSpots as number),
-      // busySpots: newRoom.busySpots - (this.oldRoomSig().busySpots as number),
       unavailableSpots: newRoom.unavailableSpots - (this.oldRoomSig().unavailableSpots as number),
     };
     const updatedFloor: Floor = this._createEditRoomFloor(diffRoom, newRoom);
 
     this._adminRoomService.updateRoom(this.oldRoomSig() as Room, newRoom);
     this._adminFloorService.updateFloor(this.floorSig(), updatedFloor);
+    this._updateBuilding(updatedFloor);
     this.addRoomFormGroup.reset();
     this.addingRoom = false;
     this.editingRoom = false;
@@ -133,14 +139,13 @@ export class AdminFloorDetailComponent implements OnInit {
     const diffRoom: Room = {
       ...this.oldRoomSig(),
       totalSpotsNumber: -deletedRoom.totalSpotsNumber,
-      // freeSpots: -deletedRoom.freeSpots,
-      // busySpots: -deletedRoom.busySpots,
       unavailableSpots: -deletedRoom.unavailableSpots,
     };
     const updatedFloor: Floor = this._createDeleteRoomFloor(diffRoom, deletedRoom);
 
     this._adminRoomService.deleteRoom(deletedRoom);
     this._adminFloorService.updateFloor(this.floorSig(), updatedFloor);
+    this._updateBuilding(updatedFloor);
     this.addRoomFormGroup.reset();
     this.addingRoom = false;
     this.editingRoom = false;
@@ -153,8 +158,6 @@ export class AdminFloorDetailComponent implements OnInit {
       subjectList: [],
       timetable: this.roomEmptyTimetable,
       totalSpotsNumber: totalSpotsNumber,
-      // freeSpots: totalSpotsNumber - unavailableSpots,
-      // busySpots: 0,
       unavailableSpots: unavailableSpots,
     };
   }
@@ -164,8 +167,6 @@ export class AdminFloorDetailComponent implements OnInit {
       ...this.floorSig(),
       roomList: this.floorSig().roomList ? [...this.floorSig().roomList, addedRoom] : [addedRoom],
       totalSpotsNumber: this._reduceSpotNumber('totalSpotsNumber', addedRoom),
-      // freeSpots: this._reduceSpotNumber('freeSpots', addedRoom),
-      // busySpots: this._reduceSpotNumber('busySpots', addedRoom),
       unavailableSpots: this._reduceSpotNumber('unavailableSpots', addedRoom),
     };
   }
@@ -175,8 +176,6 @@ export class AdminFloorDetailComponent implements OnInit {
       ...this.floorSig(),
       roomList: this.floorSig().roomList.map((room: Room) => (room === this.oldRoomSig() ? newRoom : room)),
       totalSpotsNumber: this._reduceSpotNumber('totalSpotsNumber', diffRoom),
-      // freeSpots: this._reduceSpotNumber('freeSpots', diffRoom),
-      // busySpots: this._reduceSpotNumber('busySpots', diffRoom),
       unavailableSpots: this._reduceSpotNumber('unavailableSpots', diffRoom),
     };
   }
@@ -185,8 +184,6 @@ export class AdminFloorDetailComponent implements OnInit {
       ...this.floorSig(),
       roomList: this.floorSig().roomList.filter((room: Room) => room !== deletedRoom),
       totalSpotsNumber: this._reduceSpotNumber('totalSpotsNumber', diffRoom),
-      // freeSpots: this._reduceSpotNumber('freeSpots', diffRoom),
-      // busySpots: this._reduceSpotNumber('busySpots', diffRoom),
       unavailableSpots: this._reduceSpotNumber('unavailableSpots', diffRoom),
     };
   }
@@ -204,5 +201,13 @@ export class AdminFloorDetailComponent implements OnInit {
     } else {
       return newRoom ? newRoom[spotType] : 0;
     }
+  }
+
+  private _updateBuilding(changedFloor: Floor): void {
+    const updatedBuilding: Building = {
+      ...this.buildingSig(),
+      floorList: this.buildingSig().floorList.map((floor: Floor) => (floor.name === changedFloor.name ? changedFloor : floor)),
+    };
+    this._adminBuildingService.updateBuilding(this.buildingSig(), updatedBuilding);
   }
 }

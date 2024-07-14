@@ -1,13 +1,13 @@
 <mat-card appearance="outlined" class="@container">
-  <mat-card-content class="!flex flex-col justify-center gap-4 @sm:flex-row @sm:justify-between @sm:items-center">
+  <mat-card-content class="@sm:flex-row @sm:justify-between @sm:items-center !flex flex-col justify-center gap-4">
     <div class="flex flex-col gap-2">
       <p class="font-bold"><span>Room name : </span>{{ roomDataSig().name }}</p>
       <p>{{ buildingNameSig() }}</p>
     </div>
     <div class="flex flex-col gap-2">
       <mat-chip-set class="">
-        <mat-chip>{{ roomDataSig().freeSpots }}</mat-chip>
-        <mat-chip> {{ roomDataSig().busySpots }}</mat-chip>
+        <!-- <mat-chip>{{ roomDataSig().freeSpots }}</mat-chip>
+        <mat-chip> {{ roomDataSig().busySpots }}</mat-chip> -->
         <mat-chip> {{ roomDataSig().unavailableSpots }}</mat-chip>
       </mat-chip-set>
       <button mat-flat-button (click)="toggleDrawer()">Book spot</button>
