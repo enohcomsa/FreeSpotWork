@@ -1,0 +1,36 @@
+{
+  "name": "freee-spot-faculty",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/service/faculty/src",
+  "prefix": "free-spot",
+  "projectType": "library",
+  "tags": ["scope:service"],
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:package",
+      "outputs": ["{workspaceRoot}/dist/{projectRoot}"],
+      "options": {
+        "project": "libs/service/faculty/ng-package.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "libs/service/faculty/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "libs/service/faculty/tsconfig.lib.json"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "libs/service/faculty/jest.config.ts"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}
