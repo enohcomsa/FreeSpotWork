@@ -2,6 +2,8 @@
 
 <free-spot-dynamic-chip-list
   [itemListSig]="facultySig().subjectList || []"
+  (itemListSigChange)="onSubjectListChanged($event)"
+  [optionListSig]="subjectList"
   itemLabelSig="subject"
   itemKeyDysplay="name"
 ></free-spot-dynamic-chip-list>
@@ -9,10 +11,14 @@
 <h2 class="pb-2 pt-4 text-xl font-bold md:pb-4 md:pt-8">Years</h2>
 @for (year of facultySig().yearList; track $index) {
   <mat-list>
-    <div mat-subheader class="text-lg font-bold">{{ year.name }}</div>
+    <div mat-subheader class="flex cursor-pointer items-center gap-2 text-lg font-bold">
+      <span (click)="editYear.emit(year)">{{ year.name }}</span>
+      <mat-icon (click)="deleteYear(year)">cancel</mat-icon>
+    </div>
 
     <free-spot-dynamic-chip-list
       [itemListSig]="year.yearGroupList ? year.yearGroupList : []"
+      (itemListSigChange)="onYearGroupListChange($event, year)"
       itemLabelSig="group"
       itemKeyDysplay="name"
       itemDinamicRoute="group/"

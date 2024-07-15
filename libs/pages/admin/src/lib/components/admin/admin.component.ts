@@ -21,7 +21,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { AdminBuildingService } from '@free-spot-service/building';
-import { FACULTY_LIST } from '@free-spot/constants';
+// import { FACULTY_LIST } from '@free-spot/constants';
+import { AdminFacultyService } from '@free-spot-service/faculty';
 
 @Component({
   selector: 'free-spot-admin',
@@ -46,12 +47,14 @@ import { FACULTY_LIST } from '@free-spot/constants';
 })
 export class AdminComponent implements OnInit {
   private _formBuilder: FormBuilder = inject(FormBuilder);
+  private _adminFacultyService: AdminFacultyService = inject(AdminFacultyService);
   private _adminBuildingService: AdminBuildingService = inject(AdminBuildingService);
 
-  facultyList: Faculty[] = FACULTY_LIST;
+  // facultyList: Faculty[] = FACULTY_LIST;
 
   editBuilding = viewChild<ElementRef>('editBuilding');
   editEvent = viewChild<ElementRef>('editEvent');
+  facultyListSig: Signal<Faculty[]> = this._adminFacultyService.facultyListSig;
   buildingListSig: Signal<Building[]> = this._adminBuildingService.buildingListSig;
   oldYearSig: WritableSignal<Year> = signal({} as Year);
   oldbuildingSig: WritableSignal<Building> = signal({} as Building);
@@ -151,6 +154,8 @@ export class AdminComponent implements OnInit {
 
   ngOnInit(): void {
     this._adminBuildingService.init();
+    this._adminFacultyService.init();
+    // this.facultyList.forEach((fac) => this._adminFacultyService.addFaculty(fac));
   }
 
   onAddingYear(): void {
@@ -166,31 +171,39 @@ export class AdminComponent implements OnInit {
     };
 
     const updatedFaculty: Faculty = { ...faculty, yearList: faculty.yearList ? [...faculty.yearList, newYear] : [newYear] };
-    //addyear
-    console.log(newYear, updatedFaculty);
-
+    this._adminFacultyService.updateFaculty(faculty, updatedFaculty);
     this.addingYear = false;
     this.editingYear = false;
   }
+
   onEditingYear(yearToEdit: Year): void {
     this.editingYear = true;
     this.oldYearSig.set(yearToEdit);
     this.addYearFormControl.setValue(yearToEdit.name);
   }
+
   onEditYear(faculty: Faculty): void {
     const newYear: Year = {
       name: this.addYearFormControl.value,
-      yearGroupList: [...this.oldYearSig().yearGroupList],
+      yearGroupList: this.oldYearSig().yearGroupList ? [...this.oldYearSig().yearGroupList] : [],
     };
     const updatedFaculty: Faculty = {
       ...faculty,
       yearList: faculty.yearList?.map((year: Year) => (year === this.oldYearSig() ? newYear : year)),
     };
 
-    ///backend update
-    console.log(updatedFaculty);
-
+    this._adminFacultyService.updateFaculty(faculty, updatedFaculty);
     this.addYearFormControl.reset();
+    this.addingYear = false;
+    this.editingYear = false;
+  }
+
+  onFacultyChange(changedFaculty: Faculty): void {
+    const oldFaculty: Faculty =
+      this.facultyListSig().find((faculty: Faculty) => faculty.name === changedFaculty.name) || ({} as Faculty);
+    if (oldFaculty.name) {
+      this._adminFacultyService.updateFaculty(oldFaculty, changedFaculty);
+    }
     this.addingYear = false;
     this.editingYear = false;
   }
@@ -245,10 +258,6 @@ export class AdminComponent implements OnInit {
   onEditEvent(): void {
     this.editEvent()?.nativeElement.scrollIntoView({ block: 'center', behavior: 'smooth' });
   }
-
-  // onFloorClick(florName: string): void {
-  //   this._router.navigate(['floor/' + florName], { relativeTo: this._activatedRoute });
-  // }
 
   private _createBuilding(buildingName: string, buildingAdress: string): Building {
     return {

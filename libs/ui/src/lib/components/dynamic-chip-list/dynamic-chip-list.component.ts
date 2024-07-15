@@ -42,7 +42,12 @@ export class DynamicChipListComponent<T> {
 
   onAddItem(): void {
     this.addingItem = false;
-    this.itemListSig.set([...this.itemListSig(), this.addItemFormControl.value as T]);
+    if (this.itemLabelSig() === 'group') {
+      this.itemListSig.set([...this.itemListSig(), { name: this.addItemFormControl.value } as T]);
+    } else {
+      this.itemListSig.set([...this.itemListSig(), this.addItemFormControl.value as T]);
+    }
+
     this.addItemFormControl.reset();
   }
 
