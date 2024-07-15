@@ -1,10 +1,10 @@
-import { SubjectName } from '@free-spot/enums';
 import { TimeTableItem } from './timetable-item.model';
+import { SubjectItem } from './subject.model';
 
 export interface Room {
   name: string;
   floorName: string;
-  subjectList: SubjectName[];
+  subjectList: SubjectItem[];
   timetable: TimeTableItem[];
   totalSpotsNumber: number;
   unavailableSpots: number;

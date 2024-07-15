@@ -6,10 +6,24 @@
   <mat-accordion>
     @for (faculty of facultyList; track $index) {
       <mat-expansion-panel outline="true">
-        <mat-expansion-panel-header>
+        <mat-expansion-panel-header class="!h-fit !py-2">
           <mat-panel-title> {{ faculty.name }} </mat-panel-title>
         </mat-expansion-panel-header>
         <free-spot-faculty [facultySig]="faculty"></free-spot-faculty>
+        @if (addingYear || editingYear) {
+          <form
+            class="flex flex-col py-4 sm:flex-row sm:items-center sm:gap-4"
+            (ngSubmit)="editingYear ? onEditYear(faculty) : onAddYear(faculty)"
+          >
+            <mat-form-field>
+              <mat-label>New Year</mat-label>
+              <input type="text" matInput [formControl]="addYearFormControl" />
+            </mat-form-field>
+            <button mat-flat-button type="submit" class="sm:mb-5">{{ editingYear ? 'Edit Year' : 'Add Year' }}</button>
+          </form>
+        } @else {
+          <free-spot-add-item-card class="block h-24 w-full md:h-28" (click)="onAddingYear()"></free-spot-add-item-card>
+        }
       </mat-expansion-panel>
     }
   </mat-accordion>

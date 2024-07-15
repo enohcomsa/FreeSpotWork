@@ -2,8 +2,9 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTabsModule } from '@angular/material/tabs';
 import { DynamicChipListComponent, TimetableItemComponent } from '@free-spot/ui';
-import { Group, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
-import { Event, SubjectName, WeekDay, WeekParity } from '@free-spot/enums';
+import { Group, SubjectItem, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
+import { Event, WeekDay, WeekParity } from '@free-spot/enums';
+import { SUBJECT_LIST } from '@free-spot/constants';
 
 @Component({
   selector: 'free-spot-group',
@@ -15,11 +16,12 @@ import { Event, SubjectName, WeekDay, WeekParity } from '@free-spot/enums';
 })
 export class GroupComponent {
   groupNameSig = input.required<string>();
+  subjectList: SubjectItem[] = SUBJECT_LIST;
 
   timetableActivityItem1: TimetableActivityItem = {
     startHour: 8,
     endHour: 10,
-    subjectName: SubjectName.TLELEFONY,
+    subjectItem: this.subjectList[0],
     roomName: '5432',
     activiteType: Event.LABORATORY,
     weekParity: WeekParity.ODD,
@@ -29,7 +31,7 @@ export class GroupComponent {
   timetableActivityItem2: TimetableActivityItem = {
     startHour: 12,
     endHour: 14,
-    subjectName: SubjectName.TLELEFONY,
+    subjectItem: this.subjectList[0],
     roomName: '5432',
     activiteType: Event.COURSE,
     weekParity: WeekParity.BOTH,
@@ -39,7 +41,7 @@ export class GroupComponent {
   timetableActivityItem3: TimetableActivityItem = {
     startHour: 16,
     endHour: 18,
-    subjectName: SubjectName.TLELEFONY,
+    subjectItem: this.subjectList[0],
     roomName: '5432',
     activiteType: Event.PROJECT,
     weekParity: WeekParity.EVEN,
@@ -49,7 +51,7 @@ export class GroupComponent {
   timetableActivityItem4: TimetableActivityItem = {
     startHour: 8,
     endHour: 10,
-    subjectName: SubjectName.CID,
+    subjectItem: this.subjectList[1],
     roomName: '542',
     activiteType: Event.PROJECT,
     weekParity: WeekParity.EVEN,

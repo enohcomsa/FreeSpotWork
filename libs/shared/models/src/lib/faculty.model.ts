@@ -5,5 +5,5 @@ export interface Faculty {
   name: string;
   shortName: string;
   subjectList?: SubjectItem[];
-  yearList: Year[];
+  yearList?: Year[];
 }

@@ -2,11 +2,11 @@ import { ChangeDetectionStrategy, Component, inject, input, OnInit, Signal } fro
 import { CommonModule } from '@angular/common';
 import { DynamicChipListComponent, TimetableItemComponent } from '@free-spot/ui';
 import { AdminRoomTimetableItemComponent } from '../admin-room-timetable-item/admin-room-timetable-item.component';
-import { SubjectName } from '@free-spot/enums';
-import { Building, Floor, Room, TimeTableItem } from '@free-spot/models';
+import { Building, Floor, Room, SubjectItem, TimeTableItem } from '@free-spot/models';
 import { AdminRoomService } from '@free-spot-service/room';
 import { AdminBuildingService } from '@free-spot-service/building';
 import { AdminFloorService } from '@free-spot-service/floor';
+import { SUBJECT_LIST } from '@free-spot/constants';
 
 @Component({
   selector: 'free-spot-admin-room-detail',
@@ -28,20 +28,7 @@ export class AdminRoomDetailComponent implements OnInit {
   buildingNameSig = input.required<string>();
   buildingSig!: Signal<Building>;
 
-  subjectList = [
-    'aaaa',
-    'bbb',
-    'cccccc',
-    'dddddddd',
-    'eeeeeee',
-    'fffff',
-    'gggg',
-    'hhhhhhhh',
-    'iiiiiii',
-    'jjjjjjj',
-    'kkkkkkk',
-    'llllllll',
-  ];
+  subjectList: SubjectItem[] = SUBJECT_LIST;
 
   ngOnInit(): void {
     this._adminRoomService.init();
@@ -52,10 +39,10 @@ export class AdminRoomDetailComponent implements OnInit {
     this.buildingSig = this._adminBuildingService.getBuildingByName(this.buildingNameSig());
   }
 
-  onSubjectListChange(changedSubjectList: string[]): void {
+  onSubjectListChange(changedSubjectList: SubjectItem[]): void {
     const updatedRoom: Room = {
       ...this.roomSig(),
-      subjectList: changedSubjectList as SubjectName[],
+      subjectList: changedSubjectList,
     };
     this._adminRoomService.updateRoom(this.roomSig(), updatedRoom);
     this._updateFloorAndBuilding(updatedRoom);

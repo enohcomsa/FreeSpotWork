@@ -1,9 +1,10 @@
-import { SubjectName, Event, WeekParity } from '@free-spot/enums';
+import { Event, WeekParity } from '@free-spot/enums';
+import { SubjectItem } from './subject.model';
 
 export interface TimetableActivityItem {
   startHour: number;
   endHour: number;
-  subjectName: SubjectName;
+  subjectItem: SubjectItem;
   roomName: string;
   activiteType: Event;
   weekParity: WeekParity;

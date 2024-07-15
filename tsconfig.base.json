@@ -23,6 +23,7 @@
       "@free-spot-service/room": ["libs/service/room/src/index.ts"],
       "@free-spot-service/user": ["libs/service/user/src/index.ts"],
       "@free-spot/admin": ["libs/pages/admin/src/index.ts"],
+      "@free-spot/constants": ["libs/shared/constants/src/index.ts"],
       "@free-spot/dashboard": ["libs/pages/dashboard/src/index.ts"],
       "@free-spot/enums": ["libs/shared/enums/src/index.ts"],
       "@free-spot/models": ["libs/shared/models/src/index.ts"],

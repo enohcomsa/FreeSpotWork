@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TimetableItemComponent } from '@free-spot/ui';
-import { Group, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
-import { SubjectName, WeekParity, Event, WeekDay } from '@free-spot/enums';
+import { Group, SubjectItem, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
+import { WeekParity, Event, WeekDay } from '@free-spot/enums';
+import { SUBJECT_LIST } from '@free-spot/constants';
 
 @Component({
   selector: 'free-spot-schedule',
@@ -13,10 +14,11 @@ import { SubjectName, WeekParity, Event, WeekDay } from '@free-spot/enums';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ScheduleComponent {
+  subjectList: SubjectItem[] = SUBJECT_LIST;
   timetableActivityItem1: TimetableActivityItem = {
     startHour: 8,
     endHour: 10,
-    subjectName: SubjectName.TLELEFONY,
+    subjectItem: this.subjectList[0],
     roomName: '5432',
     activiteType: Event.LABORATORY,
     weekParity: WeekParity.ODD,
@@ -26,7 +28,7 @@ export class ScheduleComponent {
   timetableActivityItem2: TimetableActivityItem = {
     startHour: 12,
     endHour: 14,
-    subjectName: SubjectName.TLELEFONY,
+    subjectItem: this.subjectList[1],
     roomName: '5432',
     activiteType: Event.COURSE,
     weekParity: WeekParity.BOTH,
@@ -36,7 +38,7 @@ export class ScheduleComponent {
   timetableActivityItem3: TimetableActivityItem = {
     startHour: 16,
     endHour: 18,
-    subjectName: SubjectName.TLELEFONY,
+    subjectItem: this.subjectList[0],
     roomName: '5432',
     activiteType: Event.PROJECT,
     weekParity: WeekParity.EVEN,
@@ -46,7 +48,7 @@ export class ScheduleComponent {
   timetableActivityItem4: TimetableActivityItem = {
     startHour: 8,
     endHour: 10,
-    subjectName: SubjectName.CID,
+    subjectItem: this.subjectList[2],
     roomName: '542',
     activiteType: Event.PROJECT,
     weekParity: WeekParity.EVEN,

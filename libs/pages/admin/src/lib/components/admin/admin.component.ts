@@ -12,7 +12,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { FacultyComponent } from '../faculty/faculty.component';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { Building, Faculty, Floor, SubjectItem } from '@free-spot/models';
+import { Building, Faculty, Floor, SubjectItem, Year } from '@free-spot/models';
 import { AddItemCardComponent, DynamicChipListComponent } from '@free-spot/ui';
 import { AdminBuildingCardComponent } from '../admin-building-card/admin-building-card.component';
 import { AdminEventCardComponent } from '../admin-event-card/admin-event-card.component';
@@ -21,6 +21,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { AdminBuildingService } from '@free-spot-service/building';
+import { FACULTY_LIST } from '@free-spot/constants';
 
 @Component({
   selector: 'free-spot-admin',
@@ -47,11 +48,17 @@ export class AdminComponent implements OnInit {
   private _formBuilder: FormBuilder = inject(FormBuilder);
   private _adminBuildingService: AdminBuildingService = inject(AdminBuildingService);
 
+  facultyList: Faculty[] = FACULTY_LIST;
+
   editBuilding = viewChild<ElementRef>('editBuilding');
   editEvent = viewChild<ElementRef>('editEvent');
   buildingListSig: Signal<Building[]> = this._adminBuildingService.buildingListSig;
+  oldYearSig: WritableSignal<Year> = signal({} as Year);
   oldbuildingSig: WritableSignal<Building> = signal({} as Building);
 
+  addingYear = false;
+  editingYear = false;
+  addYearFormControl = this._formBuilder.nonNullable.control('');
   addingBuilding = false;
   editingBuilding = false;
   addBuildingFormGroup = this._formBuilder.nonNullable.group({
@@ -67,8 +74,6 @@ export class AdminComponent implements OnInit {
   subjectItem: SubjectItem = {
     name: 'subject 1',
     shortName: 'subj1',
-    professor: 'string',
-    roomList: [],
   };
 
   facultyItem: Faculty = {
@@ -111,16 +116,6 @@ export class AdminComponent implements OnInit {
     ],
   };
 
-  facultyList: Faculty[] = [
-    this.facultyItem,
-    this.facultyItem,
-    this.facultyItem,
-    this.facultyItem,
-    this.facultyItem,
-    this.facultyItem,
-    this.facultyItem,
-  ];
-
   floorExp: Floor = {
     name: 'UTCN Obs ground Floor',
     buildingName: 'Laboratoare Observator',
@@ -156,6 +151,48 @@ export class AdminComponent implements OnInit {
 
   ngOnInit(): void {
     this._adminBuildingService.init();
+  }
+
+  onAddingYear(): void {
+    this.addYearFormControl.reset();
+    this.addingYear = true;
+    this.editingYear = false;
+  }
+
+  onAddYear(faculty: Faculty): void {
+    const newYear: Year = {
+      name: this.addYearFormControl.value,
+      yearGroupList: [],
+    };
+
+    const updatedFaculty: Faculty = { ...faculty, yearList: faculty.yearList ? [...faculty.yearList, newYear] : [newYear] };
+    //addyear
+    console.log(newYear, updatedFaculty);
+
+    this.addingYear = false;
+    this.editingYear = false;
+  }
+  onEditingYear(yearToEdit: Year): void {
+    this.editingYear = true;
+    this.oldYearSig.set(yearToEdit);
+    this.addYearFormControl.setValue(yearToEdit.name);
+  }
+  onEditYear(faculty: Faculty): void {
+    const newYear: Year = {
+      name: this.addYearFormControl.value,
+      yearGroupList: [...this.oldYearSig().yearGroupList],
+    };
+    const updatedFaculty: Faculty = {
+      ...faculty,
+      yearList: faculty.yearList?.map((year: Year) => (year === this.oldYearSig() ? newYear : year)),
+    };
+
+    ///backend update
+    console.log(updatedFaculty);
+
+    this.addYearFormControl.reset();
+    this.addingYear = false;
+    this.editingYear = false;
   }
 
   onAddingBuilding(): void {

@@ -1,5 +1,6 @@
 export enum SubjectName {
-  TLELEFONY = 'TEL',
-  CID = 'CID',
+  SOT = 'SOT',
+  PM = 'PM',
   TM = 'TM',
+  MFF = 'M',
 }

@@ -1,24 +1,28 @@
 <h2 class="pb-2 pt-4 text-xl font-bold md:pb-4 md:pt-8">Subjects</h2>
-@if (facultySig().subjectList?.length) {
-  <free-spot-dynamic-chip-list
-    [itemListSig]="facultySig().subjectList || []"
-    itemLabelSig="subject"
-    itemKeyDysplay="name"
-  ></free-spot-dynamic-chip-list>
-}
+
+<free-spot-dynamic-chip-list
+  [itemListSig]="facultySig().subjectList || []"
+  itemLabelSig="subject"
+  itemKeyDysplay="name"
+></free-spot-dynamic-chip-list>
 
 <h2 class="pb-2 pt-4 text-xl font-bold md:pb-4 md:pt-8">Years</h2>
 @for (year of facultySig().yearList; track $index) {
   <mat-list>
     <div mat-subheader class="text-lg font-bold">{{ year.name }}</div>
-    @if (year.yearGroupList.length) {
-      <free-spot-dynamic-chip-list
-        [itemListSig]="year.yearGroupList"
-        itemLabelSig="group"
-        itemKeyDysplay="name"
-        itemDinamicRoute="group/"
-      ></free-spot-dynamic-chip-list>
-    }
+
+    <free-spot-dynamic-chip-list
+      [itemListSig]="year.yearGroupList ? year.yearGroupList : []"
+      itemLabelSig="group"
+      itemKeyDysplay="name"
+      itemDinamicRoute="group/"
+    ></free-spot-dynamic-chip-list>
+
+    <mat-divider></mat-divider>
+  </mat-list>
+} @empty {
+  <mat-list>
+    <div mat-subheader class="text-lg font-bold">No year added yet</div>
     <mat-divider></mat-divider>
   </mat-list>
 }

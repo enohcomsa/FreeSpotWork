@@ -8,7 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { TimetableActivityItem, TimeTableItem } from '@free-spot/models';
+import { SubjectItem, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
 import { Event, WeekParity } from '@free-spot/enums';
 
 @Component({
@@ -35,7 +35,7 @@ export class AdminRoomTimetableItemComponent implements OnInit {
 
   roomNameSig = input.required<string>();
   timetableItemSig = model.required<TimeTableItem>();
-  subjectListSig = input.required<string[]>();
+  subjectListSig = input.required<SubjectItem[]>();
 
   startHourList: number[] = [8, 10, 12, 14, 16, 18];
   eventList: Event[] = Object.values(Event).filter((event: Event) => event !== Event.SPECIAL_EVENT);
@@ -75,7 +75,7 @@ export class AdminRoomTimetableItemComponent implements OnInit {
     const newTimetableActivity: TimetableActivityItem = {
       startHour: this.addTimetableActivityFormGroup.controls['startHour'].value,
       endHour: this.addTimetableActivityFormGroup.controls['startHour'].value + 2,
-      subjectName: this.addTimetableActivityFormGroup.controls['subjectName'].value,
+      subjectItem: this.addTimetableActivityFormGroup.controls['subjectName'].value,
       roomName: this.roomNameSig(),
       activiteType: this.addTimetableActivityFormGroup.controls['activiteType'].value,
       weekParity: this.addTimetableActivityFormGroup.controls['weekParity'].value,

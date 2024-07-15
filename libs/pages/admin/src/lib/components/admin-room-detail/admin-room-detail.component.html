@@ -4,6 +4,7 @@
   <free-spot-dynamic-chip-list
     [optionListSig]="subjectList"
     [itemListSig]="roomSig().subjectList ? roomSig().subjectList : []"
+    itemKeyDysplay="name"
     itemLabelSig="subject"
     (itemListSigChange)="onSubjectListChange($event)"
   ></free-spot-dynamic-chip-list>
