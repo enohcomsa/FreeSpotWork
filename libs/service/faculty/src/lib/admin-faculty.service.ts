@@ -1,5 +1,5 @@
 import { computed, inject, Injectable, signal, Signal, WritableSignal } from '@angular/core';
-import { Faculty } from '@free-spot/models';
+import { Faculty, Group, Year } from '@free-spot/models';
 import { SignalArrayUtil } from '@free-spot/util';
 import { HttpFacultyService } from '@http-free-spot/faculty';
 import { take } from 'rxjs';
@@ -24,6 +24,17 @@ export class AdminFacultyService {
 
   getFacultyByName(facultyName: string): Signal<Faculty> {
     return computed(() => this.facultyListSig().find((faculty: Faculty) => faculty.name === facultyName) || ({} as Faculty));
+  }
+
+  getFacultyByGroupName(groupName: string): Signal<Faculty> {
+    return computed(
+      () =>
+        this.facultyListSig().find((faculty: Faculty) => {
+          return faculty.yearList
+            ?.map((year: Year) => year.yearGroupList.some((group: Group) => group.name === groupName))
+            .some((checkedYear: boolean) => checkedYear === true);
+        }) || ({} as Faculty),
+    );
   }
 
   addFaculty(newFaculty: Faculty): void {

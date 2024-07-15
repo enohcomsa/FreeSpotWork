@@ -34,6 +34,7 @@
       "@free-spot/util": ["libs/util/src/index.ts"],
       "@http-free-spot/building": ["libs/http-free-spot/building/src/index.ts"],
       "@http-free-spot/event": ["libs/http-free-spot/event/src/index.ts"],
+      "@http-free-spot/faculty": ["libs/http-free-spot/faculty/src/index.ts"],
       "@http-free-spot/floor": ["libs/http-free-spot/floor/src/index.ts"],
       "@http-free-spot/group": ["libs/http-free-spot/group/src/index.ts"],
       "@http-free-spot/room": ["libs/http-free-spot/room/src/index.ts"],
