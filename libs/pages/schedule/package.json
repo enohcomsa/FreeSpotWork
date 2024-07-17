@@ -7,7 +7,8 @@
     "@angular/router": "~18.0.0",
     "@free-spot/ui": "0.0.1",
     "@free-spot/models": "0.0.1",
-    "@free-spot/enums": "0.0.1"
+    "@free-spot/enums": "0.0.1",
+    "@free-spot/constants": "0.0.1"
   },
   "sideEffects": false
 }
