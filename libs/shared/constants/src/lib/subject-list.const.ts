@@ -21,4 +21,20 @@ export const SUBJECT_LIST: SubjectItem[] = [
     name: 'Managementul proiectelor/ Educatie antreprenoriala',
     shortName: 'MP/EA',
   },
+  {
+    name: 'Procesoare de semnal',
+    shortName: 'PS',
+  },
+  {
+    name: 'Electronica aplicata',
+    shortName: 'EA',
+  },
+  {
+    name: 'Prel.semn. vocal',
+    shortName: 'PSV',
+  },
+  {
+    name: 'Markting',
+    shortName: 'MK',
+  },
 ];

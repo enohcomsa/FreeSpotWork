@@ -25,7 +25,9 @@
           <p>{{ timetableItemActivity.activiteType }}</p>
           <p>{{ timetableItemActivity.roomName }}</p>
         </div>
-        <mat-icon matChipRemove>cancel</mat-icon>
+        <button matChipRemove (click)="onRemoveTimetableActivity(timetableItemActivity)">
+          <mat-icon>cancel</mat-icon>
+        </button>
       </mat-chip>
     }
   } @empty {

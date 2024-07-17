@@ -1,104 +1,175 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, OnInit, Signal, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { DynamicChipListComponent, TimetableItemComponent } from '@free-spot/ui';
-import { Group, SubjectItem, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
-import { Event, WeekDay, WeekParity } from '@free-spot/enums';
-import { SUBJECT_LIST } from '@free-spot/constants';
+import { Faculty, Group, SemiGroup, TimeTableItem, Year } from '@free-spot/models';
+import { AdminFacultyService } from '@free-spot-service/faculty';
+import { FormBuilder, FormsModule } from '@angular/forms';
+import { AdminBuildingService } from '@free-spot-service/building';
+import { AdminGroupTimetableComponent } from '../admin-group-timetable/admin-group-timetable.component';
+import { AdminRoomService } from '@free-spot-service/room';
+import { WeekDay } from '@free-spot/enums';
+import { AdminSemisemiGroupTimetableComponent } from '../admin-semigroup-timetable/admin-semigroup-timetable.component';
 
 @Component({
   selector: 'free-spot-group',
   standalone: true,
-  imports: [CommonModule, DynamicChipListComponent, MatTabsModule, TimetableItemComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    DynamicChipListComponent,
+    MatTabsModule,
+    TimetableItemComponent,
+    AdminGroupTimetableComponent,
+    MatSlideToggleModule,
+    AdminSemisemiGroupTimetableComponent,
+  ],
   templateUrl: './group.component.html',
   styleUrl: './group.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GroupComponent {
+export class GroupComponent implements OnInit {
+  private _formBuilder: FormBuilder = inject(FormBuilder);
+  private _adminRoomService: AdminRoomService = inject(AdminRoomService);
+  private _adminFacultyService: AdminFacultyService = inject(AdminFacultyService);
+  private _adminBuildingService: AdminBuildingService = inject(AdminBuildingService);
+
   groupNameSig = input.required<string>();
-  subjectList: SubjectItem[] = SUBJECT_LIST;
+  groupSig: Signal<Group> = signal<Group>({} as Group);
+  yearSig: Signal<Year> = signal<Year>({} as Year);
+  facultySig: Signal<Faculty> = signal<Faculty>({} as Faculty);
 
-  timetableActivityItem1: TimetableActivityItem = {
-    startHour: 8,
-    endHour: 10,
-    subjectItem: this.subjectList[0],
-    roomName: '5432',
-    activiteType: Event.LABORATORY,
-    weekParity: WeekParity.ODD,
-    freeSpots: 0,
-    busySpots: 0,
-  };
-  timetableActivityItem2: TimetableActivityItem = {
-    startHour: 12,
-    endHour: 14,
-    subjectItem: this.subjectList[0],
-    roomName: '5432',
-    activiteType: Event.COURSE,
-    weekParity: WeekParity.BOTH,
-    freeSpots: 0,
-    busySpots: 0,
-  };
-  timetableActivityItem3: TimetableActivityItem = {
-    startHour: 16,
-    endHour: 18,
-    subjectItem: this.subjectList[0],
-    roomName: '5432',
-    activiteType: Event.PROJECT,
-    weekParity: WeekParity.EVEN,
-    freeSpots: 0,
-    busySpots: 0,
-  };
-  timetableActivityItem4: TimetableActivityItem = {
-    startHour: 8,
-    endHour: 10,
-    subjectItem: this.subjectList[1],
-    roomName: '542',
-    activiteType: Event.PROJECT,
-    weekParity: WeekParity.EVEN,
-    freeSpots: 0,
-    busySpots: 0,
-  };
+  semigroupsEnabledSig = computed(() => !!this.groupSig().semigroups);
+  addingYear = false;
+  editingYear = false;
+  addGroupFormControl = this._formBuilder.nonNullable.control('');
 
-  groupData: Group = {
-    name: 'gr1',
-    studentList: [
-      'enoh',
-      'dsada',
-      'dsggggg',
-      'bbbbbbbb',
-      'ffffffff',
-      'zzzzzzz',
-      'enoh',
-      'dsada',
-      'dsggggg',
-      'bbbbbbbb',
-      'ffffffff',
-      'zzzzzzz',
-      'enoh',
-      'dsada',
-      'dsggggg',
-      'bbbbbbbb',
-      'ffffffff',
-      'zzzzzzz',
-    ],
-    timeTable: [
-      this.getTimetableActivity(WeekDay.MONDAY),
-      this.getTimetableActivity(WeekDay.TUESDAY),
-      this.getTimetableActivity(WeekDay.WEDNESDAY),
-      this.getTimetableActivity(WeekDay.THURSDAY),
-      this.getTimetableActivity(WeekDay.FRIDAY),
-    ],
-  };
+  emptyTimetable: TimeTableItem[] = [
+    { weekDay: WeekDay.MONDAY, activities: [] },
+    { weekDay: WeekDay.TUESDAY, activities: [] },
+    { weekDay: WeekDay.WEDNESDAY, activities: [] },
+    { weekDay: WeekDay.THURSDAY, activities: [] },
+    { weekDay: WeekDay.FRIDAY, activities: [] },
+  ];
 
-  getTimetableActivity(weekDay: WeekDay): TimeTableItem {
-    return {
-      weekDay: weekDay,
-      activities: [
-        this.timetableActivityItem1,
-        this.timetableActivityItem2,
-        this.timetableActivityItem3,
-        this.timetableActivityItem4,
-      ],
+  studentList = [
+    'enoh',
+    'dsada',
+    'dsggggg',
+    'bbbbbbbb',
+    'ffffffff',
+    'zzzzzzz',
+    'enoh',
+    'dsada',
+    'dsggggg',
+    'bbbbbbbb',
+    'ffffffff',
+    'zzzzzzz',
+    'enoh',
+    'dsada',
+    'dsggggg',
+    'bbbbbbbb',
+    'ffffffff',
+    'zzzzzzz',
+  ];
+
+  ngOnInit(): void {
+    this._adminRoomService.init();
+    this._adminBuildingService.init();
+    this._adminFacultyService.init();
+
+    this.groupSig = computed(() => {
+      let currentGroup: Group = { name: this.groupNameSig(), studentList: [], timetable: [] };
+      this.facultySig().yearList?.forEach((year: Year) =>
+        year.yearGroupList?.forEach((yearGroup: Group) => {
+          if (yearGroup.name === this.groupNameSig()) {
+            currentGroup = yearGroup;
+          }
+        }),
+      );
+      return currentGroup;
+    });
+
+    this.yearSig = computed(() => {
+      let currentYear: Year = {} as Year;
+      this.facultySig().yearList?.forEach((year: Year) =>
+        year.yearGroupList?.some((yearGroup: Group) => {
+          if (yearGroup.name === this.groupNameSig()) {
+            currentYear = year;
+          }
+        }),
+      );
+      return currentYear;
+    });
+
+    this.facultySig = this._adminFacultyService.getFacultyByGroupName(this.groupNameSig());
+  }
+
+  toggleSemigroups(enableSemigroups: boolean): void {
+    if (enableSemigroups) {
+      const groupWithSemigroups: Group = {
+        ...this.groupSig(),
+        timetable: this.emptyTimetable,
+        semigroups: [
+          { name: this.groupNameSig() + ' sg1', students: [], timetable: this.emptyTimetable },
+          { name: this.groupNameSig() + ' sg2', students: [], timetable: this.emptyTimetable },
+        ],
+      };
+      this._updateFaculty(groupWithSemigroups);
+    } else {
+      const groupWithoutSemigroups: Group = {
+        name: this.groupNameSig(),
+        studentList: this.groupSig().studentList ? [...this.groupSig().studentList] : [],
+        timetable: this.emptyTimetable,
+      };
+      this._updateFaculty(groupWithoutSemigroups);
+    }
+  }
+
+  updateGroupStudentList(updatedStudentGroupList: string[]): void {
+    const updatedGroup: Group = { ...this.groupSig(), studentList: updatedStudentGroupList };
+    this._updateFaculty(updatedGroup);
+  }
+
+  updateGroupTimetable(updatedTimetableGroup: Group): void {
+    this._updateFaculty(updatedTimetableGroup);
+  }
+
+  updateSemiGroupStudentList(updatedStudentSemiGroupList: string[], oldSemiGroup: SemiGroup): void {
+    const updatedSemiGroup: SemiGroup = { ...oldSemiGroup, students: updatedStudentSemiGroupList };
+    const updatedGroup: Group = {
+      ...this.groupSig(),
+      semigroups: this.groupSig().semigroups?.map((semiGroup: SemiGroup) =>
+        semiGroup.name === updatedSemiGroup.name ? updatedSemiGroup : semiGroup,
+      ),
     };
+
+    this._updateFaculty(updatedGroup);
+  }
+
+  updateSemiGroupTimetable(updatedSemiGroup: SemiGroup): void {
+    const updatedGroup: Group = {
+      ...this.groupSig(),
+      semigroups: this.groupSig().semigroups?.map((semiGroup: SemiGroup) =>
+        semiGroup.name === updatedSemiGroup.name ? updatedSemiGroup : semiGroup,
+      ),
+    };
+
+    this._updateFaculty(updatedGroup);
+  }
+
+  private _updateFaculty(updatedGroup: Group): void {
+    const updatedYear: Year = {
+      ...this.yearSig(),
+      yearGroupList: this.yearSig().yearGroupList.map((yearGroup: Group) =>
+        yearGroup.name === updatedGroup.name ? updatedGroup : yearGroup,
+      ),
+    };
+    const updatedFaculty: Faculty = {
+      ...this.facultySig(),
+      yearList: this.facultySig().yearList?.map((year: Year) => (year.name === updatedYear.name ? updatedYear : year)),
+    };
+    this._adminFacultyService.updateFaculty(this.facultySig(), updatedFaculty);
   }
 }

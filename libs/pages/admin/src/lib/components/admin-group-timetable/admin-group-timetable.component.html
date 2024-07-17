@@ -1,0 +1,72 @@
+<mat-chip-set class="pb-4">
+  @for (timetableItem of groupSig().timetable; track $index; let last1 = $last) {
+    @for (timetableItemActivity of timetableItem.activities; track $index; let last2 = $last) {
+      <mat-chip removable="true">
+        <div class="flex gap-2">
+          <p>{{ getTimeInterval(timetableItemActivity.startHour) }}</p>
+          <p>{{ timetableItemActivity.subjectItem.shortName }}</p>
+          <p>{{ timetableItemActivity.activiteType }}</p>
+          <p>{{ timetableItemActivity.roomName }}</p>
+        </div>
+        <button matChipRemove (click)="onRemoveTimetableActivity(timetableItemActivity)">
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </mat-chip>
+    }
+  }
+  @if (emptyTimetableSig()) {
+    <mat-chip>No timetable items added yet</mat-chip>
+    <button mat-icon-button class="ml-2" (click)="addingTimetableActivity = true">
+      <mat-icon class="mb-2">add </mat-icon>
+    </button>
+  } @else {
+    <button mat-icon-button class="ml-2" (click)="addingTimetableActivity = true">
+      <mat-icon class="mb-2">add </mat-icon>
+    </button>
+  }
+</mat-chip-set>
+
+@if (addingTimetableActivity) {
+  <form
+    [formGroup]="addTimetableActivityFormGroup"
+    class="flex flex-col flex-wrap py-4 lg:flex-row lg:items-center lg:gap-4"
+    (ngSubmit)="onAddTimetableActivity()"
+  >
+    <div class="flex flex-auto flex-col md:flex-row md:items-center md:gap-4">
+      <mat-form-field class="flex-auto">
+        <mat-label>Week day</mat-label>
+        <mat-select formControlName="weekDay">
+          @for (weekDay of weekDayList; track weekDay) {
+            <mat-option [value]="weekDay">{{ weekDay }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="flex-auto">
+        <mat-label>Subject name</mat-label>
+        <input type="text" matInput formControlName="subject" [matAutocomplete]="autoSubject" />
+        <mat-autocomplete autoActiveFirstOption #autoSubject="matAutocomplete">
+          @for (subject of subjectListSig(); track $index) {
+            <mat-option [value]="subject">{{ subject.name }}</mat-option>
+          }
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <mat-form-field class="flex-auto">
+        <mat-label>Activity</mat-label>
+        <input type="text" matInput formControlName="timetableActivity" [matAutocomplete]="autoType" />
+        <mat-autocomplete autoActiveFirstOption #autoType="matAutocomplete">
+          @for (activity of foundActivitiesSig(); track $index) {
+            <mat-option [value]="activity"
+              >{{ activity.startHour }} {{ activity.activiteType }} {{ activity.roomName }} {{ activity.weekParity }}</mat-option
+            >
+          }
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
+
+    <div class="flex flex-auto flex-col md:flex-row md:items-center md:gap-4">
+      <button mat-flat-button type="submit" class="flex-auto sm:mb-5">Add timetable item</button>
+    </div>
+  </form>
+}

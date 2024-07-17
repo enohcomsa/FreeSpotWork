@@ -78,7 +78,7 @@ export class ScheduleComponent {
       'ffffffff',
       'zzzzzzz',
     ],
-    timeTable: [
+    timetable: [
       this.getTimetableActivity(WeekDay.MONDAY),
       this.getTimetableActivity(WeekDay.TUESDAY),
       this.getTimetableActivity(WeekDay.WEDNESDAY),

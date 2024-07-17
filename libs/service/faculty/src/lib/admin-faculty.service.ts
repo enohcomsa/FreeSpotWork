@@ -31,7 +31,7 @@ export class AdminFacultyService {
       () =>
         this.facultyListSig().find((faculty: Faculty) => {
           return faculty.yearList
-            ?.map((year: Year) => year.yearGroupList.some((group: Group) => group.name === groupName))
+            ?.map((year: Year) => year.yearGroupList?.some((group: Group) => group.name === groupName))
             .some((checkedYear: boolean) => checkedYear === true);
         }) || ({} as Faculty),
     );

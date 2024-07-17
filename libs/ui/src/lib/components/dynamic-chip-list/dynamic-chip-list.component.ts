@@ -8,6 +8,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TimeTableItem } from '@free-spot/models';
+import { WeekDay } from '@free-spot/enums';
 
 @Component({
   selector: 'free-spot-dynamic-chip-list',
@@ -40,10 +42,18 @@ export class DynamicChipListComponent<T> {
   addItemFormControl = this._formBuilder.nonNullable.control('');
   addingItem = false;
 
+  emptyTimetable: TimeTableItem[] = [
+    { weekDay: WeekDay.MONDAY, activities: [] },
+    { weekDay: WeekDay.TUESDAY, activities: [] },
+    { weekDay: WeekDay.WEDNESDAY, activities: [] },
+    { weekDay: WeekDay.THURSDAY, activities: [] },
+    { weekDay: WeekDay.FRIDAY, activities: [] },
+  ];
+
   onAddItem(): void {
     this.addingItem = false;
     if (this.itemLabelSig() === 'group') {
-      this.itemListSig.set([...this.itemListSig(), { name: this.addItemFormControl.value } as T]);
+      this.itemListSig.set([...this.itemListSig(), { name: this.addItemFormControl.value, timetable: this.emptyTimetable } as T]);
     } else {
       this.itemListSig.set([...this.itemListSig(), this.addItemFormControl.value as T]);
     }

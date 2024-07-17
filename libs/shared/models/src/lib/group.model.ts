@@ -4,6 +4,6 @@ import { TimeTableItem } from './timetable-item.model';
 export interface Group {
   name: string;
   studentList: string[];
-  timeTable: TimeTableItem[];
+  timetable: TimeTableItem[];
   semigroups?: SemiGroup[];
 }

@@ -1,5 +1,6 @@
 import { computed, inject, Injectable, Signal, signal, WritableSignal } from '@angular/core';
-import { Room } from '@free-spot/models';
+import { WeekDay } from '@free-spot/enums';
+import { Room, SubjectItem, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
 import { SignalArrayUtil } from '@free-spot/util';
 import { HttpRoomService } from '@http-free-spot/room';
 import { take } from 'rxjs';
@@ -24,6 +25,25 @@ export class AdminRoomService {
 
   getRoomByName(roomName: string): Signal<Room> {
     return computed(() => this.roomListSig().find((room: Room) => room.name === roomName) || ({} as Room));
+  }
+
+  getTimetableActivitiesByWeekDayAndSubject(weekDay: WeekDay, subject: SubjectItem): TimetableActivityItem[] {
+    const weeDayTimetableActivities: TimetableActivityItem[] = (
+      [
+        ...this.roomListSig().map((room: Room) =>
+          room.timetable.filter(
+            (timetableItem: TimeTableItem) => timetableItem.weekDay === weekDay && !!timetableItem.activities,
+          ),
+        ),
+      ].flat(Infinity) as TimeTableItem[]
+    )
+      .map((timetableItem: TimeTableItem) => timetableItem.activities)
+      .flat(Infinity) as TimetableActivityItem[];
+
+    const foundTimetableActivities = weeDayTimetableActivities.filter(
+      (timetableActivity: TimetableActivityItem) => timetableActivity.subjectItem?.name === subject?.name,
+    );
+    return foundTimetableActivities;
   }
 
   addRoom(newRoom: Room): void {

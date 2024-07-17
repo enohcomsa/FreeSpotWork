@@ -87,33 +87,33 @@ export class AdminComponent implements OnInit {
       {
         name: '1',
         yearGroupList: [
-          { name: 'gr1', studentList: [], timeTable: [] },
-          { name: 'gr2', studentList: [], timeTable: [] },
-          { name: 'gr3', studentList: [], timeTable: [] },
+          { name: 'gr1', studentList: [], timetable: [] },
+          { name: 'gr2', studentList: [], timetable: [] },
+          { name: 'gr3', studentList: [], timetable: [] },
         ],
       },
       // {
       //   name: '2',
       //   yearGroupList: [
-      //     { name: 'gr1', studentList: [], timeTable: [] },
-      //     { name: 'gr2', studentList: [], timeTable: [] },
-      //     { name: 'gr3', studentList: [], timeTable: [] },
+      //     { name: 'gr1', studentList: [], timetable: [] },
+      //     { name: 'gr2', studentList: [], timetable: [] },
+      //     { name: 'gr3', studentList: [], timetable: [] },
       //   ],
       // },
       // {
       //   name: '3',
       //   yearGroupList: [
-      //     { name: 'gr1', studentList: [], timeTable: [] },
-      //     { name: 'gr2', studentList: [], timeTable: [] },
-      //     { name: 'gr3', studentList: [], timeTable: [] },
+      //     { name: 'gr1', studentList: [], timetable: [] },
+      //     { name: 'gr2', studentList: [], timetable: [] },
+      //     { name: 'gr3', studentList: [], timetable: [] },
       //   ],
       // },
       // {
       //   name: '4',
       //   yearGroupList: [
-      //     { name: 'gr1', studentList: [], timeTable: [] },
-      //     { name: 'gr2', studentList: [], timeTable: [] },
-      //     { name: 'gr3', studentList: [], timeTable: [] },
+      //     { name: 'gr1', studentList: [], timetable: [] },
+      //     { name: 'gr2', studentList: [], timetable: [] },
+      //     { name: 'gr3', studentList: [], timetable: [] },
       //   ],
       // },
     ],
