@@ -34,7 +34,7 @@ export const SUBJECT_LIST: SubjectItem[] = [
     shortName: 'PSV',
   },
   {
-    name: 'Markting',
+    name: 'Marketing',
     shortName: 'MK',
   },
 ];

@@ -19,7 +19,7 @@ export class AdminRoomService {
       .getRoomList()
       .pipe(take(1))
       .subscribe((roomList: Room[]) => {
-        this._roomListSig.set(roomList.filter((room: Room) => room !== null));
+        this._roomListSig.set(roomList?.filter((room: Room) => room !== null));
       });
   }
 
@@ -28,22 +28,27 @@ export class AdminRoomService {
   }
 
   getTimetableActivitiesByWeekDayAndSubject(weekDay: WeekDay, subject: SubjectItem): TimetableActivityItem[] {
-    const weeDayTimetableActivities: TimetableActivityItem[] = (
-      [
-        ...this.roomListSig().map((room: Room) =>
-          room.timetable.filter(
-            (timetableItem: TimeTableItem) => timetableItem.weekDay === weekDay && !!timetableItem.activities,
+    if (this._roomListSig()) {
+      const weeDayTimetableActivities: TimetableActivityItem[] = (
+        [
+          ...this._roomListSig().map((room: Room) =>
+            room.timetable.filter(
+              (timetableItem: TimeTableItem) => timetableItem.weekDay === weekDay && !!timetableItem.activities,
+            ),
           ),
-        ),
-      ].flat(Infinity) as TimeTableItem[]
-    )
-      .map((timetableItem: TimeTableItem) => timetableItem.activities)
-      .flat(Infinity) as TimetableActivityItem[];
+        ].flat(Infinity) as TimeTableItem[]
+      )
+        .map((timetableItem: TimeTableItem) => timetableItem.activities)
+        .flat(Infinity) as TimetableActivityItem[];
 
-    const foundTimetableActivities = weeDayTimetableActivities.filter(
-      (timetableActivity: TimetableActivityItem) => timetableActivity.subjectItem?.name === subject?.name,
-    );
-    return foundTimetableActivities;
+      const foundTimetableActivities =
+        weeDayTimetableActivities?.filter(
+          (timetableActivity: TimetableActivityItem) => timetableActivity.subjectItem?.name === subject?.name,
+        ) || [];
+      return foundTimetableActivities;
+    } else {
+      return [];
+    }
   }
 
   addRoom(newRoom: Room): void {

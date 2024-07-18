@@ -17,7 +17,7 @@ export class AdminGroupService {
       .getGroupList()
       .pipe(take(1))
       .subscribe((groupList: Group[]) => {
-        this._groupListSig.set(groupList.filter((group: Group) => group !== null));
+        this._groupListSig.set(groupList?.filter((group: Group) => group !== null));
       });
   }
 

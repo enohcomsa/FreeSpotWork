@@ -18,7 +18,7 @@ export class AdminFacultyService {
       .getFacultyList()
       .pipe(take(1))
       .subscribe((facultyList: Faculty[]) => {
-        this._facultyListSig.set(facultyList.filter((faculty: Faculty) => faculty !== null));
+        this._facultyListSig.set(facultyList?.filter((faculty: Faculty) => faculty !== null));
       });
   }
 

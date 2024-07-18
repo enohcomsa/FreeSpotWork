@@ -18,7 +18,7 @@ export class AdminFloorService {
       .getFloorList()
       .pipe(take(1))
       .subscribe((floorList: Floor[]) => {
-        this._floorListSig.set(floorList.filter((floor: Floor) => floor !== null));
+        this._floorListSig.set(floorList?.filter((floor: Floor) => floor !== null));
       });
   }
 

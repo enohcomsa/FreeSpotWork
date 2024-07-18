@@ -1,17 +1,19 @@
 <mat-chip-set class="pb-4">
   @for (timetableItem of semiGroupSig().timetable; track $index; let last1 = $last) {
     @for (timetableItemActivity of timetableItem.activities; track $index; let last2 = $last) {
-      <mat-chip removable="true">
-        <div class="flex gap-2">
-          <p>{{ getTimeInterval(timetableItemActivity.startHour) }}</p>
-          <p>{{ timetableItemActivity.subjectItem.shortName }}</p>
-          <p>{{ timetableItemActivity.activiteType }}</p>
-          <p>{{ timetableItemActivity.roomName }}</p>
-        </div>
-        <button matChipRemove (click)="onRemoveTimetableActivity(timetableItemActivity)">
-          <mat-icon>cancel</mat-icon>
-        </button>
-      </mat-chip>
+      @if (timetableItemActivity) {
+        <mat-chip removable="true">
+          <div class="flex gap-2">
+            <p>{{ getTimeInterval(timetableItemActivity.startHour) }}</p>
+            <p>{{ timetableItemActivity.subjectItem.shortName }}</p>
+            <p>{{ timetableItemActivity.activiteType }}</p>
+            <p>{{ timetableItemActivity.roomName }}</p>
+          </div>
+          <button matChipRemove (click)="onRemoveTimetableActivity(timetableItemActivity)">
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </mat-chip>
+      }
     }
   }
   @if (emptyTimetableSig()) {
