@@ -27,7 +27,7 @@
           <mat-label>Subject</mat-label>
           <mat-select formControlName="subject">
             @for (subject of materieNames; track subject) {
-              <mat-option [value]="subject">{{ subject }}</mat-option>
+              <mat-option [value]="subject">{{ subject.name }}</mat-option>
             }
           </mat-select>
         </mat-form-field>

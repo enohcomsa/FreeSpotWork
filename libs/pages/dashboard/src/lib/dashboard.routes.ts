@@ -12,7 +12,7 @@ export const dashboardRoutes: Route[] = [
         },
       },
       {
-        path: 'floor/:floorName',
+        path: 'floor/:floorNameSig',
         loadComponent: async () => {
           const mod = await import('./components/floor-details/floor-details.component');
           return mod.FloorDetailsComponent;

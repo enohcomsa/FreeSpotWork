@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, model, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { Room } from '@free-spot/models';
@@ -17,8 +17,10 @@ export class FloorRoomComponent {
   roomDataSig = input.required<Room>();
   buildingNameSig = input.required<string>();
   toggleStateSig = model.required<boolean>();
+  roomBookingSearchSig = output<string>();
 
-  toggleDrawer(): void {
+  toggleDrawer(roomName: string): void {
     this.toggleStateSig.set(!this.toggleStateSig());
+    this.roomBookingSearchSig.emit(roomName);
   }
 }

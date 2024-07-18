@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, model } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { DynamicFormComponent } from '@free-spot/ui';
@@ -17,5 +17,5 @@ import { MatIconModule } from '@angular/material/icon';
 export class FloorBookingDrawerComponent {
   toggleStateSig = model.required<boolean>();
   EVENT = Event;
-  roomName = 'observator 518';
+  roomNameSig = input.required<string>();
 }

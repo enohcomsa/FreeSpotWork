@@ -9,6 +9,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { Event } from '@free-spot/enums';
 import { BookingItemComponent } from '../booking-item/booking-item.component';
+import { SubjectItem } from '@free-spot/models';
+import { SUBJECT_LIST } from '@free-spot/constants';
 
 @Component({
   selector: 'free-spot-dynamic-form',
@@ -34,9 +36,9 @@ export class DynamicFormComponent implements OnInit {
   EVENT = Event;
 
   eventNames: string[] = ['event_efeffe', 'event_deww', 'event_eeeee', 'event_ertty', 'event_xzxz'];
-  materieNames: string[] = ['materie_efeffe', 'materie_deww', 'materie_eeeee', 'materie_ertty', 'materie_xzxz'];
+  materieNames: SubjectItem[] = SUBJECT_LIST;
 
-  eventList: Event[] = [Event.COURSE, Event.LABORATORY, Event.PROJECT, Event.SEMINAR, Event.SPECIAL_EVENT];
+  eventList: Event[] = Object.values(Event);
   searchForm!: FormGroup;
 
   searchActive$: WritableSignal<boolean> = signal(false);
