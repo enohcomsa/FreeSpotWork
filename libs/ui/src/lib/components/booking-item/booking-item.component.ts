@@ -15,8 +15,11 @@ import { Event } from '@free-spot/enums';
 })
 export class BookingItemComponent {
   event_learn: BookedEvent = {
-    eventType: Event.LABORATORY,
-    subjectName: 'materie_1',
+    activityType: Event.LABORATORY,
+    subjectItem: {
+      name: 'Sist. optoelectronice in telecomunicatii ',
+      shortName: 'SOT',
+    },
     date: new Date('2024-7-15'),
     startHour: 8,
     endHour: 10,
@@ -25,8 +28,11 @@ export class BookingItemComponent {
     roomName: '519',
   };
   event_special: BookedEvent = {
-    eventType: Event.SPECIAL_EVENT,
-    subjectName: 'Special event Bosch',
+    activityType: Event.SPECIAL_EVENT,
+    subjectItem: {
+      name: 'Sist. optoelectronice in telecomunicatii ',
+      shortName: 'SOT',
+    },
     date: new Date('2024-7-15'),
     startHour: 14,
     endHour: 16,

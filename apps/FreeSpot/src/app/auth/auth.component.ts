@@ -60,6 +60,8 @@ export class AuthComponent {
       authObs = this._authService.signUp({
         email: this.authForm.controls['email'].value,
         password: this.authForm.controls['password'].value,
+        familyName: this.authForm.controls['familyName'].value,
+        firstName: this.authForm.controls['firstName'].value,
       });
     }
 

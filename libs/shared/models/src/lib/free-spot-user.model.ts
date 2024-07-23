@@ -6,12 +6,10 @@ export interface FreeSpotUser {
   familyName: string;
   firstName: string;
   email: string;
-  year?: string;
+  faculty?: string;
+  currentYear?: string;
   group?: string;
   semiGroup?: string;
-  faculty?: string;
-  specialization?: string;
-  currentYear?: number;
   preferdLanguage?: Language;
   preferedTheme?: Theme;
   bookingList: BookedEvent[];

@@ -37,6 +37,23 @@ export class AdminFacultyService {
     );
   }
 
+  getGroupByName(groupName: string): Signal<Group> {
+    return computed(() => {
+      let foundGroup: Group = {} as Group;
+      this.facultyListSig()?.forEach((faculty: Faculty) =>
+        faculty.yearList?.forEach((year: Year) =>
+          year.yearGroupList.forEach((group: Group) => {
+            if (group.name === groupName) {
+              foundGroup = group;
+            }
+          }),
+        ),
+      );
+
+      return foundGroup;
+    });
+  }
+
   addFaculty(newFaculty: Faculty): void {
     SignalArrayUtil.addItem(newFaculty, this._facultyListSig);
     this._httpFacultyService.storeFacultyList(this._facultyListSig());

@@ -47,7 +47,7 @@ export class AdminRoomTimetableItemComponent implements OnInit {
     this.addTimetableActivityFormGroup = this._formBuilder.nonNullable.group({
       startHour: [this.startHourList[0]],
       subjectName: [this.subjectListSig()[0]],
-      activiteType: [Event.COURSE],
+      activityType: [Event.COURSE],
       weekParity: [WeekParity.BOTH],
     });
   }
@@ -77,7 +77,7 @@ export class AdminRoomTimetableItemComponent implements OnInit {
       endHour: this.addTimetableActivityFormGroup.controls['startHour'].value + 2,
       subjectItem: this.addTimetableActivityFormGroup.controls['subjectName'].value,
       roomName: this.roomNameSig(),
-      activiteType: this.addTimetableActivityFormGroup.controls['activiteType'].value,
+      activityType: this.addTimetableActivityFormGroup.controls['activityType'].value,
       weekParity: this.addTimetableActivityFormGroup.controls['weekParity'].value,
       freeSpots: 0,
       busySpots: 0,

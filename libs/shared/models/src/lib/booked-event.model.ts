@@ -1,8 +1,9 @@
 import { Event } from '@free-spot/enums';
+import { SubjectItem } from './subject.model';
 
 export interface BookedEvent {
-  eventType: Event;
-  subjectName: string;
+  activityType: Event;
+  subjectItem: SubjectItem;
   date: Date;
   startHour: number;
   endHour: number;

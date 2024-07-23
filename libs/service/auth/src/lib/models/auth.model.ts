@@ -1,6 +1,8 @@
 export interface UserData {
   email: string;
   password: string;
+  familyName?: string;
+  firstName?: string;
 }
 
 export interface AuthResponse {

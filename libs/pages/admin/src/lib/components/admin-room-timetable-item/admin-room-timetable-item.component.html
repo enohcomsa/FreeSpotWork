@@ -6,7 +6,7 @@
           <div class="flex gap-2">
             <p>{{ getTimeInterval(timetableItemActivity.startHour) }}</p>
             <p>{{ timetableItemActivity.subjectItem.shortName }}</p>
-            <p>{{ timetableItemActivity.activiteType }}</p>
+            <p>{{ timetableItemActivity.activityType }}</p>
             <p>{{ timetableItemActivity.roomName }}</p>
           </div>
           <button matChipRemove (click)="onRemoveTimetableActivity(timetableItemActivity)">
@@ -22,7 +22,7 @@
         <div class="flex gap-2">
           <p>{{ getTimeInterval(timetableItemActivity.startHour) }}</p>
           <p>{{ timetableItemActivity.subjectItem.shortName }}</p>
-          <p>{{ timetableItemActivity.activiteType }}</p>
+          <p>{{ timetableItemActivity.activityType }}</p>
           <p>{{ timetableItemActivity.roomName }}</p>
         </div>
         <button matChipRemove (click)="onRemoveTimetableActivity(timetableItemActivity)">
@@ -66,7 +66,7 @@
 
       <mat-form-field class="flex-auto">
         <mat-label>Activity type</mat-label>
-        <input type="text" matInput formControlName="activiteType" [matAutocomplete]="autoType" />
+        <input type="text" matInput formControlName="activityType" [matAutocomplete]="autoType" />
         <mat-autocomplete autoActiveFirstOption #autoType="matAutocomplete">
           @for (event of eventList; track $index) {
             <mat-option [value]="event">{{ event }}</mat-option>

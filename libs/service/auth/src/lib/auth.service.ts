@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { AuthUser } from './models/auth-user.model';
 import { AuthResponse, UserData } from './models/auth.model';
 import { HttpUserService } from '@http-free-spot/user';
+import { FreeSpotUser } from '@free-spot/models';
+import { Role } from '@free-spot/enums';
 // import { AppUser } from '../shared/models/user.model';
 
 @Injectable({
@@ -30,7 +32,7 @@ export class AuthService {
       .pipe(
         tap((res: AuthResponse) => {
           this._handleAuth(res.email, res.localId, res.idToken, +res.expiresIn);
-          this._addUser(res.email);
+          this._addUser(res.email, user.firstName || '', user.familyName || '');
         }),
       );
   }
@@ -86,13 +88,20 @@ export class AuthService {
     localStorage.setItem('user', JSON.stringify(user));
   }
 
-  private _addUser(email: string): void {
+  private _addUser(email: string, firstName: string, familtyName: string): void {
     this._http
-      .get<string[]>('https://freespot-6e3c4-default-rtdb.europe-west1.firebasedatabase.app/userList/.json')
+      .get<FreeSpotUser[]>('https://freespot-6e3c4-default-rtdb.europe-west1.firebasedatabase.app/userList/.json')
       .pipe(
-        tap((userList: string[] | undefined) => {
-          const allUsers: string[] = userList || [];
-          allUsers.push(email);
+        tap((userList: FreeSpotUser[] | undefined) => {
+          const allUsers: FreeSpotUser[] = userList || [];
+          const newUser: FreeSpotUser = {
+            role: Role.MEMBER,
+            familyName: familtyName,
+            firstName: firstName,
+            email: email,
+            bookingList: [],
+          };
+          allUsers.push(newUser);
           this._httpUserService.storeUserList(allUsers);
         }),
       )
