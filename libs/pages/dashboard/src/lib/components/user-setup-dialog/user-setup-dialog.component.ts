@@ -22,7 +22,7 @@ import { UserService } from '@free-spot-service/user';
 import { Language, Theme } from '@free-spot/enums';
 import { AdminFloorService } from '@free-spot-service/floor';
 import { AdminRoomService } from '@free-spot-service/room';
-// import { BookingService } from '@free-spot-service/booking';
+import { BookingService } from '@free-spot-service/booking';
 
 @Component({
   selector: 'free-spot-user-setup-dialog',
@@ -47,7 +47,7 @@ export class UserSetupDialogComponent implements OnInit, OnDestroy {
   private _adminRoomService: AdminRoomService = inject(AdminRoomService);
   private _adminFloorService: AdminFloorService = inject(AdminFloorService);
   private _adminFacultyService: AdminFacultyService = inject(AdminFacultyService);
-  // private bookingService: BookingService = inject(BookingService);
+  private _bookingService: BookingService = inject(BookingService);
 
   protected user: FreeSpotUser = inject(MAT_DIALOG_DATA);
 
@@ -110,10 +110,14 @@ export class UserSetupDialogComponent implements OnInit, OnDestroy {
       preferedTheme: Theme.DARK,
       bookingList: [],
     };
-
-    this._getUserTimetableItems(
-      this.setupForm.controls['group'].value as Group,
-      this.setupForm.controls['semigroup'].value as SemiGroup,
+    /////////////////////booking
+    console.log(
+      this._generateUserBookedItems(
+        this._getUserTimetableItems(
+          this.setupForm.controls['group'].value as Group,
+          this.setupForm.controls['semigroup'].value as SemiGroup,
+        ),
+      ),
     );
 
     this._userService.updateFreeSpotUser(this.user, updatedUser);
@@ -134,11 +138,11 @@ export class UserSetupDialogComponent implements OnInit, OnDestroy {
     return timetableActivityItemList;
   }
 
-  private _getLocation(roomName: string): Partial<BookedEvent> {
+  private _getLocation(roomName: string): Pick<BookedEvent, 'buildingName' | 'floorName' | 'roomName'> {
     const activityFloor: Floor = this._adminFloorService.getFloorByName(
       this._adminRoomService.getRoomByName(roomName)().floorName,
     )();
-    const newLocation: Partial<BookedEvent> = {
+    const newLocation: Pick<BookedEvent, 'buildingName' | 'floorName' | 'roomName'> = {
       buildingName: activityFloor.buildingName,
       floorName: activityFloor.name,
       roomName: roomName,
@@ -151,7 +155,13 @@ export class UserSetupDialogComponent implements OnInit, OnDestroy {
     const newUserBookingList: BookedEvent[] = [];
     timetableItemList.forEach((timeTableItem: TimeTableItem) => {
       timeTableItem.activities.forEach((timetableActivity: TimetableActivityItem) => {
-        this._getLocation(timetableActivity.roomName);
+        newUserBookingList.push(
+          this._bookingService.generateBooking(
+            this._getLocation(timetableActivity.roomName),
+            timeTableItem.date || new Date(),
+            timetableActivity,
+          ),
+        );
       });
     });
 
