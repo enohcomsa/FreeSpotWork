@@ -16,6 +16,7 @@
     "baseUrl": ".",
     "paths": {
       "@free-spot-service/auth": ["libs/service/auth/src/index.ts"],
+      "@free-spot-service/booking": ["libs/service/free-spot-booking/src/index.ts"],
       "@free-spot-service/building": ["libs/service/building/src/index.ts"],
       "@free-spot-service/event": ["libs/service/event/src/index.ts"],
       "@free-spot-service/faculty": ["libs/service/faculty/src/index.ts"],

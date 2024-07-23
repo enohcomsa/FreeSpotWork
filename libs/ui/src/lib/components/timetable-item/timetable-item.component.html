@@ -24,7 +24,7 @@
             @if (day.bothWeekActivity) {
               <div class="flex w-full items-center justify-center gap-1 text-sm font-light tracking-tighter">
                 <p>{{ day.bothWeekActivity.subjectItem.shortName }}</p>
-                <p>{{ getEventInitial(day.bothWeekActivity.activiteType) }}</p>
+                <p>{{ getEventInitial(day.bothWeekActivity.activityType) }}</p>
                 <p>{{ day.bothWeekActivity.roomName }}</p>
               </div>
             } @else {
@@ -32,7 +32,7 @@
                 <div class="flex w-1/2 items-center justify-center gap-1">
                   @if (day.oddWeekActivity) {
                     <p>{{ day.oddWeekActivity.subjectItem.shortName }}</p>
-                    <p>{{ getEventInitial(day.oddWeekActivity.activiteType) }}</p>
+                    <p>{{ getEventInitial(day.oddWeekActivity.activityType) }}</p>
                     <p>{{ day.oddWeekActivity.roomName }}</p>
                   }
                 </div>
@@ -40,7 +40,7 @@
                 <div class="flex w-1/2 items-center justify-center gap-1">
                   @if (day.evenWeekActivity) {
                     <p>{{ day.evenWeekActivity.subjectItem.shortName }}</p>
-                    <p>{{ getEventInitial(day.evenWeekActivity.activiteType) }}</p>
+                    <p>{{ getEventInitial(day.evenWeekActivity.activityType) }}</p>
                     <p>{{ day.evenWeekActivity.roomName }}</p>
                   }
                 </div>

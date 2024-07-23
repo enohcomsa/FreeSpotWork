@@ -7,9 +7,22 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { filter, Subscription } from 'rxjs';
 import { AdminFacultyService } from '@free-spot-service/faculty';
-import { Faculty, FreeSpotUser, Group, SemiGroup, TimetableActivityItem, TimeTableItem, Year } from '@free-spot/models';
+import {
+  BookedEvent,
+  Faculty,
+  Floor,
+  FreeSpotUser,
+  Group,
+  SemiGroup,
+  TimetableActivityItem,
+  TimeTableItem,
+  Year,
+} from '@free-spot/models';
 import { UserService } from '@free-spot-service/user';
 import { Language, Theme } from '@free-spot/enums';
+import { AdminFloorService } from '@free-spot-service/floor';
+import { AdminRoomService } from '@free-spot-service/room';
+// import { BookingService } from '@free-spot-service/booking';
 
 @Component({
   selector: 'free-spot-user-setup-dialog',
@@ -31,7 +44,10 @@ export class UserSetupDialogComponent implements OnInit, OnDestroy {
   private _formBuilder: FormBuilder = inject(FormBuilder);
   private _dialogRef: MatDialogRef<UserSetupDialogComponent> = inject(MatDialogRef<UserSetupDialogComponent>);
   private _userService: UserService = inject(UserService);
+  private _adminRoomService: AdminRoomService = inject(AdminRoomService);
+  private _adminFloorService: AdminFloorService = inject(AdminFloorService);
   private _adminFacultyService: AdminFacultyService = inject(AdminFacultyService);
+  // private bookingService: BookingService = inject(BookingService);
 
   protected user: FreeSpotUser = inject(MAT_DIALOG_DATA);
 
@@ -49,6 +65,8 @@ export class UserSetupDialogComponent implements OnInit, OnDestroy {
   subscriptionList: Subscription[] = [];
 
   ngOnInit(): void {
+    this._adminRoomService.init();
+    this._adminFloorService.init();
     this._adminFacultyService.init();
     this.subscriptionList.push(
       this.setupForm.controls['faculty'].valueChanges
@@ -80,6 +98,7 @@ export class UserSetupDialogComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subscriptionList.forEach((subsciption: Subscription) => subsciption.unsubscribe());
   }
+
   onSubmitSetupForm(): void {
     const updatedUser: FreeSpotUser = {
       ...this.user,
@@ -92,34 +111,50 @@ export class UserSetupDialogComponent implements OnInit, OnDestroy {
       bookingList: [],
     };
 
-    console.log(
-      this._getUserTimetableActivityItems(
-        this.setupForm.controls['group'].value as Group,
-        this.setupForm.controls['semigroup'].value as SemiGroup,
-      ),
+    this._getUserTimetableItems(
+      this.setupForm.controls['group'].value as Group,
+      this.setupForm.controls['semigroup'].value as SemiGroup,
     );
 
     this._userService.updateFreeSpotUser(this.user, updatedUser);
     this._dialogRef.close();
   }
 
-  private _getUserTimetableActivityItems(group: Group, semiGroup?: SemiGroup): TimetableActivityItem[] {
-    console.log(semiGroup);
-
-    const timetableActivityItemList: TimetableActivityItem[] = [];
+  private _getUserTimetableItems(group: Group, semiGroup?: SemiGroup): TimeTableItem[] {
+    const timetableActivityItemList: TimeTableItem[] = [];
     if (semiGroup !== null && semiGroup !== undefined) {
       semiGroup.timetable.forEach((timetableItem: TimeTableItem) =>
-        timetableItem.activities?.forEach((timetableActivityItem: TimetableActivityItem) =>
-          timetableActivityItemList.push(timetableActivityItem),
-        ),
+        timetableItem.activities ? timetableActivityItemList.push(timetableItem) : '',
       );
     } else {
       group.timetable.forEach((timetableItem: TimeTableItem) =>
-        timetableItem.activities?.forEach((timetableActivityItem: TimetableActivityItem) =>
-          timetableActivityItemList.push(timetableActivityItem),
-        ),
+        timetableItem.activities ? timetableActivityItemList.push(timetableItem) : '',
       );
     }
     return timetableActivityItemList;
+  }
+
+  private _getLocation(roomName: string): Partial<BookedEvent> {
+    const activityFloor: Floor = this._adminFloorService.getFloorByName(
+      this._adminRoomService.getRoomByName(roomName)().floorName,
+    )();
+    const newLocation: Partial<BookedEvent> = {
+      buildingName: activityFloor.buildingName,
+      floorName: activityFloor.name,
+      roomName: roomName,
+    };
+
+    return newLocation;
+  }
+
+  private _generateUserBookedItems(timetableItemList: TimeTableItem[]): BookedEvent[] {
+    const newUserBookingList: BookedEvent[] = [];
+    timetableItemList.forEach((timeTableItem: TimeTableItem) => {
+      timeTableItem.activities.forEach((timetableActivity: TimetableActivityItem) => {
+        this._getLocation(timetableActivity.roomName);
+      });
+    });
+
+    return newUserBookingList;
   }
 }
