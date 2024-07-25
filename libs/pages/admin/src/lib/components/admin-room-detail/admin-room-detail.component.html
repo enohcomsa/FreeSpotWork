@@ -13,7 +13,7 @@
     <h2 class="pb-4 pt-8 text-xl font-bold md:pb-8 md:pt-12">{{ roomTimetableItem.weekDay }}</h2>
     <free-spot-admin-room-timetable-item
       class="grow"
-      [roomNameSig]="roomNameSig()"
+      [roomSig]="roomSig()"
       [subjectListSig]="roomSig().subjectList ? roomSig().subjectList : []"
       [timetableItemSig]="roomTimetableItem"
       (timetableItemSigChange)="onTimetableItemChange($event)"

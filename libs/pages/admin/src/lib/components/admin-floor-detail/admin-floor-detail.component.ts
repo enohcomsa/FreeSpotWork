@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   ElementRef,
   inject,
   input,
@@ -15,13 +16,15 @@ import { FormsModule, ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { Building, Floor, Room, TimeTableItem } from '@free-spot/models';
+import { Building, Floor, Room, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
 import { AdminRoomCardComponent } from '../admin-room-card/admin-room-card.component';
 import { AdminRoomService } from '@free-spot-service/room';
 import { WeekDay } from '@free-spot/enums';
 import { AddItemCardComponent } from '@free-spot/ui';
 import { AdminFloorService } from '@free-spot-service/floor';
 import { AdminBuildingService } from '@free-spot-service/building';
+import { AdminFacultyService } from '@free-spot-service/faculty';
+import { AppDateService } from '@free-spot-service/app-date';
 
 @Component({
   selector: 'free-spot-admin-floor-detail',
@@ -45,6 +48,8 @@ export class AdminFloorDetailComponent implements OnInit {
   private _adminRoomService: AdminRoomService = inject(AdminRoomService);
   private _adminFloorService: AdminFloorService = inject(AdminFloorService);
   private _adminBuildingService: AdminBuildingService = inject(AdminBuildingService);
+  private _adminFacultyService: AdminFacultyService = inject(AdminFacultyService);
+  private _appDateService: AppDateService = inject(AppDateService);
 
   editRoom = viewChild.required<ElementRef>('editRoom');
   floorNameSig = input.required<string>();
@@ -61,18 +66,20 @@ export class AdminFloorDetailComponent implements OnInit {
     totalSpotsNumber: [0],
     unavailableSpots: [0],
   });
-  roomEmptyTimetable: TimeTableItem[] = [
-    { weekDay: WeekDay.MONDAY, activities: [] },
-    { weekDay: WeekDay.TUESDAY, activities: [] },
-    { weekDay: WeekDay.WEDNESDAY, activities: [] },
-    { weekDay: WeekDay.THURSDAY, activities: [] },
-    { weekDay: WeekDay.FRIDAY, activities: [] },
-  ];
+  roomEmptyTimetable: Signal<TimeTableItem[]> = computed(() => [
+    { weekDay: WeekDay.MONDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.MONDAY) },
+    { weekDay: WeekDay.TUESDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.TUESDAY) },
+    { weekDay: WeekDay.WEDNESDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.WEDNESDAY) },
+    { weekDay: WeekDay.THURSDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.THURSDAY) },
+    { weekDay: WeekDay.FRIDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.FRIDAY) },
+  ]);
 
   ngOnInit(): void {
     this._adminRoomService.init();
     this._adminFloorService.init();
     this._adminBuildingService.init();
+    this._adminFacultyService.init();
+    this._appDateService.init();
     this.floorSig = this._adminFloorService.getFloorByName(this.floorNameSig());
     this.buildingSig = this._adminBuildingService.getBuildingByName(this.buildingNameSig());
   }
@@ -112,6 +119,10 @@ export class AdminFloorDetailComponent implements OnInit {
   }
 
   onEditRoom(): void {
+    const freeSpotsModifier =
+      (this.addRoomFormGroup.controls['totalSpotsNumber'].value as number) -
+      this.oldRoomSig().totalSpotsNumber -
+      ((this.addRoomFormGroup.controls['unavailableSpots'].value as number) - this.oldRoomSig().unavailableSpots);
     const newRoom: Room = {
       ...this._createRoom(
         this.addRoomFormGroup.controls['roomName'].value as string,
@@ -119,8 +130,19 @@ export class AdminFloorDetailComponent implements OnInit {
         this.addRoomFormGroup.controls['unavailableSpots'].value as number,
       ),
       subjectList: this.oldRoomSig().subjectList,
-      timetable: this.oldRoomSig().timetable,
+      timetable: this.oldRoomSig().timetable.map((timeTableItem: TimeTableItem) => {
+        return {
+          ...timeTableItem,
+          activities: timeTableItem.activities?.map((timetebleActivity: TimetableActivityItem) => {
+            return {
+              ...timetebleActivity,
+              freeSpots: timetebleActivity.freeSpots + freeSpotsModifier,
+            };
+          }),
+        };
+      }),
     };
+
     const diffRoom: Room = {
       ...this.oldRoomSig(),
       totalSpotsNumber: newRoom.totalSpotsNumber - (this.oldRoomSig().totalSpotsNumber as number),
@@ -144,6 +166,7 @@ export class AdminFloorDetailComponent implements OnInit {
     };
     const updatedFloor: Floor = this._createDeleteRoomFloor(diffRoom, deletedRoom);
 
+    this._adminFacultyService.removeTimetableActivitiesByRoomName(deletedRoom.name);
     this._adminRoomService.deleteRoom(deletedRoom);
     this._adminFloorService.updateFloor(this.floorSig(), updatedFloor);
     this._updateBuilding(updatedFloor);
@@ -157,7 +180,7 @@ export class AdminFloorDetailComponent implements OnInit {
       name: roomName,
       floorName: this.floorNameSig(),
       subjectList: [],
-      timetable: this.roomEmptyTimetable,
+      timetable: this.roomEmptyTimetable(),
       totalSpotsNumber: totalSpotsNumber,
       unavailableSpots: unavailableSpots,
     };

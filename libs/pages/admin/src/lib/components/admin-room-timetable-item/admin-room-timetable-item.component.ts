@@ -8,8 +8,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { SubjectItem, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
+import { Room, SubjectItem, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
 import { Event, WeekParity } from '@free-spot/enums';
+import { AdminFacultyService } from '@free-spot-service/faculty';
 
 @Component({
   selector: 'free-spot-admin-room-timetable-item',
@@ -32,8 +33,9 @@ import { Event, WeekParity } from '@free-spot/enums';
 })
 export class AdminRoomTimetableItemComponent implements OnInit {
   private _formBuilder: FormBuilder = inject(FormBuilder);
+  private _adminFacultyService: AdminFacultyService = inject(AdminFacultyService);
 
-  roomNameSig = input.required<string>();
+  roomSig = input.required<Room>();
   timetableItemSig = model.required<TimeTableItem>();
   subjectListSig = input.required<SubjectItem[]>();
 
@@ -44,6 +46,7 @@ export class AdminRoomTimetableItemComponent implements OnInit {
   addingTimetableActivity = false;
 
   ngOnInit(): void {
+    this._adminFacultyService.init();
     this.addTimetableActivityFormGroup = this._formBuilder.nonNullable.group({
       startHour: [this.startHourList[0]],
       subjectName: [this.subjectListSig()[0]],
@@ -76,10 +79,10 @@ export class AdminRoomTimetableItemComponent implements OnInit {
       startHour: this.addTimetableActivityFormGroup.controls['startHour'].value,
       endHour: this.addTimetableActivityFormGroup.controls['startHour'].value + 2,
       subjectItem: this.addTimetableActivityFormGroup.controls['subjectName'].value,
-      roomName: this.roomNameSig(),
+      roomName: this.roomSig().name,
       activityType: this.addTimetableActivityFormGroup.controls['activityType'].value,
       weekParity: this.addTimetableActivityFormGroup.controls['weekParity'].value,
-      freeSpots: 0,
+      freeSpots: this.roomSig().totalSpotsNumber - this.roomSig().unavailableSpots,
       busySpots: 0,
     };
 
@@ -94,6 +97,7 @@ export class AdminRoomTimetableItemComponent implements OnInit {
   }
 
   onRemoveTimetableActivity(removedTimetableActivity: TimetableActivityItem): void {
+    this._adminFacultyService.removeDeletedTimetableActivity(removedTimetableActivity);
     this.timetableItemSig.set({
       ...this.timetableItemSig(),
       activities: this.timetableItemSig().activities.filter(
