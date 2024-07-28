@@ -38,29 +38,29 @@ export class AppDateService {
   }
 
   getAppDateByWeekDay(weekDay: WeekDay): Date {
-    const weekDayDate = new Date();
+    const weekDayDate = new Date(this.appDateSig().date);
     let distance = 0;
 
     switch (weekDay) {
       case WeekDay.MONDAY:
         distance = (6 + weekDayDate.getDay()) % 7;
-        weekDayDate.setDate(weekDayDate.getDate() - distance);
+        weekDayDate.setDate(weekDayDate.getDate() + 7 - distance);
         return weekDayDate;
       case WeekDay.TUESDAY:
         distance = (5 + weekDayDate.getDay()) % 7;
-        weekDayDate.setDate(weekDayDate.getDate() - distance);
+        weekDayDate.setDate(weekDayDate.getDate() + 7 - distance);
         return weekDayDate;
       case WeekDay.WEDNESDAY:
         distance = (4 + weekDayDate.getDay()) % 7;
-        weekDayDate.setDate(weekDayDate.getDate() - distance);
+        weekDayDate.setDate(weekDayDate.getDate() + 7 - distance);
         return weekDayDate;
       case WeekDay.THURSDAY:
         distance = (3 + weekDayDate.getDay()) % 7;
-        weekDayDate.setDate(weekDayDate.getDate() - distance);
+        weekDayDate.setDate(weekDayDate.getDate() + 7 - distance);
         return weekDayDate;
       case WeekDay.FRIDAY:
         distance = (2 + weekDayDate.getDay()) % 7;
-        weekDayDate.setDate(weekDayDate.getDate() - distance);
+        weekDayDate.setDate(weekDayDate.getDate() + 7 - distance);
         return weekDayDate;
       default:
         return weekDayDate;

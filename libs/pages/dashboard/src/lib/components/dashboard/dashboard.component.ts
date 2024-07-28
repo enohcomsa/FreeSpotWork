@@ -63,13 +63,4 @@ export class DashboardComponent implements OnInit {
     this._adminBuildingService.init();
     this._adminFacultyService.init();
   }
-
-  // private _initUserBookings(groupName: string, semiGroupName?: string): void {
-  //   const foundGroupSig: Signal<Group> = this._adminFacultyService.getGroupByName(groupName);
-  //   if (semiGroupName) {
-  //     console.log('');
-  //   } else {
-  //     console.log(foundGroupSig());
-  //   }
-  // }
 }

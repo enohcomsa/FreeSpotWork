@@ -106,7 +106,7 @@ export class AdminGroupTimetableComponent implements OnInit {
 
       const oldTimetableItem: TimeTableItem = this.groupSig().timetable?.find(
         (timetableItem: TimeTableItem) => timetableItem.weekDay === this.addTimetableActivityFormGroup.controls['weekDay'].value,
-      ) || { weekDay: this.addTimetableActivityFormGroup.controls['weekDay'].value, activities: [] };
+      ) || { weekDay: this.addTimetableActivityFormGroup.controls['weekDay'].value, activities: [], date: new Date() };
 
       const newTimetableItem: TimeTableItem = {
         ...oldTimetableItem,
@@ -129,12 +129,12 @@ export class AdminGroupTimetableComponent implements OnInit {
 
   onRemoveTimetableActivity(deletedTimetableActivity: TimetableActivityItem): void {
     const oldTimetableItem: TimeTableItem = this.groupSig().timetable?.find(
-      (timetableItem: TimeTableItem) => timetableItem.weekDay === this.addTimetableActivityFormGroup.controls['weekDay'].value,
+      (timetableItem: TimeTableItem) => timetableItem.date === deletedTimetableActivity.date,
     ) as TimeTableItem;
 
     const newTimetableItem: TimeTableItem = {
       ...oldTimetableItem,
-      activities: oldTimetableItem.activities.filter(
+      activities: oldTimetableItem.activities?.filter(
         (timetableActivity: TimetableActivityItem) => timetableActivity !== deletedTimetableActivity,
       ),
     };

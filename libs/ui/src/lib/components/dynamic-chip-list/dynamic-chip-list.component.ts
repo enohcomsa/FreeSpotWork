@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, input, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, model, OnInit, Signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -10,6 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TimeTableItem } from '@free-spot/models';
 import { WeekDay } from '@free-spot/enums';
+import { AppDateService } from '@free-spot-service/app-date';
 
 @Component({
   selector: 'free-spot-dynamic-chip-list',
@@ -29,10 +30,11 @@ import { WeekDay } from '@free-spot/enums';
   styleUrl: './dynamic-chip-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DynamicChipListComponent<T> {
+export class DynamicChipListComponent<T> implements OnInit {
   private _formBuilder: FormBuilder = inject(FormBuilder);
   private _router: Router = inject(Router);
   private _activatedRoute: ActivatedRoute = inject(ActivatedRoute);
+  private _appDateService: AppDateService = inject(AppDateService);
 
   itemListSig = model.required<T[]>();
   itemLabelSig = input.required<string>();
@@ -42,13 +44,17 @@ export class DynamicChipListComponent<T> {
   addItemFormControl = this._formBuilder.nonNullable.control('');
   addingItem = false;
 
-  emptyTimetable: TimeTableItem[] = [
-    { weekDay: WeekDay.MONDAY, activities: [] },
-    { weekDay: WeekDay.TUESDAY, activities: [] },
-    { weekDay: WeekDay.WEDNESDAY, activities: [] },
-    { weekDay: WeekDay.THURSDAY, activities: [] },
-    { weekDay: WeekDay.FRIDAY, activities: [] },
-  ];
+  emptyTimetable: Signal<TimeTableItem[]> = computed(() => [
+    { weekDay: WeekDay.MONDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.MONDAY) },
+    { weekDay: WeekDay.TUESDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.TUESDAY) },
+    { weekDay: WeekDay.WEDNESDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.WEDNESDAY) },
+    { weekDay: WeekDay.THURSDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.THURSDAY) },
+    { weekDay: WeekDay.FRIDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.FRIDAY) },
+  ]);
+
+  ngOnInit(): void {
+    this._appDateService.init();
+  }
 
   onAddItem(): void {
     this.addingItem = false;

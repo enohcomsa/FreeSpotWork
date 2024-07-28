@@ -11,6 +11,7 @@ import { AdminGroupTimetableComponent } from '../admin-group-timetable/admin-gro
 import { AdminRoomService } from '@free-spot-service/room';
 import { WeekDay } from '@free-spot/enums';
 import { AdminSemisemiGroupTimetableComponent } from '../admin-semigroup-timetable/admin-semigroup-timetable.component';
+import { AppDateService } from '@free-spot-service/app-date';
 
 @Component({
   selector: 'free-spot-group',
@@ -34,6 +35,7 @@ export class GroupComponent implements OnInit {
   private _adminRoomService: AdminRoomService = inject(AdminRoomService);
   private _adminFacultyService: AdminFacultyService = inject(AdminFacultyService);
   private _adminBuildingService: AdminBuildingService = inject(AdminBuildingService);
+  private _appDateService: AppDateService = inject(AppDateService);
 
   groupNameSig = input.required<string>();
   groupSig: Signal<Group> = signal<Group>({} as Group);
@@ -45,13 +47,13 @@ export class GroupComponent implements OnInit {
   editingYear = false;
   addGroupFormControl = this._formBuilder.nonNullable.control('');
 
-  emptyTimetable: TimeTableItem[] = [
-    { weekDay: WeekDay.MONDAY, activities: [] },
-    { weekDay: WeekDay.TUESDAY, activities: [] },
-    { weekDay: WeekDay.WEDNESDAY, activities: [] },
-    { weekDay: WeekDay.THURSDAY, activities: [] },
-    { weekDay: WeekDay.FRIDAY, activities: [] },
-  ];
+  emptyTimetable: Signal<TimeTableItem[]> = computed(() => [
+    { weekDay: WeekDay.MONDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.MONDAY) },
+    { weekDay: WeekDay.TUESDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.TUESDAY) },
+    { weekDay: WeekDay.WEDNESDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.WEDNESDAY) },
+    { weekDay: WeekDay.THURSDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.THURSDAY) },
+    { weekDay: WeekDay.FRIDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.FRIDAY) },
+  ]);
 
   studentList = [
     'enoh',
@@ -78,6 +80,7 @@ export class GroupComponent implements OnInit {
     this._adminRoomService.init();
     this._adminBuildingService.init();
     this._adminFacultyService.init();
+    this._appDateService.init();
 
     this.groupSig = computed(() => {
       let currentGroup: Group = { name: this.groupNameSig(), studentList: [], timetable: [] };
@@ -110,10 +113,10 @@ export class GroupComponent implements OnInit {
     if (enableSemigroups) {
       const groupWithSemigroups: Group = {
         ...this.groupSig(),
-        timetable: this.emptyTimetable,
+        timetable: this.emptyTimetable(),
         semigroups: [
-          { name: this.groupNameSig() + ' sg1', students: [], timetable: this.emptyTimetable },
-          { name: this.groupNameSig() + ' sg2', students: [], timetable: this.emptyTimetable },
+          { name: this.groupNameSig() + ' sg1', students: [], timetable: this.emptyTimetable() },
+          { name: this.groupNameSig() + ' sg2', students: [], timetable: this.emptyTimetable() },
         ],
       };
       this._updateFaculty(groupWithSemigroups);
@@ -121,7 +124,7 @@ export class GroupComponent implements OnInit {
       const groupWithoutSemigroups: Group = {
         name: this.groupNameSig(),
         studentList: this.groupSig().studentList ? [...this.groupSig().studentList] : [],
-        timetable: this.emptyTimetable,
+        timetable: this.emptyTimetable(),
       };
       this._updateFaculty(groupWithoutSemigroups);
     }

@@ -50,6 +50,13 @@ export class AdminRoomService {
       return [];
     }
   }
+  updateTimetableActivitySpots(changedTimetableActivity: TimetableActivityItem, addingBooking: boolean): void {
+    const newRoomList: Room[] = this._roomListSig().map((room: Room) => {
+      return this._updateTimetableActivityFromRoom(room, changedTimetableActivity, addingBooking);
+    });
+    this._roomListSig.set(newRoomList);
+    this._httpRoomService.storeRoomList(this._roomListSig());
+  }
 
   addRoom(newRoom: Room): void {
     SignalArrayUtil.addItem(newRoom, this._roomListSig);
@@ -64,5 +71,44 @@ export class AdminRoomService {
   deleteRoom(deletedRoom: Room): void {
     SignalArrayUtil.deleteItem(deletedRoom, this._roomListSig);
     this._httpRoomService.storeRoomList(this._roomListSig());
+  }
+
+  private _updateTimetableActivityFromRoom(
+    room: Room,
+    changedTimetableActivity: TimetableActivityItem,
+    addingBooking: boolean,
+  ): Room {
+    room = {
+      ...room,
+      timetable: room.timetable.map((timeTableItem: TimeTableItem) => {
+        return {
+          ...timeTableItem,
+          activities: timeTableItem.activities?.map((timetableActivity: TimetableActivityItem) => {
+            return this._checkTimetebleActivityEquality(changedTimetableActivity, timetableActivity)
+              ? {
+                  ...timetableActivity,
+                  freeSpots: addingBooking ? timetableActivity.freeSpots - 1 : timetableActivity.freeSpots + 1,
+                  busySpots: addingBooking ? timetableActivity.busySpots + 1 : timetableActivity.busySpots - 1,
+                }
+              : timetableActivity;
+          }),
+        };
+      }),
+    };
+
+    return room;
+  }
+
+  private _checkTimetebleActivityEquality(
+    timetableActivity1: TimetableActivityItem,
+    timetableActivity2: TimetableActivityItem,
+  ): boolean {
+    return (
+      timetableActivity1.roomName === timetableActivity2.roomName &&
+      timetableActivity1.subjectItem.name === timetableActivity2.subjectItem.name &&
+      timetableActivity1.startHour === timetableActivity2.startHour &&
+      timetableActivity1.weekParity === timetableActivity2.weekParity &&
+      timetableActivity1.date === timetableActivity2.date
+    );
   }
 }

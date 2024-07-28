@@ -24,6 +24,7 @@ export class ScheduleComponent {
     weekParity: WeekParity.ODD,
     freeSpots: 0,
     busySpots: 0,
+    date: new Date(),
   };
   timetableActivityItem2: TimetableActivityItem = {
     startHour: 12,
@@ -34,6 +35,7 @@ export class ScheduleComponent {
     weekParity: WeekParity.BOTH,
     freeSpots: 0,
     busySpots: 0,
+    date: new Date(),
   };
   timetableActivityItem3: TimetableActivityItem = {
     startHour: 16,
@@ -44,6 +46,7 @@ export class ScheduleComponent {
     weekParity: WeekParity.EVEN,
     freeSpots: 0,
     busySpots: 0,
+    date: new Date(),
   };
   timetableActivityItem4: TimetableActivityItem = {
     startHour: 8,
@@ -54,6 +57,7 @@ export class ScheduleComponent {
     weekParity: WeekParity.EVEN,
     freeSpots: 0,
     busySpots: 0,
+    date: new Date(),
   };
 
   groupData: Group = {
@@ -96,6 +100,7 @@ export class ScheduleComponent {
         this.timetableActivityItem3,
         this.timetableActivityItem4,
       ],
+      date: new Date(),
     };
   }
 }

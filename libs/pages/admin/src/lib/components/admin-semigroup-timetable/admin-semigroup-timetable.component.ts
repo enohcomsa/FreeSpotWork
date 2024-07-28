@@ -108,7 +108,7 @@ export class AdminSemisemiGroupTimetableComponent implements OnInit {
       const oldTimetableItem: TimeTableItem = this.semiGroupSig().timetable?.find(
         (timetableItem: TimeTableItem) =>
           timetableItem.weekDay === this.addTimetableActivityFormSemiGroup.controls['weekDay'].value,
-      ) || { weekDay: this.addTimetableActivityFormSemiGroup.controls['weekDay'].value, activities: [] };
+      ) || { weekDay: this.addTimetableActivityFormSemiGroup.controls['weekDay'].value, activities: [], date: new Date() };
 
       const newTimetableItem: TimeTableItem = {
         ...oldTimetableItem,
@@ -131,13 +131,12 @@ export class AdminSemisemiGroupTimetableComponent implements OnInit {
 
   onRemoveTimetableActivity(deletedTimetableActivity: TimetableActivityItem): void {
     const oldTimetableItem: TimeTableItem = this.semiGroupSig().timetable?.find(
-      (timetableItem: TimeTableItem) =>
-        timetableItem.weekDay === this.addTimetableActivityFormSemiGroup.controls['weekDay'].value,
+      (timetableItem: TimeTableItem) => timetableItem.date === deletedTimetableActivity.date,
     ) as TimeTableItem;
 
     const newTimetableItem: TimeTableItem = {
       ...oldTimetableItem,
-      activities: oldTimetableItem.activities.filter(
+      activities: oldTimetableItem.activities?.filter(
         (timetableActivity: TimetableActivityItem) => timetableActivity !== deletedTimetableActivity,
       ),
     };

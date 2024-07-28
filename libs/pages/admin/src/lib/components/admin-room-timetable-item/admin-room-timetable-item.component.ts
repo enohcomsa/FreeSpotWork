@@ -84,6 +84,7 @@ export class AdminRoomTimetableItemComponent implements OnInit {
       weekParity: this.addTimetableActivityFormGroup.controls['weekParity'].value,
       freeSpots: this.roomSig().totalSpotsNumber - this.roomSig().unavailableSpots,
       busySpots: 0,
+      date: this.timetableItemSig().date,
     };
 
     this.timetableItemSig.set({

@@ -92,6 +92,26 @@ export class AdminFacultyService {
     this._httpFacultyService.storeFacultyList(this._facultyListSig());
   }
 
+  updateTimetableActivitySpots(changedTimetableActivity: TimetableActivityItem, addingBooking: boolean): void {
+    const newFacultyList: Faculty[] = this._facultyListSig().map((faculty: Faculty) => {
+      return {
+        ...faculty,
+        yearList:
+          faculty.yearList?.map((year: Year) => {
+            return {
+              ...year,
+              yearGroupList:
+                year.yearGroupList?.map((group: Group) =>
+                  this._updateTimetableActivityFromGroup(group, changedTimetableActivity, addingBooking),
+                ) || [],
+            };
+          }) || [],
+      };
+    });
+    this._facultyListSig.set(newFacultyList);
+    this._httpFacultyService.storeFacultyList(this._facultyListSig());
+  }
+
   addFaculty(newFaculty: Faculty): void {
     SignalArrayUtil.addItem(newFaculty, this._facultyListSig);
     this._httpFacultyService.storeFacultyList(this._facultyListSig());
@@ -118,12 +138,7 @@ export class AdminFacultyService {
               return {
                 ...timeTableItem,
                 activities: timeTableItem.activities?.filter((timetableActivity: TimetableActivityItem) => {
-                  return !(
-                    timetableActivity.roomName === removedTimetableActivity.roomName &&
-                    timetableActivity.subjectItem.name === removedTimetableActivity.subjectItem.name &&
-                    timetableActivity.startHour === removedTimetableActivity.startHour &&
-                    timetableActivity.weekParity === removedTimetableActivity.weekParity
-                  );
+                  return !this._checkTimetebleActivityEquality(timetableActivity, removedTimetableActivity);
                 }),
               };
             }),
@@ -137,12 +152,7 @@ export class AdminFacultyService {
           return {
             ...timeTableItem,
             activities: timeTableItem.activities?.filter((timetableActivity: TimetableActivityItem) => {
-              return !(
-                timetableActivity.roomName === removedTimetableActivity.roomName &&
-                timetableActivity.subjectItem.name === removedTimetableActivity.subjectItem.name &&
-                timetableActivity.startHour === removedTimetableActivity.startHour &&
-                timetableActivity.weekParity === removedTimetableActivity.weekParity
-              );
+              return !this._checkTimetebleActivityEquality(timetableActivity, removedTimetableActivity);
             }),
           };
         }),
@@ -185,5 +195,68 @@ export class AdminFacultyService {
     }
 
     return group;
+  }
+
+  private _updateTimetableActivityFromGroup(
+    group: Group,
+    changedTimetableActivity: TimetableActivityItem,
+    addingBooking: boolean,
+  ): Group {
+    if (group.semigroups !== null && group.semigroups !== undefined) {
+      group = {
+        ...group,
+        semigroups: group.semigroups.map((semigroup: SemiGroup) => {
+          return {
+            ...semigroup,
+            timetable: semigroup.timetable.map((timeTableItem: TimeTableItem) => {
+              return {
+                ...timeTableItem,
+                activities: timeTableItem.activities?.map((timetableActivity: TimetableActivityItem) => {
+                  return this._checkTimetebleActivityEquality(changedTimetableActivity, timetableActivity)
+                    ? {
+                        ...timetableActivity,
+                        freeSpots: addingBooking ? timetableActivity.freeSpots - 1 : timetableActivity.freeSpots + 1,
+                        busySpots: addingBooking ? timetableActivity.busySpots + 1 : timetableActivity.busySpots - 1,
+                      }
+                    : timetableActivity;
+                }),
+              };
+            }),
+          };
+        }),
+      };
+    } else {
+      group = {
+        ...group,
+        timetable: group.timetable.map((timeTableItem: TimeTableItem) => {
+          return {
+            ...timeTableItem,
+            activities: timeTableItem.activities?.map((timetableActivity: TimetableActivityItem) => {
+              return this._checkTimetebleActivityEquality(changedTimetableActivity, timetableActivity)
+                ? {
+                    ...timetableActivity,
+                    freeSpots: addingBooking ? timetableActivity.freeSpots - 1 : timetableActivity.freeSpots + 1,
+                    busySpots: addingBooking ? timetableActivity.busySpots + 1 : timetableActivity.busySpots - 1,
+                  }
+                : timetableActivity;
+            }),
+          };
+        }),
+      };
+    }
+    return group;
+  }
+
+  private _checkTimetebleActivityEquality(
+    timetableActivity1: TimetableActivityItem,
+    timetableActivity2: TimetableActivityItem,
+  ): boolean {
+    return (
+      timetableActivity1.roomName === timetableActivity2.roomName &&
+      timetableActivity1.subjectItem.name === timetableActivity2.subjectItem.name &&
+      timetableActivity1.startHour === timetableActivity2.startHour &&
+      timetableActivity1.weekParity === timetableActivity2.weekParity &&
+      timetableActivity1.date === timetableActivity2.date
+    );
   }
 }

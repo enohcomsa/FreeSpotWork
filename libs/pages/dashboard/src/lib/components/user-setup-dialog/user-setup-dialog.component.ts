@@ -23,6 +23,7 @@ import { Language, Theme } from '@free-spot/enums';
 import { AdminFloorService } from '@free-spot-service/floor';
 import { AdminRoomService } from '@free-spot-service/room';
 import { BookingService } from '@free-spot-service/booking';
+import { AdminBuildingService } from '@free-spot-service/building';
 
 @Component({
   selector: 'free-spot-user-setup-dialog',
@@ -46,6 +47,7 @@ export class UserSetupDialogComponent implements OnInit, OnDestroy {
   private _userService: UserService = inject(UserService);
   private _adminRoomService: AdminRoomService = inject(AdminRoomService);
   private _adminFloorService: AdminFloorService = inject(AdminFloorService);
+  private _adminBuildingService: AdminBuildingService = inject(AdminBuildingService);
   private _adminFacultyService: AdminFacultyService = inject(AdminFacultyService);
   private _bookingService: BookingService = inject(BookingService);
 
@@ -67,6 +69,7 @@ export class UserSetupDialogComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this._adminRoomService.init();
     this._adminFloorService.init();
+    this._adminBuildingService.init();
     this._adminFacultyService.init();
     this.subscriptionList.push(
       this.setupForm.controls['faculty'].valueChanges
@@ -108,17 +111,13 @@ export class UserSetupDialogComponent implements OnInit, OnDestroy {
       semiGroup: this.setupForm.controls['semigroup'].value?.name || '',
       preferdLanguage: Language.EN,
       preferedTheme: Theme.DARK,
-      bookingList: [],
-    };
-    /////////////////////booking
-    console.log(
-      this._generateUserBookedItems(
+      bookingList: this._generateUserBookedItems(
         this._getUserTimetableItems(
           this.setupForm.controls['group'].value as Group,
           this.setupForm.controls['semigroup'].value as SemiGroup,
         ),
       ),
-    );
+    };
 
     this._userService.updateFreeSpotUser(this.user, updatedUser);
     this._dialogRef.close();
@@ -156,12 +155,12 @@ export class UserSetupDialogComponent implements OnInit, OnDestroy {
     timetableItemList.forEach((timeTableItem: TimeTableItem) => {
       timeTableItem.activities.forEach((timetableActivity: TimetableActivityItem) => {
         newUserBookingList.push(
-          this._bookingService.generateBooking(
-            this._getLocation(timetableActivity.roomName),
-            timeTableItem.date || new Date(),
-            timetableActivity,
-          ),
+          this._bookingService.generateBooking(this._getLocation(timetableActivity.roomName), timetableActivity),
         );
+        this._adminFacultyService.updateTimetableActivitySpots(timetableActivity, true);
+        this._adminBuildingService.updateTimetableActivitySpots(timetableActivity, true);
+        this._adminFloorService.updateTimetableActivitySpots(timetableActivity, true);
+        this._adminRoomService.updateTimetableActivitySpots(timetableActivity, true);
       });
     });
 

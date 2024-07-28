@@ -7,14 +7,13 @@ import { BookedEvent, TimetableActivityItem } from '@free-spot/models';
 export class BookingService {
   generateBooking(
     location: Pick<BookedEvent, 'buildingName' | 'floorName' | 'roomName'>,
-    date: Date,
     timetableActivityItem: TimetableActivityItem,
   ): BookedEvent {
     return {
       ...location,
       activityType: timetableActivityItem.activityType,
       subjectItem: timetableActivityItem.subjectItem,
-      date: date,
+      date: timetableActivityItem.date,
       startHour: timetableActivityItem.startHour,
       endHour: timetableActivityItem.endHour,
     };

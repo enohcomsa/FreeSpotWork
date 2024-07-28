@@ -1,5 +1,5 @@
 import { computed, inject, Injectable, Signal, signal, WritableSignal } from '@angular/core';
-import { Floor } from '@free-spot/models';
+import { Floor, Room, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
 import { SignalArrayUtil } from '@free-spot/util';
 import { HttpFloorService } from '@http-free-spot/floor';
 import { take } from 'rxjs';
@@ -26,6 +26,20 @@ export class AdminFloorService {
     return computed(() => this._floorListSig().find((floor: Floor) => floor.name === floorName) || ({} as Floor));
   }
 
+  updateTimetableActivitySpots(changedTimetableActivity: TimetableActivityItem, addingBooking: boolean): void {
+    const newFloorList: Floor[] = this._floorListSig().map((floor: Floor) => {
+      return {
+        ...floor,
+        roomList:
+          floor.roomList?.map((room: Room) =>
+            this._updateTimetableActivityFromRoom(room, changedTimetableActivity, addingBooking),
+          ) || [],
+      };
+    });
+    this._floorListSig.set(newFloorList);
+    this._httpFloorService.storeFloorList(this._floorListSig());
+  }
+
   addFloor(newFloor: Floor): void {
     SignalArrayUtil.addItem(newFloor, this._floorListSig);
     this._httpFloorService.storeFloorList(this._floorListSig());
@@ -39,5 +53,44 @@ export class AdminFloorService {
   deleteFloor(deletedFloor: Floor): void {
     SignalArrayUtil.deleteItem(deletedFloor, this._floorListSig);
     this._httpFloorService.storeFloorList(this._floorListSig());
+  }
+
+  private _updateTimetableActivityFromRoom(
+    room: Room,
+    changedTimetableActivity: TimetableActivityItem,
+    addingBooking: boolean,
+  ): Room {
+    room = {
+      ...room,
+      timetable: room.timetable.map((timeTableItem: TimeTableItem) => {
+        return {
+          ...timeTableItem,
+          activities: timeTableItem.activities?.map((timetableActivity: TimetableActivityItem) => {
+            return this._checkTimetebleActivityEquality(changedTimetableActivity, timetableActivity)
+              ? {
+                  ...timetableActivity,
+                  freeSpots: addingBooking ? timetableActivity.freeSpots - 1 : timetableActivity.freeSpots + 1,
+                  busySpots: addingBooking ? timetableActivity.busySpots + 1 : timetableActivity.busySpots - 1,
+                }
+              : timetableActivity;
+          }),
+        };
+      }),
+    };
+
+    return room;
+  }
+
+  private _checkTimetebleActivityEquality(
+    timetableActivity1: TimetableActivityItem,
+    timetableActivity2: TimetableActivityItem,
+  ): boolean {
+    return (
+      timetableActivity1.roomName === timetableActivity2.roomName &&
+      timetableActivity1.subjectItem.name === timetableActivity2.subjectItem.name &&
+      timetableActivity1.startHour === timetableActivity2.startHour &&
+      timetableActivity1.weekParity === timetableActivity2.weekParity &&
+      timetableActivity1.date === timetableActivity2.date
+    );
   }
 }

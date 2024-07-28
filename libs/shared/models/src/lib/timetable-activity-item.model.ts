@@ -10,4 +10,5 @@ export interface TimetableActivityItem {
   weekParity: WeekParity;
   freeSpots: number;
   busySpots: number;
+  date: Date;
 }
