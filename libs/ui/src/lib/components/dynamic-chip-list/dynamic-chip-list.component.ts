@@ -40,6 +40,7 @@ export class DynamicChipListComponent<T> implements OnInit {
   itemLabelSig = input.required<string>();
   optionListSig = input<T[]>();
   itemKeyDysplay = input<keyof T>();
+  itemKeyDysplay2 = input<keyof T>();
   itemDinamicRoute = input<string>('');
   addItemFormControl = this._formBuilder.nonNullable.control('');
   addingItem = false;
@@ -72,7 +73,11 @@ export class DynamicChipListComponent<T> implements OnInit {
   }
 
   getDisplayName(item: T): string {
-    return item[this.itemKeyDysplay() as keyof T] as string;
+    if (this.itemKeyDysplay2() !== undefined && this.itemKeyDysplay2() !== null) {
+      return ((item[this.itemKeyDysplay() as keyof T] as string) + ' ' + item[this.itemKeyDysplay2() as keyof T]) as string;
+    } else {
+      return item[this.itemKeyDysplay() as keyof T] as string;
+    }
   }
 
   onFloorClick(florName: string): void {

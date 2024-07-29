@@ -4,7 +4,7 @@
   "sourceRoot": "libs/service/booking/src",
   "prefix": "lib",
   "projectType": "library",
-  "tags": ["scope:service"],
+  "tags": ["scope:module"],
   "targets": {
     "build": {
       "executor": "@nx/angular:package",

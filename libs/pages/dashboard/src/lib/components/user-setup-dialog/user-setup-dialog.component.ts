@@ -7,23 +7,11 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { filter, Subscription } from 'rxjs';
 import { AdminFacultyService } from '@free-spot-service/faculty';
-import {
-  BookedEvent,
-  Faculty,
-  Floor,
-  FreeSpotUser,
-  Group,
-  SemiGroup,
-  TimetableActivityItem,
-  TimeTableItem,
-  Year,
-} from '@free-spot/models';
+import { Faculty, FreeSpotUser, Group, SemiGroup, Year } from '@free-spot/models';
 import { UserService } from '@free-spot-service/user';
 import { Language, Theme } from '@free-spot/enums';
-import { AdminFloorService } from '@free-spot-service/floor';
-import { AdminRoomService } from '@free-spot-service/room';
+
 import { BookingService } from '@free-spot-service/booking';
-import { AdminBuildingService } from '@free-spot-service/building';
 
 @Component({
   selector: 'free-spot-user-setup-dialog',
@@ -45,9 +33,6 @@ export class UserSetupDialogComponent implements OnInit, OnDestroy {
   private _formBuilder: FormBuilder = inject(FormBuilder);
   private _dialogRef: MatDialogRef<UserSetupDialogComponent> = inject(MatDialogRef<UserSetupDialogComponent>);
   private _userService: UserService = inject(UserService);
-  private _adminRoomService: AdminRoomService = inject(AdminRoomService);
-  private _adminFloorService: AdminFloorService = inject(AdminFloorService);
-  private _adminBuildingService: AdminBuildingService = inject(AdminBuildingService);
   private _adminFacultyService: AdminFacultyService = inject(AdminFacultyService);
   private _bookingService: BookingService = inject(BookingService);
 
@@ -67,9 +52,7 @@ export class UserSetupDialogComponent implements OnInit, OnDestroy {
   subscriptionList: Subscription[] = [];
 
   ngOnInit(): void {
-    this._adminRoomService.init();
-    this._adminFloorService.init();
-    this._adminBuildingService.init();
+    this._bookingService.init();
     this._adminFacultyService.init();
     this.subscriptionList.push(
       this.setupForm.controls['faculty'].valueChanges
@@ -111,59 +94,50 @@ export class UserSetupDialogComponent implements OnInit, OnDestroy {
       semiGroup: this.setupForm.controls['semigroup'].value?.name || '',
       preferdLanguage: Language.EN,
       preferedTheme: Theme.DARK,
-      bookingList: this._generateUserBookedItems(
-        this._getUserTimetableItems(
-          this.setupForm.controls['group'].value as Group,
-          this.setupForm.controls['semigroup'].value as SemiGroup,
-        ),
+      bookingList: this._bookingService.generateUserBookedItems(
+        this.setupForm.controls['group'].value as Group,
+        true,
+        this.setupForm.controls['semigroup'].value as SemiGroup,
       ),
     };
 
+    const updatedFaculty: Faculty = {
+      ...this.setupForm.controls['faculty'].value,
+      yearList: this.setupForm.controls['faculty'].value?.yearList?.map((year: Year) => {
+        if (year.name === this.setupForm.controls['currentYear'].value?.name) {
+          return {
+            ...year,
+            yearGroupList: year.yearGroupList.map((group: Group) => {
+              if (group.name === this.setupForm.controls['group'].value?.name) {
+                return {
+                  ...group,
+                  studentList: group.studentList ? [...group.studentList, updatedUser] : [updatedUser],
+                  semigroups: this.setupForm.controls['semigroup'].value?.name
+                    ? group.semigroups?.map((semiGroup: SemiGroup) => {
+                        if (semiGroup.name === this.setupForm.controls['semigroup'].value?.name) {
+                          return {
+                            ...semiGroup,
+                            students: semiGroup.students ? [...semiGroup.students, updatedUser] : [updatedUser],
+                          };
+                        } else {
+                          return semiGroup;
+                        }
+                      })
+                    : [],
+                };
+              } else {
+                return group;
+              }
+            }),
+          };
+        } else {
+          return year;
+        }
+      }),
+    } as Faculty;
+
+    this._adminFacultyService.updateFaculty(this._adminFacultyService.getFacultyByName(updatedFaculty.name)(), updatedFaculty);
     this._userService.updateFreeSpotUser(this.user, updatedUser);
     this._dialogRef.close();
-  }
-
-  private _getUserTimetableItems(group: Group, semiGroup?: SemiGroup): TimeTableItem[] {
-    const timetableActivityItemList: TimeTableItem[] = [];
-    if (semiGroup !== null && semiGroup !== undefined) {
-      semiGroup.timetable.forEach((timetableItem: TimeTableItem) =>
-        timetableItem.activities ? timetableActivityItemList.push(timetableItem) : '',
-      );
-    } else {
-      group.timetable.forEach((timetableItem: TimeTableItem) =>
-        timetableItem.activities ? timetableActivityItemList.push(timetableItem) : '',
-      );
-    }
-    return timetableActivityItemList;
-  }
-
-  private _getLocation(roomName: string): Pick<BookedEvent, 'buildingName' | 'floorName' | 'roomName'> {
-    const activityFloor: Floor = this._adminFloorService.getFloorByName(
-      this._adminRoomService.getRoomByName(roomName)().floorName,
-    )();
-    const newLocation: Pick<BookedEvent, 'buildingName' | 'floorName' | 'roomName'> = {
-      buildingName: activityFloor.buildingName,
-      floorName: activityFloor.name,
-      roomName: roomName,
-    };
-
-    return newLocation;
-  }
-
-  private _generateUserBookedItems(timetableItemList: TimeTableItem[]): BookedEvent[] {
-    const newUserBookingList: BookedEvent[] = [];
-    timetableItemList.forEach((timeTableItem: TimeTableItem) => {
-      timeTableItem.activities.forEach((timetableActivity: TimetableActivityItem) => {
-        newUserBookingList.push(
-          this._bookingService.generateBooking(this._getLocation(timetableActivity.roomName), timetableActivity),
-        );
-        this._adminFacultyService.updateTimetableActivitySpots(timetableActivity, true);
-        this._adminBuildingService.updateTimetableActivitySpots(timetableActivity, true);
-        this._adminFloorService.updateTimetableActivitySpots(timetableActivity, true);
-        this._adminRoomService.updateTimetableActivitySpots(timetableActivity, true);
-      });
-    });
-
-    return newUserBookingList;
   }
 }

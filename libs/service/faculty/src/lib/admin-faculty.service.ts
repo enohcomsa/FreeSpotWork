@@ -23,7 +23,7 @@ export class AdminFacultyService {
   }
 
   getFacultyByName(facultyName: string): Signal<Faculty> {
-    return computed(() => this.facultyListSig().find((faculty: Faculty) => faculty.name === facultyName) || ({} as Faculty));
+    return computed(() => this._facultyListSig().find((faculty: Faculty) => faculty.name === facultyName) || ({} as Faculty));
   }
 
   getFacultyByGroupName(groupName: string): Signal<Faculty> {

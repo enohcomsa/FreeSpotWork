@@ -25,7 +25,18 @@
               },
               {
                 "sourceTag": "scope:lib",
-                "onlyDependOnLibsWithTags": ["scope:service", "scope:http-service", "scope:ui", "scope:util", "scope:model"]
+                "onlyDependOnLibsWithTags": [
+                  "scope:module",
+                  "scope:service",
+                  "scope:http-service",
+                  "scope:ui",
+                  "scope:util",
+                  "scope:model"
+                ]
+              },
+              {
+                "sourceTag": "scope:module",
+                "onlyDependOnLibsWithTags": ["scope:service", "scope:ui", "scope:util", "scope:model"]
               },
               {
                 "sourceTag": "scope:service",

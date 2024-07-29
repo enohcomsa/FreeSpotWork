@@ -62,26 +62,7 @@ export class ScheduleComponent {
 
   groupData: Group = {
     name: 'gr1',
-    studentList: [
-      'enoh',
-      'dsada',
-      'dsggggg',
-      'bbbbbbbb',
-      'ffffffff',
-      'zzzzzzz',
-      'enoh',
-      'dsada',
-      'dsggggg',
-      'bbbbbbbb',
-      'ffffffff',
-      'zzzzzzz',
-      'enoh',
-      'dsada',
-      'dsggggg',
-      'bbbbbbbb',
-      'ffffffff',
-      'zzzzzzz',
-    ],
+    studentList: [],
     timetable: [
       this.getTimetableActivity(WeekDay.MONDAY),
       this.getTimetableActivity(WeekDay.TUESDAY),

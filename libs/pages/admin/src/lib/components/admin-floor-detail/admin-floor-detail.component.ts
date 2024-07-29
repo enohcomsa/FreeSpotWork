@@ -25,6 +25,7 @@ import { AdminFloorService } from '@free-spot-service/floor';
 import { AdminBuildingService } from '@free-spot-service/building';
 import { AdminFacultyService } from '@free-spot-service/faculty';
 import { AppDateService } from '@free-spot-service/app-date';
+import { UserService } from '@free-spot-service/user';
 
 @Component({
   selector: 'free-spot-admin-floor-detail',
@@ -50,6 +51,7 @@ export class AdminFloorDetailComponent implements OnInit {
   private _adminBuildingService: AdminBuildingService = inject(AdminBuildingService);
   private _adminFacultyService: AdminFacultyService = inject(AdminFacultyService);
   private _appDateService: AppDateService = inject(AppDateService);
+  private _userService: UserService = inject(UserService);
 
   editRoom = viewChild.required<ElementRef>('editRoom');
   floorNameSig = input.required<string>();
@@ -80,6 +82,7 @@ export class AdminFloorDetailComponent implements OnInit {
     this._adminBuildingService.init();
     this._adminFacultyService.init();
     this._appDateService.init();
+    this._userService.init();
     this.floorSig = this._adminFloorService.getFloorByName(this.floorNameSig());
     this.buildingSig = this._adminBuildingService.getBuildingByName(this.buildingNameSig());
   }
@@ -166,6 +169,7 @@ export class AdminFloorDetailComponent implements OnInit {
     };
     const updatedFloor: Floor = this._createDeleteRoomFloor(diffRoom, deletedRoom);
 
+    this._userService.removeTimetableActivitiesByRoomName(deletedRoom.name);
     this._adminFacultyService.removeTimetableActivitiesByRoomName(deletedRoom.name);
     this._adminRoomService.deleteRoom(deletedRoom);
     this._adminFloorService.updateFloor(this.floorSig(), updatedFloor);

@@ -52,12 +52,6 @@ export class DashboardComponent implements OnInit {
       }
     });
 
-  // constructor() {
-  //   effect(() => {
-  //     console.log(this.currentUserGroupSig());
-  //   });
-  // }
-
   ngOnInit(): void {
     this._userService.init();
     this._adminBuildingService.init();

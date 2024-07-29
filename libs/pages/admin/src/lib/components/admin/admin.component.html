@@ -1,6 +1,13 @@
 <div class="container !pb-96">
   <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Admin List</h1>
-  <free-spot-dynamic-chip-list [itemListSig]="admminUserList" itemLabelSig="admin"></free-spot-dynamic-chip-list>
+  <free-spot-dynamic-chip-list
+    [itemListSig]="adminUserListSig()"
+    (itemListSigChange)="updateAdminList($event)"
+    itemLabelSig="admin"
+    [optionListSig]="userListSig()"
+    [itemKeyDysplay]="'firstName'"
+    [itemKeyDysplay2]="'familyName'"
+  ></free-spot-dynamic-chip-list>
 
   <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Faculties</h1>
   <mat-accordion>

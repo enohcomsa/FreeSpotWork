@@ -1,5 +1,5 @@
 import { computed, inject, Injectable, signal, Signal, WritableSignal } from '@angular/core';
-import { FreeSpotUser } from '@free-spot/models';
+import { BookedEvent, FreeSpotUser } from '@free-spot/models';
 import { SignalArrayUtil } from '@free-spot/util';
 import { HttpUserService } from '@http-free-spot/user';
 import { take } from 'rxjs';
@@ -24,6 +24,14 @@ export class UserService {
 
   getFreeSpotUserByEmail(userEmail: string): Signal<FreeSpotUser> {
     return computed(() => this._userListSig()?.find((user: FreeSpotUser) => user.email === userEmail) || ({} as FreeSpotUser));
+  }
+
+  removeTimetableActivitiesByRoomName(deletedRoomName: string): void {
+    const newUserList: FreeSpotUser[] = this._userListSig().map((user: FreeSpotUser) => {
+      return { ...user, bookingList: user.bookingList?.filter((booking: BookedEvent) => booking.roomName !== deletedRoomName) };
+    });
+    this._userListSig.set(newUserList);
+    this._httpFreeSpotUserService.storeUserList(this._userListSig());
   }
 
   addFreeSpotUser(newFreeSpotUser: FreeSpotUser): void {

@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   ElementRef,
   inject,
   OnInit,
@@ -12,7 +13,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { FacultyComponent } from '../faculty/faculty.component';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { Building, Faculty, Floor, SubjectItem, Year } from '@free-spot/models';
+import { Building, Faculty, Floor, FreeSpotUser, Year } from '@free-spot/models';
 import { AddItemCardComponent, DynamicChipListComponent } from '@free-spot/ui';
 import { AdminBuildingCardComponent } from '../admin-building-card/admin-building-card.component';
 import { AdminEventCardComponent } from '../admin-event-card/admin-event-card.component';
@@ -23,6 +24,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { AdminBuildingService } from '@free-spot-service/building';
 // import { FACULTY_LIST } from '@free-spot/constants';
 import { AdminFacultyService } from '@free-spot-service/faculty';
+import { UserService } from '@free-spot-service/user';
+import { Role } from '@free-spot/enums';
 
 @Component({
   selector: 'free-spot-admin',
@@ -49,13 +52,13 @@ export class AdminComponent implements OnInit {
   private _formBuilder: FormBuilder = inject(FormBuilder);
   private _adminFacultyService: AdminFacultyService = inject(AdminFacultyService);
   private _adminBuildingService: AdminBuildingService = inject(AdminBuildingService);
-
-  // facultyList: Faculty[] = FACULTY_LIST;
+  private _userService: UserService = inject(UserService);
 
   editBuilding = viewChild<ElementRef>('editBuilding');
   editEvent = viewChild<ElementRef>('editEvent');
   facultyListSig: Signal<Faculty[]> = this._adminFacultyService.facultyListSig;
   buildingListSig: Signal<Building[]> = this._adminBuildingService.buildingListSig;
+  userListSig: Signal<FreeSpotUser[]> = this._userService.userListSig;
   oldYearSig: WritableSignal<Year> = signal({} as Year);
   oldbuildingSig: WritableSignal<Building> = signal({} as Building);
 
@@ -72,76 +75,16 @@ export class AdminComponent implements OnInit {
   addingEvent = false;
   addEventFormControl = this._formBuilder.control('');
 
-  admminUserList: string[] = ['enoh', 'dsada', 'dsggggg', 'bbbbbbbb', 'ffffffff', 'zzzzzzz'];
+  adminUserListSig: Signal<FreeSpotUser[]> = computed(
+    () => this.userListSig().filter((user: FreeSpotUser) => user.role === Role.ADMIN) || [],
+  );
 
-  subjectItem: SubjectItem = {
-    name: 'subject 1',
-    shortName: 'subj1',
-  };
-
-  facultyItem: Faculty = {
-    name: 'Electronica telecomunicatii si tehnologia informatiei',
-    shortName: 'ETTI',
-    subjectList: [this.subjectItem, this.subjectItem, this.subjectItem, this.subjectItem],
-    yearList: [
-      {
-        name: '1',
-        yearGroupList: [
-          { name: 'gr1', studentList: [], timetable: [] },
-          { name: 'gr2', studentList: [], timetable: [] },
-          { name: 'gr3', studentList: [], timetable: [] },
-        ],
-      },
-      // {
-      //   name: '2',
-      //   yearGroupList: [
-      //     { name: 'gr1', studentList: [], timetable: [] },
-      //     { name: 'gr2', studentList: [], timetable: [] },
-      //     { name: 'gr3', studentList: [], timetable: [] },
-      //   ],
-      // },
-      // {
-      //   name: '3',
-      //   yearGroupList: [
-      //     { name: 'gr1', studentList: [], timetable: [] },
-      //     { name: 'gr2', studentList: [], timetable: [] },
-      //     { name: 'gr3', studentList: [], timetable: [] },
-      //   ],
-      // },
-      // {
-      //   name: '4',
-      //   yearGroupList: [
-      //     { name: 'gr1', studentList: [], timetable: [] },
-      //     { name: 'gr2', studentList: [], timetable: [] },
-      //     { name: 'gr3', studentList: [], timetable: [] },
-      //   ],
-      // },
-    ],
-  };
-
-  floorExp: Floor = {
-    name: 'UTCN Obs ground Floor',
-    buildingName: 'Laboratoare Observator',
-    roomList: [],
-    totalSpotsNumber: 120,
-    // freeSpots: 90,
-    // busySpots: 20,
-    unavailableSpots: 10,
-  };
   floorExp2: Floor = {
     name: '328',
     buildingName: 'Laboratoare Observator',
     roomList: [],
     totalSpotsNumber: 90,
-    // freeSpots: 50,
-    // busySpots: 30,
     unavailableSpots: 10,
-  };
-  cardData: Building = {
-    name: 'Laboratoare Observator',
-    adress: 'Observatorului, 400347',
-    floorList: [this.floorExp, this.floorExp2],
-    specialEvent: false,
   };
   eventData: Building = {
     name: 'Simpozion',
@@ -155,7 +98,30 @@ export class AdminComponent implements OnInit {
   ngOnInit(): void {
     this._adminBuildingService.init();
     this._adminFacultyService.init();
+    this._userService.init();
     // this.facultyList.forEach((fac) => this._adminFacultyService.addFaculty(fac));
+  }
+
+  updateAdminList(updatedAdminList: FreeSpotUser[]): void {
+    if (this.adminUserListSig().length < updatedAdminList.length) {
+      const oldUser: FreeSpotUser = updatedAdminList.filter(
+        (admin: FreeSpotUser) =>
+          this.adminUserListSig().find(
+            (oldAdmin: FreeSpotUser) => oldAdmin.firstName === admin.firstName && oldAdmin.familyName === admin.familyName,
+          ) === undefined,
+      )[0];
+      const addedAdmin: FreeSpotUser = { ...oldUser, role: Role.ADMIN };
+      this._userService.updateFreeSpotUser(oldUser, addedAdmin);
+    } else {
+      const oldUser: FreeSpotUser = this.adminUserListSig().filter(
+        (admin: FreeSpotUser) =>
+          updatedAdminList.find(
+            (oldAdmin: FreeSpotUser) => oldAdmin.firstName === admin.firstName && oldAdmin.familyName === admin.familyName,
+          ) === undefined,
+      )[0];
+      const removedAdmin: FreeSpotUser = { ...oldUser, role: Role.MEMBER };
+      this._userService.updateFreeSpotUser(oldUser, removedAdmin);
+    }
   }
 
   onAddingYear(): void {

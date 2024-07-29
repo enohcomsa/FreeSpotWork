@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { DynamicChipListComponent, TimetableItemComponent } from '@free-spot/ui';
-import { Faculty, Group, SemiGroup, TimeTableItem, Year } from '@free-spot/models';
+import { Faculty, FreeSpotUser, Group, SemiGroup, TimeTableItem, Year } from '@free-spot/models';
 import { AdminFacultyService } from '@free-spot-service/faculty';
 import { FormBuilder, FormsModule } from '@angular/forms';
 import { AdminBuildingService } from '@free-spot-service/building';
@@ -12,6 +12,8 @@ import { AdminRoomService } from '@free-spot-service/room';
 import { WeekDay } from '@free-spot/enums';
 import { AdminSemisemiGroupTimetableComponent } from '../admin-semigroup-timetable/admin-semigroup-timetable.component';
 import { AppDateService } from '@free-spot-service/app-date';
+import { UserService } from '@free-spot-service/user';
+import { BookingService } from '@free-spot-service/booking';
 
 @Component({
   selector: 'free-spot-group',
@@ -36,11 +38,14 @@ export class GroupComponent implements OnInit {
   private _adminFacultyService: AdminFacultyService = inject(AdminFacultyService);
   private _adminBuildingService: AdminBuildingService = inject(AdminBuildingService);
   private _appDateService: AppDateService = inject(AppDateService);
+  private _userService: UserService = inject(UserService);
+  private _bookingService: BookingService = inject(BookingService);
 
   groupNameSig = input.required<string>();
   groupSig: Signal<Group> = signal<Group>({} as Group);
   yearSig: Signal<Year> = signal<Year>({} as Year);
   facultySig: Signal<Faculty> = signal<Faculty>({} as Faculty);
+  userListSig: Signal<FreeSpotUser[]> = this._userService.userListSig;
 
   semigroupsEnabledSig = computed(() => !!this.groupSig().semigroups);
   addingYear = false;
@@ -55,32 +60,13 @@ export class GroupComponent implements OnInit {
     { weekDay: WeekDay.FRIDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.FRIDAY) },
   ]);
 
-  studentList = [
-    'enoh',
-    'dsada',
-    'dsggggg',
-    'bbbbbbbb',
-    'ffffffff',
-    'zzzzzzz',
-    'enoh',
-    'dsada',
-    'dsggggg',
-    'bbbbbbbb',
-    'ffffffff',
-    'zzzzzzz',
-    'enoh',
-    'dsada',
-    'dsggggg',
-    'bbbbbbbb',
-    'ffffffff',
-    'zzzzzzz',
-  ];
-
   ngOnInit(): void {
     this._adminRoomService.init();
     this._adminBuildingService.init();
     this._adminFacultyService.init();
     this._appDateService.init();
+    this._userService.init();
+    this._bookingService.init();
 
     this.groupSig = computed(() => {
       let currentGroup: Group = { name: this.groupNameSig(), studentList: [], timetable: [] };
@@ -130,8 +116,57 @@ export class GroupComponent implements OnInit {
     }
   }
 
-  updateGroupStudentList(updatedStudentGroupList: string[]): void {
+  updateGroupStudentList(updatedStudentGroupList: FreeSpotUser[]): void {
     const updatedGroup: Group = { ...this.groupSig(), studentList: updatedStudentGroupList };
+
+    if (this.groupSig().studentList?.length < updatedStudentGroupList.length || this.groupSig().studentList === undefined) {
+      const oldUserName: FreeSpotUser = updatedStudentGroupList.filter(
+        (student: FreeSpotUser) =>
+          this.groupSig().studentList?.find(
+            (oldStudent: FreeSpotUser) =>
+              oldStudent.firstName === student.firstName && oldStudent.familyName === student.familyName,
+          ) === undefined,
+      )[0];
+
+      const oldUser: FreeSpotUser =
+        this.userListSig().find(
+          (user: FreeSpotUser) => user.firstName === oldUserName.firstName && user.familyName === oldUserName.familyName,
+        ) || ({} as FreeSpotUser);
+
+      const newUser: FreeSpotUser = {
+        ...(oldUser as FreeSpotUser),
+        bookingList: this._bookingService.generateUserBookedItems(this.groupSig(), true),
+        faculty: this.facultySig().name,
+        currentYear: this.yearSig().name,
+        group: this.groupSig().name,
+      };
+
+      this._userService.updateFreeSpotUser(oldUser, newUser);
+    } else {
+      const oldUserName: FreeSpotUser = this.groupSig().studentList.filter(
+        (student: FreeSpotUser) =>
+          updatedStudentGroupList?.find(
+            (oldStudent: FreeSpotUser) =>
+              oldStudent.firstName === student.firstName && oldStudent.familyName === student.familyName,
+          ) === undefined,
+      )[0];
+
+      const oldUser: FreeSpotUser =
+        this.userListSig().find(
+          (user: FreeSpotUser) => user.firstName === oldUserName.firstName && user.familyName === oldUserName.familyName,
+        ) || ({} as FreeSpotUser);
+
+      const newUser: FreeSpotUser = {
+        ...oldUser,
+        bookingList: this._bookingService.generateUserBookedItems(this.groupSig(), false),
+        faculty: undefined,
+        currentYear: undefined,
+        group: undefined,
+      };
+      newUser.bookingList = [];
+      this._userService.updateFreeSpotUser(oldUser, newUser);
+    }
+
     this._updateFaculty(updatedGroup);
   }
 
@@ -139,7 +174,7 @@ export class GroupComponent implements OnInit {
     this._updateFaculty(updatedTimetableGroup);
   }
 
-  updateSemiGroupStudentList(updatedStudentSemiGroupList: string[], oldSemiGroup: SemiGroup): void {
+  updateSemiGroupStudentList(updatedStudentSemiGroupList: FreeSpotUser[], oldSemiGroup: SemiGroup): void {
     const updatedSemiGroup: SemiGroup = { ...oldSemiGroup, students: updatedStudentSemiGroupList };
     const updatedGroup: Group = {
       ...this.groupSig(),
@@ -147,6 +182,56 @@ export class GroupComponent implements OnInit {
         semiGroup.name === updatedSemiGroup.name ? updatedSemiGroup : semiGroup,
       ),
     };
+
+    if (oldSemiGroup.students?.length < updatedStudentSemiGroupList.length || oldSemiGroup.students === undefined) {
+      const oldUserName: FreeSpotUser = updatedStudentSemiGroupList.filter(
+        (student: FreeSpotUser) =>
+          oldSemiGroup.students?.find(
+            (oldStudent: FreeSpotUser) =>
+              oldStudent.firstName === student.firstName && oldStudent.familyName === student.familyName,
+          ) === undefined,
+      )[0];
+
+      const oldUser: FreeSpotUser =
+        this.userListSig().find(
+          (user: FreeSpotUser) => user.firstName === oldUserName.firstName && user.familyName === oldUserName.familyName,
+        ) || ({} as FreeSpotUser);
+
+      const newUser: FreeSpotUser = {
+        ...(oldUser as FreeSpotUser),
+        bookingList: this._bookingService.generateUserBookedItems(this.groupSig(), true, oldSemiGroup),
+        faculty: this.facultySig().name,
+        currentYear: this.yearSig().name,
+        group: this.groupSig().name,
+        semiGroup: oldSemiGroup.name,
+      };
+
+      this._userService.updateFreeSpotUser(oldUser, newUser);
+    } else {
+      const oldUserName: FreeSpotUser = oldSemiGroup.students.filter(
+        (student: FreeSpotUser) =>
+          updatedStudentSemiGroupList?.find(
+            (oldStudent: FreeSpotUser) =>
+              oldStudent.firstName === student.firstName && oldStudent.familyName === student.familyName,
+          ) === undefined,
+      )[0];
+
+      const oldUser: FreeSpotUser =
+        this.userListSig().find(
+          (user: FreeSpotUser) => user.firstName === oldUserName.firstName && user.familyName === oldUserName.familyName,
+        ) || ({} as FreeSpotUser);
+
+      const newUser: FreeSpotUser = {
+        ...oldUser,
+        bookingList: this._bookingService.generateUserBookedItems(this.groupSig(), false, oldSemiGroup),
+        faculty: undefined,
+        currentYear: undefined,
+        group: undefined,
+        semiGroup: undefined,
+      };
+      newUser.bookingList = [];
+      this._userService.updateFreeSpotUser(oldUser, newUser);
+    }
 
     this._updateFaculty(updatedGroup);
   }
