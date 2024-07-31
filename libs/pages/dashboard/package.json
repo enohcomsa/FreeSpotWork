@@ -15,7 +15,6 @@
     "@free-spot-service/faculty": "0.0.1",
     "@free-spot-service/floor": "0.0.1",
     "@angular/forms": "~18.0.0",
-    "@free-spot-service/room": "0.0.1",
     "@free-spot-service/booking": "0.0.1"
   },
   "sideEffects": false
