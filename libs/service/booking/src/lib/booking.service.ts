@@ -47,6 +47,13 @@ export class BookingService {
     return newUserBookingList;
   }
 
+  generateUserBookedItemByActivity(timetableActivity: TimetableActivityItem, addingBooking: boolean): BookedEvent {
+    this._adminBuildingService.updateTimetableActivitySpots(timetableActivity, addingBooking);
+    this._adminFloorService.updateTimetableActivitySpots(timetableActivity, addingBooking);
+    this._adminRoomService.updateTimetableActivitySpots(timetableActivity, addingBooking);
+    return this.generateBooking(timetableActivity);
+  }
+
   private _getUserTimetableItems(group: Group, semiGroup?: SemiGroup): TimeTableItem[] {
     const timetableItemList: TimeTableItem[] = [];
     if (semiGroup !== null && semiGroup !== undefined) {
