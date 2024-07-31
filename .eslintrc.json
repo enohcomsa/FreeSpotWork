@@ -48,7 +48,7 @@
               },
               {
                 "sourceTag": "scope:ui",
-                "onlyDependOnLibsWithTags": ["scope:service", "scope:ui", "scope:util", "scope:model"]
+                "onlyDependOnLibsWithTags": ["scope:module", "scope:service", "scope:ui", "scope:util", "scope:model"]
               },
               {
                 "sourceTag": "scope:util",

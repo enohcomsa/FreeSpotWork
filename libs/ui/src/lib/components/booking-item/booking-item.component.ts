@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, InputSignal, OnInit, Signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
-import { BookedEvent } from '@free-spot/models';
+import { BookedEvent, TimetableActivityItem } from '@free-spot/models';
 import { Event } from '@free-spot/enums';
+import { BookingService } from '@free-spot-service/booking';
 
 @Component({
   selector: 'free-spot-booking-item',
@@ -13,7 +14,12 @@ import { Event } from '@free-spot/enums';
   styleUrl: './booking-item.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BookingItemComponent {
+export class BookingItemComponent implements OnInit {
+  private _bookingService: BookingService = inject(BookingService);
+
+  timetableActivitySig: InputSignal<TimetableActivityItem> = input.required<TimetableActivityItem>();
+  eventBookingSig: Signal<BookedEvent> = computed(() => this._bookingService.generateBooking(this.timetableActivitySig()));
+
   event_learn: BookedEvent = {
     activityType: Event.LABORATORY,
     subjectItem: {
@@ -40,4 +46,8 @@ export class BookingItemComponent {
     floorName: '1st',
     roomName: '329',
   };
+
+  ngOnInit(): void {
+    this._bookingService.init();
+  }
 }

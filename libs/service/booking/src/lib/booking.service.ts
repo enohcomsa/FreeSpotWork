@@ -47,10 +47,17 @@ export class BookingService {
     return newUserBookingList;
   }
 
-  generateUserBookedItemByActivity(timetableActivity: TimetableActivityItem, addingBooking: boolean): BookedEvent {
+  generateUserBookedItemByActivity(
+    timetableActivity: TimetableActivityItem,
+    addingBooking: boolean,
+    updateFaculty?: boolean,
+  ): BookedEvent {
     this._adminBuildingService.updateTimetableActivitySpots(timetableActivity, addingBooking);
     this._adminFloorService.updateTimetableActivitySpots(timetableActivity, addingBooking);
     this._adminRoomService.updateTimetableActivitySpots(timetableActivity, addingBooking);
+    if (updateFaculty !== undefined && updateFaculty !== null && updateFaculty) {
+      this._adminFacultyService.updateTimetableActivitySpots(timetableActivity, addingBooking);
+    }
     return this.generateBooking(timetableActivity);
   }
 

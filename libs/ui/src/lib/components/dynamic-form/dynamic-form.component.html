@@ -8,7 +8,7 @@
       <mat-form-field class="w-full">
         <mat-label>Select booking</mat-label>
         <mat-select formControlName="eventBooking">
-          @for (event of eventList; track $index) {
+          @for (event of eventListSig(); track $index) {
             <mat-option [value]="event">{{ event | lowercase }}</mat-option>
           }
         </mat-select>
@@ -26,7 +26,7 @@
         <mat-form-field class="w-full">
           <mat-label>Subject</mat-label>
           <mat-select formControlName="subject">
-            @for (subject of materieNames; track subject) {
+            @for (subject of subjectItemListSig(); track subject) {
               <mat-option [value]="subject">{{ subject.name }}</mat-option>
             }
           </mat-select>
@@ -40,12 +40,11 @@
 
     @if (searchActive$()) {
       <div class="flex flex-col space-y-4">
-        <free-spot-booking-item></free-spot-booking-item>
-        <free-spot-booking-item></free-spot-booking-item>
-        <free-spot-booking-item></free-spot-booking-item>
-        <free-spot-booking-item></free-spot-booking-item>
-        <free-spot-booking-item></free-spot-booking-item>
-        <free-spot-booking-item></free-spot-booking-item>
+        @for (timetableActivity of timetableActivityListFoundSig(); track timetableActivity) {
+          <free-spot-booking-item [timetableActivitySig]="timetableActivity"></free-spot-booking-item>
+        } @empty {
+          <h3>No items found.</h3>
+        }
       </div>
     }
   </mat-card-content>

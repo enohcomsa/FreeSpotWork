@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -17,6 +17,8 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class BookedSpotComponent {
   EVENT = Event;
+  eventSig = input.required<BookedEvent>();
+
   event_learn: BookedEvent = {
     activityType: Event.LABORATORY,
     subjectItem: {

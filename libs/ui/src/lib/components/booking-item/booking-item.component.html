@@ -1,18 +1,18 @@
 <mat-card appearance="outlined" class="@container">
   <mat-card-content class="@md:flex-row @md:justify-between @md:items-baseline !flex flex-col justify-center">
-    <p class="grow text-lg font-bold tracking-tight">{{ event_learn.subjectItem.shortName }}</p>
+    <p class="grow text-lg font-bold tracking-tight">{{ eventBookingSig().subjectItem.shortName }}</p>
     <div
       class="@sm:flex-row @sm:justify-between @sm:items-center @lg:tracking-tight @lg:text-base flex grow flex-col justify-center text-sm tracking-tighter"
     >
       <div class="flex items-center">
-        <p class="max-w-40 truncate">{{ event_learn.buildingName }}<span class="mx-1">|</span></p>
-        <p>{{ event_learn.floorName }}<span class="mx-1">|</span></p>
-        <p>{{ event_learn.roomName }}</p>
+        <p class="max-w-40 truncate">{{ eventBookingSig().buildingName }}<span class="mx-1">|</span></p>
+        <p>{{ eventBookingSig().floorName }}<span class="mx-1">|</span></p>
+        <p>{{ eventBookingSig().roomName }}</p>
       </div>
       <div class="flex items-center">
-        <p>{{ event_learn.date | date: 'EEEE, dd MMM, yyyy' }}<span class="mx-1">|</span></p>
-        <p>{{ event_learn.startHour }}-</p>
-        <p>{{ event_learn.endHour }}</p>
+        <p>{{ eventBookingSig().date | date: 'EEEE, dd MMM, yyyy' }}<span class="mx-1">|</span></p>
+        <p>{{ eventBookingSig().startHour }}-</p>
+        <p>{{ eventBookingSig().endHour }}</p>
       </div>
       <button mat-flat-button class="mt-2">Book spot</button>
     </div>

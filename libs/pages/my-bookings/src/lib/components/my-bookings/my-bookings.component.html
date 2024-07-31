@@ -7,27 +7,19 @@
     <mat-chip-option selected> All bookings</mat-chip-option>
     <mat-chip-option> Laboratory</mat-chip-option>
     <mat-chip-option> Course</mat-chip-option>
+    <mat-chip-option> Project</mat-chip-option>
   </mat-chip-listbox>
 
   <div class="grid grid-cols-1 gap-8 pb-4 md:grid-cols-2 lg:grid lg:grid-cols-3">
-    <free-spot-booked-spot> </free-spot-booked-spot>
-    <free-spot-booked-spot> </free-spot-booked-spot>
-    <free-spot-booked-spot> </free-spot-booked-spot>
-    <free-spot-booked-spot> </free-spot-booked-spot>
-    <free-spot-booked-spot> </free-spot-booked-spot>
-    <free-spot-booked-spot> </free-spot-booked-spot>
-    <free-spot-booked-spot> </free-spot-booked-spot>
+    @for (bookedEvent of currentUserSig().bookingList; track bookedEvent) {
+      <free-spot-booked-spot [eventSig]="bookedEvent"> </free-spot-booked-spot>
+    }
   </div>
 
   <h1 class="py-4 text-3xl font-bold md:py-8">My Events</h1>
 
   <div class="grid grid-cols-1 gap-8 pb-4 md:grid-cols-2 lg:grid lg:grid-cols-3">
-    <free-spot-booked-spot> </free-spot-booked-spot>
-    <free-spot-booked-spot> </free-spot-booked-spot>
-    <free-spot-booked-spot> </free-spot-booked-spot>
-    <free-spot-booked-spot> </free-spot-booked-spot>
-    <free-spot-booked-spot> </free-spot-booked-spot>
-    <free-spot-booked-spot> </free-spot-booked-spot>
-    <free-spot-booked-spot> </free-spot-booked-spot>
+    <!-- <free-spot-booked-spot> </free-spot-booked-spot>
+    <free-spot-booked-spot> </free-spot-booked-spot> -->
   </div>
 </div>

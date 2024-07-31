@@ -4,17 +4,17 @@
       <div class="flex items-start gap-4">
         <mat-icon class="scale-125">event_available</mat-icon>
         <div class="flex-col">
-          @if (event.activityType === EVENT.SPECIAL_EVENT) {
-            <p class="-mt-2 grow text-lg font-bold">{{ event.subjectItem.shortName }}</p>
+          @if (eventSig().activityType === EVENT.SPECIAL_EVENT) {
+            <p class="-mt-2 grow text-lg font-bold">{{ eventSig().subjectItem.shortName }}</p>
           } @else {
             <p class="-mt-2 grow text-lg font-bold">
-              {{ event.activityType | lowercase }}<span class="mx-1">:</span>{{ event.subjectItem.shortName }}
+              {{ eventSig().activityType | lowercase }}<span class="mx-1">:</span>{{ eventSig().subjectItem.shortName }}
             </p>
           }
           <div class="flex items-center text-sm tracking-tighter">
-            <p class="max-w-48 truncate sm:max-w-fit md:max-w-48 lg:max-w-44 xl:max-w-fit">{{ event.buildingName }}</p>
-            <p><span class="mx-1">|</span>{{ event.floorName }}<span class="mx-1">|</span></p>
-            <p>{{ event.roomName }}</p>
+            <p class="max-w-48 truncate sm:max-w-fit md:max-w-48 lg:max-w-44 xl:max-w-fit">{{ eventSig().buildingName }}</p>
+            <p><span class="mx-1">|</span>{{ eventSig().floorName }}<span class="mx-1">|</span></p>
+            <p>{{ eventSig().roomName }}</p>
           </div>
         </div>
       </div>
@@ -23,9 +23,9 @@
   <mat-card-content class="!flex flex-col gap-2 !pt-2">
     <mat-divider></mat-divider>
     <div class="flex items-center font-bold">
-      <p>{{ event.date | date: 'EEEE, dd MMM, yyyy' }}<span class="mx-1">|</span></p>
-      <p>{{ event.startHour }}-</p>
-      <p>{{ event.endHour }}</p>
+      <p>{{ eventSig().date | date: 'EEEE, dd MMM, yyyy' }}<span class="mx-1">|</span></p>
+      <p>{{ eventSig().startHour }}-</p>
+      <p>{{ eventSig().endHour }}</p>
     </div>
   </mat-card-content>
   <mat-card-actions>
