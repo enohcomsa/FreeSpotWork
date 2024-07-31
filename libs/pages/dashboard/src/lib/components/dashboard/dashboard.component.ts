@@ -6,7 +6,7 @@ import { AdminBuildingService } from '@free-spot-service/building';
 import { Building, FreeSpotUser, Group } from '@free-spot/models';
 import { UserService } from '@free-spot-service/user';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { filter, Subscription } from 'rxjs';
+import { filter, Subscription, take } from 'rxjs';
 import { UserSetupDialogComponent } from '../user-setup-dialog/user-setup-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { AdminFacultyService } from '@free-spot-service/faculty';
@@ -40,7 +40,10 @@ export class DashboardComponent implements OnInit {
   ).email;
   currentUserSig: Signal<FreeSpotUser> = this._userService.getFreeSpotUserByEmail(this.currentUserEmail);
   currentUserSubscription: Subscription = toObservable(this.currentUserSig)
-    .pipe(filter((user: FreeSpotUser) => Object.keys(user).length !== 0))
+    .pipe(
+      filter((user: FreeSpotUser) => Object.keys(user).length !== 0),
+      take(1),
+    )
     .subscribe((user: FreeSpotUser) => {
       if ((!user.group && !user.semiGroup) || !user.faculty || !user.currentYear) {
         this._dialog.open(UserSetupDialogComponent, {

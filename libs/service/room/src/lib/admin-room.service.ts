@@ -69,7 +69,8 @@ export class AdminRoomService {
   }
 
   deleteRoom(deletedRoom: Room): void {
-    SignalArrayUtil.deleteItem(deletedRoom, this._roomListSig);
+    const updatedRoomList: Room[] = this._roomListSig().filter((room: Room) => room.name !== deletedRoom.name);
+    this._roomListSig.set(updatedRoomList);
     this._httpRoomService.storeRoomList(this._roomListSig());
   }
 

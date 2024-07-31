@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { DynamicChipListComponent, TimetableItemComponent } from '@free-spot/ui';
-import { Faculty, FreeSpotUser, Group, SemiGroup, TimeTableItem, Year } from '@free-spot/models';
+import { Faculty, FreeSpotUser, Group, SemiGroup, TimetableActivityItem, TimeTableItem, Year } from '@free-spot/models';
 import { AdminFacultyService } from '@free-spot-service/faculty';
 import { FormBuilder, FormsModule } from '@angular/forms';
 import { AdminBuildingService } from '@free-spot-service/building';
@@ -140,6 +140,18 @@ export class GroupComponent implements OnInit {
         currentYear: this.yearSig().name,
         group: this.groupSig().name,
       };
+      updatedGroup.timetable = updatedGroup.timetable.map((timetableItem: TimeTableItem) => {
+        return {
+          ...timetableItem,
+          activities: timetableItem.activities?.map((timetableActivity: TimetableActivityItem) => {
+            return {
+              ...timetableActivity,
+              freeSpots: timetableActivity.freeSpots - 1,
+              busySpots: timetableActivity.busySpots + 1,
+            };
+          }),
+        };
+      });
 
       this._userService.updateFreeSpotUser(oldUser, newUser);
     } else {
@@ -164,6 +176,20 @@ export class GroupComponent implements OnInit {
         group: undefined,
       };
       newUser.bookingList = [];
+
+      updatedGroup.timetable = updatedGroup.timetable.map((timetableItem: TimeTableItem) => {
+        return {
+          ...timetableItem,
+          activities: timetableItem.activities?.map((timetableActivity: TimetableActivityItem) => {
+            return {
+              ...timetableActivity,
+              freeSpots: timetableActivity.freeSpots + 1,
+              busySpots: timetableActivity.busySpots - 1,
+            };
+          }),
+        };
+      });
+
       this._userService.updateFreeSpotUser(oldUser, newUser);
     }
 
@@ -176,12 +202,6 @@ export class GroupComponent implements OnInit {
 
   updateSemiGroupStudentList(updatedStudentSemiGroupList: FreeSpotUser[], oldSemiGroup: SemiGroup): void {
     const updatedSemiGroup: SemiGroup = { ...oldSemiGroup, students: updatedStudentSemiGroupList };
-    const updatedGroup: Group = {
-      ...this.groupSig(),
-      semigroups: this.groupSig().semigroups?.map((semiGroup: SemiGroup) =>
-        semiGroup.name === updatedSemiGroup.name ? updatedSemiGroup : semiGroup,
-      ),
-    };
 
     if (oldSemiGroup.students?.length < updatedStudentSemiGroupList.length || oldSemiGroup.students === undefined) {
       const oldUserName: FreeSpotUser = updatedStudentSemiGroupList.filter(
@@ -205,6 +225,19 @@ export class GroupComponent implements OnInit {
         group: this.groupSig().name,
         semiGroup: oldSemiGroup.name,
       };
+
+      updatedSemiGroup.timetable = updatedSemiGroup.timetable.map((timetableItem: TimeTableItem) => {
+        return {
+          ...timetableItem,
+          activities: timetableItem.activities?.map((timetableActivity: TimetableActivityItem) => {
+            return {
+              ...timetableActivity,
+              freeSpots: timetableActivity.freeSpots - 1,
+              busySpots: timetableActivity.busySpots + 1,
+            };
+          }),
+        };
+      });
 
       this._userService.updateFreeSpotUser(oldUser, newUser);
     } else {
@@ -230,8 +263,27 @@ export class GroupComponent implements OnInit {
         semiGroup: undefined,
       };
       newUser.bookingList = [];
+      updatedSemiGroup.timetable = updatedSemiGroup.timetable.map((timetableItem: TimeTableItem) => {
+        return {
+          ...timetableItem,
+          activities: timetableItem.activities?.map((timetableActivity: TimetableActivityItem) => {
+            return {
+              ...timetableActivity,
+              freeSpots: timetableActivity.freeSpots + 1,
+              busySpots: timetableActivity.busySpots - 1,
+            };
+          }),
+        };
+      });
       this._userService.updateFreeSpotUser(oldUser, newUser);
     }
+
+    const updatedGroup: Group = {
+      ...this.groupSig(),
+      semigroups: this.groupSig().semigroups?.map((semiGroup: SemiGroup) =>
+        semiGroup.name === updatedSemiGroup.name ? updatedSemiGroup : semiGroup,
+      ),
+    };
 
     this._updateFaculty(updatedGroup);
   }

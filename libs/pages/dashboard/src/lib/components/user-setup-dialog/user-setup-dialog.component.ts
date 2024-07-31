@@ -101,9 +101,13 @@ export class UserSetupDialogComponent implements OnInit, OnDestroy {
       ),
     };
 
+    const newFacultyWithUpdatedSpots = this._adminFacultyService.getFacultyByName(
+      this.setupForm.controls['faculty'].value?.name as string,
+    )();
+
     const updatedFaculty: Faculty = {
-      ...this.setupForm.controls['faculty'].value,
-      yearList: this.setupForm.controls['faculty'].value?.yearList?.map((year: Year) => {
+      ...newFacultyWithUpdatedSpots,
+      yearList: newFacultyWithUpdatedSpots.yearList?.map((year: Year) => {
         if (year.name === this.setupForm.controls['currentYear'].value?.name) {
           return {
             ...year,

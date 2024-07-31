@@ -210,7 +210,7 @@ export class AdminFloorDetailComponent implements OnInit {
   private _createDeleteRoomFloor(diffRoom: Room, deletedRoom: Room): Floor {
     return {
       ...this.floorSig(),
-      roomList: this.floorSig().roomList.filter((room: Room) => room !== deletedRoom),
+      roomList: this.floorSig().roomList.filter((room: Room) => room.name !== deletedRoom.name),
       totalSpotsNumber: this._reduceSpotNumber('totalSpotsNumber', diffRoom),
       unavailableSpots: this._reduceSpotNumber('unavailableSpots', diffRoom),
     };
