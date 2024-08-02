@@ -54,6 +54,7 @@ export class AdminRoomService {
     const newRoomList: Room[] = this._roomListSig().map((room: Room) => {
       return this._updateTimetableActivityFromRoom(room, changedTimetableActivity, addingBooking);
     });
+
     this._roomListSig.set(newRoomList);
     this._httpRoomService.storeRoomList(this._roomListSig());
   }
@@ -109,7 +110,7 @@ export class AdminRoomService {
       timetableActivity1.subjectItem.name === timetableActivity2.subjectItem.name &&
       timetableActivity1.startHour === timetableActivity2.startHour &&
       timetableActivity1.weekParity === timetableActivity2.weekParity &&
-      timetableActivity1.date === timetableActivity2.date
+      new Date(timetableActivity1.date).getTime() === new Date(timetableActivity2.date).getTime()
     );
   }
 }

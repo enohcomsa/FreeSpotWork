@@ -10,6 +10,8 @@ import { take } from 'rxjs';
 export class AppDateService {
   private _httpAppDateService: HttpAppDateService = inject(HttpAppDateService);
 
+  appDateChanged: WritableSignal<boolean> = signal(false);
+
   private _appDateSig: WritableSignal<FreeSpotDate> = signal({} as FreeSpotDate);
   appDateSig = this._appDateSig.asReadonly();
 
@@ -31,6 +33,7 @@ export class AppDateService {
           newAppDate.weekCount = newAppDate.weekCount + weekDiff;
           this._appDateSig.set(newAppDate);
           this._httpAppDateService.storeAppDate(newAppDate);
+          this.appDateChanged.set(true);
         } else {
           this._appDateSig.set({ ...appDate, date: new Date(appDate.date) });
         }

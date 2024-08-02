@@ -90,7 +90,7 @@ export class AdminFloorService {
       timetableActivity1.subjectItem.name === timetableActivity2.subjectItem.name &&
       timetableActivity1.startHour === timetableActivity2.startHour &&
       timetableActivity1.weekParity === timetableActivity2.weekParity &&
-      timetableActivity1.date === timetableActivity2.date
+      new Date(timetableActivity1.date).getTime() === new Date(timetableActivity2.date).getTime()
     );
   }
 }
