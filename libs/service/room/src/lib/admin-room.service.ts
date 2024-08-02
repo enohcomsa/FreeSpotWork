@@ -15,12 +15,14 @@ export class AdminRoomService {
   roomListSig = this._roomListSig.asReadonly();
 
   init(): void {
-    this._httpRoomService
-      .getRoomList()
-      .pipe(take(1))
-      .subscribe((roomList: Room[]) => {
-        this._roomListSig.set(roomList?.filter((room: Room) => room !== null));
-      });
+    if (!this._roomListSig().length) {
+      this._httpRoomService
+        .getRoomList()
+        .pipe(take(1))
+        .subscribe((roomList: Room[]) => {
+          this._roomListSig.set(roomList?.filter((room: Room) => room !== null));
+        });
+    }
   }
 
   getRoomByName(roomName: string): Signal<Room> {

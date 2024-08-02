@@ -14,12 +14,14 @@ export class AdminBuildingService {
   buildingListSig = this._buildingListSig.asReadonly();
 
   init(): void {
-    this._httpBuildingService
-      .getBuildingList()
-      .pipe(take(1))
-      .subscribe((buildingList: Building[]) => {
-        this._buildingListSig.set(buildingList?.filter((building: Building) => building !== null));
-      });
+    if (!this._buildingListSig().length) {
+      this._httpBuildingService
+        .getBuildingList()
+        .pipe(take(1))
+        .subscribe((buildingList: Building[]) => {
+          this._buildingListSig.set(buildingList?.filter((building: Building) => building !== null));
+        });
+    }
   }
 
   getBuildingByName(buildingName: string): Signal<Building> {

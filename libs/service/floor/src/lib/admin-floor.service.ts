@@ -14,12 +14,14 @@ export class AdminFloorService {
   floorListSig = this._floorListSig.asReadonly();
 
   init(): void {
-    this._httpFloorService
-      .getFloorList()
-      .pipe(take(1))
-      .subscribe((floorList: Floor[]) => {
-        this._floorListSig.set(floorList?.filter((floor: Floor) => floor !== null));
-      });
+    if (!this._floorListSig().length) {
+      this._httpFloorService
+        .getFloorList()
+        .pipe(take(1))
+        .subscribe((floorList: Floor[]) => {
+          this._floorListSig.set(floorList?.filter((floor: Floor) => floor !== null));
+        });
+    }
   }
 
   getFloorByName(floorName: string): Signal<Floor> {

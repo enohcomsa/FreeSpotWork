@@ -13,12 +13,14 @@ export class AdminGroupService {
   groupListSig = this._groupListSig.asReadonly();
 
   init(): void {
-    this._httpGroupService
-      .getGroupList()
-      .pipe(take(1))
-      .subscribe((groupList: Group[]) => {
-        this._groupListSig.set(groupList?.filter((group: Group) => group !== null));
-      });
+    if (!this._groupListSig().length) {
+      this._httpGroupService
+        .getGroupList()
+        .pipe(take(1))
+        .subscribe((groupList: Group[]) => {
+          this._groupListSig.set(groupList?.filter((group: Group) => group !== null));
+        });
+    }
   }
 
   getGroupByName(groupName: string): Signal<Group> {

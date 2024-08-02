@@ -8,11 +8,14 @@
     <mat-chip-option> Laboratory</mat-chip-option>
     <mat-chip-option> Course</mat-chip-option>
     <mat-chip-option> Project</mat-chip-option>
+    <mat-chip-option> Seminary</mat-chip-option>
   </mat-chip-listbox>
 
   <div class="grid grid-cols-1 gap-8 pb-4 md:grid-cols-2 lg:grid lg:grid-cols-3">
-    @for (bookedEvent of currentUserSig().bookingList; track bookedEvent) {
+    @for (bookedEvent of filteredBookedItems(); track bookedEvent) {
       <free-spot-booked-spot [eventSig]="bookedEvent"> </free-spot-booked-spot>
+    } @empty {
+      <h3>No bookings found.</h3>
     }
   </div>
 

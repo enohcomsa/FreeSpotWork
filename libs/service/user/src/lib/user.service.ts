@@ -14,12 +14,14 @@ export class UserService {
   userListSig = this._userListSig.asReadonly();
 
   init(): void {
-    this._httpFreeSpotUserService
-      .getUserList()
-      .pipe(take(1))
-      .subscribe((userList: FreeSpotUser[]) => {
-        this._userListSig.set(userList?.filter((user: FreeSpotUser) => user !== null));
-      });
+    if (!this._userListSig().length) {
+      this._httpFreeSpotUserService
+        .getUserList()
+        .pipe(take(1))
+        .subscribe((userList: FreeSpotUser[]) => {
+          this._userListSig.set(userList?.filter((user: FreeSpotUser) => user !== null));
+        });
+    }
   }
 
   getFreeSpotUserByEmail(userEmail: string): Signal<FreeSpotUser> {

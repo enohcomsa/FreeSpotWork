@@ -14,12 +14,14 @@ export class AdminFacultyService {
   facultyListSig = this._facultyListSig.asReadonly();
 
   init(): void {
-    this._httpFacultyService
-      .getFacultyList()
-      .pipe(take(1))
-      .subscribe((facultyList: Faculty[]) => {
-        this._facultyListSig.set(facultyList?.filter((faculty: Faculty) => faculty !== null));
-      });
+    if (!this._facultyListSig().length) {
+      this._httpFacultyService
+        .getFacultyList()
+        .pipe(take(1))
+        .subscribe((facultyList: Faculty[]) => {
+          this._facultyListSig.set(facultyList?.filter((faculty: Faculty) => faculty !== null));
+        });
+    }
   }
 
   getFacultyByName(facultyName: string): Signal<Faculty> {
