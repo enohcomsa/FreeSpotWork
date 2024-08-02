@@ -29,6 +29,7 @@ export class BookingService {
       date: timetableActivityItem.date,
       startHour: timetableActivityItem.startHour,
       endHour: timetableActivityItem.endHour,
+      weekParity: timetableActivityItem.weekParity,
     };
   }
 

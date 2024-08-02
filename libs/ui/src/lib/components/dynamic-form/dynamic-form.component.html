@@ -41,7 +41,10 @@
     @if (searchActive$()) {
       <div class="flex flex-col space-y-4">
         @for (timetableActivity of timetableActivityListFoundSig(); track timetableActivity) {
-          <free-spot-booking-item [timetableActivitySig]="timetableActivity"></free-spot-booking-item>
+          <free-spot-booking-item
+            [timetableActivitySig]="timetableActivity"
+            [oldTimetableActivitySig]="oldTimetableActivitySig()"
+          ></free-spot-booking-item>
         } @empty {
           <h3>No items found.</h3>
         }

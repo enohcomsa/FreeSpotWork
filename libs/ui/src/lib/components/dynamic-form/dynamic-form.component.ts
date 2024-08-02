@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   DestroyRef,
   inject,
   input,
@@ -17,12 +18,21 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
-import { Event } from '@free-spot/enums';
+import { Event, WeekParity } from '@free-spot/enums';
 import { BookingItemComponent } from '../booking-item/booking-item.component';
-import { BookedEvent, FreeSpotUser, Room, SubjectItem, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
+import {
+  BookedEvent,
+  FreeSpotDate,
+  FreeSpotUser,
+  Room,
+  SubjectItem,
+  TimetableActivityItem,
+  TimeTableItem,
+} from '@free-spot/models';
 import { SUBJECT_LIST } from '@free-spot/constants';
 import { UserService } from '@free-spot-service/user';
 import { AdminRoomService } from '@free-spot-service/room';
+import { AppDateService } from '@free-spot-service/app-date';
 
 @Component({
   selector: 'free-spot-dynamic-form',
@@ -45,6 +55,16 @@ export class DynamicFormComponent implements OnInit {
   private _destroyRef = inject(DestroyRef);
   private _userService: UserService = inject(UserService);
   private _adminRoomService: AdminRoomService = inject(AdminRoomService);
+  private _appDateService: AppDateService = inject(AppDateService);
+
+  appDateSig: Signal<FreeSpotDate> = this._appDateService.appDateSig;
+  weekParitySig: Signal<WeekParity> = computed(() => {
+    if (this.appDateSig().weekCount % 2 === 0) {
+      return WeekParity.EVEN;
+    } else {
+      return WeekParity.ODD;
+    }
+  });
 
   private _currentUserEmail = (
     JSON.parse(localStorage.getItem('user') as string) as {
@@ -65,10 +85,12 @@ export class DynamicFormComponent implements OnInit {
   searchActive$: WritableSignal<boolean> = signal(false);
   eventNames: string[] = ['event_efeffe', 'event_deww', 'event_eeeee', 'event_ertty', 'event_xzxz'];
   timetableActivityListFoundSig: WritableSignal<TimetableActivityItem[]> = signal([]);
+  oldTimetableActivitySig: WritableSignal<TimetableActivityItem> = signal({} as TimetableActivityItem);
 
   ngOnInit(): void {
     this._userService.init();
     this._adminRoomService.init();
+    this._appDateService.init();
     this.searchForm = this._formBuilder.group({
       eventBooking: this.eventBookingSelectedSig(),
       subject: this.subjectItemListSig()[0],
@@ -90,6 +112,7 @@ export class DynamicFormComponent implements OnInit {
           bookedEvent.subjectItem.name === this.searchForm.controls['subject'].value.name &&
           bookedEvent.activityType === this.searchForm.controls['eventBooking'].value,
       ) || ({} as BookedEvent);
+
     if (Object.keys(oldBookedEvent).length) {
       this.roomListSig().forEach((room: Room) => {
         if (
@@ -109,18 +132,42 @@ export class DynamicFormComponent implements OnInit {
           });
         }
       });
+
+      this.oldTimetableActivitySig.set(
+        timetableActivityListFound.find((timetableActivity: TimetableActivityItem) =>
+          timetableActivity.startHour !== oldBookedEvent.startHour
+            ? true
+            : timetableActivity.date !== oldBookedEvent.date
+              ? true
+              : timetableActivity.weekParity !== oldBookedEvent.weekParity,
+        ) || ({} as TimetableActivityItem),
+      );
+
+      timetableActivityListFound = timetableActivityListFound.filter((timetableActivity: TimetableActivityItem) => {
+        return timetableActivity.weekParity === WeekParity.BOTH || timetableActivity.weekParity === this.weekParitySig();
+      });
+
+      timetableActivityListFound = timetableActivityListFound.filter((timetableActivity: TimetableActivityItem) =>
+        timetableActivity.startHour !== oldBookedEvent.startHour
+          ? true
+          : timetableActivity.date !== oldBookedEvent.date
+            ? true
+            : timetableActivity.weekParity !== oldBookedEvent.weekParity,
+      );
+
+      timetableActivityListFound = timetableActivityListFound.filter(
+        (timetableActivity: TimetableActivityItem) =>
+          new Date().setHours(0, 0, 0, 0) - new Date(timetableActivity.date).getTime() <= 0,
+      );
+
+      timetableActivityListFound = timetableActivityListFound.filter(
+        (timetableActivity: TimetableActivityItem) => new Date().getHours() < timetableActivity.startHour,
+      );
+
+      timetableActivityListFound = timetableActivityListFound.filter(
+        (timetableActivity: TimetableActivityItem) => timetableActivity.freeSpots > 0,
+      );
     }
-
-    console.log(timetableActivityListFound);
-
-    timetableActivityListFound = timetableActivityListFound.filter((timetableActivity: TimetableActivityItem) =>
-      timetableActivity.startHour !== oldBookedEvent.startHour
-        ? timetableActivity.startHour !== oldBookedEvent.startHour
-        : timetableActivity.date !== oldBookedEvent.date,
-    );
-    timetableActivityListFound = timetableActivityListFound.filter((timetableActivity: TimetableActivityItem) => {
-      return new Date().setHours(0, 0, 0, 0) - new Date(timetableActivity.date).getTime() <= 0;
-    });
 
     this.timetableActivityListFoundSig.set(timetableActivityListFound);
     this.searchActive$.set(true);

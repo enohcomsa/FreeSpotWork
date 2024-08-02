@@ -4,7 +4,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { BookedEvent } from '@free-spot/models';
-import { Event } from '@free-spot/enums';
+import { Event, WeekParity } from '@free-spot/enums';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
@@ -20,6 +20,7 @@ export class BookedSpotComponent {
   eventSig = input.required<BookedEvent>();
 
   event_learn: BookedEvent = {
+    weekParity: WeekParity.BOTH,
     activityType: Event.LABORATORY,
     subjectItem: {
       name: 'Sist. optoelectronice in telecomunicatii ',
@@ -33,6 +34,8 @@ export class BookedSpotComponent {
     roomName: '519',
   };
   event_special: BookedEvent = {
+    weekParity: WeekParity.BOTH,
+
     activityType: Event.SPECIAL_EVENT,
     subjectItem: {
       name: 'Sist. optoelectronice in telecomunicatii ',

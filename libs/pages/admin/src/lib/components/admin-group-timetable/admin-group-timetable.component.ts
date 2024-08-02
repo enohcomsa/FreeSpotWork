@@ -219,7 +219,8 @@ export class AdminGroupTimetableComponent implements OnInit {
       bookedEvent1.subjectItem.name === bookedEvent2.subjectItem.name &&
       bookedEvent1.startHour === bookedEvent2.startHour &&
       bookedEvent1.date === bookedEvent2.date &&
-      bookedEvent1.activityType === bookedEvent2.activityType
+      bookedEvent1.activityType === bookedEvent2.activityType &&
+      bookedEvent1.weekParity === bookedEvent2.weekParity
     );
   }
 }

@@ -14,7 +14,7 @@
         <p>{{ eventBookingSig().startHour }}-</p>
         <p>{{ eventBookingSig().endHour }}</p>
       </div>
-      <button mat-flat-button class="mt-2">Book spot</button>
+      <button mat-flat-button class="mt-2" (click)="bookSpot()">Book spot</button>
     </div>
   </mat-card-content>
 </mat-card>
