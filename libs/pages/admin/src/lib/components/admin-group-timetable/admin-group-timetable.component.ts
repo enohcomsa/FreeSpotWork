@@ -13,7 +13,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { BookedEvent, FreeSpotUser, Group, SubjectItem, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
 import { Event, WeekDay } from '@free-spot/enums';
-import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
@@ -74,9 +74,9 @@ export class AdminGroupTimetableComponent implements OnInit {
     this._bookingService.init();
     this._userService.init();
     this.addTimetableActivityFormGroup = this._formBuilder.nonNullable.group({
-      weekDay: [WeekDay.MONDAY],
-      subject: [this.subjectListSig()[0]],
-      timetableActivity: [{}],
+      weekDay: [WeekDay.MONDAY, [Validators.required, Validators.minLength(1)]],
+      subject: [this.subjectListSig()[0], [Validators.required, Validators.minLength(1)]],
+      timetableActivity: [{}, [Validators.required, Validators.minLength(1)]],
     });
     this.addTimetableActivityFormGroup.valueChanges.pipe(debounceTime(300)).subscribe(() => {
       this.foundActivitiesSig.set(

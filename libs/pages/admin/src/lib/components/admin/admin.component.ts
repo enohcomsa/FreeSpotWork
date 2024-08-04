@@ -17,7 +17,7 @@ import { Building, Faculty, Floor, FreeSpotUser, Year } from '@free-spot/models'
 import { AddItemCardComponent, DynamicChipListComponent } from '@free-spot/ui';
 import { AdminBuildingCardComponent } from '../admin-building-card/admin-building-card.component';
 import { AdminEventCardComponent } from '../admin-event-card/admin-event-card.component';
-import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -64,12 +64,12 @@ export class AdminComponent implements OnInit {
 
   addingYear = false;
   editingYear = false;
-  addYearFormControl = this._formBuilder.nonNullable.control('');
+  addYearFormControl = this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(3)]);
   addingBuilding = false;
   editingBuilding = false;
   addBuildingFormGroup = this._formBuilder.nonNullable.group({
-    name: [''],
-    adress: [''],
+    name: ['', [Validators.required, Validators.minLength(3)]],
+    adress: ['', [Validators.required, Validators.minLength(3)]],
   });
 
   addingEvent = false;

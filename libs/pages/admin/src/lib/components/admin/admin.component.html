@@ -30,7 +30,9 @@
               <mat-label>New Year</mat-label>
               <input type="text" matInput [formControl]="addYearFormControl" />
             </mat-form-field>
-            <button mat-flat-button type="submit" class="sm:mb-5">{{ editingYear ? 'Edit Year' : 'Add Year' }}</button>
+            <button mat-flat-button type="submit" class="sm:mb-5" [disabled]="!addYearFormControl.valid">
+              {{ editingYear ? 'Edit Year' : 'Add Year' }}
+            </button>
           </form>
         } @else {
           <free-spot-add-item-card class="block h-24 w-full md:h-28" (click)="onAddingYear()"></free-spot-add-item-card>
@@ -70,7 +72,9 @@
           <mat-label>Building adress</mat-label>
           <input type="text" matInput formControlName="adress" />
         </mat-form-field>
-        <button mat-flat-button type="submit" class="sm:mb-5">{{ editingBuilding ? 'Edit building' : 'Add building' }}</button>
+        <button mat-flat-button type="submit" class="sm:mb-5" [disabled]="!addBuildingFormGroup.valid">
+          {{ editingBuilding ? 'Edit building' : 'Add building' }}
+        </button>
       </form>
     }
   </div>

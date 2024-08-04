@@ -35,7 +35,9 @@
           <mat-label>Unavailable spots</mat-label>
           <input type="number" matInput formControlName="unavailableSpots" />
         </mat-form-field>
-        <button mat-flat-button type="submit" class="sm:mb-5">{{ editingRoom ? 'Edit room' : 'Add room' }}</button>
+        <button mat-flat-button type="submit" class="sm:mb-5" [disabled]="!addRoomFormGroup.valid">
+          {{ editingRoom ? 'Edit room' : 'Add room' }}
+        </button>
       </form>
     }
   </div>

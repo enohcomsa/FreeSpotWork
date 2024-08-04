@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -92,9 +92,9 @@ export class DynamicFormComponent implements OnInit {
     this._adminRoomService.init();
     this._appDateService.init();
     this.searchForm = this._formBuilder.group({
-      eventBooking: this.eventBookingSelectedSig(),
-      subject: this.subjectItemListSig()[0],
-      event: [this.eventNames[0]],
+      eventBooking: [this.eventBookingSelectedSig(), Validators.required],
+      subject: [this.subjectItemListSig()[0], Validators.required],
+      event: [this.eventNames[0], Validators.required],
     });
 
     this.searchForm.valueChanges.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(() => this.searchActive$.set(false));

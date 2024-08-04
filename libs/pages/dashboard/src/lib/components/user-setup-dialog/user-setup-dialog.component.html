@@ -42,6 +42,6 @@
         <mat-select formControlName="semigroup"></mat-select>
       </mat-form-field>
     }
-    <button mat-flat-button type="submit" form="setup-form">Update Account</button>
+    <button mat-flat-button type="submit" form="setup-form" [disabled]="!setupForm.valid">Update Account</button>
   </form>
 </div>

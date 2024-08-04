@@ -12,7 +12,7 @@ import {
   WritableSignal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -64,9 +64,9 @@ export class AdminFloorDetailComponent implements OnInit {
   addingRoom = false;
   editingRoom = false;
   addRoomFormGroup = this._formBuilder.nonNullable.group({
-    roomName: [''],
-    totalSpotsNumber: [0],
-    unavailableSpots: [0],
+    roomName: ['', [Validators.required, Validators.minLength(3)]],
+    totalSpotsNumber: [0, Validators.required],
+    unavailableSpots: [0, Validators.required],
   });
   roomEmptyTimetable: Signal<TimeTableItem[]> = computed(() => [
     { weekDay: WeekDay.MONDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.MONDAY) },

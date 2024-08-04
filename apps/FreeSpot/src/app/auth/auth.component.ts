@@ -42,6 +42,7 @@ export class AuthComponent {
 
   onSwitchMode(): void {
     this.isLoginMode = !this.isLoginMode;
+    this.authForm.reset();
     if (this.isLoginMode) {
       this.authForm.get('firstName')?.setValidators([Validators.minLength(3)]);
     } else {

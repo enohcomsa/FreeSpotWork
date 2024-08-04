@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, input, model, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
@@ -48,10 +48,10 @@ export class AdminRoomTimetableItemComponent implements OnInit {
   ngOnInit(): void {
     this._adminFacultyService.init();
     this.addTimetableActivityFormGroup = this._formBuilder.nonNullable.group({
-      startHour: [this.startHourList[0]],
-      subjectName: [this.subjectListSig()[0]],
-      activityType: [Event.COURSE],
-      weekParity: [WeekParity.BOTH],
+      startHour: [this.startHourList[0], Validators.required],
+      subjectName: [this.subjectListSig()[0], [Validators.required, Validators.minLength(1)]],
+      activityType: [Event.COURSE, Validators.required],
+      weekParity: [WeekParity.BOTH, Validators.required],
     });
   }
 

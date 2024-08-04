@@ -66,7 +66,9 @@
     </div>
 
     <div class="flex flex-auto flex-col md:flex-row md:items-center md:gap-4">
-      <button mat-flat-button type="submit" class="flex-auto sm:mb-5">Add timetable item</button>
+      <button mat-flat-button type="submit" class="flex-auto sm:mb-5" [disabled]="!addTimetableActivityFormGroup.valid">
+        Add timetable item
+      </button>
     </div>
   </form>
 }

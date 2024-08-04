@@ -59,6 +59,6 @@
         }
       </mat-autocomplete>
     </mat-form-field>
-    <button mat-flat-button type="submit" class="sm:mb-5">Add {{ itemLabelSig() }}</button>
+    <button mat-flat-button type="submit" class="sm:mb-5" [disabled]="!addItemFormControl.valid">Add {{ itemLabelSig() }}</button>
   </form>
 }

@@ -13,7 +13,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { Floor, Building } from '@free-spot/models';
 import { AdminFloorCardComponent } from '../admin-floor-card/admin-floor-card.component';
-import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -50,7 +50,7 @@ export class AdminBuildingDetailComponent implements OnInit {
 
   addingFloor = false;
   editingFloor = false;
-  addFloorFormControl = this._formBuilder.nonNullable.control('');
+  addFloorFormControl = this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(3)]);
 
   ngOnInit(): void {
     this._adminFloorService.init();

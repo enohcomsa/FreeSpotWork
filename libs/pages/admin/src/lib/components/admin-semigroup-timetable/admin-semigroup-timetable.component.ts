@@ -11,7 +11,7 @@ import {
   WritableSignal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AdminRoomService } from '@free-spot-service/room';
 import { BookedEvent, FreeSpotUser, SemiGroup, SubjectItem, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
 import { debounceTime } from 'rxjs';
@@ -74,9 +74,9 @@ export class AdminSemisemiGroupTimetableComponent implements OnInit {
     this._bookingService.init();
     this._userService.init();
     this.addTimetableActivityFormSemiGroup = this._formBuilder.nonNullable.group({
-      weekDay: [WeekDay.MONDAY],
-      subject: [this.subjectListSig()[0]],
-      timetableActivity: [{}],
+      weekDay: [WeekDay.MONDAY, [Validators.required, Validators.minLength(1)]],
+      subject: [this.subjectListSig()[0], [Validators.required, Validators.minLength(1)]],
+      timetableActivity: [{}, [Validators.required, Validators.minLength(1)]],
     });
     this.addTimetableActivityFormSemiGroup.valueChanges.pipe(debounceTime(300)).subscribe(() => {
       this.foundActivitiesSig.set(

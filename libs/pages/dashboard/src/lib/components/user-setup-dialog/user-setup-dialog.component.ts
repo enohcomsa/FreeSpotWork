@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit, signal, 
 import { CommonModule } from '@angular/common';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
-import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { filter, Subscription } from 'rxjs';
@@ -44,9 +44,9 @@ export class UserSetupDialogComponent implements OnInit, OnDestroy {
   foundSemigroupListSig: WritableSignal<SemiGroup[]> = signal([]);
 
   setupForm = this._formBuilder.group({
-    faculty: this.facultyListSig()[0] || null,
-    currentYear: {} as Year,
-    group: {} as Group,
+    faculty: [this.facultyListSig()[0] || null, [Validators.required, Validators.minLength(1)]],
+    currentYear: [{} as Year, [Validators.required, Validators.minLength(1)]],
+    group: [{} as Group, [Validators.required, Validators.minLength(1)]],
     semigroup: {} as SemiGroup,
   });
   subscriptionList: Subscription[] = [];

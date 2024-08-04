@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, model, OnInit, Signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
@@ -42,7 +42,7 @@ export class DynamicChipListComponent<T> implements OnInit {
   itemKeyDysplay = input<keyof T>();
   itemKeyDysplay2 = input<keyof T>();
   itemDinamicRoute = input<string>('');
-  addItemFormControl = this._formBuilder.nonNullable.control('');
+  addItemFormControl = this._formBuilder.nonNullable.control('', Validators.required);
   addingItem = false;
 
   emptyTimetable: Signal<TimeTableItem[]> = computed(() => [
