@@ -28,6 +28,7 @@
           >
             <mat-form-field>
               <mat-label>New Year</mat-label>
+              <mat-hint>Enter faculty year name</mat-hint>
               <input type="text" matInput [formControl]="addYearFormControl" />
             </mat-form-field>
             <button mat-flat-button type="submit" class="sm:mb-5" [disabled]="!addYearFormControl.valid">
@@ -66,10 +67,12 @@
       >
         <mat-form-field>
           <mat-label>Building name</mat-label>
+          <mat-hint>Enter building name</mat-hint>
           <input type="text" matInput formControlName="name" />
         </mat-form-field>
         <mat-form-field>
           <mat-label>Building adress</mat-label>
+          <mat-hint>Enter building address</mat-hint>
           <input type="text" matInput formControlName="adress" />
         </mat-form-field>
         <button mat-flat-button type="submit" class="sm:mb-5" [disabled]="!addBuildingFormGroup.valid">
@@ -104,6 +107,7 @@
       <form class="flex flex-col py-4 sm:flex-row sm:items-center sm:gap-4" (ngSubmit)="onAddEvent()">
         <mat-form-field>
           <mat-label>New event</mat-label>
+          <mat-hint>Enter event name</mat-hint>
           <input type="text" matInput [formControl]="addEventFormControl" />
         </mat-form-field>
         <button mat-flat-button type="submit" class="sm:mb-5">Add Event</button>

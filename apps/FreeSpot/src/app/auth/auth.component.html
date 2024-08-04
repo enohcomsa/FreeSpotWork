@@ -1,4 +1,4 @@
-<div class="min-h-screen flex items-center justify-center">
+<div class="flex min-h-screen items-center justify-center">
   <mat-card appearance="outlined" class="w-1/4 p-4">
     <form
       [formGroup]="authForm"
@@ -6,16 +6,16 @@
       #authFormDirective="ngForm"
       class="flex flex-col space-y-4"
     >
-      @if(!isLoginMode){
-      <mat-form-field class="mt-4">
-        <mat-label>First name</mat-label>
-        <input matInput formControlName="firstName" />
-      </mat-form-field>
+      @if (!isLoginMode) {
+        <mat-form-field class="mt-4">
+          <mat-label>First name</mat-label>
+          <input matInput formControlName="firstName" />
+        </mat-form-field>
 
-      <mat-form-field class="mt-4">
-        <mat-label>Last name</mat-label>
-        <input matInput formControlName="familyName" />
-      </mat-form-field>
+        <mat-form-field class="mt-4">
+          <mat-label>Last name</mat-label>
+          <input matInput formControlName="familyName" />
+        </mat-form-field>
       }
       <mat-form-field class="mt-4">
         <mat-label>Email</mat-label>
@@ -24,7 +24,7 @@
 
       <mat-form-field>
         <mat-label>Password</mat-label>
-        <input matInput formControlName="password" />
+        <input type="password" matInput formControlName="password" />
       </mat-form-field>
 
       <button mat-stroked-button type="submit" [disabled]="!authForm.valid">

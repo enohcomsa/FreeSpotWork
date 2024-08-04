@@ -24,6 +24,7 @@
       >
         <mat-form-field>
           <mat-label>New floor</mat-label>
+          <mat-hint>Enter floor name</mat-hint>
           <input type="text" matInput [formControl]="addFloorFormControl" />
         </mat-form-field>
         <button mat-flat-button type="submit" class="sm:mb-5" [disabled]="!addFloorFormControl.valid">
