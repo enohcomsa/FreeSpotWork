@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, model, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, model, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Faculty, Group, SubjectItem, Year } from '@free-spot/models';
 import { MatListModule } from '@angular/material/list';
@@ -7,6 +7,7 @@ import { DynamicChipListComponent } from '@free-spot/ui';
 import { MatIconModule } from '@angular/material/icon';
 import { SUBJECT_LIST } from '@free-spot/constants';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { ConfirmModalService } from '@free-spot-service/confirm-modal';
 
 @Component({
   selector: 'free-spot-faculty',
@@ -17,15 +18,25 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FacultyComponent {
+  private _confirmService: ConfirmModalService = inject(ConfirmModalService);
+
   facultySig = model.required<Faculty>();
   subjectList: SubjectItem[] = SUBJECT_LIST;
 
   editYear = output<Year>();
+
   deleteYear(deletedYear: Year): void {
-    this.facultySig.set({
-      ...this.facultySig(),
-      yearList: this.facultySig().yearList?.filter((year: Year) => year.name !== deletedYear.name),
-    });
+    this._confirmService
+      .openConfirmDialog('Are you sure you want to delete this year?')
+      .afterClosed()
+      .subscribe((result: boolean) => {
+        if (result) {
+          this.facultySig.set({
+            ...this.facultySig(),
+            yearList: this.facultySig().yearList?.filter((year: Year) => year.name !== deletedYear.name),
+          });
+        }
+      });
   }
 
   onSubjectListChanged(newSubjectList: SubjectItem[]): void {

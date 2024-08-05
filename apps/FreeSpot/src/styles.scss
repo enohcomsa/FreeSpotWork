@@ -12,10 +12,10 @@ html {
   scrollbar-gutter: stable;
 }
 
-html,
-body {
-  height: 100%;
-}
+// html {
+//   height: 100%;
+// }
+
 body {
   @include mat.all-component-themes(free-spot-m3-theme.$dark-theme);
   margin: 0;

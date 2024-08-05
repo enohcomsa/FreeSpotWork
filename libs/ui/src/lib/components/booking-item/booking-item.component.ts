@@ -6,6 +6,7 @@ import { BookedEvent, FreeSpotUser, TimetableActivityItem } from '@free-spot/mod
 import { Event, WeekParity } from '@free-spot/enums';
 import { BookingService } from '@free-spot-service/booking';
 import { UserService } from '@free-spot-service/user';
+import { ConfirmModalService } from '@free-spot-service/confirm-modal';
 
 @Component({
   selector: 'free-spot-booking-item',
@@ -18,6 +19,7 @@ import { UserService } from '@free-spot-service/user';
 export class BookingItemComponent implements OnInit {
   private _bookingService: BookingService = inject(BookingService);
   private _userService: UserService = inject(UserService);
+  private _confirmService: ConfirmModalService = inject(ConfirmModalService);
 
   timetableActivitySig: InputSignal<TimetableActivityItem> = input.required<TimetableActivityItem>();
   oldTimetableActivitySig: InputSignal<TimetableActivityItem> = input.required<TimetableActivityItem>();
@@ -70,30 +72,37 @@ export class BookingItemComponent implements OnInit {
   }
 
   bookSpot(): void {
-    this._bookingService.generateUserBookedItemByActivity(this.oldTimetableActivitySig(), false, true);
-    this._bookingService.generateUserBookedItemByActivity(this.timetableActivitySig(), true, true);
+    this._confirmService
+      .openConfirmDialog('Are you sure you wnat to book this spot? The old booking will be lost!')
+      .afterClosed()
+      .subscribe((result: boolean) => {
+        if (result) {
+          this._bookingService.generateUserBookedItemByActivity(this.oldTimetableActivitySig(), false, true);
+          this._bookingService.generateUserBookedItemByActivity(this.timetableActivitySig(), true, true);
 
-    const oldBookedEvent: BookedEvent =
-      this.currentUserSig().bookingList.find(
-        (bookedEvent: BookedEvent) =>
-          bookedEvent.subjectItem.name === this.oldTimetableActivitySig().subjectItem.name &&
-          bookedEvent.activityType === this.oldTimetableActivitySig().activityType,
-      ) || ({} as BookedEvent);
+          const oldBookedEvent: BookedEvent =
+            this.currentUserSig().bookingList.find(
+              (bookedEvent: BookedEvent) =>
+                bookedEvent.subjectItem.name === this.oldTimetableActivitySig().subjectItem.name &&
+                bookedEvent.activityType === this.oldTimetableActivitySig().activityType,
+            ) || ({} as BookedEvent);
 
-    const newUserBookingList: FreeSpotUser = {
-      ...this.currentUserSig(),
-      bookingList: this.currentUserSig().bookingList
-        ? [
-            ...this.currentUserSig().bookingList.filter(
-              (bookedEvent: BookedEvent) => !this._checkBookedEventEquality(bookedEvent, oldBookedEvent),
-            ),
-            this.eventBookingSig(),
-          ]
-        : [this.eventBookingSig()],
-    };
+          const newUserBookingList: FreeSpotUser = {
+            ...this.currentUserSig(),
+            bookingList: this.currentUserSig().bookingList
+              ? [
+                  ...this.currentUserSig().bookingList.filter(
+                    (bookedEvent: BookedEvent) => !this._checkBookedEventEquality(bookedEvent, oldBookedEvent),
+                  ),
+                  this.eventBookingSig(),
+                ]
+              : [this.eventBookingSig()],
+          };
 
-    this._userService.updateFreeSpotUser(this.currentUserSig(), newUserBookingList);
-    this.bookingActive.emit(false);
+          this._userService.updateFreeSpotUser(this.currentUserSig(), newUserBookingList);
+          this.bookingActive.emit(false);
+        }
+      });
   }
 
   private _checkBookedEventEquality(bookedEvent1: BookedEvent, bookedEvent2: BookedEvent): boolean {

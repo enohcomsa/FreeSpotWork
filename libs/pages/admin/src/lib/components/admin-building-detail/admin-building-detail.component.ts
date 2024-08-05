@@ -20,6 +20,7 @@ import { MatInputModule } from '@angular/material/input';
 import { AddItemCardComponent } from '@free-spot/ui';
 import { AdminBuildingService } from '@free-spot-service/building';
 import { AdminFloorService } from '@free-spot-service/floor';
+import { ConfirmModalService } from '@free-spot-service/confirm-modal';
 
 @Component({
   selector: 'free-spot-admin-building-detail',
@@ -42,6 +43,7 @@ export class AdminBuildingDetailComponent implements OnInit {
   private _formBuilder: FormBuilder = inject(FormBuilder);
   private _adminFloorService: AdminFloorService = inject(AdminFloorService);
   private _adminBuildingService: AdminBuildingService = inject(AdminBuildingService);
+  private _confirmService: ConfirmModalService = inject(ConfirmModalService);
 
   editFloor = viewChild<ElementRef>('editFloor');
   buildingNameSig = input.required<string>();
@@ -99,15 +101,22 @@ export class AdminBuildingDetailComponent implements OnInit {
   }
 
   onDeleteFloor(deletedFloor: Floor): void {
-    const updatedBuilding: Building = {
-      ...this.buildingSig(),
-      floorList: this.buildingSig().floorList.filter((floor: Floor) => floor !== deletedFloor),
-    };
-    this._adminFloorService.deleteFloor(deletedFloor);
-    this._adminBuildingService.updateBuilding(this.buildingSig(), updatedBuilding);
-    this.addFloorFormControl.reset();
-    this.editingFloor = false;
-    this.addingFloor = false;
+    this._confirmService
+      .openConfirmDialog('Are you sure you want to delete this floor?')
+      .afterClosed()
+      .subscribe((result: boolean) => {
+        if (result) {
+          const updatedBuilding: Building = {
+            ...this.buildingSig(),
+            floorList: this.buildingSig().floorList.filter((floor: Floor) => floor !== deletedFloor),
+          };
+          this._adminFloorService.deleteFloor(deletedFloor);
+          this._adminBuildingService.updateBuilding(this.buildingSig(), updatedBuilding);
+          this.addFloorFormControl.reset();
+          this.editingFloor = false;
+          this.addingFloor = false;
+        }
+      });
   }
 
   private _createFloor(floorName: string): Floor {

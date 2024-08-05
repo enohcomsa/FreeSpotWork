@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, OnInit, Signal, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, OnInit, Signal, signal, viewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTabsModule } from '@angular/material/tabs';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatSlideToggle, MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { DynamicChipListComponent, TimetableItemComponent } from '@free-spot/ui';
 import { Faculty, FreeSpotUser, Group, SemiGroup, TimetableActivityItem, TimeTableItem, Year } from '@free-spot/models';
 import { AdminFacultyService } from '@free-spot-service/faculty';
@@ -15,6 +15,7 @@ import { AppDateService } from '@free-spot-service/app-date';
 import { UserService } from '@free-spot-service/user';
 import { BookingService } from '@free-spot-service/booking';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { ConfirmModalService } from '@free-spot-service/confirm-modal';
 
 @Component({
   selector: 'free-spot-group',
@@ -42,6 +43,7 @@ export class GroupComponent implements OnInit {
   private _appDateService: AppDateService = inject(AppDateService);
   private _userService: UserService = inject(UserService);
   private _bookingService: BookingService = inject(BookingService);
+  private _confirmService: ConfirmModalService = inject(ConfirmModalService);
 
   groupNameSig = input.required<string>();
   groupSig: Signal<Group> = signal<Group>({} as Group);
@@ -49,6 +51,7 @@ export class GroupComponent implements OnInit {
   facultySig: Signal<Faculty> = signal<Faculty>({} as Faculty);
   userListSig: Signal<FreeSpotUser[]> = this._userService.userListSig;
 
+  semigroupToggle = viewChild.required<MatSlideToggle>('semigroupsToggle');
   semigroupsEnabledSig = computed(() => !!this.groupSig().semigroups);
   addingYear = false;
   editingYear = false;
@@ -98,24 +101,33 @@ export class GroupComponent implements OnInit {
   }
 
   toggleSemigroups(enableSemigroups: boolean): void {
-    if (enableSemigroups) {
-      const groupWithSemigroups: Group = {
-        ...this.groupSig(),
-        timetable: this.emptyTimetable(),
-        semigroups: [
-          { name: this.groupNameSig() + ' sg1', students: [], timetable: this.emptyTimetable() },
-          { name: this.groupNameSig() + ' sg2', students: [], timetable: this.emptyTimetable() },
-        ],
-      };
-      this._updateFaculty(groupWithSemigroups);
-    } else {
-      const groupWithoutSemigroups: Group = {
-        name: this.groupNameSig(),
-        studentList: this.groupSig().studentList ? [...this.groupSig().studentList] : [],
-        timetable: this.emptyTimetable(),
-      };
-      this._updateFaculty(groupWithoutSemigroups);
-    }
+    this._confirmService
+      .openConfirmDialog('Are you sure you want to switch semigroups? Timetable data will be lost!')
+      .afterClosed()
+      .subscribe((result: boolean) => {
+        if (result) {
+          if (enableSemigroups) {
+            const groupWithSemigroups: Group = {
+              ...this.groupSig(),
+              timetable: this.emptyTimetable(),
+              semigroups: [
+                { name: this.groupNameSig() + ' sg1', students: [], timetable: this.emptyTimetable() },
+                { name: this.groupNameSig() + ' sg2', students: [], timetable: this.emptyTimetable() },
+              ],
+            };
+            this._updateFaculty(groupWithSemigroups);
+          } else {
+            const groupWithoutSemigroups: Group = {
+              name: this.groupNameSig(),
+              studentList: this.groupSig().studentList ? [...this.groupSig().studentList] : [],
+              timetable: this.emptyTimetable(),
+            };
+            this._updateFaculty(groupWithoutSemigroups);
+          }
+        } else {
+          this.semigroupToggle().checked = !this.semigroupToggle()?.checked;
+        }
+      });
   }
 
   updateGroupStudentList(updatedStudentGroupList: FreeSpotUser[]): void {

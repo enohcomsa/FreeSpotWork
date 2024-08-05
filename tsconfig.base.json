@@ -19,6 +19,7 @@
       "@free-spot-service/auth": ["libs/service/auth/src/index.ts"],
       "@free-spot-service/booking": ["libs/service/booking/src/index.ts"],
       "@free-spot-service/building": ["libs/service/building/src/index.ts"],
+      "@free-spot-service/confirm-modal": ["libs/service/confitm-modal/src/index.ts"],
       "@free-spot-service/event": ["libs/service/event/src/index.ts"],
       "@free-spot-service/faculty": ["libs/service/faculty/src/index.ts"],
       "@free-spot-service/floor": ["libs/service/floor/src/index.ts"],

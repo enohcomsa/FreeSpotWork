@@ -26,6 +26,7 @@ import { AdminBuildingService } from '@free-spot-service/building';
 import { AdminFacultyService } from '@free-spot-service/faculty';
 import { AppDateService } from '@free-spot-service/app-date';
 import { UserService } from '@free-spot-service/user';
+import { ConfirmModalService } from '@free-spot-service/confirm-modal';
 
 @Component({
   selector: 'free-spot-admin-floor-detail',
@@ -52,6 +53,7 @@ export class AdminFloorDetailComponent implements OnInit {
   private _adminFacultyService: AdminFacultyService = inject(AdminFacultyService);
   private _appDateService: AppDateService = inject(AppDateService);
   private _userService: UserService = inject(UserService);
+  private _confirmService: ConfirmModalService = inject(ConfirmModalService);
 
   editRoom = viewChild.required<ElementRef>('editRoom');
   floorNameSig = input.required<string>();
@@ -64,7 +66,7 @@ export class AdminFloorDetailComponent implements OnInit {
   addingRoom = false;
   editingRoom = false;
   addRoomFormGroup = this._formBuilder.nonNullable.group({
-    roomName: ['', [Validators.required, Validators.minLength(3)]],
+    roomName: ['', [Validators.required, Validators.minLength(1)]],
     totalSpotsNumber: [0, Validators.required],
     unavailableSpots: [0, Validators.required],
   });
@@ -162,21 +164,28 @@ export class AdminFloorDetailComponent implements OnInit {
   }
 
   onDeleteRoom(deletedRoom: Room): void {
-    const diffRoom: Room = {
-      ...this.oldRoomSig(),
-      totalSpotsNumber: -deletedRoom.totalSpotsNumber,
-      unavailableSpots: -deletedRoom.unavailableSpots,
-    };
-    const updatedFloor: Floor = this._createDeleteRoomFloor(diffRoom, deletedRoom);
+    this._confirmService
+      .openConfirmDialog('Are you sure you want to delete this room?')
+      .afterClosed()
+      .subscribe((result: boolean) => {
+        if (result) {
+          const diffRoom: Room = {
+            ...this.oldRoomSig(),
+            totalSpotsNumber: -deletedRoom.totalSpotsNumber,
+            unavailableSpots: -deletedRoom.unavailableSpots,
+          };
+          const updatedFloor: Floor = this._createDeleteRoomFloor(diffRoom, deletedRoom);
 
-    this._userService.removeTimetableActivitiesByRoomName(deletedRoom.name);
-    this._adminFacultyService.removeTimetableActivitiesByRoomName(deletedRoom.name);
-    this._adminRoomService.deleteRoom(deletedRoom);
-    this._adminFloorService.updateFloor(this.floorSig(), updatedFloor);
-    this._updateBuilding(updatedFloor);
-    this.addRoomFormGroup.reset();
-    this.addingRoom = false;
-    this.editingRoom = false;
+          this._userService.removeTimetableActivitiesByRoomName(deletedRoom.name);
+          this._adminFacultyService.removeTimetableActivitiesByRoomName(deletedRoom.name);
+          this._adminRoomService.deleteRoom(deletedRoom);
+          this._adminFloorService.updateFloor(this.floorSig(), updatedFloor);
+          this._updateBuilding(updatedFloor);
+          this.addRoomFormGroup.reset();
+          this.addingRoom = false;
+          this.editingRoom = false;
+        }
+      });
   }
 
   private _createRoom(roomName: string, totalSpotsNumber: number, unavailableSpots: number): Room {

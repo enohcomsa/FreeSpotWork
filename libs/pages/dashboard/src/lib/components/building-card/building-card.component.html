@@ -41,6 +41,10 @@
           @if (!last) {
             <mat-divider></mat-divider>
           }
+        } @empty {
+          <div class="flex h-12 items-center justify-between text-xs tracking-tighter">
+            <p class="min-w-24">No floors added yet</p>
+          </div>
         }
       </mat-list>
     </mat-card-content>

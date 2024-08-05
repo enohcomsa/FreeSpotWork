@@ -26,6 +26,7 @@ import { debounceTime } from 'rxjs';
 import { BookingService } from '@free-spot-service/booking';
 import { UserService } from '@free-spot-service/user';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { ConfirmModalService } from '@free-spot-service/confirm-modal';
 
 @Component({
   selector: 'free-spot-admin-group-timetable',
@@ -52,6 +53,7 @@ export class AdminGroupTimetableComponent implements OnInit {
   private _adminRoomService: AdminRoomService = inject(AdminRoomService);
   private _userService: UserService = inject(UserService);
   private _bookingService: BookingService = inject(BookingService);
+  private _confirmService: ConfirmModalService = inject(ConfirmModalService);
 
   userListSig: Signal<FreeSpotUser[]> = this._userService.userListSig;
   groupSig = model.required<Group>();
@@ -156,50 +158,60 @@ export class AdminGroupTimetableComponent implements OnInit {
   }
 
   onRemoveTimetableActivity(deletedTimetableActivity: TimetableActivityItem): void {
-    if (this.groupSig().studentList && this.groupSig().studentList?.length) {
-      this.groupSig().studentList?.forEach((student: FreeSpotUser) => {
-        const newBookedItem: BookedEvent = this._bookingService.generateUserBookedItemByActivity(deletedTimetableActivity, false);
+    this._confirmService
+      .openConfirmDialog('Are you sure you want to delete this activity?')
+      .afterClosed()
+      .subscribe((result: boolean) => {
+        if (result) {
+          if (this.groupSig().studentList && this.groupSig().studentList?.length) {
+            this.groupSig().studentList?.forEach((student: FreeSpotUser) => {
+              const newBookedItem: BookedEvent = this._bookingService.generateUserBookedItemByActivity(
+                deletedTimetableActivity,
+                false,
+              );
 
-        deletedTimetableActivity.freeSpots = deletedTimetableActivity.freeSpots + 1;
-        deletedTimetableActivity.busySpots = deletedTimetableActivity.busySpots - 1;
-        const oldUser: FreeSpotUser =
-          this.userListSig().find(
-            (user: FreeSpotUser) => user.firstName === student.firstName && user.familyName === student.familyName,
-          ) || ({} as FreeSpotUser);
-        const newUser: FreeSpotUser = {
-          ...oldUser,
-          bookingList: oldUser.bookingList
-            ? oldUser.bookingList.filter(
-                (bookedEvent: BookedEvent) => !this._checkBookedEventEquality(bookedEvent, newBookedItem),
-              )
-            : [],
-        };
+              deletedTimetableActivity.freeSpots = deletedTimetableActivity.freeSpots + 1;
+              deletedTimetableActivity.busySpots = deletedTimetableActivity.busySpots - 1;
+              const oldUser: FreeSpotUser =
+                this.userListSig().find(
+                  (user: FreeSpotUser) => user.firstName === student.firstName && user.familyName === student.familyName,
+                ) || ({} as FreeSpotUser);
+              const newUser: FreeSpotUser = {
+                ...oldUser,
+                bookingList: oldUser.bookingList
+                  ? oldUser.bookingList.filter(
+                      (bookedEvent: BookedEvent) => !this._checkBookedEventEquality(bookedEvent, newBookedItem),
+                    )
+                  : [],
+              };
 
-        this._userService.updateFreeSpotUser(oldUser, newUser);
+              this._userService.updateFreeSpotUser(oldUser, newUser);
+            });
+          }
+
+          const oldTimetableItem: TimeTableItem = this.groupSig().timetable?.find(
+            (timetableItem: TimeTableItem) => timetableItem.date === deletedTimetableActivity.date,
+          ) as TimeTableItem;
+
+          const newTimetableItem: TimeTableItem = {
+            ...oldTimetableItem,
+            activities: oldTimetableItem.activities?.filter(
+              (timetableActivity: TimetableActivityItem) =>
+                !this._checkTimetebleActivityEquality(timetableActivity, deletedTimetableActivity),
+            ),
+          };
+
+          const updatedGroup: Group = {
+            ...this.groupSig(),
+            timetable: this.groupSig().timetable
+              ? this.groupSig().timetable.map((timetableItem: TimeTableItem) =>
+                  timetableItem.weekDay === newTimetableItem.weekDay ? newTimetableItem : timetableItem,
+                )
+              : [newTimetableItem],
+          };
+          this.groupSig.set(updatedGroup);
+        }
       });
-    }
-
-    const oldTimetableItem: TimeTableItem = this.groupSig().timetable?.find(
-      (timetableItem: TimeTableItem) => timetableItem.date === deletedTimetableActivity.date,
-    ) as TimeTableItem;
-
-    const newTimetableItem: TimeTableItem = {
-      ...oldTimetableItem,
-      activities: oldTimetableItem.activities?.filter(
-        (timetableActivity: TimetableActivityItem) =>
-          !this._checkTimetebleActivityEquality(timetableActivity, deletedTimetableActivity),
-      ),
-    };
-
-    const updatedGroup: Group = {
-      ...this.groupSig(),
-      timetable: this.groupSig().timetable
-        ? this.groupSig().timetable.map((timetableItem: TimeTableItem) =>
-            timetableItem.weekDay === newTimetableItem.weekDay ? newTimetableItem : timetableItem,
-          )
-        : [newTimetableItem],
-    };
-    this.groupSig.set(updatedGroup);
   }
 
   private _checkTimetebleActivityEquality(

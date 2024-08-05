@@ -26,6 +26,7 @@ import { AdminBuildingService } from '@free-spot-service/building';
 import { AdminFacultyService } from '@free-spot-service/faculty';
 import { UserService } from '@free-spot-service/user';
 import { Role } from '@free-spot/enums';
+import { ConfirmModalService } from '@free-spot-service/confirm-modal';
 
 @Component({
   selector: 'free-spot-admin',
@@ -53,6 +54,7 @@ export class AdminComponent implements OnInit {
   private _adminFacultyService: AdminFacultyService = inject(AdminFacultyService);
   private _adminBuildingService: AdminBuildingService = inject(AdminBuildingService);
   private _userService: UserService = inject(UserService);
+  private _confirmService: ConfirmModalService = inject(ConfirmModalService);
 
   editBuilding = viewChild<ElementRef>('editBuilding');
   editEvent = viewChild<ElementRef>('editEvent');
@@ -212,8 +214,16 @@ export class AdminComponent implements OnInit {
     this.addingBuilding = false;
     this.editingBuilding = false;
   }
+
   onDeleteBuilding(deletedBuilding: Building): void {
-    this._adminBuildingService.deleteBuilding(deletedBuilding);
+    this._confirmService
+      .openConfirmDialog('Are you sure you want to delete this building?')
+      .afterClosed()
+      .subscribe((result: boolean) => {
+        if (result) {
+          this._adminBuildingService.deleteBuilding(deletedBuilding);
+        }
+      });
   }
 
   ///////////////////////////EVENT

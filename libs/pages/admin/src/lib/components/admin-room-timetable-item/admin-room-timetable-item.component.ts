@@ -12,6 +12,7 @@ import { Room, SubjectItem, TimetableActivityItem, TimeTableItem } from '@free-s
 import { Event, WeekParity } from '@free-spot/enums';
 import { AdminFacultyService } from '@free-spot-service/faculty';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { ConfirmModalService } from '@free-spot-service/confirm-modal';
 
 @Component({
   selector: 'free-spot-admin-room-timetable-item',
@@ -36,6 +37,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 export class AdminRoomTimetableItemComponent implements OnInit {
   private _formBuilder: FormBuilder = inject(FormBuilder);
   private _adminFacultyService: AdminFacultyService = inject(AdminFacultyService);
+  private _confirmService: ConfirmModalService = inject(ConfirmModalService);
 
   roomSig = input.required<Room>();
   timetableItemSig = model.required<TimeTableItem>();
@@ -100,12 +102,19 @@ export class AdminRoomTimetableItemComponent implements OnInit {
   }
 
   onRemoveTimetableActivity(removedTimetableActivity: TimetableActivityItem): void {
-    this._adminFacultyService.removeDeletedTimetableActivity(removedTimetableActivity);
-    this.timetableItemSig.set({
-      ...this.timetableItemSig(),
-      activities: this.timetableItemSig().activities.filter(
-        (timetableActivity: TimetableActivityItem) => timetableActivity !== removedTimetableActivity,
-      ),
-    });
+    this._confirmService
+      .openConfirmDialog('Are you sure you want to delete this activity?')
+      .afterClosed()
+      .subscribe((result: boolean) => {
+        if (result) {
+          this._adminFacultyService.removeDeletedTimetableActivity(removedTimetableActivity);
+          this.timetableItemSig.set({
+            ...this.timetableItemSig(),
+            activities: this.timetableItemSig().activities.filter(
+              (timetableActivity: TimetableActivityItem) => timetableActivity !== removedTimetableActivity,
+            ),
+          });
+        }
+      });
   }
 }

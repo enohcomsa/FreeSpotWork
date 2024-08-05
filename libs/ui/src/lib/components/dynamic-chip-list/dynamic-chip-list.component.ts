@@ -12,6 +12,7 @@ import { TimeTableItem } from '@free-spot/models';
 import { WeekDay } from '@free-spot/enums';
 import { AppDateService } from '@free-spot-service/app-date';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { ConfirmModalService } from '@free-spot-service/confirm-modal';
 
 @Component({
   selector: 'free-spot-dynamic-chip-list',
@@ -37,6 +38,7 @@ export class DynamicChipListComponent<T> implements OnInit {
   private _router: Router = inject(Router);
   private _activatedRoute: ActivatedRoute = inject(ActivatedRoute);
   private _appDateService: AppDateService = inject(AppDateService);
+  private _confirmService: ConfirmModalService = inject(ConfirmModalService);
 
   itemListSig = model.required<T[]>();
   itemLabelSig = input.required<string>();
@@ -71,7 +73,14 @@ export class DynamicChipListComponent<T> implements OnInit {
   }
 
   onRemoveItem(removedItem: T): void {
-    this.itemListSig.set(this.itemListSig().filter((item: T) => item !== removedItem));
+    this._confirmService
+      .openConfirmDialog('Are you sure you want to delete this item?')
+      .afterClosed()
+      .subscribe((result: boolean) => {
+        if (result) {
+          this.itemListSig.set(this.itemListSig().filter((item: T) => item !== removedItem));
+        }
+      });
   }
 
   getDisplayName(item: T): string {
