@@ -20,7 +20,7 @@
       </div>
     </mat-card-title>
   </mat-card-header>
-  <mat-card-content class="!flex flex-col gap-2 !pt-2">
+  <mat-card-content class="!flex flex-col gap-2 !pb-8 !pt-2">
     <mat-divider></mat-divider>
     <div class="flex items-center font-bold">
       <p>{{ eventSig().date | date: 'EEEE, dd MMM, yyyy' }}<span class="mx-1">|</span></p>
@@ -28,7 +28,4 @@
       <p>{{ eventSig().endHour }}</p>
     </div>
   </mat-card-content>
-  <mat-card-actions>
-    <button mat-flat-button class="mb-4 ml-2">Reschedule spot</button>
-  </mat-card-actions>
 </mat-card>

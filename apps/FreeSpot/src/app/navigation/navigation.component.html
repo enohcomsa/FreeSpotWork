@@ -4,7 +4,9 @@
     <a class="hidden cursor-pointer tracking-wide hover:text-red-200 md:block" routerLink="/dashboard">Dashboard</a>
     <a class="hidden cursor-pointer tracking-wide hover:text-red-200 md:block" routerLink="/schedule">Schedule</a>
     <a class="hidden cursor-pointer tracking-wide hover:text-red-200 md:block" routerLink="/my-bookings">My bookings</a>
-    <a class="hidden cursor-pointer tracking-wide hover:text-red-200 md:block" routerLink="/admin">Admin</a>
+    @if (currentUserSig().role === Role.ADMIN) {
+      <a class="hidden cursor-pointer tracking-wide hover:text-red-200 md:block" routerLink="/admin">Admin</a>
+    }
     <!-- <nav profile></nav> -->
     <div class="flex space-x-4 pl-6">
       <div class="hidden h-8 w-8 rounded-full bg-red-600 md:flex"></div>
@@ -26,8 +28,10 @@
       <a class="block cursor-pointer hover:text-red-200 md:block" (click)="opened = false" routerLink="/my-bookings"
         >My bookings</a
       >
-      <mat-divider></mat-divider>
-      <a class="block cursor-pointer hover:text-red-200 md:block" (click)="opened = false" routerLink="/admin">Admin</a>
+      @if (currentUserSig().role === Role.ADMIN) {
+        <mat-divider></mat-divider>
+        <a class="block cursor-pointer hover:text-red-200 md:block" (click)="opened = false" routerLink="/admin">Admin</a>
+      }
     </div>
   </div>
 </mat-toolbar>

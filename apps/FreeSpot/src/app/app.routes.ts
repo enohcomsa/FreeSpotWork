@@ -1,5 +1,6 @@
 import { Route } from '@angular/router';
 import { authGuard } from '@free-spot-service/auth';
+import { adminGuard } from './guards/admin-guard.guard';
 
 export const appRoutes: Route[] = [
   {
@@ -13,18 +14,23 @@ export const appRoutes: Route[] = [
     children: [
       {
         path: 'dashboard',
+        canActivate: [authGuard],
         loadChildren: () => import('@free-spot/dashboard').then(),
       },
       {
         path: 'schedule',
+        canActivate: [authGuard],
+
         loadChildren: () => import('@free-spot/schedule').then(),
       },
       {
         path: 'my-bookings',
+        canActivate: [authGuard],
         loadChildren: () => import('@free-spot/my-bookings').then(),
       },
       {
         path: 'admin',
+        canActivate: [authGuard, adminGuard],
         loadChildren: () => import('@free-spot/admin').then(),
       },
     ],

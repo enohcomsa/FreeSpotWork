@@ -7,7 +7,6 @@ import { AuthResponse, UserData } from './models/auth.model';
 import { HttpUserService } from '@http-free-spot/user';
 import { FreeSpotUser } from '@free-spot/models';
 import { Role } from '@free-spot/enums';
-// import { AppUser } from '../shared/models/user.model';
 
 @Injectable({
   providedIn: 'root',
