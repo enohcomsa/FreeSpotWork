@@ -12,8 +12,22 @@
 @for (year of facultySig().yearList; track $index) {
   <mat-list>
     <div mat-subheader class="flex cursor-pointer items-center gap-2 text-lg font-bold">
-      <span (click)="editYear.emit(year)">{{ year.name }}</span>
-      <mat-icon (click)="deleteYear(year)">cancel</mat-icon>
+      <span
+        (click)="editYear.emit(year)"
+        matTooltip="click to edit year"
+        matTooltipPosition="right"
+        matTooltipPositionAtOrigin="true"
+        matTooltipShowDelay="500"
+        >{{ year.name }}</span
+      >
+      <mat-icon
+        (click)="deleteYear(year)"
+        matTooltip="click to delete year"
+        matTooltipPosition="right"
+        matTooltipPositionAtOrigin="true"
+        matTooltipShowDelay="500"
+        >cancel</mat-icon
+      >
     </div>
 
     <free-spot-dynamic-chip-list

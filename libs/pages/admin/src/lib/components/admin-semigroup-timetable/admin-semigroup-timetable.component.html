@@ -9,7 +9,13 @@
             <p>{{ timetableItemActivity.activityType }}</p>
             <p>{{ timetableItemActivity.roomName }}</p>
           </div>
-          <button matChipRemove (click)="onRemoveTimetableActivity(timetableItemActivity)">
+          <button
+            matChipRemove
+            (click)="onRemoveTimetableActivity(timetableItemActivity)"
+            matTooltip="click to remove timetable activity"
+            matTooltipPosition="above"
+            matTooltipShowDelay="500"
+          >
             <mat-icon>cancel</mat-icon>
           </button>
         </mat-chip>
@@ -18,11 +24,25 @@
   }
   @if (emptyTimetableSig()) {
     <mat-chip>No timetable items added yet</mat-chip>
-    <button mat-icon-button class="ml-2" (click)="addingTimetableActivity = true">
+    <button
+      mat-icon-button
+      class="ml-2"
+      (click)="addingTimetableActivity = true"
+      matTooltip="click to add timetable activity"
+      matTooltipPosition="above"
+      matTooltipShowDelay="500"
+    >
       <mat-icon class="mb-2">add </mat-icon>
     </button>
   } @else {
-    <button mat-icon-button class="ml-2" (click)="addingTimetableActivity = true">
+    <button
+      mat-icon-button
+      class="ml-2"
+      (click)="addingTimetableActivity = true"
+      matTooltip="click to add timetable activity"
+      matTooltipPosition="above"
+      matTooltipShowDelay="500"
+    >
       <mat-icon class="mb-2">add </mat-icon>
     </button>
   }

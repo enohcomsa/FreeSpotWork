@@ -6,11 +6,12 @@ import { MatDividerModule } from '@angular/material/divider';
 import { DynamicChipListComponent } from '@free-spot/ui';
 import { MatIconModule } from '@angular/material/icon';
 import { SUBJECT_LIST } from '@free-spot/constants';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'free-spot-faculty',
   standalone: true,
-  imports: [CommonModule, MatListModule, MatDividerModule, DynamicChipListComponent, MatIconModule],
+  imports: [CommonModule, MatListModule, MatDividerModule, DynamicChipListComponent, MatIconModule, MatTooltipModule],
   templateUrl: './faculty.component.html',
   styleUrl: './faculty.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -82,7 +82,7 @@ export class DynamicFormComponent implements OnInit {
 
   eventListSig: Signal<Event[]> = input<Event[]>(Object.values(Event).filter((event: Event) => event !== Event.COURSE));
   searchForm!: FormGroup;
-  searchActive$: WritableSignal<boolean> = signal(false);
+  searchActiveSig: WritableSignal<boolean> = signal(false);
   eventNames: string[] = ['event_efeffe', 'event_deww', 'event_eeeee', 'event_ertty', 'event_xzxz'];
   timetableActivityListFoundSig: WritableSignal<TimetableActivityItem[]> = signal([]);
   oldTimetableActivitySig: WritableSignal<TimetableActivityItem> = signal({} as TimetableActivityItem);
@@ -97,7 +97,7 @@ export class DynamicFormComponent implements OnInit {
       event: [this.eventNames[0], Validators.required],
     });
 
-    this.searchForm.valueChanges.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(() => this.searchActive$.set(false));
+    this.searchForm.valueChanges.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(() => this.searchActiveSig.set(false));
   }
 
   get event(): Event {
@@ -160,8 +160,10 @@ export class DynamicFormComponent implements OnInit {
           new Date().setHours(0, 0, 0, 0) - new Date(timetableActivity.date).getTime() <= 0,
       );
 
-      timetableActivityListFound = timetableActivityListFound.filter(
-        (timetableActivity: TimetableActivityItem) => new Date().getHours() < timetableActivity.startHour,
+      timetableActivityListFound = timetableActivityListFound.filter((timetableActivity: TimetableActivityItem) =>
+        new Date().setHours(0, 0, 0, 0) - new Date(timetableActivity.date).getTime() === 0
+          ? new Date().getHours() < timetableActivity.startHour
+          : true,
       );
 
       timetableActivityListFound = timetableActivityListFound.filter(
@@ -170,6 +172,6 @@ export class DynamicFormComponent implements OnInit {
     }
 
     this.timetableActivityListFoundSig.set(timetableActivityListFound);
-    this.searchActive$.set(true);
+    this.searchActiveSig.set(true);
   }
 }

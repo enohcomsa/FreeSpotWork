@@ -14,6 +14,7 @@ import { AdminSemisemiGroupTimetableComponent } from '../admin-semigroup-timetab
 import { AppDateService } from '@free-spot-service/app-date';
 import { UserService } from '@free-spot-service/user';
 import { BookingService } from '@free-spot-service/booking';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'free-spot-group',
@@ -27,6 +28,7 @@ import { BookingService } from '@free-spot-service/booking';
     AdminGroupTimetableComponent,
     MatSlideToggleModule,
     AdminSemisemiGroupTimetableComponent,
+    MatTooltipModule,
   ],
   templateUrl: './group.component.html',
   styleUrl: './group.component.scss',

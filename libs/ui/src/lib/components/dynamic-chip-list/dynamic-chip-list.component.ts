@@ -11,6 +11,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TimeTableItem } from '@free-spot/models';
 import { WeekDay } from '@free-spot/enums';
 import { AppDateService } from '@free-spot-service/app-date';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'free-spot-dynamic-chip-list',
@@ -25,6 +26,7 @@ import { AppDateService } from '@free-spot-service/app-date';
     MatAutocompleteModule,
     MatInputModule,
     MatFormFieldModule,
+    MatTooltipModule,
   ],
   templateUrl: './dynamic-chip-list.component.html',
   styleUrl: './dynamic-chip-list.component.scss',

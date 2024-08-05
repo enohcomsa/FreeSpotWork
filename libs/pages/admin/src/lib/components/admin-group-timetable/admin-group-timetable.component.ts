@@ -25,6 +25,7 @@ import { AdminRoomService } from '@free-spot-service/room';
 import { debounceTime } from 'rxjs';
 import { BookingService } from '@free-spot-service/booking';
 import { UserService } from '@free-spot-service/user';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'free-spot-admin-group-timetable',
@@ -40,6 +41,7 @@ import { UserService } from '@free-spot-service/user';
     MatInputModule,
     MatFormFieldModule,
     MatSelectModule,
+    MatTooltipModule,
   ],
   templateUrl: './admin-group-timetable.component.html',
   styleUrl: './admin-group-timetable.component.scss',

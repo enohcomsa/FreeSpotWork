@@ -13,7 +13,7 @@
         <mat-list-item class="!p-0">
           <div class="flex justify-between text-xs tracking-tighter">
             <p class="min-w-24">Floor</p>
-            <div class="flex gap-4 [&>p]:w-14">
+            <div class="flex gap-4 [&>p]:w-14 [&>p]:text-center">
               <p>Total</p>
               <p>Unavabile</p>
             </div>
@@ -22,7 +22,14 @@
         <mat-divider></mat-divider>
 
         @for (floor of buildingSig().floorList; track floor.name; let last = $last) {
-          <mat-list-item class="!cursor-pointer !p-0" (click)="onFloorClick(floor.name)">
+          <mat-list-item
+            class="!cursor-pointer !p-0"
+            (click)="onFloorClick(floor.name)"
+            matTooltip="click to see floor details"
+            matTooltipPosition="right"
+            matTooltipPositionAtOrigin="true"
+            matTooltipShowDelay="500"
+          >
             <div class="flex justify-between text-xs tracking-tighter">
               <p class="min-w-24 truncate">{{ floor.name }}</p>
               <div class="flex gap-4 [&>p]:w-14 [&>p]:text-center">

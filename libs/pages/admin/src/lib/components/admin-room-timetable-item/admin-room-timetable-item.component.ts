@@ -11,6 +11,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { Room, SubjectItem, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
 import { Event, WeekParity } from '@free-spot/enums';
 import { AdminFacultyService } from '@free-spot-service/faculty';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'free-spot-admin-room-timetable-item',
@@ -26,6 +27,7 @@ import { AdminFacultyService } from '@free-spot-service/faculty';
     MatInputModule,
     MatFormFieldModule,
     MatSelectModule,
+    MatTooltipModule,
   ],
   templateUrl: './admin-room-timetable-item.component.html',
   styleUrl: './admin-room-timetable-item.component.scss',

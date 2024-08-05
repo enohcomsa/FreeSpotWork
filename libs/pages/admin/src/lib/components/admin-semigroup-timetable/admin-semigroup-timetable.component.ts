@@ -25,6 +25,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { BookingService } from '@free-spot-service/booking';
 import { UserService } from '@free-spot-service/user';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'free-spot-admin-semigroup-timetable',
@@ -40,6 +41,7 @@ import { UserService } from '@free-spot-service/user';
     MatInputModule,
     MatFormFieldModule,
     MatSelectModule,
+    MatTooltipModule,
   ],
   templateUrl: './admin-semigroup-timetable.component.html',
   styleUrl: './admin-semigroup-timetable.component.scss',

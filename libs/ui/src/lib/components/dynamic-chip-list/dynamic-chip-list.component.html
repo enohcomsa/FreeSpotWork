@@ -3,31 +3,69 @@
     @if (last) {
       <div class="relative flex">
         <mat-chip (click)="onDynamicNavigation(item)">
-          <div [ngClass]="{ '!cursor-pointer': itemDinamicRoute() !== '' }" removable="true">
+          <div
+            [ngClass]="{ '!cursor-pointer': itemDinamicRoute() !== '' }"
+            removable="true"
+            matTooltip="click to see group details"
+            matTooltipPosition="right"
+            matTooltipPositionAtOrigin="true"
+            matTooltipShowDelay="500"
+            [matTooltipDisabled]="!itemDinamicRoute()"
+          >
             @if (itemKeyDysplay()) {
               <p>{{ getDisplayName(item) }}</p>
             } @else {
               <p>{{ item }}</p>
             }
           </div>
-          <button matChipRemove (click)="onRemoveItem(item)">
+          <button
+            matChipRemove
+            (click)="onRemoveItem(item)"
+            matTooltip="click to remove item"
+            matTooltipPosition="right"
+            matTooltipPositionAtOrigin="true"
+            matTooltipShowDelay="500"
+          >
             <mat-icon>cancel</mat-icon>
           </button>
         </mat-chip>
-        <button mat-icon-button class="ml-2" (click)="addingItem = true">
+        <button
+          mat-icon-button
+          class="ml-2"
+          (click)="addingItem = true"
+          matTooltip="click to add  item"
+          matTooltipPosition="right"
+          matTooltipPositionAtOrigin="true"
+          matTooltipShowDelay="500"
+        >
           <mat-icon class="mb-2">add </mat-icon>
         </button>
       </div>
     } @else {
       <mat-chip (click)="onDynamicNavigation(item)">
-        <div [ngClass]="{ '!cursor-pointer': itemDinamicRoute() !== '' }" removable="true">
+        <div
+          [ngClass]="{ '!cursor-pointer': itemDinamicRoute() !== '' }"
+          removable="true"
+          matTooltip="click to see group details"
+          matTooltipPosition="right"
+          matTooltipPositionAtOrigin="true"
+          matTooltipShowDelay="500"
+          [matTooltipDisabled]="!itemDinamicRoute()"
+        >
           @if (itemKeyDysplay()) {
             <p>{{ getDisplayName(item) }}</p>
           } @else {
             <p>{{ item }}</p>
           }
         </div>
-        <button matChipRemove (click)="onRemoveItem(item)">
+        <button
+          matChipRemove
+          (click)="onRemoveItem(item)"
+          matTooltip="click to remove item"
+          matTooltipPosition="right"
+          matTooltipPositionAtOrigin="true"
+          matTooltipShowDelay="500"
+        >
           <mat-icon>cancel</mat-icon>
         </button>
       </mat-chip>
@@ -35,7 +73,15 @@
   } @empty {
     <div class="relative flex">
       <mat-chip> No items added yet </mat-chip>
-      <button mat-icon-button class="ml-2" (click)="addingItem = true">
+      <button
+        mat-icon-button
+        class="ml-2"
+        (click)="addingItem = true"
+        matTooltip="click to add item"
+        matTooltipPosition="right"
+        matTooltipPositionAtOrigin="true"
+        matTooltipShowDelay="500"
+      >
         <mat-icon class="mb-2">add </mat-icon>
       </button>
     </div>

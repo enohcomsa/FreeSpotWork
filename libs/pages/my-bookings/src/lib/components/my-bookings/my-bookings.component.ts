@@ -40,11 +40,12 @@ export class MyBookingsComponent implements OnInit {
 
   filteredBookedItems: Signal<BookedEvent[]> = computed(() => {
     let bookedEventList: BookedEvent[] = this.currentUserSig().bookingList;
-    bookedEventList = bookedEventList?.filter(
-      (bookedEvent: BookedEvent) =>
-        bookedEvent.weekParity === this.weekParitySig() &&
-        new Date().setHours(0, 0, 0, 0) - new Date(bookedEvent.date).getTime() <= 0 &&
-        new Date().getHours() < bookedEvent.startHour,
+    bookedEventList = bookedEventList?.filter((bookedEvent: BookedEvent) =>
+      bookedEvent.weekParity === this.weekParitySig() &&
+      new Date().setHours(0, 0, 0, 0) - new Date(bookedEvent.date).getTime() <= 0 &&
+      new Date().setHours(0, 0, 0, 0) - new Date(bookedEvent.date).getTime() === 0
+        ? new Date().getHours() < bookedEvent.startHour
+        : true,
     );
     return bookedEventList;
   });

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, InputSignal, OnInit, Signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, InputSignal, OnInit, output, Signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -21,6 +21,7 @@ export class BookingItemComponent implements OnInit {
 
   timetableActivitySig: InputSignal<TimetableActivityItem> = input.required<TimetableActivityItem>();
   oldTimetableActivitySig: InputSignal<TimetableActivityItem> = input.required<TimetableActivityItem>();
+  bookingActive = output<boolean>();
   eventBookingSig: Signal<BookedEvent> = computed(() => this._bookingService.generateBooking(this.timetableActivitySig()));
 
   private _currentUserEmail = (
@@ -67,6 +68,7 @@ export class BookingItemComponent implements OnInit {
     this._bookingService.init();
     this._userService.init();
   }
+
   bookSpot(): void {
     this._bookingService.generateUserBookedItemByActivity(this.oldTimetableActivitySig(), false, true);
     this._bookingService.generateUserBookedItemByActivity(this.timetableActivitySig(), true, true);
@@ -91,6 +93,7 @@ export class BookingItemComponent implements OnInit {
     };
 
     this._userService.updateFreeSpotUser(this.currentUserSig(), newUserBookingList);
+    this.bookingActive.emit(false);
   }
 
   private _checkBookedEventEquality(bookedEvent1: BookedEvent, bookedEvent2: BookedEvent): boolean {

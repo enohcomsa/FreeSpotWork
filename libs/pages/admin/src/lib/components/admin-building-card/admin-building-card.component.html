@@ -46,8 +46,22 @@
     <button mat-flat-button class="grow" (click)="onOpenClick()">
       <mat-icon class="@2xs:!mr-2 @2xs:!-ml-2 !m-0">open_in_browser</mat-icon><span class="@2xs:inline-block hidden">Open</span>
     </button>
-    <button mat-flat-button class="grow" (click)="deleteBuilding.emit(adminBuildingSig())">
-      <mat-icon class="@2xs:!mr-2 @2xs:!-ml-2 !m-0">delete</mat-icon><span class="@2xs:inline-block hidden">Delete</span>
-    </button>
+    <div
+      class="grow"
+      matTooltip="Remove building floors before deleteing building"
+      matTooltipPosition="right"
+      matTooltipPositionAtOrigin="true"
+      matTooltipShowDelay="500"
+      [matTooltipDisabled]="adminBuildingSig().floorList ? adminBuildingSig().floorList.length === 0 : true"
+    >
+      <button
+        mat-flat-button
+        class="w-full grow"
+        (click)="deleteBuilding.emit(adminBuildingSig())"
+        [disabled]="adminBuildingSig().floorList ? adminBuildingSig().floorList.length > 0 : false"
+      >
+        <mat-icon class="@2xs:!mr-2 @2xs:!-ml-2 !m-0">delete</mat-icon><span class="@2xs:inline-block hidden">Delete</span>
+      </button>
+    </div>
   </mat-card-actions>
 </mat-card>

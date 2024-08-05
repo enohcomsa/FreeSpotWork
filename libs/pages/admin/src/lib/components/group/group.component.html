@@ -2,6 +2,14 @@
   <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Group: {{ groupSig().name }}</h1>
 
   <mat-slide-toggle
+    [matTooltip]="
+      (groupSig().studentList ? groupSig().studentList.length !== 0 : false)
+        ? 'remove students from group before toggle semigroups'
+        : 'click to toogle semigoups'
+    "
+    matTooltipPosition="below"
+    matTooltipPositionAtOrigin="true"
+    matTooltipShowDelay="500"
     [disabled]="groupSig().studentList ? groupSig().studentList.length !== 0 : false"
     class="pb-8"
     [checked]="semigroupsEnabledSig()"

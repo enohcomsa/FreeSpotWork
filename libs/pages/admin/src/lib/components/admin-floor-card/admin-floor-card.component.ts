@@ -6,11 +6,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { Floor } from '@free-spot/models';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'free-spot-admin-floor-card',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatIconModule, MatButtonModule, MatDividerModule],
+  imports: [CommonModule, MatCardModule, MatIconModule, MatButtonModule, MatDividerModule, MatTooltipModule],
   templateUrl: './admin-floor-card.component.html',
   styleUrl: './admin-floor-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -33,17 +33,18 @@
         </mat-form-field>
       }
 
-      <button mat-flat-button type="submit" [disabled]="!searchForm.valid || searchActive$()" class="@md:mb-5 w-full">
+      <button mat-flat-button type="submit" [disabled]="!searchForm.valid || searchActiveSig()" class="@md:mb-5 w-full">
         Search
       </button>
     </form>
 
-    @if (searchActive$()) {
+    @if (searchActiveSig()) {
       <div class="flex flex-col space-y-4">
         @for (timetableActivity of timetableActivityListFoundSig(); track timetableActivity) {
           <free-spot-booking-item
             [timetableActivitySig]="timetableActivity"
             [oldTimetableActivitySig]="oldTimetableActivitySig()"
+            (bookingActive)="searchActiveSig.set($event)"
           ></free-spot-booking-item>
         } @empty {
           <h3>No free spot available.</h3>
@@ -51,7 +52,7 @@
       </div>
     }
   </mat-card-content>
-  @if (!searchActive$()) {
+  @if (!searchActiveSig()) {
     <mat-card-footer> <p class="@md:mt-0 my-4 px-4 text-sm tracking-tighter">Select a booking and search.</p> </mat-card-footer>
   }
 </mat-card>

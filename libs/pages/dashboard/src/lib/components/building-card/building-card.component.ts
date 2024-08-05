@@ -5,12 +5,13 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { Building } from '@free-spot/models';
 
 @Component({
   selector: 'free-spot-building-card',
   standalone: true,
-  imports: [CommonModule, RouterModule, MatCardModule, MatIconModule, MatListModule, MatDividerModule],
+  imports: [CommonModule, RouterModule, MatCardModule, MatIconModule, MatListModule, MatDividerModule, MatTooltipModule],
   templateUrl: './building-card.component.html',
   styleUrl: './building-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
