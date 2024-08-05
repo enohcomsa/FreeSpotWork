@@ -81,13 +81,43 @@ export class AdminSemisemiGroupTimetableComponent implements OnInit {
       timetableActivity: [{}, [Validators.required, Validators.minLength(1)]],
     });
     this.addTimetableActivityFormSemiGroup.valueChanges.pipe(debounceTime(300)).subscribe(() => {
-      this.foundActivitiesSig.set(
-        this._adminRoomService.getTimetableActivitiesByWeekDayAndSubject(
-          this.addTimetableActivityFormSemiGroup.controls['weekDay'].value,
-          this.addTimetableActivityFormSemiGroup.controls['subject'].value,
-        ),
+      let foundTimetableActivities: TimetableActivityItem[] = this._adminRoomService.getTimetableActivitiesByWeekDayAndSubject(
+        this.addTimetableActivityFormSemiGroup.controls['weekDay'].value,
+        this.addTimetableActivityFormSemiGroup.controls['subject'].value,
       );
+      const currentActivities: TimetableActivityItem[] = this._getActivitiesFromItemByWeekDay(
+        this.addTimetableActivityFormSemiGroup.controls['weekDay'].value,
+      );
+      foundTimetableActivities = foundTimetableActivities.filter((timetableActivity: TimetableActivityItem) => {
+        return !currentActivities.some((exitentActivity: TimetableActivityItem) =>
+          this._checkTimetebleActivityEquality(exitentActivity, timetableActivity),
+        );
+      });
+
+      this.foundActivitiesSig.set(foundTimetableActivities);
     });
+  }
+
+  dysplaySubject(subjectItem: SubjectItem): string {
+    if (subjectItem !== undefined && subjectItem !== null && Object.keys(subjectItem).length) {
+      return subjectItem.shortName;
+    }
+    return '';
+  }
+
+  dysplayTimetableActivity(timetableActivity: TimetableActivityItem): string {
+    if (timetableActivity !== undefined && timetableActivity !== null && Object.keys(timetableActivity).length) {
+      return (
+        timetableActivity.startHour +
+        ' ' +
+        timetableActivity.activityType +
+        ' ' +
+        timetableActivity.roomName +
+        ' ' +
+        timetableActivity.weekParity
+      );
+    }
+    return '';
   }
 
   getTimeInterval(startHour: number): string {
@@ -225,5 +255,14 @@ export class AdminSemisemiGroupTimetableComponent implements OnInit {
       bookedEvent1.activityType === bookedEvent2.activityType &&
       bookedEvent1.weekParity === bookedEvent2.weekParity
     );
+  }
+
+  private _getActivitiesFromItemByWeekDay(weekDay: WeekDay): TimetableActivityItem[] {
+    let activities: TimetableActivityItem[] = [];
+    this.semiGroupSig().timetable.forEach((timetableItem: TimeTableItem) => {
+      timetableItem.weekDay === weekDay ? (timetableItem.activities ? (activities = timetableItem.activities) : '') : '';
+    });
+
+    return activities;
   }
 }

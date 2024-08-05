@@ -42,11 +42,21 @@ export class DynamicChipListComponent<T> implements OnInit {
 
   itemListSig = model.required<T[]>();
   itemLabelSig = input.required<string>();
-  optionListSig = input<T[]>();
+  optionListSig = input<T[]>([]);
   itemKeyDysplay = input<keyof T>();
   itemKeyDysplay2 = input<keyof T>();
   itemDinamicRoute = input<string>('');
-  addItemFormControl = this._formBuilder.nonNullable.control('', Validators.required);
+
+  filteredOptionListSig: Signal<T[]> = computed(() => {
+    return this.optionListSig().filter(
+      (option: T) =>
+        !this.itemListSig().some(
+          (item: T) => item[this.itemKeyDysplay() as keyof T] === option[this.itemKeyDysplay() as keyof T],
+        ),
+    );
+  });
+
+  addItemFormControl = this._formBuilder.nonNullable.control({} as T, Validators.required);
   addingItem = false;
 
   emptyTimetable: Signal<TimeTableItem[]> = computed(() => [
@@ -59,6 +69,12 @@ export class DynamicChipListComponent<T> implements OnInit {
 
   ngOnInit(): void {
     this._appDateService.init();
+    if (this.optionListSig()?.length) {
+      this.addItemFormControl.setValue(this.filteredOptionListSig()[0]);
+      if (!this.filteredOptionListSig().length) {
+        this.addItemFormControl.disable();
+      }
+    }
   }
 
   onAddItem(): void {
@@ -84,10 +100,14 @@ export class DynamicChipListComponent<T> implements OnInit {
   }
 
   getDisplayName(item: T): string {
-    if (this.itemKeyDysplay2() !== undefined && this.itemKeyDysplay2() !== null) {
-      return ((item[this.itemKeyDysplay() as keyof T] as string) + ' ' + item[this.itemKeyDysplay2() as keyof T]) as string;
+    if (item !== undefined && item !== null) {
+      if (this.itemKeyDysplay2() !== undefined && this.itemKeyDysplay2() !== null) {
+        return ((item[this.itemKeyDysplay() as keyof T] as string) + ' ' + item[this.itemKeyDysplay2() as keyof T]) as string;
+      } else {
+        return item[this.itemKeyDysplay() as keyof T] as string;
+      }
     } else {
-      return item[this.itemKeyDysplay() as keyof T] as string;
+      return '';
     }
   }
 

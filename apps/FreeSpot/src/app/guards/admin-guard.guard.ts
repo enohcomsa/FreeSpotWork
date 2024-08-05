@@ -3,6 +3,8 @@ import { CanActivateFn } from '@angular/router';
 import { UserService } from '@free-spot-service/user';
 import { Role } from '@free-spot/enums';
 import { FreeSpotUser } from '@free-spot/models';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { filter, map, take } from 'rxjs';
 
 export const adminGuard: CanActivateFn = () => {
   const _userService: UserService = inject(UserService);
@@ -17,8 +19,9 @@ export const adminGuard: CanActivateFn = () => {
   )?.email;
   const currentUserSig: Signal<FreeSpotUser> = _userService.getFreeSpotUserByEmail(_currentUserEmail);
 
-  if (Object.keys(currentUserSig()).length) {
-    return currentUserSig().role === Role.ADMIN;
-  }
-  return false;
+  return toObservable(currentUserSig).pipe(
+    filter((user) => !!Object.keys(user).length),
+    take(1),
+    map((user: FreeSpotUser) => user.role === Role.ADMIN),
+  );
 };

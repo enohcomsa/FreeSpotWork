@@ -83,13 +83,43 @@ export class AdminGroupTimetableComponent implements OnInit {
       timetableActivity: [{}, [Validators.required, Validators.minLength(1)]],
     });
     this.addTimetableActivityFormGroup.valueChanges.pipe(debounceTime(300)).subscribe(() => {
-      this.foundActivitiesSig.set(
-        this._adminRoomService.getTimetableActivitiesByWeekDayAndSubject(
-          this.addTimetableActivityFormGroup.controls['weekDay'].value,
-          this.addTimetableActivityFormGroup.controls['subject'].value,
-        ),
+      let foundTimetableActivities: TimetableActivityItem[] = this._adminRoomService.getTimetableActivitiesByWeekDayAndSubject(
+        this.addTimetableActivityFormGroup.controls['weekDay'].value,
+        this.addTimetableActivityFormGroup.controls['subject'].value,
       );
+      const currentActivities: TimetableActivityItem[] = this._getActivitiesFromItemByWeekDay(
+        this.addTimetableActivityFormGroup.controls['weekDay'].value,
+      );
+      foundTimetableActivities = foundTimetableActivities.filter((timetableActivity: TimetableActivityItem) => {
+        return !currentActivities.some((exitentActivity: TimetableActivityItem) =>
+          this._checkTimetebleActivityEquality(exitentActivity, timetableActivity),
+        );
+      });
+
+      this.foundActivitiesSig.set(foundTimetableActivities);
     });
+  }
+
+  dysplaySubject(subjectItem: SubjectItem): string {
+    if (subjectItem !== undefined && subjectItem !== null && Object.keys(subjectItem).length) {
+      return subjectItem.shortName;
+    }
+    return '';
+  }
+
+  dysplayTimetableActivity(timetableActivity: TimetableActivityItem): string {
+    if (timetableActivity !== undefined && timetableActivity !== null && Object.keys(timetableActivity).length) {
+      return (
+        timetableActivity.startHour +
+        ' ' +
+        timetableActivity.activityType +
+        ' ' +
+        timetableActivity.roomName +
+        ' ' +
+        timetableActivity.weekParity
+      );
+    }
+    return '';
   }
 
   getTimeInterval(startHour: number): string {
@@ -236,5 +266,14 @@ export class AdminGroupTimetableComponent implements OnInit {
       bookedEvent1.activityType === bookedEvent2.activityType &&
       bookedEvent1.weekParity === bookedEvent2.weekParity
     );
+  }
+
+  private _getActivitiesFromItemByWeekDay(weekDay: WeekDay): TimetableActivityItem[] {
+    let activities: TimetableActivityItem[] = [];
+    this.groupSig().timetable.forEach((timetableItem: TimeTableItem) => {
+      timetableItem.weekDay === weekDay ? (timetableItem.activities ? (activities = timetableItem.activities) : '') : '';
+    });
+
+    return activities;
   }
 }

@@ -67,7 +67,7 @@
       <mat-form-field class="flex-auto">
         <mat-label>Subject name</mat-label>
         <input type="text" matInput formControlName="subject" [matAutocomplete]="autoSubject" />
-        <mat-autocomplete autoActiveFirstOption #autoSubject="matAutocomplete">
+        <mat-autocomplete autoActiveFirstOption #autoSubject="matAutocomplete" [displayWith]="dysplaySubject">
           @for (subject of subjectListSig(); track $index) {
             <mat-option [value]="subject">{{ subject.name }}</mat-option>
           }
@@ -77,7 +77,7 @@
       <mat-form-field class="flex-auto">
         <mat-label>Activity</mat-label>
         <input type="text" matInput formControlName="timetableActivity" [matAutocomplete]="autoType" />
-        <mat-autocomplete autoActiveFirstOption #autoType="matAutocomplete">
+        <mat-autocomplete autoActiveFirstOption #autoType="matAutocomplete" [displayWith]="dysplayTimetableActivity">
           @for (activity of foundActivitiesSig(); track $index) {
             <mat-option [value]="activity"
               >{{ activity.startHour }} {{ activity.activityType }} {{ activity.roomName }} {{ activity.weekParity }}</mat-option
@@ -88,7 +88,12 @@
     </div>
 
     <div class="flex flex-auto flex-col md:flex-row md:items-center md:gap-4">
-      <button mat-flat-button type="submit" class="flex-auto sm:mb-5" [disabled]="!addTimetableActivityFormSemiGroup.valid">
+      <button
+        mat-flat-button
+        type="submit"
+        class="flex-auto sm:mb-5"
+        [disabled]="!addTimetableActivityFormSemiGroup.valid || !foundActivitiesSig().length"
+      >
         Add timetable item
       </button>
     </div>

@@ -87,7 +87,7 @@
       <mat-form-field class="flex-auto">
         <mat-label>Subject name</mat-label>
         <input type="text" matInput formControlName="subjectName" [matAutocomplete]="autoSubject" />
-        <mat-autocomplete autoActiveFirstOption #autoSubject="matAutocomplete">
+        <mat-autocomplete autoActiveFirstOption #autoSubject="matAutocomplete" [displayWith]="dysplaySubject">
           @for (subject of subjectListSig(); track $index) {
             <mat-option [value]="subject">{{ subject.name }}</mat-option>
           }

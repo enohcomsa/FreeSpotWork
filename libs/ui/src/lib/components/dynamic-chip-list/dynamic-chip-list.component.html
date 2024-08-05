@@ -84,11 +84,11 @@
 
 @if (addingItem) {
   <form class="flex flex-col py-4 sm:flex-row sm:items-center sm:gap-4" (ngSubmit)="onAddItem()">
-    <mat-form-field>
+    <mat-form-field matTooltip="No options Found!" matTooltipPosition="right" [matTooltipDisabled]="!addItemFormControl.disabled">
       <mat-label>New {{ itemLabelSig() }}</mat-label>
       <input type="text" matInput [formControl]="addItemFormControl" [matAutocomplete]="auto" />
-      <mat-autocomplete #auto="matAutocomplete">
-        @for (option of optionListSig(); track $index) {
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="getDisplayName.bind(this)">
+        @for (option of filteredOptionListSig(); track $index) {
           <mat-option [value]="option">
             @if (itemKeyDysplay()) {
               {{ getDisplayName(option) }}
@@ -96,6 +96,8 @@
               {{ option }}
             }
           </mat-option>
+        } @empty {
+          <mat-option disabled checked>No item found</mat-option>
         }
       </mat-autocomplete>
     </mat-form-field>

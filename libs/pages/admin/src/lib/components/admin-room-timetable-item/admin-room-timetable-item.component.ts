@@ -59,6 +59,13 @@ export class AdminRoomTimetableItemComponent implements OnInit {
     });
   }
 
+  dysplaySubject(subjectItem: SubjectItem): string {
+    if (subjectItem !== undefined && subjectItem !== null && Object.keys(subjectItem).length) {
+      return subjectItem.shortName;
+    }
+    return '';
+  }
+
   getTimeInterval(startHour: number): string {
     switch (startHour) {
       case 8:
