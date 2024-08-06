@@ -8,11 +8,12 @@ import { AppDateService } from '@free-spot-service/app-date';
 import { UserService } from '@free-spot-service/user';
 import { FreeSpotUser } from '@free-spot/models';
 import { Role } from '@free-spot/enums';
+import { LoadingComponent } from '../loading/loading.component';
 
 @Component({
   selector: 'free-spot-navigation',
   standalone: true,
-  imports: [CommonModule, RouterModule, MatToolbarModule, MatListModule, MatDividerModule],
+  imports: [CommonModule, RouterModule, MatToolbarModule, MatListModule, MatDividerModule, LoadingComponent],
   templateUrl: './navigation.component.html',
   styleUrl: './navigation.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
