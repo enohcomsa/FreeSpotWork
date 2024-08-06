@@ -4,10 +4,10 @@
   "peerDependencies": {
     "@angular/common": "^18.0.0",
     "@angular/core": "^18.0.0",
-    "@angular/router": "~18.0.0",
+    "@angular/router": "18.1.3",
     "@angular/material": "^18.0.6",
     "@free-spot/models": "0.0.1",
-    "@angular/forms": "~18.0.0",
+    "@angular/forms": "18.1.3",
     "@free-spot/ui": "0.0.1",
     "@free-spot/enums": "0.0.1",
     "@free-spot-service/building": "0.0.1",

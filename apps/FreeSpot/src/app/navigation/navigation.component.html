@@ -2,11 +2,19 @@
   <nav class="flex grow items-center justify-between py-2">
     <div class="logo h-4 w-4 rounded-full bg-red-500"></div>
     <div class="flex items-center space-x-4">
-      <a mat-button class="!hidden !text-base md:!flex" routerLinkActive routerLink="/dashboard">Dashboard</a>
-      <a mat-button class="!hidden !text-base md:!flex" routerLink="/schedule">Schedule</a>
-      <a mat-button class="!hidden !text-base md:!flex" routerLink="/my-bookings">My bookings</a>
+      <a mat-button class="!hidden !text-base md:!flex" routerLink="/dashboard" routerLinkActive="!bg-[rgba(184,196,255,0.15)]"
+        >Dashboard
+      </a>
+      <a mat-button class="!hidden !text-base md:!flex" routerLink="/schedule" routerLinkActive="!bg-[rgba(184,196,255,0.15)]"
+        >Schedule
+      </a>
+      <a mat-button class="!hidden !text-base md:!flex" routerLink="/my-bookings" routerLinkActive="!bg-[rgba(184,196,255,0.15)]"
+        >My bookings
+      </a>
       @if (currentUserSig().role === Role.ADMIN) {
-        <a mat-button class="!hidden !text-base md:!flex" routerLink="/admin">Admin</a>
+        <a mat-button class="!hidden !text-base md:!flex" routerLink="/admin" routerLinkActive="!bg-[rgba(184,196,255,0.15)]">
+          Admin
+        </a>
       }
       <!-- <nav profile></nav> -->
       <div class="flex space-x-4 pl-6">

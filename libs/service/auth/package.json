@@ -4,7 +4,7 @@
   "peerDependencies": {
     "@angular/common": "^18.0.0",
     "@angular/core": "^18.0.0",
-    "@angular/router": "~18.0.0",
+    "@angular/router": "18.1.3",
     "rxjs": "~7.8.0",
     "@http-free-spot/user": "0.0.1",
     "@free-spot/models": "0.0.1",

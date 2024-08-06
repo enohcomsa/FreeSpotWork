@@ -3,6 +3,7 @@
 
 @use 'sass:map';
 @use '@angular/material' as mat;
+@use '@angular/material-experimental' as matx;
 
 // Note: Color palettes are generated from primary: #AEBAF5, secondary: #EDDD8F, tertiary: #8FCEED
 $_palettes: (
@@ -125,10 +126,6 @@ $_palettes: (
     100: #ffffff,
   ),
 );
-
-// $angular-material-3-theme: matx.define-theme(map.set($_palettes, color, theme-type, light));
-
-// $angular-material-3-theme-dark: matx.define-theme(map.set($_palettes, color, theme-type, dark));
 
 $_rest: (
   secondary: map.get($_palettes, secondary),
