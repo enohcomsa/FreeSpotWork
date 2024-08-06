@@ -126,6 +126,10 @@ $_palettes: (
   ),
 );
 
+// $angular-material-3-theme: matx.define-theme(map.set($_palettes, color, theme-type, light));
+
+// $angular-material-3-theme-dark: matx.define-theme(map.set($_palettes, color, theme-type, dark));
+
 $_rest: (
   secondary: map.get($_palettes, secondary),
   neutral: map.get($_palettes, neutral),
@@ -161,4 +165,3 @@ $dark-theme: mat.define-theme(
     ),
   )
 );
-

@@ -1,23 +1,27 @@
-<mat-toolbar class="felx stikky z-2 top-0 items-center justify-between">
-  <div class="logo h-4 w-4 rounded-full bg-red-500"></div>
-  <div class="flex items-center space-x-4">
-    <a class="hidden cursor-pointer tracking-wide hover:text-red-200 md:block" routerLink="/dashboard">Dashboard</a>
-    <a class="hidden cursor-pointer tracking-wide hover:text-red-200 md:block" routerLink="/schedule">Schedule</a>
-    <a class="hidden cursor-pointer tracking-wide hover:text-red-200 md:block" routerLink="/my-bookings">My bookings</a>
-    @if (currentUserSig().role === Role.ADMIN) {
-      <a class="hidden cursor-pointer tracking-wide hover:text-red-200 md:block" routerLink="/admin">Admin</a>
-    }
-    <!-- <nav profile></nav> -->
-    <div class="flex space-x-4 pl-6">
-      <div class="hidden h-8 w-8 rounded-full bg-red-600 md:flex"></div>
-      <div class="hidden lg:block">Comsa Enoh</div>
+<mat-toolbar class="stikky z-2 top-0 z-20">
+  <nav class="flex grow items-center justify-between py-2">
+    <div class="logo h-4 w-4 rounded-full bg-red-500"></div>
+    <div class="flex items-center space-x-4">
+      <a mat-button class="!hidden !text-base md:!flex" routerLinkActive routerLink="/dashboard">Dashboard</a>
+      <a mat-button class="!hidden !text-base md:!flex" routerLink="/schedule">Schedule</a>
+      <a mat-button class="!hidden !text-base md:!flex" routerLink="/my-bookings">My bookings</a>
+      @if (currentUserSig().role === Role.ADMIN) {
+        <a mat-button class="!hidden !text-base md:!flex" routerLink="/admin">Admin</a>
+      }
+      <!-- <nav profile></nav> -->
+      <div class="flex space-x-4 pl-6">
+        <div class="hidden h-8 w-8 rounded-full bg-red-600 md:flex"></div>
+        <div class="hidden lg:block">Comsa Enoh</div>
+      </div>
     </div>
-  </div>
-  <button class="hamburger z-30 block focus:outline-none md:hidden" (click)="opened = !opened">
-    <span [ngClass]="{ open: opened }" class="hamburger-top bg-black"></span>
-    <span [ngClass]="{ open: opened }" class="hamburger-middle bg-black"></span>
-    <span [ngClass]="{ open: opened }" class="hamburger-bottom bg-black"></span>
-  </button>
+
+    <button class="hamburger z-30 block focus:outline-none md:hidden" (click)="opened = !opened">
+      <span [ngClass]="{ open: opened }" class="hamburger-top bg-black"></span>
+      <span [ngClass]="{ open: opened }" class="hamburger-middle bg-black"></span>
+      <span [ngClass]="{ open: opened }" class="hamburger-bottom bg-black"></span>
+    </button>
+  </nav>
+
   <div
     class="tracking-wideest fixed inset-0 z-20 flex min-h-screen w-full flex-col self-end bg-slate-200 px-4 pb-4 pt-24 opacity-95"
     [ngClass]="{ hidden: !opened }"
@@ -35,6 +39,7 @@
     </div>
   </div>
 </mat-toolbar>
+
 <free-spot-loading></free-spot-loading>
 <main class="h-[calc(100%-64px)]">
   <router-outlet></router-outlet>

@@ -9,11 +9,12 @@ import { UserService } from '@free-spot-service/user';
 import { FreeSpotUser } from '@free-spot/models';
 import { Role } from '@free-spot/enums';
 import { LoadingComponent } from '../loading/loading.component';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'free-spot-navigation',
   standalone: true,
-  imports: [CommonModule, RouterModule, MatToolbarModule, MatListModule, MatDividerModule, LoadingComponent],
+  imports: [CommonModule, RouterModule, MatToolbarModule, MatListModule, MatDividerModule, MatButtonModule, LoadingComponent],
   templateUrl: './navigation.component.html',
   styleUrl: './navigation.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
