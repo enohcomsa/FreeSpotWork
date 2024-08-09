@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '@free-spot-service/auth';
 import { LanguageService } from './translate/language.service';
@@ -17,11 +17,12 @@ export class AppComponent implements OnInit {
   private _authService: AuthService = inject(AuthService);
   private _languageService: LanguageService = inject(LanguageService);
   private _translateService: TranslateService = inject(TranslateService);
+  destroyRef = inject(DestroyRef);
   private _lang$ = toObservable(this._languageService.langSig);
 
   ngOnInit(): void {
     this._authService.autoLogIn();
-    this._lang$.pipe(takeUntilDestroyed()).subscribe((lang: Language) => this._translateService.use(lang));
+    this._lang$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((lang: Language) => this._translateService.use(lang));
   }
 }
 
