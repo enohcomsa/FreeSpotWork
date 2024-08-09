@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, Signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TimetableItemComponent } from '@free-spot/ui';
-import { Group, SubjectItem, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
-import { WeekParity, Event, WeekDay } from '@free-spot/enums';
-import { SUBJECT_LIST } from '@free-spot/constants';
+import { FreeSpotUser, Group, SemiGroup, TimeTableItem } from '@free-spot/models';
+import { WeekDay } from '@free-spot/enums';
+import { UserService } from '@free-spot-service/user';
+import { AdminFacultyService } from '@free-spot-service/faculty';
 
 @Component({
   selector: 'free-spot-schedule',
@@ -13,75 +14,53 @@ import { SUBJECT_LIST } from '@free-spot/constants';
   styleUrl: './schedule.component.sass',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ScheduleComponent {
-  subjectList: SubjectItem[] = SUBJECT_LIST;
-  timetableActivityItem1: TimetableActivityItem = {
-    startHour: 8,
-    endHour: 10,
-    subjectItem: this.subjectList[0],
-    roomName: '5432',
-    activityType: Event.LABORATORY,
-    weekParity: WeekParity.ODD,
-    freeSpots: 0,
-    busySpots: 0,
-    date: new Date(),
-  };
-  timetableActivityItem2: TimetableActivityItem = {
-    startHour: 12,
-    endHour: 14,
-    subjectItem: this.subjectList[1],
-    roomName: '5432',
-    activityType: Event.COURSE,
-    weekParity: WeekParity.BOTH,
-    freeSpots: 0,
-    busySpots: 0,
-    date: new Date(),
-  };
-  timetableActivityItem3: TimetableActivityItem = {
-    startHour: 16,
-    endHour: 18,
-    subjectItem: this.subjectList[0],
-    roomName: '5432',
-    activityType: Event.PROJECT,
-    weekParity: WeekParity.EVEN,
-    freeSpots: 0,
-    busySpots: 0,
-    date: new Date(),
-  };
-  timetableActivityItem4: TimetableActivityItem = {
-    startHour: 8,
-    endHour: 10,
-    subjectItem: this.subjectList[2],
-    roomName: '542',
-    activityType: Event.PROJECT,
-    weekParity: WeekParity.EVEN,
-    freeSpots: 0,
-    busySpots: 0,
-    date: new Date(),
-  };
+export class ScheduleComponent implements OnInit {
+  private _userService: UserService = inject(UserService);
+  private _adminFacultyService: AdminFacultyService = inject(AdminFacultyService);
 
-  groupData: Group = {
-    name: 'gr1',
-    studentList: [],
-    timetable: [
-      this.getTimetableActivity(WeekDay.MONDAY),
-      this.getTimetableActivity(WeekDay.TUESDAY),
-      this.getTimetableActivity(WeekDay.WEDNESDAY),
-      this.getTimetableActivity(WeekDay.THURSDAY),
-      this.getTimetableActivity(WeekDay.FRIDAY),
-    ],
-  };
+  private _currentUserEmail = (
+    JSON.parse(localStorage.getItem('user') as string) as {
+      email: string;
+      id: string;
+      _token: string;
+      _tokenExpirationDate: Date;
+    }
+  ).email;
 
-  getTimetableActivity(weekDay: WeekDay): TimeTableItem {
-    return {
-      weekDay: weekDay,
-      activities: [
-        this.timetableActivityItem1,
-        this.timetableActivityItem2,
-        this.timetableActivityItem3,
-        this.timetableActivityItem4,
-      ],
-      date: new Date(),
-    };
+  currentUserSig: Signal<FreeSpotUser> = this._userService.getFreeSpotUserByEmail(this._currentUserEmail);
+  userTimetableItemsSig: Signal<TimeTableItem[]> = computed(() => this._getUserTimetableItemList());
+
+  emptyTimetable: TimeTableItem[] = [
+    { weekDay: WeekDay.MONDAY, activities: [], date: new Date() },
+    { weekDay: WeekDay.TUESDAY, activities: [], date: new Date() },
+    { weekDay: WeekDay.WEDNESDAY, activities: [], date: new Date() },
+    { weekDay: WeekDay.THURSDAY, activities: [], date: new Date() },
+    { weekDay: WeekDay.FRIDAY, activities: [], date: new Date() },
+  ];
+
+  ngOnInit(): void {
+    this._userService.init();
+    this._adminFacultyService.init();
+  }
+
+  private _getUserTimetableItemList(): TimeTableItem[] {
+    let userTimetableItemList: TimeTableItem[] = [];
+    if (Object.keys(this.currentUserSig()).length) {
+      const userGroup: Group = this._adminFacultyService.getGroupByName(this.currentUserSig().group as string)();
+      const userSemiGroup: SemiGroup = this._getUserSemigroup(this.currentUserSig().semiGroup as string, userGroup);
+
+      if (Object.keys(userGroup).length) {
+        if (Object.keys(userSemiGroup).length) {
+          userTimetableItemList = userSemiGroup.timetable;
+        } else {
+          userTimetableItemList = userGroup.timetable;
+        }
+      }
+    }
+    return userTimetableItemList;
+  }
+
+  private _getUserSemigroup(semiGroupName: string, userGroup: Group): SemiGroup {
+    return userGroup.semigroups?.find((semiGroup: SemiGroup) => semiGroup.name === semiGroupName) || ({} as SemiGroup);
   }
 }
