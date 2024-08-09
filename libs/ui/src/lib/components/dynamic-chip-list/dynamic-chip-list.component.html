@@ -17,15 +17,17 @@
               <p>{{ item }}</p>
             }
           </div>
-          <button
-            matChipRemove
-            (click)="onRemoveItem(item)"
-            matTooltip="click to remove item"
-            matTooltipPosition="right"
-            matTooltipShowDelay="500"
-          >
-            <mat-icon>cancel</mat-icon>
-          </button>
+          @if (canBeDeleted(item)) {
+            <button
+              matChipRemove
+              (click)="onRemoveItem(item)"
+              matTooltip="click to remove item"
+              matTooltipPosition="right"
+              matTooltipShowDelay="500"
+            >
+              <mat-icon>cancel</mat-icon>
+            </button>
+          }
         </mat-chip>
         <button
           mat-icon-button
@@ -54,15 +56,17 @@
             <p>{{ item }}</p>
           }
         </div>
-        <button
-          matChipRemove
-          (click)="onRemoveItem(item)"
-          matTooltip="click to remove item"
-          matTooltipPosition="right"
-          matTooltipShowDelay="500"
-        >
-          <mat-icon>cancel</mat-icon>
-        </button>
+        @if (canBeDeleted(item)) {
+          <button
+            matChipRemove
+            (click)="onRemoveItem(item)"
+            matTooltip="click to remove item"
+            matTooltipPosition="right"
+            matTooltipShowDelay="500"
+          >
+            <mat-icon>cancel</mat-icon>
+          </button>
+        }
       </mat-chip>
     }
   } @empty {

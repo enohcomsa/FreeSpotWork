@@ -16,6 +16,7 @@ import { UserService } from '@free-spot-service/user';
 import { BookingService } from '@free-spot-service/booking';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ConfirmModalService } from '@free-spot-service/confirm-modal';
+import { delay, of } from 'rxjs';
 
 @Component({
   selector: 'free-spot-group',
@@ -50,6 +51,9 @@ export class GroupComponent implements OnInit {
   yearSig: Signal<Year> = signal<Year>({} as Year);
   facultySig: Signal<Faculty> = signal<Faculty>({} as Faculty);
   userListSig: Signal<FreeSpotUser[]> = this._userService.userListSig;
+  deletableUserListSig: Signal<FreeSpotUser[]> = computed(() =>
+    this.userListSig().filter((user: FreeSpotUser) => !this._checkUserInSemigroup(user)),
+  );
 
   semigroupToggle = viewChild.required<MatSlideToggle>('semigroupsToggle');
   semigroupsEnabledSig = computed(() => !!this.groupSig().semigroups);
@@ -299,7 +303,11 @@ export class GroupComponent implements OnInit {
       ),
     };
 
-    this._updateFaculty(updatedGroup);
+    of(null)
+      .pipe(delay(1500))
+      .subscribe(() => {
+        this._updateFaculty(updatedGroup);
+      });
   }
 
   updateSemiGroupTimetable(updatedSemiGroup: SemiGroup): void {
@@ -313,6 +321,22 @@ export class GroupComponent implements OnInit {
     this._updateFaculty(updatedGroup);
   }
 
+  private _checkUserInSemigroup(user: FreeSpotUser): boolean {
+    if (this.groupSig().semigroups === undefined || this.groupSig().semigroups === null) {
+      return false;
+    } else {
+      return (
+        this.groupSig()
+          .semigroups?.map((semigroup: SemiGroup) =>
+            semigroup.students?.some(
+              (student: FreeSpotUser) => student.firstName === user.firstName && student.familyName === user.familyName,
+            ),
+          )
+          ?.some((check: boolean) => check) || false
+      );
+    }
+  }
+
   private _updateFaculty(updatedGroup: Group): void {
     const updatedYear: Year = {
       ...this.yearSig(),
@@ -320,6 +344,7 @@ export class GroupComponent implements OnInit {
         yearGroup.name === updatedGroup.name ? updatedGroup : yearGroup,
       ),
     };
+
     const updatedFaculty: Faculty = {
       ...this.facultySig(),
       yearList: this.facultySig().yearList?.map((year: Year) => (year.name === updatedYear.name ? updatedYear : year)),

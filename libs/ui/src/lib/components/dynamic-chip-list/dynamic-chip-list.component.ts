@@ -46,6 +46,7 @@ export class DynamicChipListComponent<T> implements OnInit {
   itemKeyDysplay = input<keyof T>();
   itemKeyDysplay2 = input<keyof T>();
   itemDinamicRoute = input<string>('');
+  deletableItemListSig = input<T[]>();
 
   filteredOptionListSig: Signal<T[]> = computed(() => {
     return this.optionListSig().filter(
@@ -127,5 +128,19 @@ export class DynamicChipListComponent<T> implements OnInit {
     } else {
       return this.optionListSig()?.find((addedItem) => addedItem === itemName) as T;
     }
+  }
+
+  canBeDeleted(item: T): boolean {
+    let canBeDeleted = true;
+    if (this.deletableItemListSig() !== undefined && this.deletableItemListSig() !== null) {
+      canBeDeleted =
+        this.deletableItemListSig()?.some(
+          (deleteableItem: T) =>
+            deleteableItem[this.itemKeyDysplay() as keyof T] === item[this.itemKeyDysplay() as keyof T] &&
+            deleteableItem[this.itemKeyDysplay2() as keyof T] === item[this.itemKeyDysplay2() as keyof T],
+        ) ?? true;
+    }
+
+    return canBeDeleted;
   }
 }
