@@ -2,7 +2,7 @@ import { ApplicationConfig, importProvidersFrom, provideExperimentalZonelessChan
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { appRoutes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { HttpBackend, HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from '@free-spot-service/auth';
 import { loadingInterceptor } from './interceptors/loading.interceptor';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
@@ -19,8 +19,8 @@ export const appConfig: ApplicationConfig = {
       TranslateModule.forRoot({
         loader: {
           provide: TranslateLoader,
-          useFactory: (httpBackend: HttpBackend) => new TranslateHttpLoader(new HttpClient(httpBackend)),
-          deps: [HttpBackend],
+          useFactory: (http: HttpClient) => new TranslateHttpLoader(http, './assets/i18n/', '.json'),
+          deps: [HttpClient],
         },
         defaultLanguage: Language.EN,
       }),
