@@ -2,18 +2,18 @@
   <nav class="flex grow items-center justify-between py-2">
     <div class="logo h-4 w-4 rounded-full bg-red-500"></div>
     <div class="flex items-center space-x-4">
-      <a mat-button class="!hidden !text-base md:!flex" routerLink="/dashboard" routerLinkActive="!bg-[rgba(184,196,255,0.15)]"
-        >Dashboard
+      <a mat-button class="!hidden !text-base md:!flex" routerLink="/dashboard" routerLinkActive="!bg-[rgba(184,196,255,0.15)]">
+        {{ 'NAV.DASHBOARD' | translate }}
       </a>
-      <a mat-button class="!hidden !text-base md:!flex" routerLink="/schedule" routerLinkActive="!bg-[rgba(184,196,255,0.15)]"
-        >Schedule
+      <a mat-button class="!hidden !text-base md:!flex" routerLink="/schedule" routerLinkActive="!bg-[rgba(184,196,255,0.15)]">
+        {{ 'NAV.SCHEDULE' | translate }}
       </a>
-      <a mat-button class="!hidden !text-base md:!flex" routerLink="/my-bookings" routerLinkActive="!bg-[rgba(184,196,255,0.15)]"
-        >My bookings
+      <a mat-button class="!hidden !text-base md:!flex" routerLink="/my-bookings" routerLinkActive="!bg-[rgba(184,196,255,0.15)]">
+        {{ 'NAV.MY_BOOKINGS' | translate }}
       </a>
       @if (currentUserSig().role === Role.ADMIN) {
         <a mat-button class="!hidden !text-base md:!flex" routerLink="/admin" routerLinkActive="!bg-[rgba(184,196,255,0.15)]">
-          Admin
+          {{ 'NAV.ADMIN' | translate }}
         </a>
       }
       <!-- <nav profile></nav> -->
@@ -54,10 +54,10 @@
         routerLinkActive="!bg-[rgba(184,196,255,0.15)]"
         (click)="opened = false"
       >
-        <span class="py-4 text-xl tracking-widest"> Dashboard</span>
+        <span class="py-4 text-xl tracking-widest">{{ 'NAV.DASHBOARD' | translate }}</span>
       </a>
       <a mat-button class="!py-6" routerLink="/schedule" routerLinkActive="!bg-[rgba(184,196,255,0.15)]" (click)="opened = false">
-        <span class="text-xl tracking-widest">Schedule</span>
+        <span class="text-xl tracking-widest"> {{ 'NAV.SCHEDULE' | translate }}</span>
       </a>
       <a
         mat-button
@@ -65,12 +65,12 @@
         routerLink="/my-bookings"
         routerLinkActive="!bg-[rgba(184,196,255,0.15)]"
         (click)="opened = false"
-        ><span class="py-4 text-xl tracking-widest">My bookings</span>
+        ><span class="py-4 text-xl tracking-widest"> {{ 'NAV.MY_BOOKINGS' | translate }}</span>
       </a>
       @if (currentUserSig().role === Role.ADMIN) {
         <mat-divider></mat-divider>
         <a mat-button class="!py-6" routerLink="/admin" routerLinkActive="!bg-[rgba(184,196,255,0.15)]" (click)="opened = false">
-          <span class="text-xl tracking-widest">Admin</span>
+          <span class="text-xl tracking-widest"> {{ 'NAV.ADMIN' | translate }}</span>
         </a>
       }
     </div>
@@ -85,7 +85,10 @@
 <mat-menu #profileMenu="matMenu" xPosition="after">
   <button mat-menu-item>
     <mat-icon>language</mat-icon>
-    <span class="flex justify-around"> <span>EN</span><span>RO</span></span>
+    <span class="flex justify-around">
+      <span (click)="onLangChange(LANG.EN, currentUserSig())">EN</span>
+      <span (click)="onLangChange(LANG.RO, currentUserSig())">RO</span>
+    </span>
   </button>
   <button mat-menu-item>
     <div class="flex justify-between"><mat-icon>dark_mode</mat-icon> <mat-icon>light_mode</mat-icon></div>

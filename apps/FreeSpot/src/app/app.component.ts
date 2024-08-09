@@ -18,11 +18,14 @@ export class AppComponent implements OnInit {
   private _languageService: LanguageService = inject(LanguageService);
   private _translateService: TranslateService = inject(TranslateService);
   destroyRef = inject(DestroyRef);
+
   private _lang$ = toObservable(this._languageService.langSig);
 
   ngOnInit(): void {
     this._authService.autoLogIn();
-    this._lang$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((lang: Language) => this._translateService.use(lang));
+    this._lang$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((lang: Language) => {
+      this._translateService.use(lang);
+    });
   }
 }
 

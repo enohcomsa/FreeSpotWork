@@ -5,7 +5,7 @@ import { Language } from '@free-spot/enums';
   providedIn: 'root',
 })
 export class LanguageService {
-  private _langSig: WritableSignal<Language> = signal(Language.EN);
+  private _langSig: WritableSignal<Language> = signal(JSON.parse(localStorage.getItem('lang') as string) || Language.EN);
   langSig = this._langSig.asReadonly();
 
   getLang(): Language {
