@@ -13,8 +13,15 @@ html {
   scrollbar-gutter: stable;
 }
 
+.light-mode {
+  @include mat.all-component-themes(free-spot-m3-theme.$light-theme);
+}
+
+.dark-mode {
+  @include mat.all-component-colors(free-spot-m3-theme.$dark-theme);
+}
+
 body {
-  @include mat.all-component-themes(free-spot-m3-theme.$dark-theme);
   margin: 0;
   overflow-x: hidden;
 }

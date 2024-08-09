@@ -68,16 +68,9 @@ export class AuthService {
 
   logOut(): void {
     this.userSignal$.set(null);
-    localStorage.clear();
+    localStorage.removeItem('user');
     this._router.navigate(['/auth']);
   }
-
-  // to do some auto logout logic
-  // autoLogOut(expirationDuratoin: number): void {
-  //   setTimeout(() => {
-  //     this.logOut();
-  //   }, expirationDuratoin);
-  // }
 
   private _handleAuth(email: string, localId: string, idToken: string, expiresIn: number) {
     const exirationDate: Date = new Date(new Date().getTime() + expiresIn * 1000);

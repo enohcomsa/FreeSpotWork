@@ -91,9 +91,12 @@
     </span>
   </button>
   <button mat-menu-item>
-    <div class="flex justify-between"><mat-icon>dark_mode</mat-icon> <mat-icon>light_mode</mat-icon></div>
+    <div class="flex justify-between">
+      <mat-icon (click)="onThemeChange(THEME.DARK, currentUserSig())">dark_mode</mat-icon>
+      <mat-icon (click)="onThemeChange(THEME.LIGHT, currentUserSig())">light_mode</mat-icon>
+    </div>
   </button>
-  <button mat-menu-item>
+  <button mat-menu-item (click)="logout()">
     <mat-icon>logout</mat-icon>
     <span>Logout</span>
   </button>

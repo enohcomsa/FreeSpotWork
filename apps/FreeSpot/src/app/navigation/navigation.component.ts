@@ -7,7 +7,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { AppDateService } from '@free-spot-service/app-date';
 import { UserService } from '@free-spot-service/user';
 import { FreeSpotUser } from '@free-spot/models';
-import { Language, Role } from '@free-spot/enums';
+import { Language, Role, Theme } from '@free-spot/enums';
 import { LoadingComponent } from '../loading/loading.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
@@ -16,6 +16,8 @@ import { LanguageService } from '../translate/language.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { filter, Subscription, take } from 'rxjs';
+import { ThemeService } from '../theme/theme.service';
+import { AuthService } from '@free-spot-service/auth';
 
 @Component({
   selector: 'free-spot-navigation',
@@ -37,13 +39,16 @@ import { filter, Subscription, take } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NavigationComponent implements OnInit {
+  private _authService: AuthService = inject(AuthService);
   private _appDateService: AppDateService = inject(AppDateService);
   private _userService: UserService = inject(UserService);
   private _languageService: LanguageService = inject(LanguageService);
+  private _themeService: ThemeService = inject(ThemeService);
   private _destroyRef = inject(DestroyRef);
 
   opened = false;
   LANG = Language;
+  THEME = Theme;
 
   Role = Role;
   private _currentUserEmail = (
@@ -64,6 +69,7 @@ export class NavigationComponent implements OnInit {
     )
     .subscribe((user: FreeSpotUser) => {
       this._languageService.setLang(user.preferdLanguage || Language.EN);
+      this._themeService.setTheme(user.preferedTheme || Theme.DARK);
     });
 
   ngOnInit(): void {
@@ -75,6 +81,17 @@ export class NavigationComponent implements OnInit {
     const updatedUser: FreeSpotUser = { ...oldUser, preferdLanguage: lang };
     this._userService.updateFreeSpotUser(oldUser, updatedUser);
     localStorage.setItem('lang', JSON.stringify(lang));
+  }
+
+  onThemeChange(theme: Theme, oldUser: FreeSpotUser): void {
+    this._themeService.setTheme(theme);
+    const updatedUser: FreeSpotUser = { ...oldUser, preferedTheme: theme };
+    this._userService.updateFreeSpotUser(oldUser, updatedUser);
+    localStorage.setItem('theme', JSON.stringify(theme));
+  }
+
+  logout(): void {
+    this._authService.logOut();
   }
 }
 
