@@ -12,7 +12,7 @@
   </mat-chip-listbox>
 
   <div class="grid grid-cols-1 gap-8 pb-4 md:grid-cols-2 xl:grid-cols-3">
-    @for (bookedEvent of filteredBookedItemsSig(); track bookedEvent.startHour) {
+    @for (bookedEvent of filteredBookedItemsSig(); track bookedEvent) {
       <free-spot-booked-spot [eventSig]="bookedEvent"> </free-spot-booked-spot>
     } @empty {
       <h3>No bookings found.</h3>

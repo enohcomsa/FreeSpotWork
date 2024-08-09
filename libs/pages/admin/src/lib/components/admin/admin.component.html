@@ -39,6 +39,8 @@
           <free-spot-add-item-card class="block h-24 w-full md:h-28" (click)="onAddingYear()"></free-spot-add-item-card>
         }
       </mat-expansion-panel>
+    } @empty {
+      <h3>No faculty added yet.</h3>
     }
   </mat-accordion>
 
@@ -52,6 +54,8 @@
         (editBuilding)="onEditingBuilding($event)"
         (deleteBuilding)="onDeleteBuilding($event)"
       ></free-spot-admin-building-card>
+    } @empty {
+      <h3>No building added yet.</h3>
     }
     <free-spot-add-item-card
       class="h-24 w-full md:h-full md:min-h-32 md:place-self-start"

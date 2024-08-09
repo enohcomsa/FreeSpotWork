@@ -5,12 +5,16 @@
   <div class="flex flex-col gap-8 pb-4 lg:grid lg:grid-cols-2">
     @for (building of buildingListSig(); track building.name) {
       <free-spot-building-card [buildingSig]="building"></free-spot-building-card>
+    } @empty {
+      <h3>No building added yet.</h3>
     }
   </div>
   <h1 class="py-4 text-3xl font-bold md:py-8">Events</h1>
   <div class="flex flex-col gap-8 pb-4 lg:grid lg:grid-cols-2">
     @for (building of buildingListSig(); track building.name) {
       <free-spot-building-card [buildingSig]="building"></free-spot-building-card>
+    } @empty {
+      <h3>No event added yet.</h3>
     }
   </div>
 </div>
