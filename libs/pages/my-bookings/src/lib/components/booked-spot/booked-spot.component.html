@@ -12,8 +12,12 @@
             </p>
           }
           <div class="flex items-center text-sm tracking-tighter">
-            <p class="max-w-48 truncate sm:max-w-fit md:max-w-48 lg:max-w-44 xl:max-w-fit">{{ eventSig().buildingName }}</p>
-            <p><span class="mx-1">|</span>{{ eventSig().floorName }}<span class="mx-1">|</span></p>
+            <p class="max-w-40 truncate sm:max-w-fit md:max-w-48 lg:max-w-44 xl:max-w-fit">{{ eventSig().buildingName }}</p>
+            <p class="flex flex-nowrap">
+              <span class="mx-1">|</span>
+              <span class="max-w-28 truncate sm:max-w-fit">{{ eventSig().floorName }}</span>
+              <span class="mx-1">|</span>
+            </p>
             <p>{{ eventSig().roomName }}</p>
           </div>
         </div>

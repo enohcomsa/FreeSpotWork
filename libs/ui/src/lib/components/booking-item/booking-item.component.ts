@@ -7,11 +7,12 @@ import { Event, WeekParity } from '@free-spot/enums';
 import { BookingService } from '@free-spot-service/booking';
 import { UserService } from '@free-spot-service/user';
 import { ConfirmModalService } from '@free-spot-service/confirm-modal';
+import { MatDividerModule } from '@angular/material/divider';
 
 @Component({
   selector: 'free-spot-booking-item',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatButtonModule],
+  imports: [CommonModule, MatCardModule, MatButtonModule, MatDividerModule],
   templateUrl: './booking-item.component.html',
   styleUrl: './booking-item.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,6 +1,13 @@
 <mat-card appearance="outlined" class="@container">
   <mat-card-content class="@md:flex-row @md:justify-between @md:items-baseline !flex flex-col justify-center">
-    <p class="grow text-lg font-bold tracking-tight">{{ eventBookingSig().subjectItem.shortName }}</p>
+    <p class="flex grow items-center justify-between text-lg font-bold tracking-tight">
+      {{ eventBookingSig().subjectItem.shortName
+      }}<span class="ml-4 text-sm tracking-tighter md:text-base md:tracking-tight">
+        free spots:{{ timetableActivitySig().freeSpots }}
+      </span>
+      <span class="hidden md:block"></span>
+    </p>
+    <mat-divider class="md:hidden"></mat-divider>
     <div
       class="@sm:flex-row @sm:justify-between @sm:items-center @lg:tracking-tight @lg:text-base flex grow flex-col justify-center text-sm tracking-tighter"
     >
