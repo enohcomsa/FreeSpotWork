@@ -1,0 +1,8 @@
+{
+  "NAV": {
+    "DASHBOARD": "Dashboard",
+    "SCHEDULE": "Schedule",
+    "MY_BOOKINGS": "My bookings",
+    "Admin": "Admin"
+  }
+}
