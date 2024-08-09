@@ -10,11 +10,23 @@ import { FreeSpotUser } from '@free-spot/models';
 import { Role } from '@free-spot/enums';
 import { LoadingComponent } from '../loading/loading.component';
 import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'free-spot-navigation',
   standalone: true,
-  imports: [CommonModule, RouterModule, MatToolbarModule, MatListModule, MatDividerModule, MatButtonModule, LoadingComponent],
+  imports: [
+    CommonModule,
+    RouterModule,
+    MatToolbarModule,
+    MatListModule,
+    MatDividerModule,
+    MatButtonModule,
+    LoadingComponent,
+    MatMenuModule,
+    MatIconModule,
+  ],
   templateUrl: './navigation.component.html',
   styleUrl: './navigation.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

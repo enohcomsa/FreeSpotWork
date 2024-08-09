@@ -17,38 +17,81 @@
         </a>
       }
       <!-- <nav profile></nav> -->
-      <div class="flex space-x-4 pl-6">
-        <div class="hidden h-8 w-8 rounded-full bg-red-600 md:flex"></div>
-        <div class="hidden lg:block">Comsa Enoh</div>
+      <div class="flex items-center space-x-4 hover:cursor-pointer" [matMenuTriggerFor]="profileMenu">
+        <div class="hidden h-12 w-12 rounded-full bg-red-600 text-lg font-semibold md:flex md:items-center md:justify-center">
+          EC
+        </div>
+        <div class="hidden text-base lg:flex lg:items-center">
+          Comsa Enoh <mat-icon inline="true">keyboard_arrow_down</mat-icon>
+        </div>
       </div>
     </div>
 
     <button class="hamburger z-30 block focus:outline-none md:hidden" (click)="opened = !opened">
-      <span [ngClass]="{ open: opened }" class="hamburger-top bg-black"></span>
-      <span [ngClass]="{ open: opened }" class="hamburger-middle bg-black"></span>
-      <span [ngClass]="{ open: opened }" class="hamburger-bottom bg-black"></span>
+      <span [ngClass]="{ open: opened }" class="hamburger-top bg-white"></span>
+      <span [ngClass]="{ open: opened }" class="hamburger-middle bg-white"></span>
+      <span [ngClass]="{ open: opened }" class="hamburger-bottom bg-white"></span>
     </button>
   </nav>
 
-  <div
-    class="tracking-wideest fixed inset-0 z-20 flex min-h-screen w-full flex-col self-end bg-slate-200 px-4 pb-4 pt-24 opacity-95"
+  <nav
+    class="fixed inset-0 z-20 flex min-h-screen w-full flex-col self-end bg-slate-800 px-4 pb-4 opacity-95 md:hidden"
     [ngClass]="{ hidden: !opened }"
   >
-    <div class="w-full space-y-6 text-center">
-      <a class="block cursor-pointer hover:text-red-200 md:block" (click)="opened = false" routerLink="/dashboard">Dashboard</a>
-      <a class="block cursor-pointer hover:text-red-200 md:block" (click)="opened = false" routerLink="/schedule">Schedule</a>
-      <a class="block cursor-pointer hover:text-red-200 md:block" (click)="opened = false" routerLink="/my-bookings"
-        >My bookings</a
+    <div class="mb-4 flex h-16 items-center justify-between">
+      <div class="logo h-4 w-4 rounded-full bg-red-500"></div>
+      <div class="flex items-center space-x-4 hover:cursor-pointer" [matMenuTriggerFor]="profileMenu">
+        <div class="texx-xl flex h-12 w-12 items-center justify-center rounded-full bg-red-600 font-semibold">EC</div>
+        <div class="flex items-center text-xl">Comsa Enoh <mat-icon inline="true">keyboard_arrow_down</mat-icon></div>
+      </div>
+      <div></div>
+    </div>
+    <div class="flex flex-col">
+      <a
+        mat-button
+        class="!py-6"
+        routerLink="/dashboard"
+        routerLinkActive="!bg-[rgba(184,196,255,0.15)]"
+        (click)="opened = false"
       >
+        <span class="py-4 text-xl tracking-widest"> Dashboard</span>
+      </a>
+      <a mat-button class="!py-6" routerLink="/schedule" routerLinkActive="!bg-[rgba(184,196,255,0.15)]" (click)="opened = false">
+        <span class="text-xl tracking-widest">Schedule</span>
+      </a>
+      <a
+        mat-button
+        class="!py-6"
+        routerLink="/my-bookings"
+        routerLinkActive="!bg-[rgba(184,196,255,0.15)]"
+        (click)="opened = false"
+        ><span class="py-4 text-xl tracking-widest">My bookings</span>
+      </a>
       @if (currentUserSig().role === Role.ADMIN) {
         <mat-divider></mat-divider>
-        <a class="block cursor-pointer hover:text-red-200 md:block" (click)="opened = false" routerLink="/admin">Admin</a>
+        <a mat-button class="!py-6" routerLink="/admin" routerLinkActive="!bg-[rgba(184,196,255,0.15)]" (click)="opened = false">
+          <span class="text-xl tracking-widest">Admin</span>
+        </a>
       }
     </div>
-  </div>
+  </nav>
 </mat-toolbar>
 
 <free-spot-loading></free-spot-loading>
 <main class="h-[calc(100%-64px)]">
   <router-outlet></router-outlet>
 </main>
+
+<mat-menu #profileMenu="matMenu" xPosition="after">
+  <button mat-menu-item>
+    <mat-icon>language</mat-icon>
+    <span class="flex justify-around"> <span>EN</span><span>RO</span></span>
+  </button>
+  <button mat-menu-item>
+    <div class="flex justify-between"><mat-icon>dark_mode</mat-icon> <mat-icon>light_mode</mat-icon></div>
+  </button>
+  <button mat-menu-item>
+    <mat-icon>logout</mat-icon>
+    <span>Logout</span>
+  </button>
+</mat-menu>
