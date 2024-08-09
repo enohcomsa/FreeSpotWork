@@ -5,7 +5,7 @@
   <mat-card-content class="!p-0">
     <mat-list class="!pb-0">
       <mat-divider></mat-divider>
-      @for (day of dayItems; track day) {
+      @for (day of dayItems; track day.startHour) {
         <mat-divider></mat-divider>
         <mat-list-item class="!px-2">
           <div class="flex w-full">

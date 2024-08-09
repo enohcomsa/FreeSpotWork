@@ -9,7 +9,7 @@
 ></free-spot-dynamic-chip-list>
 
 <h2 class="pb-2 pt-4 text-xl font-bold md:pb-4 md:pt-8">Years</h2>
-@for (year of facultySig().yearList; track $index) {
+@for (year of facultySig().yearList; track year.name) {
   <mat-list>
     <div mat-subheader class="flex cursor-pointer items-center gap-2 text-lg font-bold">
       <span

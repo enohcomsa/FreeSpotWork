@@ -1,6 +1,6 @@
 <mat-chip-set class="pb-4">
-  @for (timetableItem of semiGroupSig().timetable; track $index; let last1 = $last) {
-    @for (timetableItemActivity of timetableItem.activities; track $index; let last2 = $last) {
+  @for (timetableItem of semiGroupSig().timetable; track timetableItem.weekDay; let last1 = $last) {
+    @for (timetableItemActivity of timetableItem.activities; track timetableItemActivity.startHour; let last2 = $last) {
       @if (timetableItemActivity) {
         <mat-chip removable="true">
           <div class="flex gap-2">
@@ -68,7 +68,7 @@
         <mat-label>Subject name</mat-label>
         <input type="text" matInput formControlName="subject" [matAutocomplete]="autoSubject" />
         <mat-autocomplete autoActiveFirstOption #autoSubject="matAutocomplete" [displayWith]="dysplaySubject">
-          @for (subject of subjectListSig(); track $index) {
+          @for (subject of subjectListSig(); track subject.name) {
             <mat-option [value]="subject">{{ subject.name }}</mat-option>
           }
         </mat-autocomplete>

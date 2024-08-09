@@ -1,9 +1,9 @@
 <div class="container">
   <div class="flex flex-wrap gap-4 lg:items-center lg:gap-0">
-    @for (timetableItem of userTimetableItemsSig(); track timetableItem) {
+    @for (timetableItem of userTimetableItemsSig(); track timetableItem.weekDay) {
       <free-spot-timetable-item class="grow" [timetableItemSig]="timetableItem"></free-spot-timetable-item>
     } @empty {
-      @for (timetableItem of emptyTimetable; track timetableItem) {
+      @for (timetableItem of emptyTimetable; track timetableItem.weekDay) {
         <free-spot-timetable-item class="grow" [timetableItemSig]="timetableItem"></free-spot-timetable-item>
       }
     }

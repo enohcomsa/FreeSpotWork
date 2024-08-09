@@ -1,5 +1,5 @@
 <mat-chip-set>
-  @for (timetableItemActivity of timetableItemSig().activities; track $index; let last = $last) {
+  @for (timetableItemActivity of timetableItemSig().activities; track timetableItemActivity.startHour; let last = $last) {
     @if (last) {
       <div class="relative flex">
         <mat-chip removable="true">
@@ -88,7 +88,7 @@
         <mat-label>Subject name</mat-label>
         <input type="text" matInput formControlName="subjectName" [matAutocomplete]="autoSubject" />
         <mat-autocomplete autoActiveFirstOption #autoSubject="matAutocomplete" [displayWith]="dysplaySubject">
-          @for (subject of subjectListSig(); track $index) {
+          @for (subject of subjectListSig(); track subject.name) {
             <mat-option [value]="subject">{{ subject.name }}</mat-option>
           }
         </mat-autocomplete>
