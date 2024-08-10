@@ -11,7 +11,7 @@ import {
   WritableSignal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AdminRoomService } from '@free-spot-service/room';
 import { BookedEvent, FreeSpotUser, SemiGroup, SubjectItem, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
 import { debounceTime } from 'rxjs';
@@ -26,6 +26,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { BookingService } from '@free-spot-service/booking';
 import { UserService } from '@free-spot-service/user';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { FormErrorMessage } from '@free-spot/util';
 
 @Component({
   selector: 'free-spot-admin-semigroup-timetable',
@@ -52,6 +53,7 @@ export class AdminSemisemiGroupTimetableComponent implements OnInit {
   private _adminRoomService: AdminRoomService = inject(AdminRoomService);
   private _userService: UserService = inject(UserService);
   private _bookingService: BookingService = inject(BookingService);
+  private _formErrorMessage: FormErrorMessage = inject(FormErrorMessage);
 
   userListSig: Signal<FreeSpotUser[]> = this._userService.userListSig;
   semiGroupSig = model.required<SemiGroup>();
@@ -97,6 +99,7 @@ export class AdminSemisemiGroupTimetableComponent implements OnInit {
       this.foundActivitiesSig.set(foundTimetableActivities);
     });
   }
+  displayError = (control: AbstractControl | null) => this._formErrorMessage.displayFormErrorMessage(control);
 
   dysplaySubject(subjectItem: SubjectItem): string {
     if (subjectItem !== undefined && subjectItem !== null && Object.keys(subjectItem).length) {

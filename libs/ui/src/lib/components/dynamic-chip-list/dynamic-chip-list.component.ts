@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, model, OnInit, Signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
@@ -13,6 +13,7 @@ import { WeekDay } from '@free-spot/enums';
 import { AppDateService } from '@free-spot-service/app-date';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ConfirmModalService } from '@free-spot-service/confirm-modal';
+import { FormErrorMessage } from '@free-spot/util';
 
 @Component({
   selector: 'free-spot-dynamic-chip-list',
@@ -39,6 +40,7 @@ export class DynamicChipListComponent<T> implements OnInit {
   private _activatedRoute: ActivatedRoute = inject(ActivatedRoute);
   private _appDateService: AppDateService = inject(AppDateService);
   private _confirmService: ConfirmModalService = inject(ConfirmModalService);
+  private _formErrorMessage: FormErrorMessage = inject(FormErrorMessage);
 
   itemListSig = model.required<T[]>();
   itemLabelSig = input.required<string>();
@@ -49,7 +51,7 @@ export class DynamicChipListComponent<T> implements OnInit {
   deletableItemListSig = input<T[]>();
 
   filteredOptionListSig: Signal<T[]> = computed(() => {
-    return this.optionListSig().filter(
+    return this.optionListSig()?.filter(
       (option: T) =>
         !this.itemListSig().some(
           (item: T) => item[this.itemKeyDysplay() as keyof T] === option[this.itemKeyDysplay() as keyof T],
@@ -78,6 +80,8 @@ export class DynamicChipListComponent<T> implements OnInit {
     }
   }
 
+  displayError = (control: AbstractControl | null) => this._formErrorMessage.displayFormErrorMessage(control);
+
   onAddItem(): void {
     this.addingItem = false;
     if (this.itemLabelSig() === 'group') {
@@ -101,7 +105,7 @@ export class DynamicChipListComponent<T> implements OnInit {
   }
 
   getDisplayName(item: T): string {
-    if (item !== undefined && item !== null) {
+    if (item !== undefined && item !== null && (typeof item === 'object' ? Object.keys(item).length : true)) {
       if (this.itemKeyDysplay2() !== undefined && this.itemKeyDysplay2() !== null) {
         return ((item[this.itemKeyDysplay() as keyof T] as string) + ' ' + item[this.itemKeyDysplay2() as keyof T]) as string;
       } else {

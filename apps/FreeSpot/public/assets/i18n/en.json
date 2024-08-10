@@ -1,4 +1,9 @@
 {
+  "FORM_ERROR": {
+    "FIELD_REQUIRED": "This field is required!",
+    "EMAIL": "Invalid email!",
+    "MIN_CHARACTERS": "Min {{charNumber}} characters required!"
+  },
   "NAV": {
     "DASHBOARD": "Dashboard",
     "SCHEDULE": "Schedule",

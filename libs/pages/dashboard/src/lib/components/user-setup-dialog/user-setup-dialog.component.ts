@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit, signal, 
 import { CommonModule } from '@angular/common';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
-import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { filter, Subscription } from 'rxjs';
@@ -12,6 +12,7 @@ import { UserService } from '@free-spot-service/user';
 import { Language, Theme } from '@free-spot/enums';
 
 import { BookingService } from '@free-spot-service/booking';
+import { FormErrorMessage } from '@free-spot/util';
 
 @Component({
   selector: 'free-spot-user-setup-dialog',
@@ -35,6 +36,7 @@ export class UserSetupDialogComponent implements OnInit, OnDestroy {
   private _userService: UserService = inject(UserService);
   private _adminFacultyService: AdminFacultyService = inject(AdminFacultyService);
   private _bookingService: BookingService = inject(BookingService);
+  private _formErrorMessage: FormErrorMessage = inject(FormErrorMessage);
 
   protected user: FreeSpotUser = inject(MAT_DIALOG_DATA);
 
@@ -80,6 +82,8 @@ export class UserSetupDialogComponent implements OnInit, OnDestroy {
       }),
     );
   }
+
+  displayError = (control: AbstractControl | null) => this._formErrorMessage.displayFormErrorMessage(control);
 
   ngOnDestroy(): void {
     this.subscriptionList.forEach((subsciption: Subscription) => subsciption.unsubscribe());

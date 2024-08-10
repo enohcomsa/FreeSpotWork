@@ -1,4 +1,9 @@
 {
+  "FORM_ERROR": {
+    "FIELD_REQUIRED": "Acest camp e obligatoriu!",
+    "EMAIL": "Email invalid!",
+    "MIN_CHARACTERS": "Minin {{charNumber}} caractere sunt necesare!"
+  },
   "NAV": {
     "DASHBOARD": "Dashboard",
     "SCHEDULE": "Orar",

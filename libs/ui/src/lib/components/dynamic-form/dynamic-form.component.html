@@ -12,6 +12,7 @@
             <mat-option [value]="event">{{ event | lowercase }}</mat-option>
           }
         </mat-select>
+        <mat-error>{{ displayError(searchForm.controls['eventBooking']) }}</mat-error>
       </mat-form-field>
       @if (event === EVENT.SPECIAL_EVENT) {
         <mat-form-field class="w-full">
@@ -21,6 +22,7 @@
               <mat-option [value]="event">{{ event }}</mat-option>
             }
           </mat-select>
+          <mat-error>{{ displayError(searchForm.controls['event']) }}</mat-error>
         </mat-form-field>
       } @else {
         <mat-form-field class="w-full">
@@ -30,6 +32,7 @@
               <mat-option [value]="subject">{{ subject.name }}</mat-option>
             }
           </mat-select>
+          <mat-error>{{ displayError(searchForm.controls['subject']) }}</mat-error>
         </mat-form-field>
       }
 

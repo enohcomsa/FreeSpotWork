@@ -12,7 +12,7 @@ import {
   WritableSignal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -27,6 +27,7 @@ import { AdminFacultyService } from '@free-spot-service/faculty';
 import { AppDateService } from '@free-spot-service/app-date';
 import { UserService } from '@free-spot-service/user';
 import { ConfirmModalService } from '@free-spot-service/confirm-modal';
+import { FormErrorMessage } from '@free-spot/util';
 
 @Component({
   selector: 'free-spot-admin-floor-detail',
@@ -54,6 +55,7 @@ export class AdminFloorDetailComponent implements OnInit {
   private _appDateService: AppDateService = inject(AppDateService);
   private _userService: UserService = inject(UserService);
   private _confirmService: ConfirmModalService = inject(ConfirmModalService);
+  private _formErrorMessage: FormErrorMessage = inject(FormErrorMessage);
 
   editRoom = viewChild.required<ElementRef>('editRoom');
   floorNameSig = input.required<string>();
@@ -88,6 +90,8 @@ export class AdminFloorDetailComponent implements OnInit {
     this.floorSig = this._adminFloorService.getFloorByName(this.floorNameSig());
     this.buildingSig = this._adminBuildingService.getBuildingByName(this.buildingNameSig());
   }
+
+  displayError = (control: AbstractControl | null) => this._formErrorMessage.displayFormErrorMessage(control);
 
   onAddingRoom(): void {
     this.addRoomFormGroup.reset();

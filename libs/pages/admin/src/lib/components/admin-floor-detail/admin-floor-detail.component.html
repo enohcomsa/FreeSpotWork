@@ -27,14 +27,17 @@
           <mat-label>New room</mat-label>
           <mat-hint>Enter room name</mat-hint>
           <input type="text" matInput formControlName="roomName" />
+          <mat-error>{{ displayError(addRoomFormGroup.controls['roomName']) }}</mat-error>
         </mat-form-field>
         <mat-form-field>
           <mat-label>Total spots</mat-label>
           <input type="number" matInput formControlName="totalSpotsNumber" />
+          <mat-error>{{ displayError(addRoomFormGroup.controls['totalSpotsNumber']) }}</mat-error>
         </mat-form-field>
         <mat-form-field>
           <mat-label>Unavailable spots</mat-label>
           <input type="number" matInput formControlName="unavailableSpots" />
+          <mat-error>{{ displayError(addRoomFormGroup.controls['unavailableSpots']) }}</mat-error>
         </mat-form-field>
         <button mat-flat-button type="submit" class="sm:mb-5" [disabled]="!addRoomFormGroup.valid">
           {{ editingRoom ? 'Edit room' : 'Add room' }}

@@ -30,6 +30,7 @@
               <mat-label>New Year</mat-label>
               <mat-hint>Enter faculty year name</mat-hint>
               <input type="text" matInput [formControl]="addYearFormControl" />
+              <mat-error>{{ displayError(addYearFormControl) }}</mat-error>
             </mat-form-field>
             <button mat-flat-button type="submit" class="sm:mb-5" [disabled]="!addYearFormControl.valid">
               {{ editingYear ? 'Edit Year' : 'Add Year' }}
@@ -73,11 +74,13 @@
           <mat-label>Building name</mat-label>
           <mat-hint>Enter building name</mat-hint>
           <input type="text" matInput formControlName="name" />
+          <mat-error>{{ displayError(addBuildingFormGroup.controls['name']) }}</mat-error>
         </mat-form-field>
         <mat-form-field>
           <mat-label>Building adress</mat-label>
           <mat-hint>Enter building address</mat-hint>
           <input type="text" matInput formControlName="adress" />
+          <mat-error>{{ displayError(addBuildingFormGroup.controls['adress']) }}</mat-error>
         </mat-form-field>
         <button mat-flat-button type="submit" class="sm:mb-5" [disabled]="!addBuildingFormGroup.valid">
           {{ editingBuilding ? 'Edit building' : 'Add building' }}
@@ -113,6 +116,7 @@
           <mat-label>New event</mat-label>
           <mat-hint>Enter event name</mat-hint>
           <input type="text" matInput [formControl]="addEventFormControl" />
+          <mat-error>{{ displayError(addEventFormControl) }}</mat-error>
         </mat-form-field>
         <button mat-flat-button type="submit" class="sm:mb-5">Add Event</button>
       </form>

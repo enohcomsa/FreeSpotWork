@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, input, model, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
@@ -13,6 +13,7 @@ import { Event, WeekParity } from '@free-spot/enums';
 import { AdminFacultyService } from '@free-spot-service/faculty';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ConfirmModalService } from '@free-spot-service/confirm-modal';
+import { FormErrorMessage } from '@free-spot/util';
 
 @Component({
   selector: 'free-spot-admin-room-timetable-item',
@@ -38,6 +39,7 @@ export class AdminRoomTimetableItemComponent implements OnInit {
   private _formBuilder: FormBuilder = inject(FormBuilder);
   private _adminFacultyService: AdminFacultyService = inject(AdminFacultyService);
   private _confirmService: ConfirmModalService = inject(ConfirmModalService);
+  private _formErrorMessage: FormErrorMessage = inject(FormErrorMessage);
 
   roomSig = input.required<Room>();
   timetableItemSig = model.required<TimeTableItem>();
@@ -58,6 +60,8 @@ export class AdminRoomTimetableItemComponent implements OnInit {
       weekParity: [WeekParity.BOTH, Validators.required],
     });
   }
+
+  displayError = (control: AbstractControl | null) => this._formErrorMessage.displayFormErrorMessage(control);
 
   dysplaySubject(subjectItem: SubjectItem): string {
     if (subjectItem !== undefined && subjectItem !== null && Object.keys(subjectItem).length) {

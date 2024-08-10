@@ -26,6 +26,7 @@
           <mat-label>New floor</mat-label>
           <mat-hint>Enter floor name</mat-hint>
           <input type="text" matInput [formControl]="addFloorFormControl" />
+          <mat-error>{{ displayError(addFloorFormControl) }}</mat-error>
         </mat-form-field>
         <button mat-flat-button type="submit" class="sm:mb-5" [disabled]="!addFloorFormControl.valid">
           {{ editingFloor ? 'Edit floor' : 'Add floor' }}

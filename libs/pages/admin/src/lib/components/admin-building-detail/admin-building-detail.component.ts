@@ -13,7 +13,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { Floor, Building } from '@free-spot/models';
 import { AdminFloorCardComponent } from '../admin-floor-card/admin-floor-card.component';
-import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -21,6 +21,7 @@ import { AddItemCardComponent } from '@free-spot/ui';
 import { AdminBuildingService } from '@free-spot-service/building';
 import { AdminFloorService } from '@free-spot-service/floor';
 import { ConfirmModalService } from '@free-spot-service/confirm-modal';
+import { FormErrorMessage } from '@free-spot/util';
 
 @Component({
   selector: 'free-spot-admin-building-detail',
@@ -44,6 +45,7 @@ export class AdminBuildingDetailComponent implements OnInit {
   private _adminFloorService: AdminFloorService = inject(AdminFloorService);
   private _adminBuildingService: AdminBuildingService = inject(AdminBuildingService);
   private _confirmService: ConfirmModalService = inject(ConfirmModalService);
+  private _formErrorMessage: FormErrorMessage = inject(FormErrorMessage);
 
   editFloor = viewChild<ElementRef>('editFloor');
   buildingNameSig = input.required<string>();
@@ -59,6 +61,8 @@ export class AdminBuildingDetailComponent implements OnInit {
     this._adminBuildingService.init();
     this.buildingSig = this._adminBuildingService.getBuildingByName(this.buildingNameSig());
   }
+
+  displayError = (control: AbstractControl | null) => this._formErrorMessage.displayFormErrorMessage(control);
 
   onAddingFloor(): void {
     this.addFloorFormControl.reset();

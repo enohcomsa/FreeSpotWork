@@ -60,6 +60,7 @@
             <mat-option [value]="weekDay">{{ weekDay }}</mat-option>
           }
         </mat-select>
+        <mat-error>{{ displayError(addTimetableActivityFormGroup.controls['weekDay']) }}</mat-error>
       </mat-form-field>
 
       <mat-form-field class="flex-auto">
@@ -70,6 +71,7 @@
             <mat-option [value]="subject">{{ subject.name }}</mat-option>
           }
         </mat-autocomplete>
+        <mat-error>{{ displayError(addTimetableActivityFormGroup.controls['subject']) }}</mat-error>
       </mat-form-field>
 
       <mat-form-field class="flex-auto">
@@ -82,6 +84,7 @@
             >
           }
         </mat-autocomplete>
+        <mat-error>{{ displayError(addTimetableActivityFormGroup.controls['timetableActivity']) }}</mat-error>
       </mat-form-field>
     </div>
 

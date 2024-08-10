@@ -13,7 +13,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { BookedEvent, FreeSpotUser, Group, SubjectItem, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
 import { Event, WeekDay } from '@free-spot/enums';
-import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
@@ -27,6 +27,7 @@ import { BookingService } from '@free-spot-service/booking';
 import { UserService } from '@free-spot-service/user';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ConfirmModalService } from '@free-spot-service/confirm-modal';
+import { FormErrorMessage } from '@free-spot/util';
 
 @Component({
   selector: 'free-spot-admin-group-timetable',
@@ -54,6 +55,7 @@ export class AdminGroupTimetableComponent implements OnInit {
   private _userService: UserService = inject(UserService);
   private _bookingService: BookingService = inject(BookingService);
   private _confirmService: ConfirmModalService = inject(ConfirmModalService);
+  private _formErrorMessage: FormErrorMessage = inject(FormErrorMessage);
 
   userListSig: Signal<FreeSpotUser[]> = this._userService.userListSig;
   groupSig = model.required<Group>();
@@ -99,6 +101,8 @@ export class AdminGroupTimetableComponent implements OnInit {
       this.foundActivitiesSig.set(foundTimetableActivities);
     });
   }
+
+  displayError = (control: AbstractControl | null) => this._formErrorMessage.displayFormErrorMessage(control);
 
   dysplaySubject(subjectItem: SubjectItem): string {
     if (subjectItem !== undefined && subjectItem !== null && Object.keys(subjectItem).length) {

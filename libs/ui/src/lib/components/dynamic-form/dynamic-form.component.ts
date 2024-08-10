@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -33,6 +33,7 @@ import { SUBJECT_LIST } from '@free-spot/constants';
 import { UserService } from '@free-spot-service/user';
 import { AdminRoomService } from '@free-spot-service/room';
 import { AppDateService } from '@free-spot-service/app-date';
+import { FormErrorMessage } from '@free-spot/util';
 
 @Component({
   selector: 'free-spot-dynamic-form',
@@ -56,6 +57,7 @@ export class DynamicFormComponent implements OnInit {
   private _userService: UserService = inject(UserService);
   private _adminRoomService: AdminRoomService = inject(AdminRoomService);
   private _appDateService: AppDateService = inject(AppDateService);
+  private _formErrorMessage: FormErrorMessage = inject(FormErrorMessage);
 
   appDateSig: Signal<FreeSpotDate> = this._appDateService.appDateSig;
   weekParitySig: Signal<WeekParity> = computed(() => {
@@ -99,6 +101,8 @@ export class DynamicFormComponent implements OnInit {
 
     this.searchForm.valueChanges.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(() => this.searchActiveSig.set(false));
   }
+
+  displayError = (control: AbstractControl | null) => this._formErrorMessage.displayFormErrorMessage(control);
 
   get event(): Event {
     return this.searchForm.get('eventBooking')?.value as Event;

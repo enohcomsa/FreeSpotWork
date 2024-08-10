@@ -104,6 +104,7 @@
           <mat-option disabled checked>No item found</mat-option>
         }
       </mat-autocomplete>
+      <mat-error>{{ displayError(addItemFormControl) }}</mat-error>
     </mat-form-field>
     <button mat-flat-button type="submit" class="sm:mb-5" [disabled]="!addItemFormControl.valid">Add {{ itemLabelSig() }}</button>
   </form>

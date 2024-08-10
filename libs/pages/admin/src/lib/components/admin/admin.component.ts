@@ -17,7 +17,7 @@ import { Building, Faculty, Floor, FreeSpotUser, Year } from '@free-spot/models'
 import { AddItemCardComponent, DynamicChipListComponent } from '@free-spot/ui';
 import { AdminBuildingCardComponent } from '../admin-building-card/admin-building-card.component';
 import { AdminEventCardComponent } from '../admin-event-card/admin-event-card.component';
-import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -27,6 +27,7 @@ import { AdminFacultyService } from '@free-spot-service/faculty';
 import { UserService } from '@free-spot-service/user';
 import { Role } from '@free-spot/enums';
 import { ConfirmModalService } from '@free-spot-service/confirm-modal';
+import { FormErrorMessage } from '@free-spot/util';
 
 @Component({
   selector: 'free-spot-admin',
@@ -55,6 +56,7 @@ export class AdminComponent implements OnInit {
   private _adminBuildingService: AdminBuildingService = inject(AdminBuildingService);
   private _userService: UserService = inject(UserService);
   private _confirmService: ConfirmModalService = inject(ConfirmModalService);
+  private _formErrorMessage: FormErrorMessage = inject(FormErrorMessage);
 
   editBuilding = viewChild<ElementRef>('editBuilding');
   editEvent = viewChild<ElementRef>('editEvent');
@@ -103,6 +105,8 @@ export class AdminComponent implements OnInit {
     this._userService.init();
     // this.facultyList.forEach((fac) => this._adminFacultyService.addFaculty(fac));
   }
+
+  displayError = (control: AbstractControl | null) => this._formErrorMessage.displayFormErrorMessage(control);
 
   updateAdminList(updatedAdminList: FreeSpotUser[]): void {
     if (this.adminUserListSig().length < updatedAdminList.length) {

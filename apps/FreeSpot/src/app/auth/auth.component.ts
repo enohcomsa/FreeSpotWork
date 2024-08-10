@@ -4,12 +4,21 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { FormBuilder, FormGroup, FormGroupDirective, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  FormGroupDirective,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { AuthResponse, AuthService } from '@free-spot-service/auth';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
+import { FormErrorMessage } from '@free-spot/util';
 
 @Component({
   selector: 'free-spot-app-auth',
@@ -33,6 +42,7 @@ export class AuthComponent {
   private _authService: AuthService = inject(AuthService);
   private _router: Router = inject(Router);
   private _toastrService: ToastrService = inject(ToastrService);
+  private _formErrorMessage: FormErrorMessage = inject(FormErrorMessage);
 
   isLoginMode = true;
 
@@ -42,6 +52,8 @@ export class AuthComponent {
     email: ['', [Validators.required, Validators.minLength(6), Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
   });
+
+  displayError = (control: AbstractControl | null) => this._formErrorMessage.displayFormErrorMessage(control);
 
   onSwitchMode(): void {
     this.isLoginMode = !this.isLoginMode;

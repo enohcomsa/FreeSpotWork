@@ -82,6 +82,7 @@
             <mat-option [value]="startHour">{{ startHour }}</mat-option>
           }
         </mat-select>
+        <mat-error>{{ displayError(addTimetableActivityFormGroup.controls['startHour']) }}</mat-error>
       </mat-form-field>
 
       <mat-form-field class="flex-auto">
@@ -92,6 +93,7 @@
             <mat-option [value]="subject">{{ subject.name }}</mat-option>
           }
         </mat-autocomplete>
+        <mat-error>{{ displayError(addTimetableActivityFormGroup.controls['subjectName']) }}</mat-error>
       </mat-form-field>
 
       <mat-form-field class="flex-auto">
@@ -102,6 +104,7 @@
             <mat-option [value]="event">{{ event }}</mat-option>
           }
         </mat-autocomplete>
+        <mat-error>{{ displayError(addTimetableActivityFormGroup.controls['activityType']) }}</mat-error>
       </mat-form-field>
     </div>
 
@@ -114,6 +117,7 @@
             <mat-option [value]="weekParity">{{ weekParity }}</mat-option>
           }
         </mat-autocomplete>
+        <mat-error>{{ displayError(addTimetableActivityFormGroup.controls['weekParity']) }}</mat-error>
       </mat-form-field>
       <button mat-flat-button type="submit" class="flex-auto sm:mb-5" [disabled]="!addTimetableActivityFormGroup.valid">
         Add timetable item

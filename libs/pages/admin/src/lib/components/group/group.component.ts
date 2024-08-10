@@ -5,7 +5,7 @@ import { MatSlideToggle, MatSlideToggleModule } from '@angular/material/slide-to
 import { DynamicChipListComponent, TimetableItemComponent } from '@free-spot/ui';
 import { Faculty, FreeSpotUser, Group, SemiGroup, TimetableActivityItem, TimeTableItem, Year } from '@free-spot/models';
 import { AdminFacultyService } from '@free-spot-service/faculty';
-import { FormBuilder, FormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { AdminBuildingService } from '@free-spot-service/building';
 import { AdminGroupTimetableComponent } from '../admin-group-timetable/admin-group-timetable.component';
 import { AdminRoomService } from '@free-spot-service/room';
@@ -37,7 +37,6 @@ import { delay, of } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GroupComponent implements OnInit {
-  private _formBuilder: FormBuilder = inject(FormBuilder);
   private _adminRoomService: AdminRoomService = inject(AdminRoomService);
   private _adminFacultyService: AdminFacultyService = inject(AdminFacultyService);
   private _adminBuildingService: AdminBuildingService = inject(AdminBuildingService);
@@ -59,7 +58,6 @@ export class GroupComponent implements OnInit {
   semigroupsEnabledSig = computed(() => !!this.groupSig().semigroups);
   addingYear = false;
   editingYear = false;
-  addGroupFormControl = this._formBuilder.nonNullable.control('');
 
   emptyTimetable: Signal<TimeTableItem[]> = computed(() => [
     { weekDay: WeekDay.MONDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.MONDAY) },

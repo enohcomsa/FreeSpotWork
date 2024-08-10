@@ -8,6 +8,7 @@
           <mat-option [value]="faculty">{{ faculty.name }}</mat-option>
         }
       </mat-select>
+      <mat-error>{{ displayError(setupForm.controls['faculty']) }}</mat-error>
     </mat-form-field>
 
     <mat-form-field>
@@ -17,6 +18,7 @@
           <mat-option [value]="year">{{ year.name }}</mat-option>
         }
       </mat-select>
+      <mat-error>{{ displayError(setupForm.controls['currentYear']) }}</mat-error>
     </mat-form-field>
 
     <mat-form-field>
@@ -26,6 +28,7 @@
           <mat-option [value]="group">{{ group.name }}</mat-option>
         }
       </mat-select>
+      <mat-error>{{ displayError(setupForm.controls['group']) }}</mat-error>
     </mat-form-field>
 
     @if (foundSemigroupListSig().length) {
@@ -36,10 +39,12 @@
             <mat-option [value]="semigroup">{{ semigroup.name }}</mat-option>
           }
         </mat-select>
+        <mat-error>{{ displayError(setupForm.controls['semigroup']) }}</mat-error>
       </mat-form-field>
     } @else {
       <mat-form-field class="opacity-0">
         <mat-select formControlName="semigroup"></mat-select>
+        <mat-error>{{ displayError(setupForm.controls['semigroup']) }}</mat-error>
       </mat-form-field>
     }
     <button mat-flat-button type="submit" form="setup-form" [disabled]="!setupForm.valid">Update Account</button>
