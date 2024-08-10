@@ -4,6 +4,7 @@ import {
   computed,
   ElementRef,
   inject,
+  OnDestroy,
   OnInit,
   Signal,
   signal,
@@ -13,7 +14,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { FacultyComponent } from '../faculty/faculty.component';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { Building, Faculty, Floor, FreeSpotUser, Year } from '@free-spot/models';
+import { Building, Faculty, Floor, FreeSpotUser, Room, Year } from '@free-spot/models';
 import { AddItemCardComponent, DynamicChipListComponent } from '@free-spot/ui';
 import { AdminBuildingCardComponent } from '../admin-building-card/admin-building-card.component';
 import { AdminEventCardComponent } from '../admin-event-card/admin-event-card.component';
@@ -28,10 +29,17 @@ import { UserService } from '@free-spot-service/user';
 import { Role } from '@free-spot/enums';
 import { ConfirmModalService } from '@free-spot-service/confirm-modal';
 import { FormErrorMessage } from '@free-spot/util';
+import { AdminEventService } from '@free-spot-service/event';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { provideNativeDateAdapter } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import { filter, Subscription } from 'rxjs';
+import { AdminRoomService } from '@free-spot-service/room';
 
 @Component({
   selector: 'free-spot-admin',
   standalone: true,
+  providers: [provideNativeDateAdapter()],
   imports: [
     CommonModule,
     FormsModule,
@@ -45,26 +53,33 @@ import { FormErrorMessage } from '@free-spot/util';
     AdminBuildingCardComponent,
     AdminEventCardComponent,
     AddItemCardComponent,
+    MatDatepickerModule,
+    MatSelectModule,
   ],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.sass',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AdminComponent implements OnInit {
+export class AdminComponent implements OnInit, OnDestroy {
   private _formBuilder: FormBuilder = inject(FormBuilder);
   private _adminFacultyService: AdminFacultyService = inject(AdminFacultyService);
   private _adminBuildingService: AdminBuildingService = inject(AdminBuildingService);
   private _userService: UserService = inject(UserService);
   private _confirmService: ConfirmModalService = inject(ConfirmModalService);
   private _formErrorMessage: FormErrorMessage = inject(FormErrorMessage);
+  private _adminEventService: AdminEventService = inject(AdminEventService);
+  private _adminRoomService: AdminRoomService = inject(AdminRoomService);
 
   editBuilding = viewChild<ElementRef>('editBuilding');
   editEvent = viewChild<ElementRef>('editEvent');
   facultyListSig: Signal<Faculty[]> = this._adminFacultyService.facultyListSig;
   buildingListSig: Signal<Building[]> = this._adminBuildingService.buildingListSig;
+  eventListSig: Signal<Building[]> = this._adminEventService.eventListSig;
   userListSig: Signal<FreeSpotUser[]> = this._userService.userListSig;
   oldYearSig: WritableSignal<Year> = signal({} as Year);
   oldbuildingSig: WritableSignal<Building> = signal({} as Building);
+  oldEventSig: WritableSignal<Building> = signal({} as Building);
+  subscriptionList: Subscription[] = [];
 
   addingYear = false;
   editingYear = false;
@@ -77,33 +92,43 @@ export class AdminComponent implements OnInit {
   });
 
   addingEvent = false;
-  addEventFormControl = this._formBuilder.control('');
+  editingEvent = false;
+  startHourList: number[] = [8, 10, 12, 14, 16, 18];
+  foundRoomListSig: WritableSignal<Room[]> = signal([]);
+  addEventFormGroup = this._formBuilder.nonNullable.group({
+    name: ['', [Validators.required, Validators.minLength(3)]],
+    date: [new Date(), [Validators.required]],
+    startHour: [this.startHourList[0], [Validators.required]],
+    building: [this.buildingListSig()[0], [Validators.required]],
+    room: [{} as Room, [Validators.required]],
+    unavailable: [0, [Validators.required]],
+  });
 
   adminUserListSig: Signal<FreeSpotUser[]> = computed(
     () => this.userListSig().filter((user: FreeSpotUser) => user.role === Role.ADMIN) || [],
   );
 
-  floorExp2: Floor = {
-    name: '328',
-    buildingName: 'Laboratoare Observator',
-    roomList: [],
-    totalSpotsNumber: 90,
-    unavailableSpots: 10,
-  };
-  eventData: Building = {
-    name: 'Simpozion',
-    adress: 'Observatorului, 400347',
-    floorList: [this.floorExp2],
-    specialEvent: true,
-    building: 'Laboratoare Observator',
-    date: new Date('2024-08-14,16:30'),
-  };
-
   ngOnInit(): void {
     this._adminBuildingService.init();
     this._adminFacultyService.init();
     this._userService.init();
+    this._adminEventService.init();
+    this._adminRoomService.init();
     // this.facultyList.forEach((fac) => this._adminFacultyService.addFaculty(fac));
+    this.subscriptionList.push(
+      this.addEventFormGroup.controls['building'].valueChanges
+        .pipe(filter((building) => !!building))
+        .subscribe((building: Building) => {
+          this.foundRoomListSig.set(this._getBuildingRoomList(building));
+          if (!this.editingEvent) {
+            this.addEventFormGroup.controls['room'].reset();
+          }
+        }),
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptionList.forEach((subsciption: Subscription) => subsciption.unsubscribe());
   }
 
   displayError = (control: AbstractControl | null) => this._formErrorMessage.displayFormErrorMessage(control);
@@ -228,15 +253,96 @@ export class AdminComponent implements OnInit {
           this._adminBuildingService.deleteBuilding(deletedBuilding);
         }
       });
+    this.addingBuilding = false;
+    this.editingBuilding = false;
   }
 
-  ///////////////////////////EVENT
+  onAddingEvent(): void {
+    this.addEventFormGroup.reset();
+    this.addingEvent = true;
+    this.editingEvent = false;
+    this.editEvent()?.nativeElement.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  }
+
   onAddEvent(): void {
+    const eventDate: Date = this.addEventFormGroup.controls['date'].value;
+    eventDate.setHours(this.addEventFormGroup.controls['startHour'].value, 0, 0, 0);
+    const newEvent: Building = {
+      name: this.addEventFormGroup.controls['name'].value,
+      adress: this.addEventFormGroup.controls['building'].value.adress,
+      floorList: [],
+      specialEvent: true,
+      building: this.addEventFormGroup.controls['building'].value.name,
+      date: eventDate,
+      roomName: this.addEventFormGroup.controls['room'].value.name,
+      freeSpots:
+        this.addEventFormGroup.controls['room'].value.totalSpotsNumber -
+        this.addEventFormGroup.controls['room'].value.unavailableSpots -
+        this.addEventFormGroup.controls['unavailable'].value,
+      reservedSpots: this.addEventFormGroup.controls['unavailable'].value,
+      busySpots: 0,
+      startHour: this.addEventFormGroup.controls['startHour'].value,
+    };
+
+    this._adminEventService.addEvent(newEvent);
+    this.editingEvent = false;
     this.addingEvent = false;
   }
 
-  onEditEvent(): void {
+  onEditingEvent(eventToEdit: Building): void {
+    this.editingEvent = true;
+    this.oldEventSig.set(eventToEdit);
+    this.addEventFormGroup.setValue({
+      name: eventToEdit.name,
+      date: new Date(eventToEdit.date as Date),
+      startHour: eventToEdit.startHour as number,
+      building: this._adminBuildingService.getBuildingByName(eventToEdit.building as string)(),
+      room: this._adminRoomService.getRoomByName(eventToEdit.roomName as string)() as Room,
+      unavailable: eventToEdit.reservedSpots as number,
+    });
+    this.addEventFormGroup.controls['room'].setValue(
+      this.foundRoomListSig().filter((room: Room) => room.name === eventToEdit.roomName)[0] as Room,
+    );
     this.editEvent()?.nativeElement.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  }
+
+  onEditEvent(): void {
+    const eventDate: Date = this.addEventFormGroup.controls['date'].value;
+    eventDate.setHours(this.addEventFormGroup.controls['startHour'].value, 0, 0, 0);
+    const updatedEvent: Building = {
+      name: this.addEventFormGroup.controls['name'].value,
+      adress: this.addEventFormGroup.controls['building'].value.adress,
+      floorList: [],
+      specialEvent: true,
+      building: this.addEventFormGroup.controls['building'].value.name,
+      date: eventDate,
+      roomName: this.addEventFormGroup.controls['room'].value.name,
+      freeSpots:
+        this.addEventFormGroup.controls['room'].value.totalSpotsNumber -
+        this.addEventFormGroup.controls['room'].value.unavailableSpots -
+        this.addEventFormGroup.controls['unavailable'].value,
+      reservedSpots: this.addEventFormGroup.controls['unavailable'].value,
+      busySpots: 0,
+      startHour: this.addEventFormGroup.controls['startHour'].value,
+    };
+
+    this._adminEventService.updateEvent(this.oldEventSig(), updatedEvent);
+    this.editingEvent = false;
+    this.addingEvent = false;
+  }
+
+  onDeleteEvent(deletedEvent: Building): void {
+    this._confirmService
+      .openConfirmDialog('Are you sure you want to delete this event?')
+      .afterClosed()
+      .subscribe((result: boolean) => {
+        if (result) {
+          this._adminEventService.deleteEvent(deletedEvent);
+        }
+      });
+
+    this.editingEvent = false;
+    this.addingEvent = false;
   }
 
   private _createBuilding(buildingName: string, buildingAdress: string): Building {
@@ -246,5 +352,15 @@ export class AdminComponent implements OnInit {
       floorList: [],
       specialEvent: false,
     };
+  }
+
+  private _getBuildingRoomList(building: Building): Room[] {
+    const roomList: Room[] = [];
+    building.floorList?.forEach((floor: Floor) => {
+      floor.roomList?.forEach((room: Room) => {
+        roomList.push(room);
+      });
+    });
+    return roomList;
   }
 }

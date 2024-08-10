@@ -41,10 +41,10 @@
   <mat-divider></mat-divider>
   <mat-card-actions class="justify-between gap-4 !p-4 lg:!p-8">
     <button mat-flat-button class="grow" (click)="addingBuildingSig.set(true); editBuilding.emit(adminBuildingSig())">
-      <mat-icon class="@2xs:!mr-2 @2xs:!-ml-2 !m-0">edit</mat-icon> <span class="@2xs:inline-block hidden">Edit</span>
+      <mat-icon class="@3xs:!mr-2 @3xs:!-ml-2 !m-0">edit</mat-icon> <span class="@3xs:inline-block hidden">Edit</span>
     </button>
     <button mat-flat-button class="grow" (click)="onOpenClick()">
-      <mat-icon class="@2xs:!mr-2 @2xs:!-ml-2 !m-0">open_in_browser</mat-icon><span class="@2xs:inline-block hidden">Open</span>
+      <mat-icon class="@3xs:!mr-2 @3xs:!-ml-2 !m-0">open_in_browser</mat-icon><span class="@3xs:inline-block hidden">Open</span>
     </button>
     <div
       class="grow"
@@ -60,7 +60,7 @@
         (click)="deleteBuilding.emit(adminBuildingSig())"
         [disabled]="adminBuildingSig().floorList ? adminBuildingSig().floorList.length > 0 : false"
       >
-        <mat-icon class="@2xs:!mr-2 @2xs:!-ml-2 !m-0">delete</mat-icon><span class="@2xs:inline-block hidden">Delete</span>
+        <mat-icon class="@3xs:!mr-2 @3xs:!-ml-2 !m-0">delete</mat-icon><span class="@3xs:inline-block hidden">Delete</span>
       </button>
     </div>
   </mat-card-actions>

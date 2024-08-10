@@ -18,5 +18,6 @@ import { Building } from '@free-spot/models';
 export class AdminEventCardComponent {
   adminEventSig = input.required<Building>();
   addingEventSig = model.required<boolean>();
-  editBuilding = output<boolean>();
+  editEvent = output<Building>();
+  deleteEvent = output<Building>();
 }

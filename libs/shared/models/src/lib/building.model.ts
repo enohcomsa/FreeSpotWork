@@ -7,4 +7,9 @@ export interface Building {
   specialEvent: boolean;
   building?: string;
   date?: Date;
+  roomName?: string;
+  freeSpots?: number;
+  reservedSpots?: number;
+  busySpots?: number;
+  startHour?: number;
 }

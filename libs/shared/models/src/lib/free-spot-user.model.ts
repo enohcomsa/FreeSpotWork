@@ -13,4 +13,5 @@ export interface FreeSpotUser {
   preferdLanguage?: Language;
   preferedTheme?: Theme;
   bookingList: BookedEvent[];
+  eventList?: BookedEvent[];
 }
