@@ -19,7 +19,9 @@
     "@free-spot-service/app-date": "0.0.1",
     "@free-spot-service/user": "0.0.1",
     "@free-spot-service/booking": "0.0.1",
-    "@free-spot-service/confirm-modal": "0.0.1"
+    "@free-spot-service/confirm-modal": "0.0.1",
+    "@free-spot/util": "0.0.1",
+    "@free-spot-service/event": "0.0.1"
   },
   "sideEffects": false
 }
