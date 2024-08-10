@@ -26,6 +26,7 @@ import { AppDateService } from '@free-spot-service/app-date';
 import { AdminFloorService } from '@free-spot-service/floor';
 import { AdminRoomService } from '@free-spot-service/room';
 import { BookingService } from '@free-spot-service/booking';
+import { AdminEventService } from '@free-spot-service/event';
 
 @Component({
   selector: 'free-spot-dashboard',
@@ -44,6 +45,7 @@ export class DashboardComponent implements OnInit {
   private _userService: UserService = inject(UserService);
   private _appDateService: AppDateService = inject(AppDateService);
   private _bookingService: BookingService = inject(BookingService);
+  private _adminEventService: AdminEventService = inject(AdminEventService);
 
   roomListSig: Signal<Room[]> = this._adminRoomService.roomListSig;
   facultyListSig: Signal<Faculty[]> = this._adminFacultyService.facultyListSig;
@@ -51,6 +53,11 @@ export class DashboardComponent implements OnInit {
   dateChangedSig: WritableSignal<boolean> = this._appDateService.appDateChanged;
   appDateSig: Signal<FreeSpotDate> = this._appDateService.appDateSig;
   buildingListSig: Signal<Building[]> = this._adminBuildingService.buildingListSig;
+  eventListSig: Signal<Building[]> = computed(() =>
+    this._adminEventService
+      .eventListSig()
+      .sort((event1, event2) => new Date(event1.date as Date).getTime() - new Date(event2.date as Date).getTime()),
+  );
   currentUserGroupSig: Signal<Group> = computed(() =>
     this._adminFacultyService.getGroupByName(this.currentUserSig().group as string)(),
   );
@@ -148,6 +155,7 @@ export class DashboardComponent implements OnInit {
     this._adminFacultyService.init();
     this._appDateService.init();
     this._bookingService.init();
+    this._adminEventService.init();
   }
 
   private _updateFloorAndBuilding(updatedRoom: Room): void {

@@ -54,25 +54,27 @@
 <ng-template #specialEvent>
   <mat-card-header class="!block">
     <mat-card-title class="!flex items-center justify-between">
-      <p>{{ eventData.name }}</p>
-      <p class="text-sm tracking-tight">{{ eventData.date | date: 'MMM dd, yyyy HH:mm' }}</p>
+      <p>{{ buildingSig().name }}</p>
+      <p class="text-sm tracking-tight">{{ buildingSig().date | date: 'MMM dd, yyyy HH:mm' }}</p>
     </mat-card-title>
     <mat-card-subtitle class="!flex flex-col !text-xs sm:flex-row sm:items-end sm:!text-sm">
       <div class="flex items-end gap-1 !text-sm">
         <mat-icon class="-ml-2 -mr-1 scale-50">location_on</mat-icon>
-        <p>{{ eventData.building }}<span class="hidden sm:mx-1 sm:inline">|</span></p>
+        <p>{{ buildingSig().building }}<span class="hidden sm:mx-1 sm:inline">|</span></p>
       </div>
-      <p>{{ eventData.adress }}</p>
+      <p>{{ buildingSig().adress }}</p>
     </mat-card-subtitle>
   </mat-card-header>
+
   <mat-card-content>
     <mat-list class="!pb-0">
       <mat-list-item class="!p-0">
         <div class="flex justify-between text-xs tracking-tighter">
           <p class="min-w-24">Room</p>
-          <div class="flex gap-4 [&>p]:w-14">
-            <p>Total</p>
-            <p>Unavabile</p>
+          <div class="flex gap-4 [&>p]:w-14 [&>p]:text-center">
+            <p>Free desk</p>
+            <p>Booked</p>
+            <p>Reserved</p>
           </div>
         </div>
       </mat-list-item>
@@ -80,10 +82,11 @@
 
       <mat-list-item class="!cursor-pointer !p-0">
         <div class="flex justify-between text-xs tracking-tighter">
-          <p class="min-w-24 truncate">{{ eventData.floorList[0].name }}</p>
+          <p class="min-w-24 truncate">{{ buildingSig().roomName }}</p>
           <div class="flex gap-4 [&>p]:w-14 [&>p]:text-center">
-            <p>{{ eventData.floorList[0].totalSpotsNumber }}</p>
-            <p>{{ eventData.floorList[0].unavailableSpots }}</p>
+            <p>{{ buildingSig().freeSpots }}</p>
+            <p>{{ buildingSig().busySpots }}</p>
+            <p>{{ buildingSig().reservedSpots }}</p>
           </div>
         </div>
       </mat-list-item>

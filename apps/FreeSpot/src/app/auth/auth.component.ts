@@ -108,6 +108,8 @@ export class AuthComponent {
       }
 
       this._toastrService.error(errorMessage, '', {
+        closeButton: true,
+        progressBar: true,
         timeOut: 5000,
         onActivateTick: true,
         positionClass: 'toast-bottom-center',

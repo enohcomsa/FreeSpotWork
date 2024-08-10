@@ -23,6 +23,23 @@ export class AdminEventService {
     }
   }
 
+  updateEventSpots(eventName: string, addingBooking: boolean): void {
+    const newEventList: Building[] = this._eventListSig().map((event: Building) => {
+      if (event.name === eventName) {
+        return {
+          ...event,
+          freeSpots: addingBooking ? (event.freeSpots as number) - 1 : (event.freeSpots as number) + 1,
+          busySpots: addingBooking ? (event.busySpots as number) + 1 : (event.busySpots as number) - 1,
+        };
+      } else {
+        return event;
+      }
+    });
+
+    this._eventListSig.set(newEventList);
+    this._httpEventService.storeEventList(this._eventListSig());
+  }
+
   getEventByName(eventName: string): Signal<Building> {
     return computed(() => this.eventListSig().find((event: Building) => event.name === eventName) || ({} as Building));
   }

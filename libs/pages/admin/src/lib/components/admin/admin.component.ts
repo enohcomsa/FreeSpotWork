@@ -14,7 +14,17 @@ import {
 import { CommonModule } from '@angular/common';
 import { FacultyComponent } from '../faculty/faculty.component';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { Building, Faculty, Floor, FreeSpotUser, Room, Year } from '@free-spot/models';
+import {
+  BookedEvent,
+  Building,
+  Faculty,
+  Floor,
+  FreeSpotUser,
+  Room,
+  SubjectItem,
+  TimetableActivityItem,
+  Year,
+} from '@free-spot/models';
 import { AddItemCardComponent, DynamicChipListComponent } from '@free-spot/ui';
 import { AdminBuildingCardComponent } from '../admin-building-card/admin-building-card.component';
 import { AdminEventCardComponent } from '../admin-event-card/admin-event-card.component';
@@ -26,7 +36,7 @@ import { AdminBuildingService } from '@free-spot-service/building';
 // import { FACULTY_LIST } from '@free-spot/constants';
 import { AdminFacultyService } from '@free-spot-service/faculty';
 import { UserService } from '@free-spot-service/user';
-import { Role } from '@free-spot/enums';
+import { Event, Role, WeekParity } from '@free-spot/enums';
 import { ConfirmModalService } from '@free-spot-service/confirm-modal';
 import { FormErrorMessage } from '@free-spot/util';
 import { AdminEventService } from '@free-spot-service/event';
@@ -35,6 +45,7 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { filter, Subscription } from 'rxjs';
 import { AdminRoomService } from '@free-spot-service/room';
+import { BookingService } from '@free-spot-service/booking';
 
 @Component({
   selector: 'free-spot-admin',
@@ -69,6 +80,7 @@ export class AdminComponent implements OnInit, OnDestroy {
   private _formErrorMessage: FormErrorMessage = inject(FormErrorMessage);
   private _adminEventService: AdminEventService = inject(AdminEventService);
   private _adminRoomService: AdminRoomService = inject(AdminRoomService);
+  private _bookingService: BookingService = inject(BookingService);
 
   editBuilding = viewChild<ElementRef>('editBuilding');
   editEvent = viewChild<ElementRef>('editEvent');
@@ -114,6 +126,7 @@ export class AdminComponent implements OnInit, OnDestroy {
     this._userService.init();
     this._adminEventService.init();
     this._adminRoomService.init();
+    this._bookingService.init();
     // this.facultyList.forEach((fac) => this._adminFacultyService.addFaculty(fac));
     this.subscriptionList.push(
       this.addEventFormGroup.controls['building'].valueChanges
@@ -320,11 +333,35 @@ export class AdminComponent implements OnInit, OnDestroy {
       freeSpots:
         this.addEventFormGroup.controls['room'].value.totalSpotsNumber -
         this.addEventFormGroup.controls['room'].value.unavailableSpots -
-        this.addEventFormGroup.controls['unavailable'].value,
+        this.addEventFormGroup.controls['unavailable'].value -
+        (this.oldEventSig().busySpots as number),
       reservedSpots: this.addEventFormGroup.controls['unavailable'].value,
-      busySpots: 0,
+      busySpots: this.oldEventSig().busySpots,
       startHour: this.addEventFormGroup.controls['startHour'].value,
     };
+
+    const timetableActivityFound: TimetableActivityItem = {
+      startHour: updatedEvent.startHour as number,
+      endHour: (updatedEvent.startHour as number) + 2,
+      subjectItem: {} as SubjectItem,
+      roomName: updatedEvent.roomName as string,
+      activityType: Event.SPECIAL_EVENT,
+      weekParity: WeekParity.BOTH,
+      freeSpots: updatedEvent.freeSpots as number,
+      busySpots: updatedEvent.busySpots as number,
+      date: updatedEvent.date as Date,
+      name: updatedEvent.name,
+    };
+
+    const eventBooking: BookedEvent = this._bookingService.generateBooking(timetableActivityFound);
+
+    this.userListSig().forEach((user: FreeSpotUser) => {
+      const newUserEventList: FreeSpotUser = {
+        ...user,
+        eventList: user.eventList?.map((event: BookedEvent) => (event.name === eventBooking.name ? eventBooking : event)),
+      };
+      this._userService.updateFreeSpotUser(user, newUserEventList);
+    });
 
     this._adminEventService.updateEvent(this.oldEventSig(), updatedEvent);
     this.editingEvent = false;
@@ -337,6 +374,14 @@ export class AdminComponent implements OnInit, OnDestroy {
       .afterClosed()
       .subscribe((result: boolean) => {
         if (result) {
+          this.userListSig().forEach((user: FreeSpotUser) => {
+            const newUserEventList: FreeSpotUser = {
+              ...user,
+              eventList: user.eventList?.filter((event: BookedEvent) => event.name !== deletedEvent.name),
+            };
+            this._userService.updateFreeSpotUser(user, newUserEventList);
+          });
+
           this._adminEventService.deleteEvent(deletedEvent);
         }
       });

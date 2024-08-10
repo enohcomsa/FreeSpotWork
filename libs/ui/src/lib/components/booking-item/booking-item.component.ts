@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { BookedEvent, FreeSpotUser, TimetableActivityItem } from '@free-spot/models';
-import { Event, WeekParity } from '@free-spot/enums';
+import { Event } from '@free-spot/enums';
 import { BookingService } from '@free-spot-service/booking';
 import { UserService } from '@free-spot-service/user';
 import { ConfirmModalService } from '@free-spot-service/confirm-modal';
 import { MatDividerModule } from '@angular/material/divider';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'free-spot-booking-item',
@@ -21,6 +22,7 @@ export class BookingItemComponent implements OnInit {
   private _bookingService: BookingService = inject(BookingService);
   private _userService: UserService = inject(UserService);
   private _confirmService: ConfirmModalService = inject(ConfirmModalService);
+  private _toastrService: ToastrService = inject(ToastrService);
 
   timetableActivitySig: InputSignal<TimetableActivityItem> = input.required<TimetableActivityItem>();
   oldTimetableActivitySig: InputSignal<TimetableActivityItem> = input.required<TimetableActivityItem>();
@@ -37,35 +39,8 @@ export class BookingItemComponent implements OnInit {
   ).email;
 
   currentUserSig: Signal<FreeSpotUser> = this._userService.getFreeSpotUserByEmail(this._currentUserEmail);
-  event_learn: BookedEvent = {
-    weekParity: WeekParity.BOTH,
 
-    activityType: Event.LABORATORY,
-    subjectItem: {
-      name: 'Sist. optoelectronice in telecomunicatii ',
-      shortName: 'SOT',
-    },
-    date: new Date('2024-7-15'),
-    startHour: 8,
-    endHour: 10,
-    buildingName: 'Laboratoare Observatorrrrrrrrrrrrrrrrr',
-    floorName: '5th',
-    roomName: '519',
-  };
-  event_special: BookedEvent = {
-    weekParity: WeekParity.BOTH,
-    activityType: Event.SPECIAL_EVENT,
-    subjectItem: {
-      name: 'Sist. optoelectronice in telecomunicatii ',
-      shortName: 'SOT',
-    },
-    date: new Date('2024-7-15'),
-    startHour: 14,
-    endHour: 16,
-    buildingName: 'Baritiu corp A',
-    floorName: '1st',
-    roomName: '329',
-  };
+  EVENT = Event;
 
   ngOnInit(): void {
     this._bookingService.init();
@@ -73,37 +48,70 @@ export class BookingItemComponent implements OnInit {
   }
 
   bookSpot(): void {
-    this._confirmService
-      .openConfirmDialog('Are you sure you wnat to book this spot? The old booking will be lost!')
-      .afterClosed()
-      .subscribe((result: boolean) => {
-        if (result) {
-          this._bookingService.generateUserBookedItemByActivity(this.oldTimetableActivitySig(), false, true);
-          this._bookingService.generateUserBookedItemByActivity(this.timetableActivitySig(), true, true);
+    if (this.eventBookingSig().activityType === Event.SPECIAL_EVENT) {
+      this._bookingService.generateSpecialEventBookedItemByActivity(this.timetableActivitySig(), true);
 
-          const oldBookedEvent: BookedEvent =
-            this.currentUserSig().bookingList.find(
-              (bookedEvent: BookedEvent) =>
-                bookedEvent.subjectItem.name === this.oldTimetableActivitySig().subjectItem.name &&
-                bookedEvent.activityType === this.oldTimetableActivitySig().activityType,
-            ) || ({} as BookedEvent);
+      const newUserBookingList: FreeSpotUser = {
+        ...this.currentUserSig(),
+        eventList: this.currentUserSig().eventList
+          ? [...(this.currentUserSig().eventList as BookedEvent[]), this.eventBookingSig()]
+          : [this.eventBookingSig()],
+      };
 
-          const newUserBookingList: FreeSpotUser = {
-            ...this.currentUserSig(),
-            bookingList: this.currentUserSig().bookingList
-              ? [
-                  ...this.currentUserSig().bookingList.filter(
-                    (bookedEvent: BookedEvent) => !this._checkBookedEventEquality(bookedEvent, oldBookedEvent),
-                  ),
-                  this.eventBookingSig(),
-                ]
-              : [this.eventBookingSig()],
-          };
-
-          this._userService.updateFreeSpotUser(this.currentUserSig(), newUserBookingList);
-          this.bookingActive.emit(false);
-        }
+      const successMessage = this.eventBookingSig().name + ' successfully booked!';
+      this._toastrService.success(successMessage, '', {
+        closeButton: true,
+        progressBar: true,
+        timeOut: 5000,
+        onActivateTick: true,
+        positionClass: 'toast-bottom-center',
       });
+
+      this._userService.updateFreeSpotUser(this.currentUserSig(), newUserBookingList);
+      this.bookingActive.emit(false);
+    } else {
+      this._confirmService
+        .openConfirmDialog('Are you sure you wnat to book this spot? The old booking will be lost!')
+        .afterClosed()
+        .subscribe((result: boolean) => {
+          if (result) {
+            this._bookingService.generateUserBookedItemByActivity(this.oldTimetableActivitySig(), false, true);
+            this._bookingService.generateUserBookedItemByActivity(this.timetableActivitySig(), true, true);
+
+            const oldBookedEvent: BookedEvent =
+              this.currentUserSig().bookingList.find(
+                (bookedEvent: BookedEvent) =>
+                  bookedEvent.subjectItem.name === this.oldTimetableActivitySig().subjectItem.name &&
+                  bookedEvent.activityType === this.oldTimetableActivitySig().activityType,
+              ) || ({} as BookedEvent);
+
+            const newUserBookingList: FreeSpotUser = {
+              ...this.currentUserSig(),
+              bookingList: this.currentUserSig().bookingList
+                ? [
+                    ...this.currentUserSig().bookingList.filter(
+                      (bookedEvent: BookedEvent) => !this._checkBookedEventEquality(bookedEvent, oldBookedEvent),
+                    ),
+                    this.eventBookingSig(),
+                  ]
+                : [this.eventBookingSig()],
+            };
+
+            const successMessage =
+              this.eventBookingSig().subjectItem.shortName + ' ' + this.eventBookingSig().activityType + ' successfully booked!';
+            this._toastrService.success(successMessage, '', {
+              closeButton: true,
+              progressBar: true,
+              timeOut: 5000,
+              onActivateTick: true,
+              positionClass: 'toast-bottom-center',
+            });
+
+            this._userService.updateFreeSpotUser(this.currentUserSig(), newUserBookingList);
+            this.bookingActive.emit(false);
+          }
+        });
+    }
   }
 
   private _checkBookedEventEquality(bookedEvent1: BookedEvent, bookedEvent2: BookedEvent): boolean {

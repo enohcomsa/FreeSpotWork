@@ -11,4 +11,5 @@ export interface BookedEvent {
   buildingName: string;
   floorName: string;
   roomName: string;
+  name?: string;
 }

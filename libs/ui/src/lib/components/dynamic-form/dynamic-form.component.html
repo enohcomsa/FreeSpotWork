@@ -18,8 +18,10 @@
         <mat-form-field class="w-full">
           <mat-label>Event name</mat-label>
           <mat-select formControlName="event">
-            @for (event of eventNames; track event) {
-              <mat-option [value]="event">{{ event }}</mat-option>
+            @for (event of filteredSpecialEventListSig(); track event.name) {
+              <mat-option [value]="event">{{ event.name }}</mat-option>
+            } @empty {
+              <mat-option disabled>No event found</mat-option>
             }
           </mat-select>
           <mat-error>{{ displayError(searchForm.controls['event']) }}</mat-error>

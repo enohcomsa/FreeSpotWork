@@ -1,8 +1,10 @@
 import { inject, Injectable } from '@angular/core';
 import { AdminBuildingService } from '@free-spot-service/building';
+import { AdminEventService } from '@free-spot-service/event';
 import { AdminFacultyService } from '@free-spot-service/faculty';
 import { AdminFloorService } from '@free-spot-service/floor';
 import { AdminRoomService } from '@free-spot-service/room';
+import { Event } from '@free-spot/enums';
 import { BookedEvent, Floor, Group, SemiGroup, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
 
 @Injectable({
@@ -13,24 +15,39 @@ export class BookingService {
   private _adminFloorService: AdminFloorService = inject(AdminFloorService);
   private _adminBuildingService: AdminBuildingService = inject(AdminBuildingService);
   private _adminFacultyService: AdminFacultyService = inject(AdminFacultyService);
+  private _adminEventService: AdminEventService = inject(AdminEventService);
 
   init(): void {
     this._adminRoomService.init();
     this._adminFloorService.init();
     this._adminBuildingService.init();
     this._adminFacultyService.init();
+    this._adminEventService.init();
   }
 
   generateBooking(timetableActivityItem: TimetableActivityItem): BookedEvent {
-    return {
-      ...this._getLocation(timetableActivityItem.roomName),
-      activityType: timetableActivityItem.activityType,
-      subjectItem: timetableActivityItem.subjectItem,
-      date: timetableActivityItem.date,
-      startHour: timetableActivityItem.startHour,
-      endHour: timetableActivityItem.endHour,
-      weekParity: timetableActivityItem.weekParity,
-    };
+    if (timetableActivityItem.activityType === Event.SPECIAL_EVENT) {
+      return {
+        ...this._getLocation(timetableActivityItem.roomName),
+        activityType: timetableActivityItem.activityType,
+        subjectItem: timetableActivityItem.subjectItem,
+        date: timetableActivityItem.date,
+        startHour: timetableActivityItem.startHour,
+        endHour: timetableActivityItem.endHour,
+        weekParity: timetableActivityItem.weekParity,
+        name: timetableActivityItem.name,
+      };
+    } else {
+      return {
+        ...this._getLocation(timetableActivityItem.roomName),
+        activityType: timetableActivityItem.activityType,
+        subjectItem: timetableActivityItem.subjectItem,
+        date: timetableActivityItem.date,
+        startHour: timetableActivityItem.startHour,
+        endHour: timetableActivityItem.endHour,
+        weekParity: timetableActivityItem.weekParity,
+      };
+    }
   }
 
   generateUserBookedItems(group: Group, addingBooking: boolean, semiGroup?: SemiGroup): BookedEvent[] {
@@ -59,6 +76,11 @@ export class BookingService {
     if (updateFaculty !== undefined && updateFaculty !== null && updateFaculty) {
       this._adminFacultyService.updateTimetableActivitySpots(timetableActivity, addingBooking);
     }
+    return this.generateBooking(timetableActivity);
+  }
+
+  generateSpecialEventBookedItemByActivity(timetableActivity: TimetableActivityItem, addingBooking: boolean): BookedEvent {
+    this._adminEventService.updateEventSpots(timetableActivity.name as string, addingBooking);
     return this.generateBooking(timetableActivity);
   }
 

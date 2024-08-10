@@ -5,7 +5,7 @@
         <mat-icon class="scale-125">event_available</mat-icon>
         <div class="flex-col">
           @if (eventSig().activityType === EVENT.SPECIAL_EVENT) {
-            <p class="-mt-2 grow text-lg font-bold">{{ eventSig().subjectItem.shortName }}</p>
+            <p class="-mt-2 grow text-lg font-bold">{{ eventSig().name }}</p>
           } @else {
             <p class="-mt-2 grow text-lg font-bold">
               {{ eventSig().activityType | lowercase }}<span class="mx-1">:</span>{{ eventSig().subjectItem.shortName }}
@@ -32,4 +32,11 @@
       <p>{{ eventSig().endHour }}</p>
     </div>
   </mat-card-content>
+  @if (eventSig().activityType === EVENT.SPECIAL_EVENT) {
+    <mat-card-actions>
+      <button mat-flat-button class="w-full grow" (click)="deleteEvent.emit(eventSig())">
+        <mat-icon class="!mr-2">delete</mat-icon><span>Delete</span>
+      </button>
+    </mat-card-actions>
+  }
 </mat-card>

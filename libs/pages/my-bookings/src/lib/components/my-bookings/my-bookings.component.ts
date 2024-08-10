@@ -7,6 +7,8 @@ import { UserService } from '@free-spot-service/user';
 import { BookedEvent, FreeSpotDate, FreeSpotUser } from '@free-spot/models';
 import { AppDateService } from '@free-spot-service/app-date';
 import { Event, WeekParity } from '@free-spot/enums';
+import { ConfirmModalService } from '@free-spot-service/confirm-modal';
+import { AdminEventService } from '@free-spot-service/event';
 
 @Component({
   selector: 'free-spot-my-bookings',
@@ -19,6 +21,8 @@ import { Event, WeekParity } from '@free-spot/enums';
 export class MyBookingsComponent implements OnInit {
   private _userService: UserService = inject(UserService);
   private _appDateService: AppDateService = inject(AppDateService);
+  private _adminEventService: AdminEventService = inject(AdminEventService);
+  private _confirmService: ConfirmModalService = inject(ConfirmModalService);
 
   private _currentUserEmail = (
     JSON.parse(localStorage.getItem('user') as string) as {
@@ -50,9 +54,25 @@ export class MyBookingsComponent implements OnInit {
     });
 
     bookedEventList = bookedEventList?.sort((event1, event2) => this._sortEventsByDate(event1, event2));
-
     return bookedEventList;
   });
+
+  activeSpecialEventBookedItemListSig: Signal<BookedEvent[]> = computed(() => {
+    let bookedEventList: BookedEvent[] = this.currentUserSig().eventList || [];
+    bookedEventList = bookedEventList?.filter((bookedEvent: BookedEvent) => {
+      return (
+        (bookedEvent.weekParity === this.weekParitySig() || bookedEvent.weekParity === WeekParity.BOTH) &&
+        new Date().setHours(0, 0, 0, 0) - new Date(bookedEvent.date).getTime() <= 0 &&
+        (new Date().setHours(0, 0, 0, 0) - new Date(bookedEvent.date).getTime() === 0
+          ? new Date().getHours() < bookedEvent.startHour
+          : true)
+      );
+    });
+
+    bookedEventList = bookedEventList?.sort((event1, event2) => this._sortEventsByDate(event1, event2));
+    return bookedEventList;
+  });
+
   private _eventFilter: WritableSignal<Event | null> = signal(null);
 
   filteredBookedItemsSig: Signal<BookedEvent[]> = computed(() => {
@@ -79,6 +99,24 @@ export class MyBookingsComponent implements OnInit {
   ngOnInit(): void {
     this._userService.init();
     this._appDateService.init();
+    this._adminEventService.init();
+  }
+
+  deleteSpecialEvent(deletedSpecialEvent: BookedEvent): void {
+    this._confirmService
+      .openConfirmDialog('Are you sure you want to remove this booking?')
+      .afterClosed()
+      .subscribe((result: boolean) => {
+        if (result) {
+          const updatedUser: FreeSpotUser = {
+            ...this.currentUserSig(),
+            eventList: this.currentUserSig().eventList?.filter((event: BookedEvent) => event.name !== deletedSpecialEvent.name),
+          };
+
+          this._adminEventService.updateEventSpots(deletedSpecialEvent.name as string, false);
+          this._userService.updateFreeSpotUser(this.currentUserSig(), updatedUser);
+        }
+      });
   }
 
   private _sortEventsByDate(event1: BookedEvent, event2: BookedEvent): number {

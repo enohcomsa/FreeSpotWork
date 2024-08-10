@@ -11,4 +11,5 @@ export interface TimetableActivityItem {
   freeSpots: number;
   busySpots: number;
   date: Date;
+  name?: string;
 }

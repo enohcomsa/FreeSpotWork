@@ -22,6 +22,7 @@ import { Event, WeekParity } from '@free-spot/enums';
 import { BookingItemComponent } from '../booking-item/booking-item.component';
 import {
   BookedEvent,
+  Building,
   FreeSpotDate,
   FreeSpotUser,
   Room,
@@ -34,6 +35,7 @@ import { UserService } from '@free-spot-service/user';
 import { AdminRoomService } from '@free-spot-service/room';
 import { AppDateService } from '@free-spot-service/app-date';
 import { FormErrorMessage } from '@free-spot/util';
+import { AdminEventService } from '@free-spot-service/event';
 
 @Component({
   selector: 'free-spot-dynamic-form',
@@ -58,6 +60,8 @@ export class DynamicFormComponent implements OnInit {
   private _adminRoomService: AdminRoomService = inject(AdminRoomService);
   private _appDateService: AppDateService = inject(AppDateService);
   private _formErrorMessage: FormErrorMessage = inject(FormErrorMessage);
+  private _adminEventService: AdminEventService = inject(AdminEventService);
+  destroyRef = inject(DestroyRef);
 
   appDateSig: Signal<FreeSpotDate> = this._appDateService.appDateSig;
   weekParitySig: Signal<WeekParity> = computed(() => {
@@ -85,7 +89,15 @@ export class DynamicFormComponent implements OnInit {
   eventListSig: Signal<Event[]> = input<Event[]>(Object.values(Event).filter((event: Event) => event !== Event.COURSE));
   searchForm!: FormGroup;
   searchActiveSig: WritableSignal<boolean> = signal(false);
-  eventNames: string[] = ['event_efeffe', 'event_deww', 'event_eeeee', 'event_ertty', 'event_xzxz'];
+  specialEventListSig: Signal<Building[]> = this._adminEventService.eventListSig;
+  filteredSpecialEventListSig: Signal<Building[]> = computed(() =>
+    this.specialEventListSig().filter(
+      (specialEvent: Building) =>
+        !this.currentUserSig().eventList?.some(
+          (bookedSpecialEvent: BookedEvent) => bookedSpecialEvent.name === specialEvent.name,
+        ),
+    ),
+  );
   timetableActivityListFoundSig: WritableSignal<TimetableActivityItem[]> = signal([]);
   oldTimetableActivitySig: WritableSignal<TimetableActivityItem> = signal({} as TimetableActivityItem);
 
@@ -93,10 +105,22 @@ export class DynamicFormComponent implements OnInit {
     this._userService.init();
     this._adminRoomService.init();
     this._appDateService.init();
+    this._adminEventService.init();
     this.searchForm = this._formBuilder.group({
       eventBooking: [this.eventBookingSelectedSig(), Validators.required],
       subject: [this.subjectItemListSig()[0], Validators.required],
-      event: [this.eventNames[0], Validators.required],
+      event: [this.specialEventListSig()[0], Validators.required],
+    });
+    this.searchForm.controls['event'].disable();
+
+    this.searchForm.controls['eventBooking'].valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event: Event) => {
+      if (event === this.EVENT.SPECIAL_EVENT) {
+        this.searchForm.controls['event'].enable();
+        this.searchForm.controls['subject'].disable();
+      } else {
+        this.searchForm.controls['event'].disable();
+        this.searchForm.controls['subject'].enable();
+      }
     });
 
     this.searchForm.valueChanges.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(() => this.searchActiveSig.set(false));
@@ -109,73 +133,102 @@ export class DynamicFormComponent implements OnInit {
   }
 
   onSubmit(): void {
-    let timetableActivityListFound: TimetableActivityItem[] = [];
-    const oldBookedEvent: BookedEvent =
-      this.currentUserSig().bookingList.find(
-        (bookedEvent: BookedEvent) =>
-          bookedEvent.subjectItem.name === this.searchForm.controls['subject'].value.name &&
-          bookedEvent.activityType === this.searchForm.controls['eventBooking'].value,
-      ) || ({} as BookedEvent);
+    if (this.searchForm.controls['eventBooking'].value !== Event.SPECIAL_EVENT) {
+      let timetableActivityListFound: TimetableActivityItem[] = [];
+      const oldBookedEvent: BookedEvent =
+        this.currentUserSig().bookingList.find(
+          (bookedEvent: BookedEvent) =>
+            bookedEvent.subjectItem.name === this.searchForm.controls['subject'].value.name &&
+            bookedEvent.activityType === this.searchForm.controls['eventBooking'].value,
+        ) || ({} as BookedEvent);
 
-    if (Object.keys(oldBookedEvent).length) {
-      this.roomListSig().forEach((room: Room) => {
-        if (
-          room.subjectList?.some(
-            (roomSubject: SubjectItem) => roomSubject.name === this.searchForm.controls['subject'].value.name,
-          )
-        ) {
-          room.timetable.forEach((timetableItem: TimeTableItem) => {
-            timetableItem.activities?.forEach((timetableActivity: TimetableActivityItem) => {
-              if (
-                timetableActivity.subjectItem.name === this.searchForm.controls['subject'].value.name &&
-                timetableActivity.activityType === this.searchForm.controls['eventBooking'].value
-              ) {
-                timetableActivityListFound.push(timetableActivity);
-              }
+      if (Object.keys(oldBookedEvent).length) {
+        this.roomListSig().forEach((room: Room) => {
+          if (
+            room.subjectList?.some(
+              (roomSubject: SubjectItem) => roomSubject.name === this.searchForm.controls['subject'].value.name,
+            )
+          ) {
+            room.timetable.forEach((timetableItem: TimeTableItem) => {
+              timetableItem.activities?.forEach((timetableActivity: TimetableActivityItem) => {
+                if (
+                  timetableActivity.subjectItem.name === this.searchForm.controls['subject'].value.name &&
+                  timetableActivity.activityType === this.searchForm.controls['eventBooking'].value
+                ) {
+                  timetableActivityListFound.push(timetableActivity);
+                }
+              });
             });
-          });
-        }
-      });
+          }
+        });
 
-      this.oldTimetableActivitySig.set(
-        timetableActivityListFound.find((timetableActivity: TimetableActivityItem) =>
+        this.oldTimetableActivitySig.set(
+          timetableActivityListFound.find((timetableActivity: TimetableActivityItem) =>
+            timetableActivity.startHour !== oldBookedEvent.startHour
+              ? true
+              : timetableActivity.date !== oldBookedEvent.date
+                ? true
+                : timetableActivity.weekParity !== oldBookedEvent.weekParity,
+          ) || ({} as TimetableActivityItem),
+        );
+
+        timetableActivityListFound = timetableActivityListFound.filter((timetableActivity: TimetableActivityItem) => {
+          return timetableActivity.weekParity === WeekParity.BOTH || timetableActivity.weekParity === this.weekParitySig();
+        });
+
+        timetableActivityListFound = timetableActivityListFound.filter((timetableActivity: TimetableActivityItem) =>
           timetableActivity.startHour !== oldBookedEvent.startHour
             ? true
             : timetableActivity.date !== oldBookedEvent.date
               ? true
               : timetableActivity.weekParity !== oldBookedEvent.weekParity,
-        ) || ({} as TimetableActivityItem),
-      );
+        );
 
-      timetableActivityListFound = timetableActivityListFound.filter((timetableActivity: TimetableActivityItem) => {
-        return timetableActivity.weekParity === WeekParity.BOTH || timetableActivity.weekParity === this.weekParitySig();
-      });
+        timetableActivityListFound = timetableActivityListFound.filter(
+          (timetableActivity: TimetableActivityItem) =>
+            new Date().setHours(0, 0, 0, 0) - new Date(timetableActivity.date).getTime() <= 0,
+        );
 
-      timetableActivityListFound = timetableActivityListFound.filter((timetableActivity: TimetableActivityItem) =>
-        timetableActivity.startHour !== oldBookedEvent.startHour
-          ? true
-          : timetableActivity.date !== oldBookedEvent.date
-            ? true
-            : timetableActivity.weekParity !== oldBookedEvent.weekParity,
-      );
+        timetableActivityListFound = timetableActivityListFound.filter((timetableActivity: TimetableActivityItem) =>
+          new Date().setHours(0, 0, 0, 0) - new Date(timetableActivity.date).getTime() === 0
+            ? new Date().getHours() < timetableActivity.startHour
+            : true,
+        );
 
-      timetableActivityListFound = timetableActivityListFound.filter(
-        (timetableActivity: TimetableActivityItem) =>
-          new Date().setHours(0, 0, 0, 0) - new Date(timetableActivity.date).getTime() <= 0,
-      );
+        timetableActivityListFound = timetableActivityListFound.filter(
+          (timetableActivity: TimetableActivityItem) => timetableActivity.freeSpots > 0,
+        );
+      }
 
-      timetableActivityListFound = timetableActivityListFound.filter((timetableActivity: TimetableActivityItem) =>
-        new Date().setHours(0, 0, 0, 0) - new Date(timetableActivity.date).getTime() === 0
-          ? new Date().getHours() < timetableActivity.startHour
-          : true,
-      );
+      this.timetableActivityListFoundSig.set(timetableActivityListFound);
+      this.searchActiveSig.set(true);
+    } else {
+      const oldBookedSpecialEvent: BookedEvent =
+        this.currentUserSig().eventList?.find(
+          (bookedEvent: BookedEvent) => bookedEvent.name === this.searchForm.controls['event'].value.name,
+        ) || ({} as BookedEvent);
 
-      timetableActivityListFound = timetableActivityListFound.filter(
-        (timetableActivity: TimetableActivityItem) => timetableActivity.freeSpots > 0,
-      );
+      if (!Object.keys(oldBookedSpecialEvent).length) {
+        const specialEvent: Building = this.searchForm.controls['event'].value;
+
+        const timetableActivityListFound: TimetableActivityItem[] = [
+          {
+            startHour: specialEvent.startHour as number,
+            endHour: (specialEvent.startHour as number) + 2,
+            subjectItem: {} as SubjectItem,
+            roomName: specialEvent.roomName as string,
+            activityType: Event.SPECIAL_EVENT,
+            weekParity: WeekParity.BOTH,
+            freeSpots: specialEvent.freeSpots as number,
+            busySpots: specialEvent.busySpots as number,
+            date: specialEvent.date as Date,
+            name: specialEvent.name,
+          },
+        ];
+
+        this.timetableActivityListFoundSig.set(timetableActivityListFound);
+        this.searchActiveSig.set(true);
+      }
     }
-
-    this.timetableActivityListFoundSig.set(timetableActivityListFound);
-    this.searchActiveSig.set(true);
   }
 }
