@@ -1,6 +1,7 @@
 @use '@angular/material' as mat;
 @use '@angular/material-experimental' as matx;
-@use './free-spot-m3-theme.scss';
+@use './styles/free-spot-m3-theme.scss';
+@import 'ngx-toastr/toastr';
 
 @tailwind base;
 @tailwind components;

@@ -8,6 +8,8 @@ import { FormBuilder, FormGroup, FormGroupDirective, FormsModule, ReactiveFormsM
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { AuthResponse, AuthService } from '@free-spot-service/auth';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'free-spot-app-auth',
@@ -30,24 +32,31 @@ export class AuthComponent {
   private _formBuilder: FormBuilder = inject(FormBuilder);
   private _authService: AuthService = inject(AuthService);
   private _router: Router = inject(Router);
+  private _toastrService: ToastrService = inject(ToastrService);
 
   isLoginMode = true;
 
   authForm: FormGroup = this._formBuilder.group({
-    firstName: ['', [Validators.minLength(3)]],
-    familyName: ['', [Validators.minLength(3)]],
+    firstName: [''],
+    familyName: [''],
     email: ['', [Validators.required, Validators.minLength(6), Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
   });
 
   onSwitchMode(): void {
     this.isLoginMode = !this.isLoginMode;
-    this.authForm.reset();
+
     if (this.isLoginMode) {
-      this.authForm.get('firstName')?.setValidators([Validators.minLength(3)]);
+      this.authForm.controls['firstName'].disable();
+      this.authForm.controls['familyName'].disable();
     } else {
-      this.authForm.get('firstName')?.setValidators([Validators.required, Validators.minLength(3)]);
+      this.authForm.controls['firstName'].enable();
+      this.authForm.controls['familyName'].enable();
+      this.authForm.controls['firstName'].setValidators([Validators.required, Validators.minLength(3)]);
+      this.authForm.controls['familyName'].setValidators([Validators.required, Validators.minLength(3)]);
     }
+
+    this.authForm.reset();
   }
 
   onSubmit(formDirective: FormGroupDirective): void {
@@ -70,12 +79,38 @@ export class AuthComponent {
       next: () => {
         this._router.navigate(['/dashboard']);
       },
-      error: (error) => console.log(error),
+      error: (error) => this._handleError(error),
     });
 
     this.authForm.reset();
     formDirective.resetForm();
   }
+
+  private _handleError(error: HttpErrorResponse): void {
+    console.log(error);
+
+    if (error instanceof HttpErrorResponse) {
+      let errorMessage = 'UNKNOW_ERROR';
+      if (error.error?.error) {
+        errorMessage = error.error.error.message;
+      }
+
+      this._toastrService.error(errorMessage, '', {
+        timeOut: 5000,
+        onActivateTick: true,
+        positionClass: 'toast-bottom-center',
+      });
+    }
+  }
 }
+
+// EMAIL_EXISTS
+// OPERATION_NOT_ALLOWED
+// TOO_MANY_ATTEMPTS_TRY_LATER
+// EMAIL_NOT_FOUND
+// INVALID_PASSWORD
+// USER_DISABLED
+// "INVALID_LOGIN_CREDENTIALS"
+// "INVALID_EMAIL"
 
 export default AuthComponent;
