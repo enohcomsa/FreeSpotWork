@@ -1,6 +1,7 @@
 @use '@angular/material' as mat;
-@use '@angular/material-experimental' as matx;
 @use './styles/free-spot-m3-theme.scss';
+@use './styles/toolbar-theme' as toolBar;
+@use './styles/card-theme' as card;
 @import 'ngx-toastr/toastr';
 
 @tailwind base;
@@ -12,14 +13,19 @@
 
 html {
   scrollbar-gutter: stable;
+  overflow-y: scroll;
 }
 
 .light-mode {
   @include mat.all-component-themes(free-spot-m3-theme.$light-theme);
+  @include toolBar.theme(free-spot-m3-theme.$light-theme);
+  @include card.theme(free-spot-m3-theme.$light-theme);
 }
 
 .dark-mode {
   @include mat.all-component-colors(free-spot-m3-theme.$dark-theme);
+  @include toolBar.color(free-spot-m3-theme.$dark-theme);
+  @include card.color(free-spot-m3-theme.$dark-theme);
 }
 
 body {
@@ -29,7 +35,7 @@ body {
 
 .container {
   max-width: 1400px;
-  margin: 0 auto;
+  margin: 24px auto;
   padding: 0 1rem;
 }
 

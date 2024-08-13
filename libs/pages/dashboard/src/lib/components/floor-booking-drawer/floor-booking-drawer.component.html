@@ -5,7 +5,7 @@
     position="end"
     [opened]="toggleStateSig()"
     (closedStart)="toggleStateSig.set(!toggleStateSig())"
-    class="hide-scrollbar -mr-[calc(100vw-100%)] !w-full sm:!w-2/3 md:!w-1/2 lg:!w-1/3"
+    class="hide-scrollbar !w-full sm:!w-2/3 md:!w-1/2 lg:!w-1/3"
   >
     <div class="flex w-full items-center justify-between p-4">
       <p>Room: {{ roomNameSig() }}</p>

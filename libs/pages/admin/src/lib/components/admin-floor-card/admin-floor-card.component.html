@@ -1,4 +1,4 @@
-<mat-card appearance="outlined" class="@container">
+<mat-card class="@container">
   <mat-card-content class="@sm:flex-row @sm:justify-between @sm:items-center !flex flex-col justify-center gap-4">
     <div class="flex flex-col gap-2 pb-4">
       <p class="font-bold">{{ adminFloorSig().name }}</p>
@@ -10,7 +10,7 @@
     <button mat-flat-button class="grow" (click)="addingFloorSig.set(true); editFloor.emit(adminFloorSig())">
       <mat-icon class="@2xs:!mr-2 @2xs:!-ml-2 !m-0">edit</mat-icon> <span class="@2xs:inline-block hidden">Edit</span>
     </button>
-    <button mat-flat-button class="grow" (click)="onOpenClick()">
+    <button mat-stroked-button class="grow" (click)="onOpenClick()">
       <mat-icon class="@2xs:!mr-2 @2xs:!-ml-2 !m-0">open_in_browser</mat-icon><span class="@2xs:inline-block hidden">Open</span>
     </button>
     <div
@@ -23,7 +23,7 @@
     >
       <button
         mat-flat-button
-        class="w-full grow"
+        class="delete-button w-full grow"
         (click)="deleteFloor.emit(adminFloorSig())"
         [disabled]="adminFloorSig().roomList ? adminFloorSig().roomList.length > 0 : false"
       >

@@ -2,7 +2,7 @@
   @for (item of itemListSig(); track $index; let last = $last) {
     @if (last) {
       <div class="relative flex">
-        <mat-chip (click)="onDynamicNavigation(item)">
+        <mat-chip [ngClass]="{ 'link-chip': itemDinamicRoute() !== '' }" (click)="onDynamicNavigation(item)">
           <div
             [ngClass]="{ '!cursor-pointer': itemDinamicRoute() !== '' }"
             removable="true"
@@ -25,7 +25,7 @@
               matTooltipPosition="right"
               matTooltipShowDelay="500"
             >
-              <mat-icon>cancel</mat-icon>
+              <mat-icon class="delete-icon">cancel</mat-icon>
             </button>
           }
         </mat-chip>
@@ -37,11 +37,11 @@
           matTooltipPosition="right"
           matTooltipShowDelay="500"
         >
-          <mat-icon class="mb-2">add </mat-icon>
+          <mat-icon class="primary-icon mb-2">add </mat-icon>
         </button>
       </div>
     } @else {
-      <mat-chip (click)="onDynamicNavigation(item)">
+      <mat-chip [ngClass]="{ 'link-chip': itemDinamicRoute() !== '' }" (click)="onDynamicNavigation(item)">
         <div
           [ngClass]="{ '!cursor-pointer': itemDinamicRoute() !== '' }"
           removable="true"
@@ -64,7 +64,7 @@
             matTooltipPosition="right"
             matTooltipShowDelay="500"
           >
-            <mat-icon>cancel</mat-icon>
+            <mat-icon class="delete-icon">cancel</mat-icon>
           </button>
         }
       </mat-chip>
@@ -80,7 +80,7 @@
         matTooltipPosition="right"
         matTooltipShowDelay="500"
       >
-        <mat-icon class="mb-2">add </mat-icon>
+        <mat-icon class="primary-icon mb-2">add </mat-icon>
       </button>
     </div>
   }

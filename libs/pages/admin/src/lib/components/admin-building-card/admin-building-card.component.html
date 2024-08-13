@@ -1,4 +1,4 @@
-<mat-card appearance="outlined" class="@container h-full">
+<mat-card class="@container h-full">
   <mat-card-header>
     <mat-card-title>{{ adminBuildingSig().name }}</mat-card-title>
     <mat-card-subtitle class="!flex items-end !text-sm">
@@ -20,11 +20,11 @@
 
       @for (floor of adminBuildingSig().floorList; track floor.name; let last = $last) {
         <mat-list-item class="!cursor-pointer !p-0">
-          <div class="flex justify-between text-xs tracking-tighter">
+          <div class="flex justify-between text-sm tracking-tighter">
             <p class="min-w-24 truncate">{{ floor.name }}</p>
             <div class="flex gap-4 [&>p]:w-14 [&>p]:text-center">
-              <p>{{ floor.totalSpotsNumber }}</p>
-              <p>{{ floor.unavailableSpots }}</p>
+              <p class="total-spots">{{ floor.totalSpotsNumber }}</p>
+              <p class="busy-spots">{{ floor.unavailableSpots }}</p>
             </div>
           </div>
         </mat-list-item>
@@ -32,7 +32,7 @@
           <mat-divider></mat-divider>
         }
       } @empty {
-        <div class="flex h-12 items-center justify-between text-xs tracking-tighter">
+        <div class="flex h-12 items-center justify-between text-sm tracking-tighter">
           <p class="min-w-24">No floors added yet</p>
         </div>
       }
@@ -43,7 +43,7 @@
     <button mat-flat-button class="grow" (click)="addingBuildingSig.set(true); editBuilding.emit(adminBuildingSig())">
       <mat-icon class="@3xs:!mr-2 @3xs:!-ml-2 !m-0">edit</mat-icon> <span class="@3xs:inline-block hidden">Edit</span>
     </button>
-    <button mat-flat-button class="grow" (click)="onOpenClick()">
+    <button mat-stroked-button class="grow" (click)="onOpenClick()">
       <mat-icon class="@3xs:!mr-2 @3xs:!-ml-2 !m-0">open_in_browser</mat-icon><span class="@3xs:inline-block hidden">Open</span>
     </button>
     <div
@@ -55,10 +55,10 @@
       [matTooltipDisabled]="adminBuildingSig().floorList ? adminBuildingSig().floorList.length === 0 : true"
     >
       <button
-        mat-flat-button
-        class="w-full grow"
-        (click)="deleteBuilding.emit(adminBuildingSig())"
         [disabled]="adminBuildingSig().floorList ? adminBuildingSig().floorList.length > 0 : false"
+        mat-flat-button
+        class="delete-button w-full grow"
+        (click)="deleteBuilding.emit(adminBuildingSig())"
       >
         <mat-icon class="@3xs:!mr-2 @3xs:!-ml-2 !m-0">delete</mat-icon><span class="@3xs:inline-block hidden">Delete</span>
       </button>

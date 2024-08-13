@@ -1,0 +1,28 @@
+@use 'sass:map';
+@use '@angular/material' as mat;
+
+@mixin color($theme) {
+  .free-spot-toolbar {
+    background-color: mat.get-theme-color($theme, primary);
+    color: mat.get-theme-color($theme, on-primary);
+  }
+
+  .on-free-spot-toolbar {
+    background-color: mat.get-theme-color($theme, on-primary);
+    color: mat.get-theme-color($theme, primary);
+  }
+
+  .free-spot-toolbar-active-link {
+    background-color: rgba(mat.get-theme-color($theme, on-primary), 0.1) !important;
+  }
+
+  .lang-color {
+    color: mat.get-theme-color($theme, primary);
+  }
+}
+
+@mixin theme($theme) {
+  @if mat.theme-has($theme, color) {
+    @include color($theme);
+  }
+}

@@ -1,4 +1,4 @@
-<mat-card appearance="outlined">
+<mat-card>
   @if (buildingSig().specialEvent) {
     <ng-container [ngTemplateOutlet]="specialEvent"></ng-container>
   } @else {
@@ -30,11 +30,11 @@
             matTooltipPositionAtOrigin="true"
             matTooltipShowDelay="500"
           >
-            <div class="flex justify-between text-xs tracking-tighter">
-              <p class="min-w-24 truncate">{{ floor.name }}</p>
+            <div class="flex justify-between text-sm tracking-tighter">
+              <p class="card-link min-w-24 truncate">{{ floor.name }}</p>
               <div class="flex gap-4 [&>p]:w-14 [&>p]:text-center">
-                <p>{{ floor.totalSpotsNumber }}</p>
-                <p>{{ floor.unavailableSpots }}</p>
+                <p class="total-spots">{{ floor.totalSpotsNumber }}</p>
+                <p class="unavabile-spots">{{ floor.unavailableSpots }}</p>
               </div>
             </div>
           </mat-list-item>
@@ -42,7 +42,7 @@
             <mat-divider></mat-divider>
           }
         } @empty {
-          <div class="flex h-12 items-center justify-between text-xs tracking-tighter">
+          <div class="flex h-12 items-center justify-between text-sm tracking-tighter">
             <p class="min-w-24">No floors added yet</p>
           </div>
         }
@@ -81,12 +81,12 @@
       <mat-divider></mat-divider>
 
       <mat-list-item class="!cursor-pointer !p-0">
-        <div class="flex justify-between text-xs tracking-tighter">
+        <div class="flex justify-between text-sm tracking-tighter">
           <p class="min-w-24 truncate">{{ buildingSig().roomName }}</p>
           <div class="flex gap-4 [&>p]:w-14 [&>p]:text-center">
-            <p>{{ buildingSig().freeSpots }}</p>
-            <p>{{ buildingSig().busySpots }}</p>
-            <p>{{ buildingSig().reservedSpots }}</p>
+            <p class="total-spots">{{ buildingSig().freeSpots }}</p>
+            <p class="busy-spots">{{ buildingSig().busySpots }}</p>
+            <p class="unavabile-spots">{{ buildingSig().reservedSpots }}</p>
           </div>
         </div>
       </mat-list-item>

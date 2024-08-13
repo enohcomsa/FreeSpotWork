@@ -1,8 +1,8 @@
-<mat-card appearance="outlined">
+<mat-card>
   <mat-card-header>
     <mat-card-title>
       <div class="flex items-start gap-4">
-        <mat-icon class="scale-125">event_available</mat-icon>
+        <mat-icon class="primary-icon scale-125">event_available</mat-icon>
         <div class="flex-col">
           @if (eventSig().activityType === EVENT.SPECIAL_EVENT) {
             <p class="-mt-2 grow text-lg font-bold">{{ eventSig().name }}</p>
@@ -34,7 +34,7 @@
   </mat-card-content>
   @if (eventSig().activityType === EVENT.SPECIAL_EVENT) {
     <mat-card-actions>
-      <button mat-flat-button class="w-full grow" (click)="deleteEvent.emit(eventSig())">
+      <button mat-flat-button class="delete-button w-full grow" (click)="deleteEvent.emit(eventSig())">
         <mat-icon class="!mr-2">delete</mat-icon><span>Delete</span>
       </button>
     </mat-card-actions>
