@@ -91,12 +91,14 @@ export class DynamicFormComponent implements OnInit {
   searchActiveSig: WritableSignal<boolean> = signal(false);
   specialEventListSig: Signal<Building[]> = this._adminEventService.eventListSig;
   filteredSpecialEventListSig: Signal<Building[]> = computed(() =>
-    this.specialEventListSig().filter(
-      (specialEvent: Building) =>
-        !this.currentUserSig().eventList?.some(
-          (bookedSpecialEvent: BookedEvent) => bookedSpecialEvent.name === specialEvent.name,
-        ),
-    ),
+    this.specialEventListSig()
+      .filter(
+        (specialEvent: Building) =>
+          !this.currentUserSig().eventList?.some(
+            (bookedSpecialEvent: BookedEvent) => bookedSpecialEvent.name === specialEvent.name,
+          ),
+      )
+      .filter((event: Building) => new Date().getTime() - new Date(event.date as Date).getTime() <= 0),
   );
   timetableActivityListFoundSig: WritableSignal<TimetableActivityItem[]> = signal([]);
   oldTimetableActivitySig: WritableSignal<TimetableActivityItem> = signal({} as TimetableActivityItem);

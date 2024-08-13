@@ -59,17 +59,10 @@ export class MyBookingsComponent implements OnInit {
 
   activeSpecialEventBookedItemListSig: Signal<BookedEvent[]> = computed(() => {
     let bookedEventList: BookedEvent[] = this.currentUserSig().eventList || [];
-    bookedEventList = bookedEventList?.filter((bookedEvent: BookedEvent) => {
-      return (
-        (bookedEvent.weekParity === this.weekParitySig() || bookedEvent.weekParity === WeekParity.BOTH) &&
-        new Date().setHours(0, 0, 0, 0) - new Date(bookedEvent.date).getTime() <= 0 &&
-        (new Date().setHours(0, 0, 0, 0) - new Date(bookedEvent.date).getTime() === 0
-          ? new Date().getHours() < bookedEvent.startHour
-          : true)
-      );
-    });
-
-    bookedEventList = bookedEventList?.sort((event1, event2) => this._sortEventsByDate(event1, event2));
+    (bookedEventList = bookedEventList?.filter(
+      (bookedEvent: BookedEvent) => new Date().getTime() - new Date(bookedEvent.date as Date).getTime() <= 0,
+    )),
+      (bookedEventList = bookedEventList?.sort((event1, event2) => this._sortEventsByDate(event1, event2)));
     return bookedEventList;
   });
 

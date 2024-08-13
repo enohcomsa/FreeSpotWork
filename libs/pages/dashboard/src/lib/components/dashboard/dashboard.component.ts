@@ -56,7 +56,8 @@ export class DashboardComponent implements OnInit {
   eventListSig: Signal<Building[]> = computed(() =>
     this._adminEventService
       .eventListSig()
-      .sort((event1, event2) => new Date(event1.date as Date).getTime() - new Date(event2.date as Date).getTime()),
+      .sort((event1, event2) => new Date(event1.date as Date).getTime() - new Date(event2.date as Date).getTime())
+      .filter((event: Building) => new Date().getTime() - new Date(event.date as Date).getTime() <= 0),
   );
   currentUserGroupSig: Signal<Group> = computed(() =>
     this._adminFacultyService.getGroupByName(this.currentUserSig().group as string)(),
