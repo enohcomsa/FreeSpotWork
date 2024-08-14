@@ -19,6 +19,18 @@
   .lang-color {
     color: mat.get-theme-color($theme, primary);
   }
+
+  .login-switch:hover {
+    color: mat.get-theme-color($theme, primary);
+  }
+
+  .theme-menu-button:hover {
+    @if mat.get-theme-type($theme) == dark {
+      background-color: rgba(228, 225, 230, 0.08) !important;
+    } @else {
+      background-color: rgba(27, 27, 31, 0.08) !important;
+    }
+  }
 }
 
 @mixin theme($theme) {

@@ -1,40 +1,78 @@
-<div class="flex min-h-screen items-center justify-center">
-  <mat-card class="w-1/4 p-4">
-    <form
-      [formGroup]="authForm"
-      (ngSubmit)="onSubmit(authFormDirective)"
-      #authFormDirective="ngForm"
-      class="flex flex-col space-y-4"
-    >
-      @if (!isLoginMode) {
-        <mat-form-field class="mt-4">
-          <mat-label>First name</mat-label>
-          <input matInput formControlName="firstName" />
-          <mat-error>{{ displayError(authForm.controls['firstName']) }}</mat-error>
-        </mat-form-field>
+<div
+  [ngClass]="themeSig() === THEME.LIGHT ? 'background-image-white' : 'background-image-black'"
+  class="flex min-h-screen items-center justify-center bg-cover bg-center bg-no-repeat"
+>
+  <mat-card class="md:3/4 w-5/6 max-w-[464px] overflow-hidden md:max-w-[928px]">
+    <div class="grid grid-cols-1 md:grid-cols-2">
+      <div
+        [ngClass]="themeSig() === THEME.LIGHT ? 'form-white bg-center' : 'form-black bg-right'"
+        class="hidden h-full w-full max-w-[464px] grow bg-cover bg-no-repeat md:block"
+      ></div>
+      <div class="@container flex max-w-[464px] flex-col items-start p-4">
+        <h1 class="@3xs:px-4 @3xs:text-3xl pb-2 pt-8 text-2xl">{{ isLoginMode ? 'Welcome back' : 'Create an account' }}</h1>
+        @if (isLoginMode) {
+          <h2 class="@3xs:px-4 text-pretty pb-12 text-sm">
+            Dont't have an account? <span (click)="onSwitchMode()" class="login-switch cursor-pointer underline">Sign up</span>
+          </h2>
+        } @else {
+          <h2 class="@3xs:px-4 text-pretty pb-8 text-sm">
+            Already have an account? <span (click)="onSwitchMode()" class="login-switch cursor-pointer underline">Log in</span>
+          </h2>
+        }
 
-        <mat-form-field class="mt-4">
-          <mat-label>Last name</mat-label>
-          <input matInput formControlName="familyName" />
-          <mat-error>{{ displayError(authForm.controls['familyName']) }}</mat-error>
-        </mat-form-field>
-      }
-      <mat-form-field class="mt-4">
-        <mat-label>Email</mat-label>
-        <input matInput formControlName="email" />
-        <mat-error>{{ displayError(authForm.controls['email']) }}</mat-error>
-      </mat-form-field>
+        <form
+          [formGroup]="authForm"
+          (ngSubmit)="onSubmit(authFormDirective)"
+          #authFormDirective="ngForm"
+          class="@3xs:px-4 flex w-full flex-col gap-4 pb-8"
+        >
+          @if (!isLoginMode) {
+            <mat-form-field>
+              <mat-label>First name</mat-label>
+              <input matInput formControlName="firstName" />
+              <mat-error>{{ displayError(authForm.controls['firstName']) }}</mat-error>
+            </mat-form-field>
 
-      <mat-form-field>
-        <mat-label>Password</mat-label>
-        <input type="password" matInput formControlName="password" />
-        <mat-error>{{ displayError(authForm.controls['password']) }}</mat-error>
-      </mat-form-field>
+            <mat-form-field>
+              <mat-label>Last name</mat-label>
+              <input matInput formControlName="familyName" />
+              <mat-error>{{ displayError(authForm.controls['familyName']) }}</mat-error>
+            </mat-form-field>
+          }
+          <mat-form-field>
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email" />
+            <mat-error>{{ displayError(authForm.controls['email']) }}</mat-error>
+          </mat-form-field>
 
-      <button mat-stroked-button type="submit" [disabled]="!authForm.valid">
-        {{ isLoginMode ? 'Log In' : 'Sign Up' }}
-      </button>
-      <button mat-flat-button type="button" (click)="onSwitchMode()">Switch to {{ isLoginMode ? 'Signup' : 'Login' }}</button>
-    </form>
+          <mat-form-field>
+            <mat-label>Password</mat-label>
+            <mat-hint>Use 6 ore more characters</mat-hint>
+            <input [type]="hide ? 'password' : 'text'" matInput formControlName="password" />
+            <mat-icon class="primary-icon cursor-pointer" matSuffix (click)="hide = !hide">{{
+              hide ? 'visibility_off' : 'visibility'
+            }}</mat-icon>
+            <mat-error>{{ displayError(authForm.controls['password']) }}</mat-error>
+          </mat-form-field>
+
+          <div class="@3xs:flex-row @3xs:items-center flex flex-col-reverse items-start justify-between gap-4 pt-8">
+            @if (isLoginMode) {
+              <h2 class="text-pretty text-sm">
+                Dont't have an account?
+                <span (click)="onSwitchMode()" class="login-switch cursor-pointer underline">Sign up</span>
+              </h2>
+            } @else {
+              <h2 class="text-pretty text-sm">
+                Already have an account?
+                <span (click)="onSwitchMode()" class="login-switch cursor-pointer underline">Log in</span>
+              </h2>
+            }
+            <button mat-flat-button type="submit" [disabled]="!authForm.valid" class="@3xs:w-fit w-full text-nowrap">
+              {{ isLoginMode ? 'Log In' : 'Create an account' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   </mat-card>
 </div>

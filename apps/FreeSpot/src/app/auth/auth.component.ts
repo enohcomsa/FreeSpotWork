@@ -19,6 +19,9 @@ import { AuthResponse, AuthService } from '@free-spot-service/auth';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { FormErrorMessage } from '@free-spot/util';
+import { ThemeService } from '../theme/theme.service';
+import { Theme } from '@free-spot/enums';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'free-spot-app-auth',
@@ -32,6 +35,7 @@ import { FormErrorMessage } from '@free-spot/util';
     MatButtonModule,
     MatInputModule,
     MatCardModule,
+    MatIconModule,
   ],
   templateUrl: './auth.component.html',
   styleUrl: './auth.component.scss',
@@ -43,8 +47,12 @@ export class AuthComponent {
   private _router: Router = inject(Router);
   private _toastrService: ToastrService = inject(ToastrService);
   private _formErrorMessage: FormErrorMessage = inject(FormErrorMessage);
+  private _themeService: ThemeService = inject(ThemeService);
 
   isLoginMode = true;
+  hide = true;
+  themeSig = this._themeService.themeSig;
+  THEME = Theme;
 
   authForm: FormGroup = this._formBuilder.group({
     firstName: [''],
@@ -117,14 +125,5 @@ export class AuthComponent {
     }
   }
 }
-
-// EMAIL_EXISTS
-// OPERATION_NOT_ALLOWED
-// TOO_MANY_ATTEMPTS_TRY_LATER
-// EMAIL_NOT_FOUND
-// INVALID_PASSWORD
-// USER_DISABLED
-// "INVALID_LOGIN_CREDENTIALS"
-// "INVALID_EMAIL"
 
 export default AuthComponent;
