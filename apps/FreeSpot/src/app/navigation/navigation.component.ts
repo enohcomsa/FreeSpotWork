@@ -93,6 +93,14 @@ export class NavigationComponent implements OnInit {
   logout(): void {
     this._authService.logOut();
   }
+
+  getLoggedUserName(): string {
+    return this.currentUserSig().firstName + '  ' + this.currentUserSig().familyName;
+  }
+
+  getLoggedUserInitials(): string {
+    return (this.currentUserSig().firstName.charAt(0) + this.currentUserSig().familyName.charAt(0)).toUpperCase();
+  }
 }
 
 export default NavigationComponent;

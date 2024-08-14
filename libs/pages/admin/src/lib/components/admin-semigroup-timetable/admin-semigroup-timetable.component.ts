@@ -27,6 +27,7 @@ import { BookingService } from '@free-spot-service/booking';
 import { UserService } from '@free-spot-service/user';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormErrorMessage } from '@free-spot/util';
+import { ConfirmModalService } from '@free-spot-service/confirm-modal';
 
 @Component({
   selector: 'free-spot-admin-semigroup-timetable',
@@ -54,6 +55,7 @@ export class AdminSemisemiGroupTimetableComponent implements OnInit {
   private _userService: UserService = inject(UserService);
   private _bookingService: BookingService = inject(BookingService);
   private _formErrorMessage: FormErrorMessage = inject(FormErrorMessage);
+  private _confirmService: ConfirmModalService = inject(ConfirmModalService);
 
   userListSig: Signal<FreeSpotUser[]> = this._userService.userListSig;
   semiGroupSig = model.required<SemiGroup>();
@@ -191,49 +193,59 @@ export class AdminSemisemiGroupTimetableComponent implements OnInit {
   }
 
   onRemoveTimetableActivity(deletedTimetableActivity: TimetableActivityItem): void {
-    if (this.semiGroupSig().students && this.semiGroupSig().students?.length) {
-      this.semiGroupSig().students?.forEach((student: FreeSpotUser) => {
-        const newBookedItem: BookedEvent = this._bookingService.generateUserBookedItemByActivity(deletedTimetableActivity, false);
+    this._confirmService
+      .openConfirmDialog('Are you sure you want to delete this activity?')
+      .afterClosed()
+      .subscribe((result: boolean) => {
+        if (result) {
+          if (this.semiGroupSig().students && this.semiGroupSig().students?.length) {
+            this.semiGroupSig().students?.forEach((student: FreeSpotUser) => {
+              const newBookedItem: BookedEvent = this._bookingService.generateUserBookedItemByActivity(
+                deletedTimetableActivity,
+                false,
+              );
 
-        deletedTimetableActivity.freeSpots = deletedTimetableActivity.freeSpots + 1;
-        deletedTimetableActivity.busySpots = deletedTimetableActivity.busySpots - 1;
-        const oldUser: FreeSpotUser =
-          this.userListSig().find(
-            (user: FreeSpotUser) => user.firstName === student.firstName && user.familyName === student.familyName,
-          ) || ({} as FreeSpotUser);
-        const newUser: FreeSpotUser = {
-          ...oldUser,
-          bookingList: oldUser.bookingList
-            ? oldUser.bookingList.filter(
-                (bookedEvent: BookedEvent) => !this._checkBookedEventEquality(bookedEvent, newBookedItem),
-              )
-            : [],
-        };
+              deletedTimetableActivity.freeSpots = deletedTimetableActivity.freeSpots + 1;
+              deletedTimetableActivity.busySpots = deletedTimetableActivity.busySpots - 1;
+              const oldUser: FreeSpotUser =
+                this.userListSig().find(
+                  (user: FreeSpotUser) => user.firstName === student.firstName && user.familyName === student.familyName,
+                ) || ({} as FreeSpotUser);
+              const newUser: FreeSpotUser = {
+                ...oldUser,
+                bookingList: oldUser.bookingList
+                  ? oldUser.bookingList.filter(
+                      (bookedEvent: BookedEvent) => !this._checkBookedEventEquality(bookedEvent, newBookedItem),
+                    )
+                  : [],
+              };
 
-        this._userService.updateFreeSpotUser(oldUser, newUser);
+              this._userService.updateFreeSpotUser(oldUser, newUser);
+            });
+          }
+
+          const oldTimetableItem: TimeTableItem = this.semiGroupSig().timetable?.find(
+            (timetableItem: TimeTableItem) => timetableItem.date === deletedTimetableActivity.date,
+          ) as TimeTableItem;
+
+          const newTimetableItem: TimeTableItem = {
+            ...oldTimetableItem,
+            activities: oldTimetableItem.activities?.filter(
+              (timetableActivity: TimetableActivityItem) => timetableActivity !== deletedTimetableActivity,
+            ),
+          };
+
+          const updatedSemiGroup: SemiGroup = {
+            ...this.semiGroupSig(),
+            timetable: this.semiGroupSig().timetable
+              ? this.semiGroupSig().timetable.map((timetableItem: TimeTableItem) =>
+                  timetableItem.weekDay === newTimetableItem.weekDay ? newTimetableItem : timetableItem,
+                )
+              : [newTimetableItem],
+          };
+          this.semiGroupSig.set(updatedSemiGroup);
+        }
       });
-    }
-
-    const oldTimetableItem: TimeTableItem = this.semiGroupSig().timetable?.find(
-      (timetableItem: TimeTableItem) => timetableItem.date === deletedTimetableActivity.date,
-    ) as TimeTableItem;
-
-    const newTimetableItem: TimeTableItem = {
-      ...oldTimetableItem,
-      activities: oldTimetableItem.activities?.filter(
-        (timetableActivity: TimetableActivityItem) => timetableActivity !== deletedTimetableActivity,
-      ),
-    };
-
-    const updatedSemiGroup: SemiGroup = {
-      ...this.semiGroupSig(),
-      timetable: this.semiGroupSig().timetable
-        ? this.semiGroupSig().timetable.map((timetableItem: TimeTableItem) =>
-            timetableItem.weekDay === newTimetableItem.weekDay ? newTimetableItem : timetableItem,
-          )
-        : [newTimetableItem],
-    };
-    this.semiGroupSig.set(updatedSemiGroup);
   }
 
   private _checkTimetebleActivityEquality(

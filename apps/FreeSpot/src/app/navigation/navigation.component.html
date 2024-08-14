@@ -1,7 +1,12 @@
 <mat-toolbar class="free-spot-toolbar stikky z-2 top-0 z-20 w-[110%]">
   <nav class="flex grow items-center justify-between py-2">
     <div class="-ml-6 h-44 w-44 sm:h-48 sm:w-48">
-      <img class="logo h-44 w-44 sm:h-48 sm:w-48" src="images/logo_transparent.png" alt="Free Spot logo" />
+      <img
+        routerLink="dashboard"
+        class="logo h-44 w-44 cursor-pointer sm:h-48 sm:w-48"
+        src="images/logo_transparent.png"
+        alt="Free Spot logo"
+      />
     </div>
     <div class="flex items-center">
       <a
@@ -44,10 +49,10 @@
           class="on-free-spot-toolbar hidden h-12 w-12 rounded-full text-lg font-semibold md:flex md:items-center md:justify-center"
           [matMenuTriggerFor]="profileMenu"
         >
-          EC
+          {{ getLoggedUserInitials() }}
         </div>
         <div class="hidden text-base font-semibold lg:flex lg:items-center" [matMenuTriggerFor]="profileMenu">
-          Comsa Enoh <mat-icon inline="true">keyboard_arrow_down</mat-icon>
+          {{ getLoggedUserName() }} <mat-icon inline="true">keyboard_arrow_down</mat-icon>
         </div>
       </div>
     </div>
@@ -65,7 +70,13 @@
   >
     <div class="mb-4 flex h-16 items-center">
       <div class="-ml-6 -mt-2 h-44 w-44 sm:mt-0 sm:h-48 sm:w-48">
-        <img class="logo h-44 w-44 sm:h-48 sm:w-48" src="images/logo_transparent.png" alt="Free Spot logo" />
+        <img
+          routerLink="dashboard"
+          (click)="opened = false"
+          class="logo h-44 w-44 cursor-pointer sm:h-48 sm:w-48"
+          src="images/logo_transparent.png"
+          alt="Free Spot logo"
+        />
       </div>
     </div>
     <div class="flex w-full flex-col items-center gap-2">
