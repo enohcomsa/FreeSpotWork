@@ -1,10 +1,12 @@
 <mat-toolbar class="free-spot-toolbar stikky z-2 top-0 z-20 w-[110%]">
   <nav class="flex grow items-center justify-between py-2">
-    <div class="logo h-4 w-4 rounded-full bg-red-500"></div>
+    <div class="-ml-6 h-44 w-44 sm:h-48 sm:w-48">
+      <img class="logo h-44 w-44 sm:h-48 sm:w-48" src="images/logo_transparent.png" alt="Free Spot logo" />
+    </div>
     <div class="flex items-center">
       <a
         mat-flat-button
-        class="!hidden !text-base md:!flex"
+        class="!hidden !text-sm !tracking-tight md:!flex lg:!text-base"
         routerLink="/dashboard"
         routerLinkActive="free-spot-toolbar-active-link"
       >
@@ -12,7 +14,7 @@
       </a>
       <a
         mat-flat-button
-        class="!hidden !text-base md:!flex"
+        class="!hidden !text-sm !tracking-tight md:!flex lg:!text-base"
         routerLink="/schedule"
         routerLinkActive="free-spot-toolbar-active-link"
       >
@@ -20,7 +22,7 @@
       </a>
       <a
         mat-flat-button
-        class="!hidden !text-base md:!flex"
+        class="!hidden !text-sm !tracking-tight md:!flex lg:!text-base"
         routerLink="/my-bookings"
         routerLinkActive="free-spot-toolbar-active-link"
       >
@@ -29,7 +31,7 @@
       @if (currentUserSig().role === Role.ADMIN) {
         <a
           mat-flat-button
-          class="mr-4 !hidden !text-base md:!flex"
+          class="mr-4 !hidden !text-sm !tracking-tight md:!flex lg:!text-base"
           routerLink="/admin"
           routerLinkActive="free-spot-toolbar-active-link"
         >
@@ -37,13 +39,14 @@
         </a>
       }
       <!-- <nav profile></nav> -->
-      <div class="flex items-center space-x-4 hover:cursor-pointer" [matMenuTriggerFor]="profileMenu">
+      <div class="flex items-center space-x-4 hover:cursor-pointer">
         <div
           class="on-free-spot-toolbar hidden h-12 w-12 rounded-full text-lg font-semibold md:flex md:items-center md:justify-center"
+          [matMenuTriggerFor]="profileMenu"
         >
           EC
         </div>
-        <div class="hidden text-base font-semibold lg:flex lg:items-center">
+        <div class="hidden text-base font-semibold lg:flex lg:items-center" [matMenuTriggerFor]="profileMenu">
           Comsa Enoh <mat-icon inline="true">keyboard_arrow_down</mat-icon>
         </div>
       </div>
@@ -60,20 +63,29 @@
     class="free-spot-toolbar fixed inset-0 z-20 flex min-h-screen w-full flex-col self-end px-4 pb-4 md:hidden"
     [ngClass]="{ hidden: !opened }"
   >
-    <div class="mb-4 flex h-16 items-center justify-between">
-      <div class="logo h-4 w-4 rounded-full bg-red-500"></div>
-      <div class="flex items-center space-x-4 hover:cursor-pointer" [matMenuTriggerFor]="profileMenu">
-        <div class="on-free-spot-toolbar flex h-12 w-12 items-center justify-center rounded-full text-xl font-semibold">EC</div>
-        <div class="flex items-center text-xl font-semibold">
-          Comsa Enoh <mat-icon inline="true">keyboard_arrow_down</mat-icon>
-        </div>
+    <div class="mb-4 flex h-16 items-center">
+      <div class="-ml-6 -mt-2 h-44 w-44 sm:mt-0 sm:h-48 sm:w-48">
+        <img class="logo h-44 w-44 sm:h-48 sm:w-48" src="images/logo_transparent.png" alt="Free Spot logo" />
       </div>
-      <div></div>
     </div>
-    <div class="flex flex-col gap-2">
+    <div class="flex w-full flex-col items-center gap-2">
+      <div class="w-full space-y-2 pb-4">
+        <div class="flex items-center justify-center space-x-4 hover:cursor-pointer">
+          <div
+            class="on-free-spot-toolbar flex h-12 w-12 items-center justify-center rounded-full text-xl font-semibold"
+            [matMenuTriggerFor]="profileMenu"
+          >
+            EC
+          </div>
+          <div class="flex items-center text-xl font-semibold" [matMenuTriggerFor]="profileMenu">
+            Comsa Enoh <mat-icon inline="true">keyboard_arrow_down</mat-icon>
+          </div>
+        </div>
+        <mat-divider></mat-divider>
+      </div>
       <a
         mat-flat-button
-        class="!py-6"
+        class="w-full !py-6"
         routerLink="/dashboard"
         routerLinkActive="free-spot-toolbar-active-link"
         (click)="opened = false"
@@ -82,7 +94,7 @@
       </a>
       <a
         mat-flat-button
-        class="!py-6"
+        class="w-full !py-6"
         routerLink="/schedule"
         routerLinkActive="free-spot-toolbar-active-link"
         (click)="opened = false"
@@ -91,23 +103,25 @@
       </a>
       <a
         mat-flat-button
-        class="!py-6"
+        class="w-full !py-6"
         routerLink="/my-bookings"
         routerLinkActive="free-spot-toolbar-active-link"
         (click)="opened = false"
         ><span class="py-4 text-xl tracking-wide"> {{ 'NAV.MY_BOOKINGS' | translate }}</span>
       </a>
       @if (currentUserSig().role === Role.ADMIN) {
-        <mat-divider></mat-divider>
-        <a
-          mat-flat-button
-          class="!py-6"
-          routerLink="/admin"
-          routerLinkActive="free-spot-toolbar-active-link"
-          (click)="opened = false"
-        >
-          <span class="text-xl tracking-wide"> {{ 'NAV.ADMIN' | translate }}</span>
-        </a>
+        <div class="w-full space-y-2">
+          <mat-divider></mat-divider>
+          <a
+            mat-flat-button
+            class="w-full !py-6"
+            routerLink="/admin"
+            routerLinkActive="free-spot-toolbar-active-link"
+            (click)="opened = false"
+          >
+            <span class="text-xl tracking-wide"> {{ 'NAV.ADMIN' | translate }}</span>
+          </a>
+        </div>
       }
     </div>
   </nav>

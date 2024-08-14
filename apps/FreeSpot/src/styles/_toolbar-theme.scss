@@ -31,6 +31,19 @@
       background-color: rgba(27, 27, 31, 0.08) !important;
     }
   }
+
+  .logo {
+    @if mat.get-theme-type($theme) == dark {
+      filter: brightness(0)
+        saturate(100%)
+        invert(12%)
+        sepia(98%)
+        saturate(2103%)
+        hue-rotate(218deg)
+        brightness(93%)
+        contrast(99%);
+    }
+  }
 }
 
 @mixin theme($theme) {

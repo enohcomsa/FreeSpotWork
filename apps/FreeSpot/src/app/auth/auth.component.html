@@ -5,9 +5,15 @@
   <mat-card class="md:3/4 w-5/6 max-w-[464px] overflow-hidden md:max-w-[928px]">
     <div class="grid grid-cols-1 md:grid-cols-2">
       <div
-        [ngClass]="themeSig() === THEME.LIGHT ? 'form-white bg-center' : 'form-black bg-right'"
-        class="hidden h-full w-full max-w-[464px] grow bg-cover bg-no-repeat md:block"
-      ></div>
+        [ngClass]="themeSig() === THEME.LIGHT ? 'form-white bg-center' : 'form-black bg-right-bottom'"
+        class="relative hidden h-full w-full max-w-[464px] grow bg-cover bg-no-repeat md:block"
+      >
+        <img
+          class="absolute left-0 right-0 top-12 mx-auto h-40 w-40 mix-blend-hard-light"
+          src="images/logo.png"
+          alt="Free Spot logo"
+        />
+      </div>
       <div class="@container flex max-w-[464px] flex-col items-start p-4">
         <h1 class="@3xs:px-4 @3xs:text-3xl pb-2 pt-8 text-2xl">{{ isLoginMode ? 'Welcome back' : 'Create an account' }}</h1>
         @if (isLoginMode) {
