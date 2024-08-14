@@ -49,10 +49,10 @@
           class="on-free-spot-toolbar hidden h-12 w-12 rounded-full text-lg font-semibold md:flex md:items-center md:justify-center"
           [matMenuTriggerFor]="profileMenu"
         >
-          {{ getLoggedUserInitials() }}
+          {{ getLoggedUserInitials()() | uppercase }}
         </div>
         <div class="hidden text-base font-semibold lg:flex lg:items-center" [matMenuTriggerFor]="profileMenu">
-          {{ getLoggedUserName() }} <mat-icon inline="true">keyboard_arrow_down</mat-icon>
+          {{ getLoggedUserName()() }} <mat-icon inline="true">keyboard_arrow_down</mat-icon>
         </div>
       </div>
     </div>
@@ -86,10 +86,10 @@
             class="on-free-spot-toolbar flex h-12 w-12 items-center justify-center rounded-full text-xl font-semibold"
             [matMenuTriggerFor]="profileMenu"
           >
-            EC
+            {{ getLoggedUserInitials()() | uppercase }}
           </div>
-          <div class="flex items-center text-xl font-semibold" [matMenuTriggerFor]="profileMenu">
-            Comsa Enoh <mat-icon inline="true">keyboard_arrow_down</mat-icon>
+          <div class="hidden items-center text-xl font-semibold sm:flex" [matMenuTriggerFor]="profileMenu">
+            {{ getLoggedUserName()() }} <mat-icon inline="true">keyboard_arrow_down</mat-icon>
           </div>
         </div>
         <mat-divider></mat-divider>

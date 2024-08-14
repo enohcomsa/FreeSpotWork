@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, Signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit, Signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -94,12 +94,12 @@ export class NavigationComponent implements OnInit {
     this._authService.logOut();
   }
 
-  getLoggedUserName(): string {
-    return this.currentUserSig().firstName + '  ' + this.currentUserSig().familyName;
+  getLoggedUserName(): Signal<string> {
+    return computed(() => this.currentUserSig().firstName + '  ' + this.currentUserSig().familyName);
   }
 
-  getLoggedUserInitials(): string {
-    return (this.currentUserSig().firstName.charAt(0) + this.currentUserSig().familyName.charAt(0)).toUpperCase();
+  getLoggedUserInitials(): Signal<string> {
+    return computed(() => this.currentUserSig().firstName?.charAt(0) + this.currentUserSig().familyName?.charAt(0) || '');
   }
 }
 
