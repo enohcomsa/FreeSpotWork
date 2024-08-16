@@ -71,11 +71,11 @@ run `npx nx generate @nx/angular:library --name=LIB_NAME --buildable=true --dire
 
 ### Netifly:
 
--[Netifly permalink](https://66bfb48cd9e6aca3d27390a3--free-spot.netlify.app/)  
--[Netifly production deploy](https://main--free-spot.netlify.app/)
+- [Netifly permalink](https://66bfb48cd9e6aca3d27390a3--free-spot.netlify.app/)
+- [Netifly production deploy](https://main--free-spot.netlify.app/)
 
 ### Vercel
 
--[Vercel permalink](https://free-spot-3kwve4nn2-enoh22s-projects.vercel.app/)  
--[Vercel production deploy](https://free-spot.vercel.app/)
+- [Vercel permalink](https://free-spot-3kwve4nn2-enoh22s-projects.vercel.app/)
+- [Vercel production deploy](https://free-spot.vercel.app/)
 
