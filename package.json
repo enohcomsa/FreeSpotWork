@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "start": "nx serve FreeSpot",
-    "build:FreeSpot": "npm i && npx nx build FreeSpot:production"
+    "build:FreeSpot": "npx nx build FreeSpot"
   },
   "private": true,
   "dependencies": {
