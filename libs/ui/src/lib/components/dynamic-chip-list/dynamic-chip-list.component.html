@@ -92,7 +92,7 @@
       <mat-label>New {{ itemLabelSig() }}</mat-label>
       <input type="text" matInput [formControl]="addItemFormControl" [matAutocomplete]="auto" />
       <mat-autocomplete #auto="matAutocomplete" [displayWith]="getDisplayName.bind(this)">
-        @for (option of filteredOptionListSig(); track $index) {
+        @for (option of filteredOptionListSig(); track option) {
           <mat-option [value]="option">
             @if (itemKeyDysplay()) {
               {{ getDisplayName(option) }}
@@ -101,7 +101,9 @@
             }
           </mat-option>
         } @empty {
-          <mat-option disabled checked>No item found</mat-option>
+          @if (optionListSig().length) {
+            <mat-option disabled checked>No item found</mat-option>
+          }
         }
       </mat-autocomplete>
       <mat-error>{{ displayError(addItemFormControl) }}</mat-error>

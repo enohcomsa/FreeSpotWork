@@ -51,12 +51,23 @@ export class DynamicChipListComponent<T> implements OnInit {
   deletableItemListSig = input<T[]>();
 
   filteredOptionListSig: Signal<T[]> = computed(() => {
-    return this.optionListSig()?.filter(
-      (option: T) =>
-        !this.itemListSig().some(
-          (item: T) => item[this.itemKeyDysplay() as keyof T] === option[this.itemKeyDysplay() as keyof T],
-        ),
-    );
+    const filterdOptions: T[] =
+      this.optionListSig()?.filter(
+        (option: T) =>
+          !this.itemListSig().some(
+            (item: T) => item[this.itemKeyDysplay() as keyof T] === option[this.itemKeyDysplay() as keyof T],
+          ),
+      ) || [];
+    if (this.optionListSig()?.length) {
+      if (filterdOptions.length) {
+        this.addItemFormControl.enable();
+        this.addItemFormControl.setValue(filterdOptions[0]);
+      } else {
+        this.addItemFormControl.disable();
+      }
+    }
+
+    return filterdOptions;
   });
 
   addItemFormControl = this._formBuilder.nonNullable.control({} as T, Validators.required);
