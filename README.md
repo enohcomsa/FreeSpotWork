@@ -72,7 +72,7 @@ run `npx nx generate @nx/angular:library --name=LIB_NAME --buildable=true --dire
 ### Netifly:
 
 - [Netifly permalink](https://66bfb48cd9e6aca3d27390a3--free-spot.netlify.app/auth)
-- [Netifly production deploy](https://main--free-spot.netlify.app/auth)
+- [Netifly production deploy](https://main--free-spot.netlify.app/)
 
 ### Vercel
 
