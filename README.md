@@ -67,3 +67,15 @@ It will show tasks that you can run with Nx.
 
 run `npx nx generate @nx/angular:library --name=LIB_NAME --buildable=true --directory=libs/pages/LIB_NAME --publishable=true --routing=true --changeDetection=OnPush --compilationMode=full --flat=true --importPath=@free-spot/LIB_NAME --prefix=free-spot --projectNameAndRootFormat=as-provided --selector=free-spot-LIB_NAME --simpleName=true --skipModule=true --skipTests=true --style=sass --tags=scope:lib --no-interactive`
 
+# Deploy urls:
+
+### Netifly:
+
+-[Netifly permalink](https://66bfb48cd9e6aca3d27390a3--free-spot.netlify.app/)  
+-[Netifly production deploy](https://main--free-spot.netlify.app/)
+
+### Vercel
+
+-[Vercel permalink](https://free-spot-3kwve4nn2-enoh22s-projects.vercel.app/)  
+-[Vercel production deploy](https://free-spot.vercel.app/)
+

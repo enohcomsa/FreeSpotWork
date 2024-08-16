@@ -19,11 +19,6 @@
           {
             "glob": "**/*",
             "input": "apps/FreeSpot/public"
-          },
-          {
-            "glob": "_redirects",
-            "input": "src",
-            "output": "/"
           }
         ],
 
