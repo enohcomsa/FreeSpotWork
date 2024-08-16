@@ -19,8 +19,14 @@
           {
             "glob": "**/*",
             "input": "apps/FreeSpot/public"
+          },
+          {
+            "glob": "_redirects",
+            "input": "src",
+            "output": "/"
           }
         ],
+
         "styles": ["apps/FreeSpot/src/styles.scss"],
         "stylePreprocessorOptions": {
           "includePaths": ["node_modules/"]
