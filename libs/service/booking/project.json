@@ -2,7 +2,7 @@
   "name": "free-spot-booking",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/service/booking/src",
-  "prefix": "lib",
+  "prefix": "free-spot",
   "projectType": "library",
   "tags": ["scope:module"],
   "targets": {

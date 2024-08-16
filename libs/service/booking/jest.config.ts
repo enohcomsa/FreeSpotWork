@@ -3,7 +3,7 @@ export default {
   displayName: 'free-spot-booking',
   preset: '../../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  coverageDirectory: '../../../coverage/libs/service/free-spot-booking',
+  coverageDirectory: '../../../coverage/libs/service/booking',
   transform: {
     '^.+\\.(ts|mjs|js|html)$': [
       'jest-preset-angular',
