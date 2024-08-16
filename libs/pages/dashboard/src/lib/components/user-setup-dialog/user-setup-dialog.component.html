@@ -1,0 +1,52 @@
+<h1 mat-dialog-title class="!text-pretty !text-lg sm:!text-xl">{{ user.firstName }} {{ user.familyName }} account setup:</h1>
+<div mat-dialog-content>
+  <form id="setup-form" [formGroup]="setupForm" class="flex flex-col gap-4" (ngSubmit)="onSubmitSetupForm()">
+    <mat-form-field>
+      <mat-label>Faculty</mat-label>
+      <mat-select formControlName="faculty">
+        @for (faculty of facultyListSig(); track faculty.name) {
+          <mat-option [value]="faculty">{{ faculty.name }}</mat-option>
+        }
+      </mat-select>
+      <mat-error>{{ displayError(setupForm.controls['faculty']) }}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Year</mat-label>
+      <mat-select formControlName="currentYear">
+        @for (year of foundYearListSig(); track year.name) {
+          <mat-option [value]="year">{{ year.name }}</mat-option>
+        }
+      </mat-select>
+      <mat-error>{{ displayError(setupForm.controls['currentYear']) }}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Group</mat-label>
+      <mat-select formControlName="group">
+        @for (group of foundGroupListSig(); track group.name) {
+          <mat-option [value]="group">{{ group.name }}</mat-option>
+        }
+      </mat-select>
+      <mat-error>{{ displayError(setupForm.controls['group']) }}</mat-error>
+    </mat-form-field>
+
+    @if (foundSemigroupListSig().length) {
+      <mat-form-field>
+        <mat-label>Semigroup</mat-label>
+        <mat-select formControlName="semigroup">
+          @for (semigroup of foundSemigroupListSig(); track semigroup.name) {
+            <mat-option [value]="semigroup">{{ semigroup.name }}</mat-option>
+          }
+        </mat-select>
+        <mat-error>{{ displayError(setupForm.controls['semigroup']) }}</mat-error>
+      </mat-form-field>
+    } @else {
+      <mat-form-field class="opacity-0">
+        <mat-select formControlName="semigroup"></mat-select>
+        <mat-error>{{ displayError(setupForm.controls['semigroup']) }}</mat-error>
+      </mat-form-field>
+    }
+    <button mat-flat-button type="submit" form="setup-form" [disabled]="!setupForm.valid">Update Account</button>
+  </form>
+</div>

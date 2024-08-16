@@ -1,0 +1,31 @@
+import { ChangeDetectionStrategy, Component, inject, input, model, output } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { Floor } from '@free-spot/models';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatTooltipModule } from '@angular/material/tooltip';
+
+@Component({
+  selector: 'free-spot-admin-floor-card',
+  standalone: true,
+  imports: [CommonModule, MatCardModule, MatIconModule, MatButtonModule, MatDividerModule, MatTooltipModule],
+  templateUrl: './admin-floor-card.component.html',
+  styleUrl: './admin-floor-card.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class AdminFloorCardComponent {
+  private _router: Router = inject(Router);
+  private _activatedRoute = inject(ActivatedRoute);
+
+  adminFloorSig = input.required<Floor>();
+  addingFloorSig = model.required<boolean>();
+  editFloor = output<Floor>();
+  deleteFloor = output<Floor>();
+
+  onOpenClick(): void {
+    this._router.navigate([this.adminFloorSig().name], { relativeTo: this._activatedRoute });
+  }
+}

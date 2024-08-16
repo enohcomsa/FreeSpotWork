@@ -1,0 +1,9 @@
+export { Event } from './lib/event.enum';
+export { FacultyName } from './lib/faculty.enum';
+export { Language } from './lib/language.enum';
+export { Role } from './lib/role.enum';
+export { Specialization } from './lib/specialization.enum';
+export { Theme } from './lib/theme.enum';
+export { WeekDay } from './lib/week-day.enum';
+export { SubjectName } from './lib/subject-name.enum';
+export { WeekParity } from './lib/week-parity.enum';

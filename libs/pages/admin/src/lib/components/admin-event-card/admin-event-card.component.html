@@ -1,0 +1,50 @@
+<mat-card class="@container">
+  <mat-card-header class="!block">
+    <mat-card-title class="!flex items-center justify-between">
+      <p>{{ adminEventSig().name }}</p>
+      <p class="text-sm tracking-tight">{{ adminEventSig().date | date: 'MMM dd, yyyy HH:mm' }}</p>
+    </mat-card-title>
+    <mat-card-subtitle class="@3xs:flex-row @3xs:items-end @3xs:!text-sm !flex flex-col !text-xs">
+      <div class="flex items-end gap-1 !text-sm">
+        <mat-icon class="-ml-2 -mr-1 scale-50">location_on</mat-icon>
+        <p>{{ adminEventSig().building }}<span class="@3xs:mx-1 @3xs:inline hidden">|</span></p>
+      </div>
+      <p>{{ adminEventSig().adress }}</p>
+    </mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <mat-list class="!pb-0">
+      <mat-list-item class="!p-0">
+        <div class="flex justify-between text-xs tracking-tighter">
+          <p class="min-w-24">Room</p>
+          <div class="flex gap-4 [&>p]:w-14 [&>p]:text-center">
+            <p>Free desk</p>
+            <p>Booked</p>
+            <p>Reserved</p>
+          </div>
+        </div>
+      </mat-list-item>
+      <mat-divider></mat-divider>
+
+      <mat-list-item class="!cursor-pointer !p-0">
+        <div class="flex justify-between text-sm tracking-tighter">
+          <p class="min-w-24 truncate">{{ adminEventSig().roomName }}</p>
+          <div class="flex gap-4 [&>p]:w-14 [&>p]:text-center">
+            <p class="total-spots">{{ adminEventSig().freeSpots }}</p>
+            <p class="busy-spots">{{ adminEventSig().busySpots }}</p>
+            <p class="unavabile-spots">{{ adminEventSig().reservedSpots }}</p>
+          </div>
+        </div>
+      </mat-list-item>
+    </mat-list>
+  </mat-card-content>
+  <mat-card-actions class="justify-between gap-4">
+    <button mat-flat-button class="grow" (click)="addingEventSig.set(true); editEvent.emit(adminEventSig())">
+      <mat-icon class="@2xs:!mr-2 @2xs:!-ml-2 !m-0">edit</mat-icon> <span class="@2xs:inline-block hidden">Edit</span>
+    </button>
+    <button mat-flat-button class="delete-button grow" (click)="deleteEvent.emit(adminEventSig())">
+      <mat-icon class="@2xs:!mr-2 @2xs:!-ml-2 !m-0">delete</mat-icon> <span class="@2xs:inline-block hidden">Delete</span>
+    </button>
+  </mat-card-actions>
+</mat-card>

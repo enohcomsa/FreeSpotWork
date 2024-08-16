@@ -1,0 +1,53 @@
+@use 'sass:map';
+@use '@angular/material' as mat;
+
+@mixin color($theme) {
+  .free-spot-toolbar {
+    background-color: mat.get-theme-color($theme, primary);
+    color: mat.get-theme-color($theme, on-primary);
+  }
+
+  .on-free-spot-toolbar {
+    background-color: mat.get-theme-color($theme, on-primary);
+    color: mat.get-theme-color($theme, primary);
+  }
+
+  .free-spot-toolbar-active-link {
+    background-color: rgba(mat.get-theme-color($theme, on-primary), 0.1) !important;
+  }
+
+  .lang-color {
+    color: mat.get-theme-color($theme, primary);
+  }
+
+  .login-switch:hover {
+    color: mat.get-theme-color($theme, primary);
+  }
+
+  .theme-menu-button:hover {
+    @if mat.get-theme-type($theme) == dark {
+      background-color: rgba(228, 225, 230, 0.08) !important;
+    } @else {
+      background-color: rgba(27, 27, 31, 0.08) !important;
+    }
+  }
+
+  .logo {
+    @if mat.get-theme-type($theme) == dark {
+      filter: brightness(0)
+        saturate(100%)
+        invert(12%)
+        sepia(98%)
+        saturate(2103%)
+        hue-rotate(218deg)
+        brightness(93%)
+        contrast(99%);
+    }
+  }
+}
+
+@mixin theme($theme) {
+  @if mat.theme-has($theme, color) {
+    @include color($theme);
+  }
+}

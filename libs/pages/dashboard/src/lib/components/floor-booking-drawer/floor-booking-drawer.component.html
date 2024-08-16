@@ -1,0 +1,22 @@
+<mat-drawer-container [ngClass]="{ 'h-[calc(100vh-64px)]': drawer.opened, 'min-h-[calc(100vh-64px)]': !drawer.opened }">
+  <mat-drawer
+    #drawer
+    mode="over"
+    position="end"
+    [opened]="toggleStateSig()"
+    (closedStart)="toggleStateSig.set(!toggleStateSig())"
+    class="hide-scrollbar !w-full sm:!w-2/3 md:!w-1/2 lg:!w-1/3"
+  >
+    <div class="flex w-full items-center justify-between p-4">
+      <p>Room: {{ roomNameSig() }}</p>
+      <button mat-icon-button (click)="drawer.close()">
+        <mat-icon class="mb-2">close</mat-icon>
+      </button>
+    </div>
+
+    <free-spot-dynamic-form [eventBookingSelectedSig]="EVENT.COURSE"></free-spot-dynamic-form>
+  </mat-drawer>
+  <mat-drawer-content>
+    <ng-content></ng-content>
+  </mat-drawer-content>
+</mat-drawer-container>

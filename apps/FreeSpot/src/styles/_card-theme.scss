@@ -1,0 +1,67 @@
+@use 'sass:map';
+@use '@angular/material' as mat;
+
+@mixin color($theme) {
+  mat-card {
+    @if mat.get-theme-type($theme) == dark {
+      background-color: mat.get-theme-color($theme, surface-container-high);
+    } @else {
+      background-color: mat.get-theme-color($theme, surface-container-low);
+    }
+  }
+
+  .card-link {
+    color: mat.get-theme-color($theme, tertiary);
+  }
+
+  .total-spots {
+    color: mat.get-theme-color($theme, primary);
+  }
+
+  .busy-spots {
+    color: mat.get-theme-color($theme, secondary);
+  }
+
+  .unavabile-spots {
+    color: mat.get-theme-color($theme, error);
+  }
+
+  .primary-chip {
+    .mdc-evolution-chip__text-label {
+      color: mat.get-theme-color($theme, primary) !important;
+    }
+  }
+
+  .link-chip {
+    .mdc-evolution-chip__text-label {
+      color: mat.get-theme-color($theme, tertiary) !important;
+    }
+  }
+
+  .error-chip {
+    .mdc-evolution-chip__text-label {
+      color: mat.get-theme-color($theme, error) !important;
+    }
+  }
+
+  .primary-icon {
+    @include mat.icon-color($theme, $color-variant: primary);
+  }
+
+  .delete-icon {
+    @include mat.icon-color($theme, $color-variant: error);
+  }
+
+  .delete-button {
+    @include mat.button-color($theme, $color-variant: error);
+  }
+  .open-button {
+    @include mat.button-color($theme, $color-variant: secondary);
+  }
+}
+
+@mixin theme($theme) {
+  @if mat.theme-has($theme, color) {
+    @include color($theme);
+  }
+}

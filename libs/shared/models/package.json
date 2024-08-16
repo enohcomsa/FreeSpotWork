@@ -1,0 +1,8 @@
+{
+  "name": "@free-spot/models",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@free-spot/enums": "0.0.1"
+  },
+  "sideEffects": false
+}

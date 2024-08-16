@@ -1,0 +1,32 @@
+<mat-card appearance="outlined" class="@container">
+  <mat-card-content class="@lg:flex-row @lg:justify-between @lg:items-baseline !flex flex-col justify-center">
+    <p class="@3xs:items-center @3xs:flex-row flex grow flex-col items-start justify-between text-lg font-bold tracking-tight">
+      @if (eventBookingSig().activityType === EVENT.SPECIAL_EVENT) {
+        {{ eventBookingSig().name }}
+      } @else {
+        {{ eventBookingSig().subjectItem.shortName }}
+      }
+
+      <span class="@3xs:ml-4 total-spots text-sm font-normal tracking-tighter md:text-base md:tracking-tight">
+        free spots:{{ timetableActivitySig().freeSpots }}
+      </span>
+      <span class="@lg:block hidden"></span>
+    </p>
+    <mat-divider class="md:hidden"></mat-divider>
+    <div
+      class="@sm:flex-row @sm:justify-between @sm:items-center @lg:tracking-tight @lg:text-base flex grow flex-col justify-center text-sm tracking-tighter"
+    >
+      <div class="flex items-center">
+        <p class="max-w-40 truncate">{{ eventBookingSig().buildingName }}<span class="mx-1">|</span></p>
+        <p>{{ eventBookingSig().floorName }}<span class="mx-1">|</span></p>
+        <p>{{ eventBookingSig().roomName }}</p>
+      </div>
+      <div class="flex items-center">
+        <p>{{ eventBookingSig().date | date: 'EEEE, dd MMM, yyyy' }}<span class="mx-1">|</span></p>
+        <p>{{ eventBookingSig().startHour }}-</p>
+        <p>{{ eventBookingSig().endHour }}</p>
+      </div>
+      <button mat-flat-button class="mt-2" (click)="bookSpot()">Book spot</button>
+    </div>
+  </mat-card-content>
+</mat-card>

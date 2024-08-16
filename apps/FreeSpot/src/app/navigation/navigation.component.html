@@ -1,0 +1,184 @@
+<mat-toolbar class="free-spot-toolbar stikky z-2 top-0 z-20 w-[110%]">
+  <nav class="flex grow items-center justify-between py-2">
+    <div class="-ml-6 h-44 w-44 sm:h-48 sm:w-48">
+      <img
+        routerLink="dashboard"
+        class="logo h-44 w-44 cursor-pointer sm:h-48 sm:w-48"
+        src="images/logo_transparent.png"
+        alt="Free Spot logo"
+      />
+    </div>
+    <div class="flex items-center">
+      <a
+        mat-flat-button
+        class="!hidden !text-sm !tracking-tight md:!flex lg:!text-base"
+        routerLink="/dashboard"
+        routerLinkActive="free-spot-toolbar-active-link"
+      >
+        {{ 'NAV.DASHBOARD' | translate }}
+      </a>
+      <a
+        mat-flat-button
+        class="!hidden !text-sm !tracking-tight md:!flex lg:!text-base"
+        routerLink="/schedule"
+        routerLinkActive="free-spot-toolbar-active-link"
+      >
+        {{ 'NAV.SCHEDULE' | translate }}
+      </a>
+      <a
+        mat-flat-button
+        class="!hidden !text-sm !tracking-tight md:!flex lg:!text-base"
+        routerLink="/my-bookings"
+        routerLinkActive="free-spot-toolbar-active-link"
+      >
+        {{ 'NAV.MY_BOOKINGS' | translate }}
+      </a>
+      @if (currentUserSig().role === Role.ADMIN) {
+        <a
+          mat-flat-button
+          class="mr-4 !hidden !text-sm !tracking-tight md:!flex lg:!text-base"
+          routerLink="/admin"
+          routerLinkActive="free-spot-toolbar-active-link"
+        >
+          {{ 'NAV.ADMIN' | translate }}
+        </a>
+      }
+      <!-- <nav profile></nav> -->
+      <div class="flex items-center space-x-4 hover:cursor-pointer">
+        <div
+          class="on-free-spot-toolbar hidden h-12 w-12 rounded-full text-lg font-semibold md:flex md:items-center md:justify-center"
+          [matMenuTriggerFor]="profileMenu"
+        >
+          {{ getLoggedUserInitials()() | uppercase }}
+        </div>
+        <div class="hidden text-base font-semibold lg:flex lg:items-center" [matMenuTriggerFor]="profileMenu">
+          {{ getLoggedUserName()() }} <mat-icon inline="true">keyboard_arrow_down</mat-icon>
+        </div>
+      </div>
+    </div>
+
+    <button class="hamburger z-30 block focus:outline-none md:hidden" (click)="opened = !opened">
+      <span [ngClass]="{ open: opened }" class="on-free-spot-toolbar hamburger-top"></span>
+      <span [ngClass]="{ open: opened }" class="on-free-spot-toolbar hamburger-middle"></span>
+      <span [ngClass]="{ open: opened }" class="on-free-spot-toolbar hamburger-bottom"></span>
+    </button>
+  </nav>
+
+  <nav
+    class="free-spot-toolbar fixed inset-0 z-20 flex min-h-screen w-full flex-col self-end px-4 pb-4 md:hidden"
+    [ngClass]="{ hidden: !opened }"
+  >
+    <div class="mb-4 flex h-16 items-center">
+      <div class="-ml-6 -mt-2 h-44 w-44 sm:mt-0 sm:h-48 sm:w-48">
+        <img
+          routerLink="dashboard"
+          (click)="opened = false"
+          class="logo h-44 w-44 cursor-pointer sm:h-48 sm:w-48"
+          src="images/logo_transparent.png"
+          alt="Free Spot logo"
+        />
+      </div>
+    </div>
+    <div class="flex w-full flex-col items-center gap-2">
+      <div class="w-full space-y-2 pb-4">
+        <div class="flex items-center justify-center space-x-4 hover:cursor-pointer">
+          <div
+            class="on-free-spot-toolbar flex h-12 w-12 items-center justify-center rounded-full text-xl font-semibold"
+            [matMenuTriggerFor]="profileMenu"
+          >
+            {{ getLoggedUserInitials()() | uppercase }}
+          </div>
+          <div class="hidden items-center text-xl font-semibold sm:flex" [matMenuTriggerFor]="profileMenu">
+            {{ getLoggedUserName()() }} <mat-icon inline="true">keyboard_arrow_down</mat-icon>
+          </div>
+        </div>
+        <mat-divider></mat-divider>
+      </div>
+      <a
+        mat-flat-button
+        class="w-full !py-6"
+        routerLink="/dashboard"
+        routerLinkActive="free-spot-toolbar-active-link"
+        (click)="opened = false"
+      >
+        <span class="py-4 text-xl tracking-wide">{{ 'NAV.DASHBOARD' | translate }}</span>
+      </a>
+      <a
+        mat-flat-button
+        class="w-full !py-6"
+        routerLink="/schedule"
+        routerLinkActive="free-spot-toolbar-active-link"
+        (click)="opened = false"
+      >
+        <span class="text-xl tracking-wide"> {{ 'NAV.SCHEDULE' | translate }}</span>
+      </a>
+      <a
+        mat-flat-button
+        class="w-full !py-6"
+        routerLink="/my-bookings"
+        routerLinkActive="free-spot-toolbar-active-link"
+        (click)="opened = false"
+        ><span class="py-4 text-xl tracking-wide"> {{ 'NAV.MY_BOOKINGS' | translate }}</span>
+      </a>
+      @if (currentUserSig().role === Role.ADMIN) {
+        <div class="w-full space-y-2">
+          <mat-divider></mat-divider>
+          <a
+            mat-flat-button
+            class="w-full !py-6"
+            routerLink="/admin"
+            routerLinkActive="free-spot-toolbar-active-link"
+            (click)="opened = false"
+          >
+            <span class="text-xl tracking-wide"> {{ 'NAV.ADMIN' | translate }}</span>
+          </a>
+        </div>
+      }
+    </div>
+  </nav>
+</mat-toolbar>
+
+<free-spot-loading></free-spot-loading>
+<main class="h-[calc(100%-64px)]">
+  <router-outlet></router-outlet>
+</main>
+
+<mat-menu #profileMenu="matMenu" xPosition="after">
+  <button mat-menu-item>
+    <mat-icon>language</mat-icon>
+    <span class="flex justify-around text-base">
+      <span
+        [ngClass]="{ 'lang-color': currentUserSig().preferdLanguage === LANG.EN }"
+        (click)="onLangChange(LANG.EN, currentUserSig())"
+      >
+        EN
+      </span>
+      <span
+        [ngClass]="{ 'lang-color': currentUserSig().preferdLanguage === LANG.RO }"
+        (click)="onLangChange(LANG.RO, currentUserSig())"
+      >
+        RO
+      </span>
+    </span>
+  </button>
+  <button class="theme-menu-button h-12 w-full px-3">
+    <div class="flex w-full items-center justify-between">
+      <mat-icon
+        [ngClass]="{ 'primary-icon !important': currentUserSig().preferedTheme === THEME.LIGHT }"
+        class="mr-3"
+        (click)="onThemeChange(THEME.LIGHT, currentUserSig())"
+        >light_mode</mat-icon
+      >
+      <mat-icon
+        [ngClass]="{ 'primary-icon': currentUserSig().preferedTheme === THEME.DARK }"
+        class="mr-5"
+        (click)="onThemeChange(THEME.DARK, currentUserSig())"
+        >dark_mode</mat-icon
+      >
+    </div>
+  </button>
+  <button mat-menu-item (click)="logout()">
+    <mat-icon>logout</mat-icon>
+    <span class="mx-2">Logout </span>
+  </button>
+</mat-menu>

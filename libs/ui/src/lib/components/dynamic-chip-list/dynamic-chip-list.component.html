@@ -1,0 +1,113 @@
+<mat-chip-set>
+  @for (item of itemListSig(); track $index; let last = $last) {
+    @if (last) {
+      <div class="relative flex">
+        <mat-chip [ngClass]="{ 'link-chip': itemDinamicRoute() !== '' }" (click)="onDynamicNavigation(item)">
+          <div
+            [ngClass]="{ '!cursor-pointer': itemDinamicRoute() !== '' }"
+            removable="true"
+            matTooltip="click to see group details"
+            matTooltipPosition="right"
+            matTooltipShowDelay="500"
+            [matTooltipDisabled]="!itemDinamicRoute()"
+          >
+            @if (itemKeyDysplay()) {
+              <p>{{ getDisplayName(item) }}</p>
+            } @else {
+              <p>{{ item }}</p>
+            }
+          </div>
+          @if (canBeDeleted(item)) {
+            <button
+              matChipRemove
+              (click)="onRemoveItem(item)"
+              matTooltip="click to remove item"
+              matTooltipPosition="right"
+              matTooltipShowDelay="500"
+            >
+              <mat-icon class="delete-icon">cancel</mat-icon>
+            </button>
+          }
+        </mat-chip>
+        <button
+          mat-icon-button
+          class="ml-2"
+          (click)="addingItem = true"
+          matTooltip="click to add  item"
+          matTooltipPosition="right"
+          matTooltipShowDelay="500"
+        >
+          <mat-icon class="primary-icon mb-2">add </mat-icon>
+        </button>
+      </div>
+    } @else {
+      <mat-chip [ngClass]="{ 'link-chip': itemDinamicRoute() !== '' }" (click)="onDynamicNavigation(item)">
+        <div
+          [ngClass]="{ '!cursor-pointer': itemDinamicRoute() !== '' }"
+          removable="true"
+          matTooltip="click to see group details"
+          matTooltipPosition="right"
+          matTooltipShowDelay="500"
+          [matTooltipDisabled]="!itemDinamicRoute()"
+        >
+          @if (itemKeyDysplay()) {
+            <p>{{ getDisplayName(item) }}</p>
+          } @else {
+            <p>{{ item }}</p>
+          }
+        </div>
+        @if (canBeDeleted(item)) {
+          <button
+            matChipRemove
+            (click)="onRemoveItem(item)"
+            matTooltip="click to remove item"
+            matTooltipPosition="right"
+            matTooltipShowDelay="500"
+          >
+            <mat-icon class="delete-icon">cancel</mat-icon>
+          </button>
+        }
+      </mat-chip>
+    }
+  } @empty {
+    <div class="relative flex">
+      <mat-chip> No items added yet </mat-chip>
+      <button
+        mat-icon-button
+        class="ml-2"
+        (click)="addingItem = true"
+        matTooltip="click to add item"
+        matTooltipPosition="right"
+        matTooltipShowDelay="500"
+      >
+        <mat-icon class="primary-icon mb-2">add </mat-icon>
+      </button>
+    </div>
+  }
+</mat-chip-set>
+
+@if (addingItem) {
+  <form class="flex flex-col py-4 sm:flex-row sm:items-center sm:gap-4" (ngSubmit)="onAddItem()">
+    <mat-form-field matTooltip="No options Found!" matTooltipPosition="right" [matTooltipDisabled]="!addItemFormControl.disabled">
+      <mat-label>New {{ itemLabelSig() }}</mat-label>
+      <input type="text" matInput [formControl]="addItemFormControl" [matAutocomplete]="auto" />
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="getDisplayName.bind(this)">
+        @for (option of filteredOptionListSig(); track option) {
+          <mat-option [value]="option">
+            @if (itemKeyDysplay()) {
+              {{ getDisplayName(option) }}
+            } @else {
+              {{ option }}
+            }
+          </mat-option>
+        } @empty {
+          @if (optionListSig().length) {
+            <mat-option disabled checked>No item found</mat-option>
+          }
+        }
+      </mat-autocomplete>
+      <mat-error>{{ displayError(addItemFormControl) }}</mat-error>
+    </mat-form-field>
+    <button mat-flat-button type="submit" class="sm:mb-5" [disabled]="!addItemFormControl.valid">Add {{ itemLabelSig() }}</button>
+  </form>
+}

@@ -1,0 +1,34 @@
+<mat-card class="@container">
+  <mat-card-content class="@sm:flex-row @sm:justify-between @sm:items-center !flex flex-col justify-center gap-4">
+    <div class="flex flex-col gap-2 pb-4">
+      <p class="font-bold">{{ adminFloorSig().name }}</p>
+      <p><span>Rooms: </span>{{ adminFloorSig().roomList ? adminFloorSig().roomList.length : 0 }}</p>
+    </div>
+  </mat-card-content>
+  <mat-divider></mat-divider>
+  <mat-card-actions class="justify-between gap-4 !p-4 lg:!px-8">
+    <button mat-flat-button class="grow" (click)="addingFloorSig.set(true); editFloor.emit(adminFloorSig())">
+      <mat-icon class="@2xs:!mr-2 @2xs:!-ml-2 !m-0">edit</mat-icon> <span class="@2xs:inline-block hidden">Edit</span>
+    </button>
+    <button mat-stroked-button class="grow" (click)="onOpenClick()">
+      <mat-icon class="@2xs:!mr-2 @2xs:!-ml-2 !m-0">open_in_browser</mat-icon><span class="@2xs:inline-block hidden">Open</span>
+    </button>
+    <div
+      class="grow"
+      matTooltip="Remove floor rooms before deleteing floor"
+      matTooltipPosition="right"
+      matTooltipPositionAtOrigin="true"
+      matTooltipShowDelay="500"
+      [matTooltipDisabled]="adminFloorSig().roomList ? adminFloorSig().roomList.length === 0 : true"
+    >
+      <button
+        mat-flat-button
+        class="delete-button w-full grow"
+        (click)="deleteFloor.emit(adminFloorSig())"
+        [disabled]="adminFloorSig().roomList ? adminFloorSig().roomList.length > 0 : false"
+      >
+        <mat-icon class="@2xs:!mr-2 @2xs:!-ml-2 !m-0">delete</mat-icon><span class="@2xs:inline-block hidden">Delete</span>
+      </button>
+    </div>
+  </mat-card-actions>
+</mat-card>

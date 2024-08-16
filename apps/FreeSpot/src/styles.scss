@@ -1,8 +1,84 @@
+@use '@angular/material' as mat;
+@use './styles/free-spot-m3-theme.scss';
+@use './styles/toolbar-theme' as toolBar;
+@use './styles/card-theme' as card;
+@import 'ngx-toastr/toastr';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+@include mat.core();
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html {
+  scrollbar-gutter: stable;
+  overflow-y: scroll;
+}
+
+.light-mode {
+  @include mat.all-component-themes(free-spot-m3-theme.$light-theme);
+  @include toolBar.theme(free-spot-m3-theme.$light-theme);
+  @include card.theme(free-spot-m3-theme.$light-theme);
+}
+
+.dark-mode {
+  @include mat.all-component-colors(free-spot-m3-theme.$dark-theme);
+  @include toolBar.color(free-spot-m3-theme.$dark-theme);
+  @include card.color(free-spot-m3-theme.$dark-theme);
+}
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 1.5rem auto;
+  padding: 0 1rem 4rem;
+}
+
+//hamburger style
+.hamburger {
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  transition: all 0.25;
+  position: relative;
+}
+
+.hamburger-top,
+.hamburger-middle,
+.hamburger-bottom {
+  content: '';
+  position: absolute;
+  width: 24px;
+  height: 3px;
+  top: 4px;
+  left: 0;
+  transform: rotate(0);
+  transition: all 0.5s;
+}
+
+.hamburger-middle {
+  transform: translateY(7px);
+}
+.hamburger-bottom {
+  transform: translateY(14px);
+}
+
+.open {
+  transform: rotate(90deg);
+  transform: translateY(0);
+}
+
+.open.hamburger-top {
+  transform: rotate(45deg) translateY(6px) translateX(6px);
+}
+.open.hamburger-middle {
+  display: none;
+}
+.open.hamburger-bottom {
+  transform: rotate(-45deg) translateY(6px) translateX(-6px);
+}

@@ -1,0 +1,8 @@
+{
+  "name": "@free-spot/constants",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@free-spot/models": "0.0.1"
+  },
+  "sideEffects": false
+}
