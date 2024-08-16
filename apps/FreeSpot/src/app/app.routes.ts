@@ -33,9 +33,9 @@ export const appRoutes: Route[] = [
         canActivate: [authGuard, adminGuard],
         loadChildren: () => import('@free-spot/admin').then(),
       },
+      { path: '**', redirectTo: 'dashboard' },
     ],
   },
   { path: '', pathMatch: 'full', redirectTo: 'auth' },
   { path: '**', redirectTo: 'auth' },
 ];
-
