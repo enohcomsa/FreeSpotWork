@@ -9,7 +9,6 @@ import { take } from 'rxjs';
 })
 export class AdminFacultyService {
   private _httpFacultyService: HttpFacultyService = inject(HttpFacultyService);
-
   private _facultyListSig: WritableSignal<Faculty[]> = signal([]);
   facultyListSig = this._facultyListSig.asReadonly();
 

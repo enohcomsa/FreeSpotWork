@@ -49,7 +49,6 @@ export class NavigationComponent implements OnInit {
   opened = false;
   LANG = Language;
   THEME = Theme;
-
   Role = Role;
   private _currentUserEmail = (
     JSON.parse(localStorage.getItem('user') as string) as {

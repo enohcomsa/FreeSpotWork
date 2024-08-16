@@ -21,22 +21,6 @@ export class BuildingCardComponent {
   private _activatedRoute = inject(ActivatedRoute);
 
   buildingSig = input.required<Building>();
-  eventData: Building = {
-    name: 'Simpozion',
-    adress: 'Observatorului, 400347',
-    floorList: [
-      {
-        name: '328',
-        buildingName: 'Laboratoare Observator',
-        roomList: [],
-        totalSpotsNumber: 90,
-        unavailableSpots: 10,
-      },
-    ],
-    specialEvent: true,
-    building: 'Laboratoare Observator',
-    date: new Date('2024-08-14,16:30'),
-  };
 
   onFloorClick(florName: string): void {
     this._router.navigate(['floor/' + florName], { relativeTo: this._activatedRoute });

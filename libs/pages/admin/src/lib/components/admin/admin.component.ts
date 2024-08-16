@@ -127,7 +127,6 @@ export class AdminComponent implements OnInit, OnDestroy {
     this._adminEventService.init();
     this._adminRoomService.init();
     this._bookingService.init();
-    // this.facultyList.forEach((fac) => this._adminFacultyService.addFaculty(fac));
     this.subscriptionList.push(
       this.addEventFormGroup.controls['building'].valueChanges
         .pipe(filter((building) => !!building))

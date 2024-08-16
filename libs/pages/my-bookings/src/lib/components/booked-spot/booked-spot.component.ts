@@ -16,7 +16,8 @@ import { MatButtonModule } from '@angular/material/button';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BookedSpotComponent {
-  EVENT = Event;
   eventSig = input.required<BookedEvent>();
   deleteEvent = output<BookedEvent>();
+
+  EVENT = Event;
 }

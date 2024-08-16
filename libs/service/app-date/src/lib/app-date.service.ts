@@ -9,11 +9,9 @@ import { take } from 'rxjs';
 })
 export class AppDateService {
   private _httpAppDateService: HttpAppDateService = inject(HttpAppDateService);
-
-  appDateChanged: WritableSignal<boolean> = signal(false);
-
   private _appDateSig: WritableSignal<FreeSpotDate> = signal({} as FreeSpotDate);
   appDateSig = this._appDateSig.asReadonly();
+  appDateChanged: WritableSignal<boolean> = signal(false);
 
   init(): void {
     if (!Object.keys(this._appDateSig()).length) {

@@ -16,6 +16,6 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class FloorBookingDrawerComponent {
   toggleStateSig = model.required<boolean>();
-  EVENT = Event;
   roomNameSig = input.required<string>();
+  EVENT = Event;
 }
