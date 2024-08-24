@@ -165,12 +165,11 @@ export class DynamicFormComponent implements OnInit {
         });
 
         this.oldTimetableActivitySig.set(
-          timetableActivityListFound.find((timetableActivity: TimetableActivityItem) =>
-            timetableActivity.startHour !== oldBookedEvent.startHour
-              ? true
-              : timetableActivity.date !== oldBookedEvent.date
-                ? true
-                : timetableActivity.weekParity !== oldBookedEvent.weekParity,
+          timetableActivityListFound.find(
+            (timetableActivity: TimetableActivityItem) =>
+              timetableActivity.startHour === oldBookedEvent.startHour &&
+              timetableActivity.date === oldBookedEvent.date &&
+              timetableActivity.weekParity === oldBookedEvent.weekParity,
           ) || ({} as TimetableActivityItem),
         );
 
