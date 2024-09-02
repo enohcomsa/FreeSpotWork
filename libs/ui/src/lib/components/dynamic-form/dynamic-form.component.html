@@ -49,7 +49,7 @@
           <free-spot-booking-item
             [timetableActivitySig]="timetableActivity"
             [oldTimetableActivitySig]="oldTimetableActivitySig()"
-            (bookingActive)="searchActiveSig.set($event)"
+            (bookingActive)="searchActiveSig.set($event); searchForm.reset()"
           ></free-spot-booking-item>
         } @empty {
           <h3>No free spot available.</h3>
