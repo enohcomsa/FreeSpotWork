@@ -36,6 +36,7 @@ import { AdminRoomService } from '@free-spot-service/room';
 import { AppDateService } from '@free-spot-service/app-date';
 import { FormErrorMessage } from '@free-spot/util';
 import { AdminEventService } from '@free-spot-service/event';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'free-spot-dynamic-form',
@@ -48,6 +49,7 @@ import { AdminEventService } from '@free-spot-service/event';
     MatSelectModule,
     MatButtonModule,
     BookingItemComponent,
+    TranslateModule,
   ],
   templateUrl: './dynamic-form.component.html',
   styleUrl: './dynamic-form.component.scss',

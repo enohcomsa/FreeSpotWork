@@ -22,6 +22,7 @@ import { FormErrorMessage } from '@free-spot/util';
 import { ThemeService } from '../theme/theme.service';
 import { Theme } from '@free-spot/enums';
 import { MatIconModule } from '@angular/material/icon';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'free-spot-app-auth',
@@ -36,6 +37,7 @@ import { MatIconModule } from '@angular/material/icon';
     MatInputModule,
     MatCardModule,
     MatIconModule,
+    TranslateModule,
   ],
   templateUrl: './auth.component.html',
   styleUrl: './auth.component.scss',

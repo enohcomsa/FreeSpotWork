@@ -9,5 +9,58 @@
     "SCHEDULE": "Schedule",
     "MY_BOOKINGS": "My bookings",
     "ADMIN": "Admin"
+  },
+  "LOGIN": {
+    "WELCOME": "Welcome back",
+    "CREATE_ACCOUNT": "Create an account",
+    "NO_ACCOUNT": "Dont't have an account?",
+    "ALREADY_ACCOUNT": "Already have an account?",
+    "FIRST_NAME": "First name",
+    "LAST_NAME": "Last name",
+    "EMAIL": "Email",
+    "PASSWORD": "Password",
+    "PASSWORD_HINT": "Use 6 ore more characters",
+    "SIGNUP": "Sign up",
+    "LOGIN": "Log in"
+  },
+  "DINAMIC_FORM": {
+    "SELECT_BOOKING": "Select booking",
+    "LABORATORY": "Laboratory",
+    "COURSE": "Course",
+    "PROJECT": "Project",
+    "SEMINAR": "Seminar",
+    "SPECIAL_EVENT": "Special event",
+    "EVENT_NAME": "Event name",
+    "NO_EV_FOUND": "No event found",
+    "SUBJECT": "Subject",
+    "NO_FREE_SPOTS": "No free spot available.",
+    "SELECT_BOOKING_HINT": "Select a booking and search.",
+    "SEARCH": "Search"
+  },
+  "BOOKING_SEARCH_RESULT": {
+    "FREE_SPOTS": " free spots:",
+    "BOOK_SPOT": "Book spot"
+  },
+  "BUILDIG_PAGE": {
+    "BUILDINGS": "Buildings",
+    "NO_BUILDINGS_MESSAGE": "No building added yet.",
+    "EVENTS": "Events",
+    "NO_EVENTS_MESSAGE": "No event added yet."
+  },
+  "BUILDING_CARD": {
+    "FLOOR": "Floor",
+    "TOTAL": "Total",
+    "UNAVAILABLE": "Unavailable",
+    "NO_FLOOR_MSG": "No floors added yet",
+    "ROOM": "Room",
+    "FREE_DESK": "Free",
+    "BOOKED": "Booked",
+    "RESERVED": "Reserved"
+  },
+  "DASH_FLOOR_DETAIL": {
+    "NO_ROOM_MSG": "No room added yet.",
+    "ROOM_NAME": "Room name :",
+    "BOOK_SPOT": "Book spot",
+    "ROOM": "Room:"
   }
 }

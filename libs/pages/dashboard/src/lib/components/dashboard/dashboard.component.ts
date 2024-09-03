@@ -27,11 +27,12 @@ import { AdminFloorService } from '@free-spot-service/floor';
 import { AdminRoomService } from '@free-spot-service/room';
 import { BookingService } from '@free-spot-service/booking';
 import { AdminEventService } from '@free-spot-service/event';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'free-spot-dashboard',
   standalone: true,
-  imports: [CommonModule, BuildingCardComponent, DynamicFormComponent, UserSetupDialogComponent],
+  imports: [CommonModule, BuildingCardComponent, DynamicFormComponent, UserSetupDialogComponent, TranslateModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.sass',
   changeDetection: ChangeDetectionStrategy.OnPush,

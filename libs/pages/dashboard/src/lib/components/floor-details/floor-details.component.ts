@@ -4,11 +4,12 @@ import { FloorBookingDrawerComponent } from '../floor-booking-drawer/floor-booki
 import { Floor } from '@free-spot/models';
 import { FloorRoomComponent } from '../floor-room/floor-room.component';
 import { AdminFloorService } from '@free-spot-service/floor';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'free-spot-floor-details',
   standalone: true,
-  imports: [CommonModule, FloorBookingDrawerComponent, FloorRoomComponent],
+  imports: [CommonModule, FloorBookingDrawerComponent, FloorRoomComponent, TranslateModule],
   templateUrl: './floor-details.component.html',
   styleUrl: './floor-details.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

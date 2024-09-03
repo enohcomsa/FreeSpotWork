@@ -7,11 +7,21 @@ import { MatListModule } from '@angular/material/list';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Building } from '@free-spot/models';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'free-spot-building-card',
   standalone: true,
-  imports: [CommonModule, RouterModule, MatCardModule, MatIconModule, MatListModule, MatDividerModule, MatTooltipModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    MatCardModule,
+    MatIconModule,
+    MatListModule,
+    MatDividerModule,
+    MatTooltipModule,
+    TranslateModule,
+  ],
   templateUrl: './building-card.component.html',
   styleUrl: './building-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

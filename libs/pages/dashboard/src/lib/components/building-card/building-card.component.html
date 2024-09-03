@@ -12,10 +12,10 @@
       <mat-list class="!pb-0">
         <mat-list-item class="!p-0">
           <div class="flex justify-between text-xs tracking-tighter">
-            <p class="min-w-24">Floor</p>
+            <p class="min-w-24">{{ 'BUILDING_CARD.FLOOR' | translate }}</p>
             <div class="flex gap-4 [&>p]:w-14 [&>p]:text-center">
-              <p>Total</p>
-              <p>Unavabile</p>
+              <p>{{ 'BUILDING_CARD.TOTAL' | translate }}</p>
+              <p>{{ 'BUILDING_CARD.UNAVAILABLE' | translate }}</p>
             </div>
           </div>
         </mat-list-item>
@@ -43,7 +43,7 @@
           }
         } @empty {
           <div class="flex h-12 items-center justify-between text-sm tracking-tighter">
-            <p class="min-w-24">No floors added yet</p>
+            <p class="min-w-24">{{ 'BUILDING_CARD.NO_FLOOR_MSG' | translate }}</p>
           </div>
         }
       </mat-list>
@@ -70,11 +70,11 @@
     <mat-list class="!pb-0">
       <mat-list-item class="!p-0">
         <div class="flex justify-between text-xs tracking-tighter">
-          <p class="min-w-24">Room</p>
+          <p class="min-w-24">{{ 'BUILDING_CARD.ROOM' | translate }}</p>
           <div class="flex gap-4 [&>p]:w-14 [&>p]:text-center">
-            <p>Free desk</p>
-            <p>Booked</p>
-            <p>Reserved</p>
+            <p>{{ 'BUILDING_CARD.FREE_DESK' | translate }}</p>
+            <p>{{ 'BUILDING_CARD.BOOKED' | translate }}</p>
+            <p>{{ 'BUILDING_CARD.RESERVED' | translate }}</p>
           </div>
         </div>
       </mat-list-item>

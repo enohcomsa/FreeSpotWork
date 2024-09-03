@@ -9,11 +9,12 @@ import { UserService } from '@free-spot-service/user';
 import { ConfirmModalService } from '@free-spot-service/confirm-modal';
 import { MatDividerModule } from '@angular/material/divider';
 import { ToastrService } from 'ngx-toastr';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'free-spot-booking-item',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatButtonModule, MatDividerModule],
+  imports: [CommonModule, MatCardModule, MatButtonModule, MatDividerModule, TranslateModule],
   templateUrl: './booking-item.component.html',
   styleUrl: './booking-item.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
