@@ -62,5 +62,25 @@
     "ROOM_NAME": "Numele sălii :",
     "BOOK_SPOT": "Rezervă loc",
     "ROOM": "Sala:"
+  },
+  "TIMETABLE_ITEM": {
+    "MONDAY": "Luni",
+    "TUESDAY": "Marți",
+    "WEDNESDAY": "Miercuri",
+    "THURSDAY": "Joi",
+    "FRIDAY": "Vineri",
+    "SATURDAY": "Sâmbătă",
+    "SUNDAY": "Duminică"
+  },
+  "BOOKINGS_PAGE": {
+    "MY_BOOKINGS": "Rezervările mele",
+    "ALL": "Toate rezervările",
+    "LABORATORY": "Laborator",
+    "COURSE": "Curs",
+    "PROJECT": "Proiect",
+    "SEMINARY": "Seminar",
+    "MY_EVENTS": "Evenimentele mele",
+    "NO_BOOKINGS_MSG": "Nu au fost găsite rezervări.",
+    "DELETE": "Șterge"
   }
 }

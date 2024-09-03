@@ -62,5 +62,25 @@
     "ROOM_NAME": "Room name :",
     "BOOK_SPOT": "Book spot",
     "ROOM": "Room:"
+  },
+  "TIMETABLE_ITEM": {
+    "MONDAY": "Monday",
+    "TUESDAY": "Tuesday",
+    "WEDNESDAY": "Wednesday",
+    "THURSDAY": "Thursday",
+    "FRIDAY": "Friday",
+    "SATURDAY": "Saturday",
+    "SUNDAY": "Sunday"
+  },
+  "BOOKINGS_PAGE": {
+    "MY_BOOKINGS": "My bookings",
+    "ALL": "All bookings",
+    "LABORATORY": "Laboratory",
+    "COURSE": "Course",
+    "PROJECT": "Project",
+    "SEMINARY": "Seminary",
+    "MY_EVENTS": "My Events",
+    "NO_BOOKINGS_MSG": "No bookings found.",
+    "DELETE": "Delete"
   }
 }

@@ -8,7 +8,8 @@
             <p class="-mt-2 grow text-lg font-bold">{{ eventSig().name }}</p>
           } @else {
             <p class="-mt-2 grow text-lg font-bold">
-              {{ eventSig().activityType | lowercase }}<span class="mx-1">:</span>{{ eventSig().subjectItem.shortName }}
+              {{ 'DINAMIC_FORM.' + eventSig().activityType | translate }}<span class="mx-1">:</span
+              >{{ eventSig().subjectItem.shortName }}
             </p>
           }
           <div class="flex items-center text-sm tracking-tighter">
@@ -35,7 +36,7 @@
   @if (eventSig().activityType === EVENT.SPECIAL_EVENT) {
     <mat-card-actions>
       <button mat-flat-button class="delete-button w-full grow" (click)="deleteEvent.emit(eventSig())">
-        <mat-icon class="!mr-2">delete</mat-icon><span>Delete</span>
+        <mat-icon class="!mr-2">delete</mat-icon><span>{{ 'BOOKINGS_PAGE.DELETE' | translate }}</span>
       </button>
     </mat-card-actions>
   }

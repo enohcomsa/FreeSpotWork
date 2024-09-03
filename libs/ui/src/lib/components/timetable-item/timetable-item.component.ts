@@ -5,11 +5,12 @@ import { MatDividerModule } from '@angular/material/divider';
 import { TimetableActivityItem, TimetableDayItem, TimeTableItem } from '@free-spot/models';
 import { MatCardModule } from '@angular/material/card';
 import { Event, WeekDay, WeekParity } from '@free-spot/enums';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'free-spot-timetable-item',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatListModule, MatDividerModule],
+  imports: [CommonModule, MatCardModule, MatListModule, MatDividerModule, TranslateModule],
   templateUrl: './timetable-item.component.html',
   styleUrl: './timetable-item.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
