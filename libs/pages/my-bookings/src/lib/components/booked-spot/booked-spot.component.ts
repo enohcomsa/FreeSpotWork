@@ -6,11 +6,12 @@ import { MatDividerModule } from '@angular/material/divider';
 import { BookedEvent } from '@free-spot/models';
 import { Event } from '@free-spot/enums';
 import { MatButtonModule } from '@angular/material/button';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'free-spot-booked-spot',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatIconModule, MatDividerModule, MatButtonModule],
+  imports: [CommonModule, MatCardModule, MatIconModule, MatDividerModule, MatButtonModule, TranslateModule],
   templateUrl: './booked-spot.component.html',
   styleUrl: './booked-spot.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

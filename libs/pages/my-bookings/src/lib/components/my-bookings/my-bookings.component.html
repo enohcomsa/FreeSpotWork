@@ -1,32 +1,42 @@
 <div class="container">
   <free-spot-dynamic-form></free-spot-dynamic-form>
 
-  <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">My bookings</h1>
+  <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">{{ 'BOOKINGS_PAGE.MY_BOOKINGS' | translate }}</h1>
 
   <mat-chip-listbox class="mb-4">
-    <mat-chip-option selected (click)="filterActiveBookedItems(EVENT.LABORATORY, true)"> All bookings</mat-chip-option>
-    <mat-chip-option (click)="filterActiveBookedItems(EVENT.LABORATORY, false)"> Laboratory</mat-chip-option>
-    <mat-chip-option (click)="filterActiveBookedItems(EVENT.COURSE, false)"> Course</mat-chip-option>
-    <mat-chip-option (click)="filterActiveBookedItems(EVENT.PROJECT, false)"> Project</mat-chip-option>
-    <mat-chip-option (click)="filterActiveBookedItems(EVENT.SEMINAR, false)"> Seminary</mat-chip-option>
+    <mat-chip-option selected (click)="filterActiveBookedItems(EVENT.LABORATORY, true)">{{
+      'BOOKINGS_PAGE.ALL' | translate
+    }}</mat-chip-option>
+    <mat-chip-option (click)="filterActiveBookedItems(EVENT.LABORATORY, false)">
+      {{ 'BOOKINGS_PAGE.LABORATORY' | translate }}</mat-chip-option
+    >
+    <mat-chip-option (click)="filterActiveBookedItems(EVENT.COURSE, false)">
+      {{ 'BOOKINGS_PAGE.COURSE' | translate }}</mat-chip-option
+    >
+    <mat-chip-option (click)="filterActiveBookedItems(EVENT.PROJECT, false)">
+      {{ 'BOOKINGS_PAGE.PROJECT' | translate }}</mat-chip-option
+    >
+    <mat-chip-option (click)="filterActiveBookedItems(EVENT.SEMINAR, false)">
+      {{ 'BOOKINGS_PAGE.SEMINARY' | translate }}</mat-chip-option
+    >
   </mat-chip-listbox>
 
   <div class="grid grid-cols-1 gap-8 pb-4 md:grid-cols-2 xl:grid-cols-3">
     @for (bookedEvent of filteredBookedItemsSig(); track bookedEvent) {
       <free-spot-booked-spot [eventSig]="bookedEvent"> </free-spot-booked-spot>
     } @empty {
-      <h3>No bookings found.</h3>
+      <h3>{{ 'BOOKINGS_PAGE.NO_BOOKINGS_MSG' | translate }}</h3>
     }
   </div>
 
   @if (activeSpecialEventBookedItemListSig().length) {
-    <h1 class="py-4 text-3xl font-bold md:py-8">My Events</h1>
+    <h1 class="py-4 text-3xl font-bold md:py-8">{{ 'BOOKINGS_PAGE.MY_EVENTS' | translate }}</h1>
 
     <div class="grid grid-cols-1 gap-8 pb-4 md:grid-cols-2 xl:grid-cols-3">
       @for (bookedEvent of activeSpecialEventBookedItemListSig(); track bookedEvent.name) {
         <free-spot-booked-spot [eventSig]="bookedEvent" (deleteEvent)="deleteSpecialEvent($event)"> </free-spot-booked-spot>
       } @empty {
-        <h3>No bookings found.</h3>
+        <h3>{{ 'BOOKINGS_PAGE.NO_BOOKINGS_MSG' | translate }}</h3>
       }
     </div>
   }

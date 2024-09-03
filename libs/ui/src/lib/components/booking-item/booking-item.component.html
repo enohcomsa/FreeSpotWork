@@ -8,7 +8,7 @@
       }
 
       <span class="@3xs:ml-4 total-spots text-sm font-normal tracking-tighter md:text-base md:tracking-tight">
-        free spots:{{ timetableActivitySig().freeSpots }}
+        {{ 'BOOKING_SEARCH_RESULT.FREE_SPOTS' | translate }}{{ timetableActivitySig().freeSpots }}
       </span>
       <span class="@lg:block hidden"></span>
     </p>
@@ -26,7 +26,7 @@
         <p>{{ eventBookingSig().startHour }}-</p>
         <p>{{ eventBookingSig().endHour }}</p>
       </div>
-      <button mat-flat-button class="mt-2" (click)="bookSpot()">Book spot</button>
+      <button mat-flat-button class="mt-2" (click)="bookSpot()">{{ 'BOOKING_SEARCH_RESULT.BOOK_SPOT' | translate }}</button>
     </div>
   </mat-card-content>
 </mat-card>

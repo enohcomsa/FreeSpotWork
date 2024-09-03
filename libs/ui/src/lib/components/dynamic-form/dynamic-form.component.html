@@ -6,29 +6,29 @@
       class="@md:flex-row @md:gap-4 mb-4 flex flex-col items-center justify-center"
     >
       <mat-form-field class="w-full">
-        <mat-label>Select booking</mat-label>
+        <mat-label>{{ 'DINAMIC_FORM.SELECT_BOOKING' | translate }}</mat-label>
         <mat-select formControlName="eventBooking">
           @for (event of eventListSig(); track $index) {
-            <mat-option [value]="event">{{ event | lowercase }}</mat-option>
+            <mat-option [value]="event">{{ 'DINAMIC_FORM.' + event | translate }}</mat-option>
           }
         </mat-select>
         <mat-error>{{ displayError(searchForm.controls['eventBooking']) }}</mat-error>
       </mat-form-field>
       @if (event === EVENT.SPECIAL_EVENT) {
         <mat-form-field class="w-full">
-          <mat-label>Event name</mat-label>
+          <mat-label>{{ 'DINAMIC_FORM.EVENT_NAME' | translate }}</mat-label>
           <mat-select formControlName="event">
             @for (event of filteredSpecialEventListSig(); track event.name) {
               <mat-option [value]="event">{{ event.name }}</mat-option>
             } @empty {
-              <mat-option disabled>No event found</mat-option>
+              <mat-option disabled>{{ 'DINAMIC_FORM.NO_EV_FOUND' | translate }}</mat-option>
             }
           </mat-select>
           <mat-error>{{ displayError(searchForm.controls['event']) }}</mat-error>
         </mat-form-field>
       } @else {
         <mat-form-field class="w-full">
-          <mat-label>Subject</mat-label>
+          <mat-label>{{ 'DINAMIC_FORM.SUBJECT' | translate }}</mat-label>
           <mat-select formControlName="subject">
             @for (subject of subjectItemListSig(); track subject.name) {
               <mat-option [value]="subject">{{ subject.name }}</mat-option>
@@ -39,7 +39,7 @@
       }
 
       <button mat-flat-button type="submit" [disabled]="!searchForm.valid || searchActiveSig()" class="@md:mb-5 w-full">
-        Search
+        {{ 'DINAMIC_FORM.SEARCH' | translate }}
       </button>
     </form>
 
@@ -52,12 +52,14 @@
             (bookingActive)="searchActiveSig.set($event); searchForm.reset()"
           ></free-spot-booking-item>
         } @empty {
-          <h3>No free spot available.</h3>
+          <h3>{{ 'DINAMIC_FORM.NO_FREE_SPOTS' | translate }}</h3>
         }
       </div>
     }
   </mat-card-content>
   @if (!searchActiveSig()) {
-    <mat-card-footer> <p class="@md:mt-0 my-4 px-4 text-sm tracking-tighter">Select a booking and search.</p> </mat-card-footer>
+    <mat-card-footer>
+      <p class="@md:mt-0 my-4 px-4 text-sm tracking-tighter">{{ 'DINAMIC_FORM.SELECT_BOOKING_HINT' | translate }}</p>
+    </mat-card-footer>
   }
 </mat-card>

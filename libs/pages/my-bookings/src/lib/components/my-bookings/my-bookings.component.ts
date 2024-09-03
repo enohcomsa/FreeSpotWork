@@ -9,11 +9,12 @@ import { AppDateService } from '@free-spot-service/app-date';
 import { Event, WeekParity } from '@free-spot/enums';
 import { ConfirmModalService } from '@free-spot-service/confirm-modal';
 import { AdminEventService } from '@free-spot-service/event';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'free-spot-my-bookings',
   standalone: true,
-  imports: [CommonModule, MatChipsModule, DynamicFormComponent, BookedSpotComponent],
+  imports: [CommonModule, MatChipsModule, DynamicFormComponent, BookedSpotComponent, TranslateModule],
   templateUrl: './my-bookings.component.html',
   styleUrl: './my-bookings.component.sass',
   changeDetection: ChangeDetectionStrategy.OnPush,

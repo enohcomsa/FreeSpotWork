@@ -9,5 +9,78 @@
     "SCHEDULE": "Orar",
     "MY_BOOKINGS": "Rezervările mele",
     "ADMIN": "Administrator"
+  },
+  "LOGIN": {
+    "WELCOME": "Bine ai revenit",
+    "CREATE_ACCOUNT": "Creează un cont",
+    "NO_ACCOUNT": "Nu ai un cont?",
+    "ALREADY_ACCOUNT": "Ai deja un cont?",
+    "FIRST_NAME": "Prenume",
+    "LAST_NAME": "Nume",
+    "EMAIL": "Email",
+    "PASSWORD": "Parolă",
+    "PASSWORD_HINT": "Folosește 6 sau mai multe caractere",
+    "SIGNUP": "Înscrie-te",
+    "LOGIN": "Conectează-te"
+  },
+  "DINAMIC_FORM": {
+    "SELECT_BOOKING": "Selectează rezervarea",
+    "LABORATORY": "Laborator",
+    "COURSE": "Curs",
+    "PROJECT": "Proiect",
+    "SEMINAR": "Seminar",
+    "SPECIAL_EVENT": "Eveniment special",
+    "EVENT_NAME": "Numele evenimentului",
+    "NO_EV_FOUND": "Niciun eveniment găsit",
+    "SUBJECT": "Materie",
+    "NO_FREE_SPOTS": "Nu sunt locuri disponibile.",
+    "SELECT_BOOKING_HINT": "Selectează o rezervare și caută.",
+    "SEARCH": "Caută"
+  },
+  "BOOKING_SEARCH_RESULT": {
+    "FREE_SPOTS": "locuri libere:",
+    "BOOK_SPOT": "Rezervă loc"
+  },
+  "BUILDIG_PAGE": {
+    "BUILDINGS": "Clădiri",
+    "NO_BUILDINGS_MESSAGE": "Nu a fost adăugată nicio clădire încă.",
+    "EVENTS": "Evenimente",
+    "NO_EVENTS_MESSAGE": "Nu a fost adăugat niciun eveniment încă."
+  },
+  "BUILDING_CARD": {
+    "FLOOR": "Etaj",
+    "TOTAL": "Total",
+    "UNAVAILABLE": "Indisponibil",
+    "NO_FLOOR_MSG": "Nu au fost adăugate etaje încă",
+    "ROOM": "Sală",
+    "FREE_DESK": "Liber",
+    "BOOKED": "Ocupat",
+    "RESERVED": "Rezervat"
+  },
+  "DASH_FLOOR_DETAIL": {
+    "NO_ROOM_MSG": "Nu a fost adăugat încă nici-o sală.",
+    "ROOM_NAME": "Numele sălii :",
+    "BOOK_SPOT": "Rezervă loc",
+    "ROOM": "Sala:"
+  },
+  "TIMETABLE_ITEM": {
+    "MONDAY": "Luni",
+    "TUESDAY": "Marți",
+    "WEDNESDAY": "Miercuri",
+    "THURSDAY": "Joi",
+    "FRIDAY": "Vineri",
+    "SATURDAY": "Sâmbătă",
+    "SUNDAY": "Duminică"
+  },
+  "BOOKINGS_PAGE": {
+    "MY_BOOKINGS": "Rezervările mele",
+    "ALL": "Toate rezervările",
+    "LABORATORY": "Laborator",
+    "COURSE": "Curs",
+    "PROJECT": "Proiect",
+    "SEMINARY": "Seminar",
+    "MY_EVENTS": "Evenimentele mele",
+    "NO_BOOKINGS_MSG": "Nu au fost găsite rezervări.",
+    "DELETE": "Șterge"
   }
 }
