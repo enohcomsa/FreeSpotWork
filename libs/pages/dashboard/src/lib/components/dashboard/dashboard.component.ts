@@ -19,7 +19,6 @@ import {
 import { UserService } from '@free-spot-service/user';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { delay, filter, of, Subscription, switchMap, take } from 'rxjs';
-import { UserSetupDialogComponent } from '../user-setup-dialog/user-setup-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { AdminFacultyService } from '@free-spot-service/faculty';
 import { AppDateService } from '@free-spot-service/app-date';
@@ -32,7 +31,7 @@ import { TranslateModule } from '@ngx-translate/core';
 @Component({
   selector: 'free-spot-dashboard',
   standalone: true,
-  imports: [CommonModule, BuildingCardComponent, DynamicFormComponent, UserSetupDialogComponent, TranslateModule],
+  imports: [CommonModule, BuildingCardComponent, DynamicFormComponent, TranslateModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.sass',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -138,9 +137,12 @@ export class DashboardComponent implements OnInit {
       filter((user: FreeSpotUser) => Object.keys(user).length !== 0),
       take(1),
     )
-    .subscribe((user: FreeSpotUser) => {
+    .subscribe(async (user: FreeSpotUser) => {
       if ((!user.group && !user.semiGroup) || !user.faculty || !user.currentYear) {
-        this._dialog.open(UserSetupDialogComponent, {
+        this._dialog.open(
+          await import('../user-setup-dialog/user-setup-dialog.component').then(
+            (m) => m.UserSetupDialogComponent
+          ), {
           delayFocusTrap: true,
           disableClose: true,
           panelClass: ['w-full', 'sm:w-3/5', 'md:w-1/2'],

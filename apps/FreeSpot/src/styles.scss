@@ -2,7 +2,7 @@
 @use './styles/free-spot-m3-theme.scss';
 @use './styles/toolbar-theme' as toolBar;
 @use './styles/card-theme' as card;
-@import 'ngx-toastr/toastr';
+@use 'ngx-toastr/toastr';
 
 @tailwind base;
 @tailwind components;
