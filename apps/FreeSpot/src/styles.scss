@@ -3,10 +3,7 @@
 @use './styles/toolbar-theme' as toolBar;
 @use './styles/card-theme' as card;
 @use 'ngx-toastr/toastr';
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@use "tailwindcss";
 
 @include mat.elevation-classes();
 @include mat.app-background();
