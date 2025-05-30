@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, OnInit, Signal, signal, viewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSlideToggle, MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { DynamicChipListComponent, TimetableItemComponent } from '@free-spot/ui';
@@ -20,9 +20,8 @@ import { delay, of } from 'rxjs';
 
 @Component({
   selector: 'free-spot-group',
-  standalone: true,
+
   imports: [
-    CommonModule,
     FormsModule,
     DynamicChipListComponent,
     MatTabsModule,
@@ -30,8 +29,8 @@ import { delay, of } from 'rxjs';
     AdminGroupTimetableComponent,
     MatSlideToggleModule,
     AdminSemisemiGroupTimetableComponent,
-    MatTooltipModule,
-  ],
+    MatTooltipModule
+],
   templateUrl: './group.component.html',
   styleUrl: './group.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, model, output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Faculty, Group, SubjectItem, Year } from '@free-spot/models';
 import { MatListModule } from '@angular/material/list';
 import { MatDividerModule } from '@angular/material/divider';
@@ -11,8 +11,8 @@ import { ConfirmModalService } from '@free-spot-service/confirm-modal';
 
 @Component({
   selector: 'free-spot-faculty',
-  standalone: true,
-  imports: [CommonModule, MatListModule, MatDividerModule, DynamicChipListComponent, MatIconModule, MatTooltipModule],
+
+  imports: [MatListModule, MatDividerModule, DynamicChipListComponent, MatIconModule, MatTooltipModule],
   templateUrl: './faculty.component.html',
   styleUrl: './faculty.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

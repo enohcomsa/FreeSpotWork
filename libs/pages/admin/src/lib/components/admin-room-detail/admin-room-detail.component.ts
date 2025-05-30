@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, input, OnInit, Signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { DynamicChipListComponent, TimetableItemComponent } from '@free-spot/ui';
 import { AdminRoomTimetableItemComponent } from '../admin-room-timetable-item/admin-room-timetable-item.component';
 import { Building, Floor, Room, SubjectItem, TimeTableItem } from '@free-spot/models';
@@ -10,8 +10,8 @@ import { SUBJECT_LIST } from '@free-spot/constants';
 
 @Component({
   selector: 'free-spot-admin-room-detail',
-  standalone: true,
-  imports: [CommonModule, DynamicChipListComponent, AdminRoomTimetableItemComponent, TimetableItemComponent],
+
+  imports: [DynamicChipListComponent, AdminRoomTimetableItemComponent, TimetableItemComponent],
   templateUrl: './admin-room-detail.component.html',
   styleUrl: './admin-room-detail.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

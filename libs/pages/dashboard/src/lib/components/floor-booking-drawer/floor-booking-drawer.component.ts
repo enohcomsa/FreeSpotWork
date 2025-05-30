@@ -9,7 +9,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'free-spot-floor-booking-drawer',
-  standalone: true,
+
   imports: [CommonModule, MatSidenavModule, DynamicFormComponent, MatButtonModule, MatIconModule, TranslateModule],
   templateUrl: './floor-booking-drawer.component.html',
   styleUrl: './floor-booking-drawer.component.scss',

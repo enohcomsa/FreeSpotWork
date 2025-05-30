@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, OnInit, Signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { TimetableItemComponent } from '@free-spot/ui';
 import { FreeSpotUser, Group, SemiGroup, TimeTableItem } from '@free-spot/models';
 import { WeekDay } from '@free-spot/enums';
@@ -8,8 +8,8 @@ import { AdminFacultyService } from '@free-spot-service/faculty';
 
 @Component({
   selector: 'free-spot-schedule',
-  standalone: true,
-  imports: [CommonModule, TimetableItemComponent],
+
+  imports: [TimetableItemComponent],
   templateUrl: './schedule.component.html',
   styleUrl: './schedule.component.sass',
   changeDetection: ChangeDetectionStrategy.OnPush,

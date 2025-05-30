@@ -11,7 +11,7 @@ import {
   viewChild,
   WritableSignal,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule, ReactiveFormsModule, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -31,17 +31,16 @@ import { FormErrorMessage } from '@free-spot/util';
 
 @Component({
   selector: 'free-spot-admin-floor-detail',
-  standalone: true,
+
   imports: [
-    CommonModule,
     FormsModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
     AdminRoomCardComponent,
-    AddItemCardComponent,
-  ],
+    AddItemCardComponent
+],
   templateUrl: './admin-floor-detail.component.html',
   styleUrl: './admin-floor-detail.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

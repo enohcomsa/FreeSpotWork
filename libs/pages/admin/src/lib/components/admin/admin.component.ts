@@ -11,7 +11,7 @@ import {
   viewChild,
   WritableSignal,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FacultyComponent } from '../faculty/faculty.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import {
@@ -49,10 +49,9 @@ import { BookingService } from '@free-spot-service/booking';
 
 @Component({
   selector: 'free-spot-admin',
-  standalone: true,
+
   providers: [provideNativeDateAdapter()],
   imports: [
-    CommonModule,
     FormsModule,
     ReactiveFormsModule,
     MatFormFieldModule,
@@ -65,8 +64,8 @@ import { BookingService } from '@free-spot-service/booking';
     AdminEventCardComponent,
     AddItemCardComponent,
     MatDatepickerModule,
-    MatSelectModule,
-  ],
+    MatSelectModule
+],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.sass',
   changeDetection: ChangeDetectionStrategy.OnPush,

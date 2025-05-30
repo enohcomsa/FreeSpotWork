@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, input, model, output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Building } from '@free-spot/models';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
@@ -11,8 +11,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'free-spot-admin-building-card',
-  standalone: true,
-  imports: [CommonModule, MatCardModule, MatDividerModule, MatListModule, MatIconModule, MatButtonModule, MatTooltipModule],
+
+  imports: [MatCardModule, MatDividerModule, MatListModule, MatIconModule, MatButtonModule, MatTooltipModule],
   templateUrl: './admin-building-card.component.html',
   styleUrl: './admin-building-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

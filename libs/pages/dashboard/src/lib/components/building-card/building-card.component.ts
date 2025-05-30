@@ -11,7 +11,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'free-spot-building-card',
-  standalone: true,
+
   imports: [
     CommonModule,
     RouterModule,

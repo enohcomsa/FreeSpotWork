@@ -10,7 +10,7 @@ import {
   signal,
   WritableSignal,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { BookedEvent, FreeSpotUser, Group, SubjectItem, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
 import { Event, WeekDay } from '@free-spot/enums';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
@@ -31,9 +31,8 @@ import { FormErrorMessage } from '@free-spot/util';
 
 @Component({
   selector: 'free-spot-admin-group-timetable',
-  standalone: true,
+
   imports: [
-    CommonModule,
     FormsModule,
     ReactiveFormsModule,
     MatChipsModule,
@@ -43,8 +42,8 @@ import { FormErrorMessage } from '@free-spot/util';
     MatInputModule,
     MatFormFieldModule,
     MatSelectModule,
-    MatTooltipModule,
-  ],
+    MatTooltipModule
+],
   templateUrl: './admin-group-timetable.component.html',
   styleUrl: './admin-group-timetable.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

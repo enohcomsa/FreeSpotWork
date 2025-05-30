@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, OnInit, Signal, WritableSignal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { DynamicFormComponent } from '@free-spot/ui';
 import { BuildingCardComponent } from '../building-card/building-card.component';
 import { AdminBuildingService } from '@free-spot-service/building';
@@ -30,8 +30,8 @@ import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'free-spot-dashboard',
-  standalone: true,
-  imports: [CommonModule, BuildingCardComponent, DynamicFormComponent, TranslateModule],
+
+  imports: [BuildingCardComponent, DynamicFormComponent, TranslateModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.sass',
   changeDetection: ChangeDetectionStrategy.OnPush,

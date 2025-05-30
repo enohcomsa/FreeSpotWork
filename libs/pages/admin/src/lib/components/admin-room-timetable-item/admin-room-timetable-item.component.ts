@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, input, model, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
@@ -17,9 +17,8 @@ import { FormErrorMessage } from '@free-spot/util';
 
 @Component({
   selector: 'free-spot-admin-room-timetable-item',
-  standalone: true,
+
   imports: [
-    CommonModule,
     FormsModule,
     ReactiveFormsModule,
     MatChipsModule,
@@ -29,8 +28,8 @@ import { FormErrorMessage } from '@free-spot/util';
     MatInputModule,
     MatFormFieldModule,
     MatSelectModule,
-    MatTooltipModule,
-  ],
+    MatTooltipModule
+],
   templateUrl: './admin-room-timetable-item.component.html',
   styleUrl: './admin-room-timetable-item.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

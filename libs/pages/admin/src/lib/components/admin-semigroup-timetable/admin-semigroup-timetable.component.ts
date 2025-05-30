@@ -10,7 +10,7 @@ import {
   Signal,
   WritableSignal,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AdminRoomService } from '@free-spot-service/room';
 import { BookedEvent, FreeSpotUser, SemiGroup, SubjectItem, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
@@ -31,9 +31,8 @@ import { ConfirmModalService } from '@free-spot-service/confirm-modal';
 
 @Component({
   selector: 'free-spot-admin-semigroup-timetable',
-  standalone: true,
+
   imports: [
-    CommonModule,
     FormsModule,
     ReactiveFormsModule,
     MatChipsModule,
@@ -43,8 +42,8 @@ import { ConfirmModalService } from '@free-spot-service/confirm-modal';
     MatInputModule,
     MatFormFieldModule,
     MatSelectModule,
-    MatTooltipModule,
-  ],
+    MatTooltipModule
+],
   templateUrl: './admin-semigroup-timetable.component.html',
   styleUrl: './admin-semigroup-timetable.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

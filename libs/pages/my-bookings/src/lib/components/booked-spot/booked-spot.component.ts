@@ -10,7 +10,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'free-spot-booked-spot',
-  standalone: true,
+
   imports: [CommonModule, MatCardModule, MatIconModule, MatDividerModule, MatButtonModule, TranslateModule],
   templateUrl: './booked-spot.component.html',
   styleUrl: './booked-spot.component.scss',

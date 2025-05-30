@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit, signal, Signal, WritableSignal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { AbstractControl, FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -16,16 +16,15 @@ import { FormErrorMessage } from '@free-spot/util';
 
 @Component({
   selector: 'free-spot-user-setup-dialog',
-  standalone: true,
+
   imports: [
-    CommonModule,
     MatDialogModule,
     MatButtonModule,
     FormsModule,
     ReactiveFormsModule,
     MatSelectModule,
-    MatFormFieldModule,
-  ],
+    MatFormFieldModule
+],
   templateUrl: './user-setup-dialog.component.html',
   styleUrl: './user-setup-dialog.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

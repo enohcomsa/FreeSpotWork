@@ -10,7 +10,7 @@ import {
   viewChild,
   WritableSignal,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Floor, Building } from '@free-spot/models';
 import { AdminFloorCardComponent } from '../admin-floor-card/admin-floor-card.component';
 import { AbstractControl, FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -25,17 +25,16 @@ import { FormErrorMessage } from '@free-spot/util';
 
 @Component({
   selector: 'free-spot-admin-building-detail',
-  standalone: true,
+
   imports: [
-    CommonModule,
     FormsModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
     AdminFloorCardComponent,
-    AddItemCardComponent,
-  ],
+    AddItemCardComponent
+],
   templateUrl: './admin-building-detail.component.html',
   styleUrl: './admin-building-detail.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

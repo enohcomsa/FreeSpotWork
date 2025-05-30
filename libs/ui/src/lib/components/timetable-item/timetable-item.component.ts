@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, input, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MatListModule } from '@angular/material/list';
 import { MatDividerModule } from '@angular/material/divider';
 import { TimetableActivityItem, TimetableDayItem, TimeTableItem } from '@free-spot/models';
@@ -9,8 +9,8 @@ import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'free-spot-timetable-item',
-  standalone: true,
-  imports: [CommonModule, MatCardModule, MatListModule, MatDividerModule, TranslateModule],
+
+  imports: [MatCardModule, MatListModule, MatDividerModule, TranslateModule],
   templateUrl: './timetable-item.component.html',
   styleUrl: './timetable-item.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

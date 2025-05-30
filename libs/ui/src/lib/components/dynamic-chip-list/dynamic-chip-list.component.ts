@@ -17,7 +17,7 @@ import { FormErrorMessage } from '@free-spot/util';
 
 @Component({
   selector: 'free-spot-dynamic-chip-list',
-  standalone: true,
+
   imports: [
     CommonModule,
     FormsModule,

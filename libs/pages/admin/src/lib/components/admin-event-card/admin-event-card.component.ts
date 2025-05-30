@@ -9,7 +9,7 @@ import { Building } from '@free-spot/models';
 
 @Component({
   selector: 'free-spot-admin-event-card',
-  standalone: true,
+
   imports: [CommonModule, MatCardModule, MatDividerModule, MatListModule, MatIconModule, MatButtonModule],
   templateUrl: './admin-event-card.component.html',
   styleUrl: './admin-event-card.component.scss',
