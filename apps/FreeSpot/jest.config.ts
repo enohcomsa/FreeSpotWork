@@ -1,4 +1,4 @@
-/* eslint-disable */
+ 
 export default {
   displayName: 'FreeSpot',
   preset: '../../jest.preset.js',
