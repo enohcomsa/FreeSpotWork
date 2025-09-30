@@ -1,0 +1,11 @@
+export { buildingsSpec } from "./buildings.schema";
+export { floorsSpec } from "./floors.schema";
+export { roomsSpec } from "./rooms.schema";
+export { facultiesSpec } from "./faculties.schema";
+export { programsSpec } from "./programs.schema";
+export { programYearsSpec } from "./program-years.schema";
+export { subjectsSpec } from "./subjects.schema";
+export { usersSpec } from "./users.schema";
+export { cohortsSpec } from "./cohorts.schema";
+export { timetableActivitiesSpec } from "./timetable-activities.schema";
+export { bookingsSpec } from "./bookings.schema";
