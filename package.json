@@ -6,7 +6,8 @@
     "start": "nx serve FreeSpot",
     "start:backend": "nx serve freespot-backend",
     "build:FreeSpot": "npx nx build FreeSpot",
-    "db:migrate": "node --loader ts-node/esm apps/freespot-backend/src/db/migrate/index.ts"
+    "db:migrate": "node --loader ts-node/esm apps/freespot-backend/src/db/migrate/index.ts",
+    "openapi-generate:freespot-app": "npx ts-node tools/scripts/openapi-freespot.ts"
   },
   "private": true,
   "dependencies": {
@@ -56,6 +57,7 @@
     "@nx/web": "^21.5.3",
     "@nx/webpack": "^21.5.3",
     "@nx/workspace": "^21.5.3",
+    "@openapitools/openapi-generator-cli": "^2.24.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.7",
     "@schematics/angular": "^20.0.0",
     "@svgr/webpack": "^8.0.1",
