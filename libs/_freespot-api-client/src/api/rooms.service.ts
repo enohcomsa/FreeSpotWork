@@ -17,40 +17,55 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
-import { RoomsIdGet200ResponseDTO } from '../model/rooms-id-get200-response';
+import { RoomCreateDTO } from '../model/room-create';
 // @ts-ignore
-import { RoomsIdPatchRequestDTO } from '../model/rooms-id-patch-request';
+import { RoomResponseDTO } from '../model/room-response';
 // @ts-ignore
-import { RoomsPostRequestDTO } from '../model/rooms-post-request';
+import { RoomUpdateDTO } from '../model/room-update';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 import { BaseService } from '../api.base.service';
-import {
-    RoomsHttpServiceInterface
-} from './rooms.serviceInterface';
 
+
+export interface RoomsIdDeleteRequestParams {
+    id: string;
+}
+
+export interface RoomsIdGetRequestParams {
+    id: string;
+}
+
+export interface RoomsIdPatchRequestParams {
+    id: string;
+    roomUpdateDTO?: RoomUpdateDTO;
+}
+
+export interface RoomsPostRequestParams {
+    roomCreateDTO?: RoomCreateDTO;
+}
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class RoomsHttpService extends BaseService implements RoomsHttpServiceInterface {
+export class RoomsHttpService extends BaseService {
 
     constructor(protected httpClient: HttpClient, @Optional() @Inject(BASE_PATH) basePath: string|string[], @Optional() configuration?: Configuration) {
         super(basePath, configuration);
     }
 
     /**
-     * @param id 
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public roomsIdDelete(id: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any>;
-    public roomsIdDelete(id: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
-    public roomsIdDelete(id: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
-    public roomsIdDelete(id: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public roomsIdDelete(requestParameters: RoomsIdDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any>;
+    public roomsIdDelete(requestParameters: RoomsIdDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
+    public roomsIdDelete(requestParameters: RoomsIdDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
+    public roomsIdDelete(requestParameters: RoomsIdDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling roomsIdDelete.');
         }
@@ -95,14 +110,15 @@ export class RoomsHttpService extends BaseService implements RoomsHttpServiceInt
     }
 
     /**
-     * @param id 
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public roomsIdGet(id: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<RoomsIdGet200ResponseDTO>;
-    public roomsIdGet(id: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<RoomsIdGet200ResponseDTO>>;
-    public roomsIdGet(id: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<RoomsIdGet200ResponseDTO>>;
-    public roomsIdGet(id: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public roomsIdGet(requestParameters: RoomsIdGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<RoomResponseDTO>;
+    public roomsIdGet(requestParameters: RoomsIdGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<RoomResponseDTO>>;
+    public roomsIdGet(requestParameters: RoomsIdGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<RoomResponseDTO>>;
+    public roomsIdGet(requestParameters: RoomsIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling roomsIdGet.');
         }
@@ -134,7 +150,7 @@ export class RoomsHttpService extends BaseService implements RoomsHttpServiceInt
 
         let localVarPath = `/rooms/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
         const { basePath, withCredentials } = this.configuration;
-        return this.httpClient.request<RoomsIdGet200ResponseDTO>('get', `${basePath}${localVarPath}`,
+        return this.httpClient.request<RoomResponseDTO>('get', `${basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,
@@ -148,18 +164,19 @@ export class RoomsHttpService extends BaseService implements RoomsHttpServiceInt
     }
 
     /**
-     * @param id 
-     * @param roomsIdPatchRequestDTO 
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public roomsIdPatch(id: string, roomsIdPatchRequestDTO?: RoomsIdPatchRequestDTO, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<RoomsIdGet200ResponseDTO>;
-    public roomsIdPatch(id: string, roomsIdPatchRequestDTO?: RoomsIdPatchRequestDTO, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<RoomsIdGet200ResponseDTO>>;
-    public roomsIdPatch(id: string, roomsIdPatchRequestDTO?: RoomsIdPatchRequestDTO, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<RoomsIdGet200ResponseDTO>>;
-    public roomsIdPatch(id: string, roomsIdPatchRequestDTO?: RoomsIdPatchRequestDTO, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public roomsIdPatch(requestParameters: RoomsIdPatchRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<RoomResponseDTO>;
+    public roomsIdPatch(requestParameters: RoomsIdPatchRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<RoomResponseDTO>>;
+    public roomsIdPatch(requestParameters: RoomsIdPatchRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<RoomResponseDTO>>;
+    public roomsIdPatch(requestParameters: RoomsIdPatchRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling roomsIdPatch.');
         }
+        const roomUpdateDTO = requestParameters?.roomUpdateDTO;
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -177,7 +194,7 @@ export class RoomsHttpService extends BaseService implements RoomsHttpServiceInt
 
         // to determine the Content-Type header
         const consumes: string[] = [
-            'application/json'
+            'application/merge-patch+json'
         ];
         const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
         if (httpContentTypeSelected !== undefined) {
@@ -197,10 +214,10 @@ export class RoomsHttpService extends BaseService implements RoomsHttpServiceInt
 
         let localVarPath = `/rooms/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
         const { basePath, withCredentials } = this.configuration;
-        return this.httpClient.request<RoomsIdGet200ResponseDTO>('patch', `${basePath}${localVarPath}`,
+        return this.httpClient.request<RoomResponseDTO>('patch', `${basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
-                body: roomsIdPatchRequestDTO,
+                body: roomUpdateDTO,
                 responseType: <any>responseType_,
                 ...(withCredentials ? { withCredentials } : {}),
                 headers: localVarHeaders,
@@ -212,14 +229,15 @@ export class RoomsHttpService extends BaseService implements RoomsHttpServiceInt
     }
 
     /**
-     * @param roomsPostRequestDTO 
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public roomsPost(roomsPostRequestDTO?: RoomsPostRequestDTO, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<RoomsIdGet200ResponseDTO>;
-    public roomsPost(roomsPostRequestDTO?: RoomsPostRequestDTO, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<RoomsIdGet200ResponseDTO>>;
-    public roomsPost(roomsPostRequestDTO?: RoomsPostRequestDTO, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<RoomsIdGet200ResponseDTO>>;
-    public roomsPost(roomsPostRequestDTO?: RoomsPostRequestDTO, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public roomsPost(requestParameters?: RoomsPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<RoomResponseDTO>;
+    public roomsPost(requestParameters?: RoomsPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<RoomResponseDTO>>;
+    public roomsPost(requestParameters?: RoomsPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<RoomResponseDTO>>;
+    public roomsPost(requestParameters?: RoomsPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const roomCreateDTO = requestParameters?.roomCreateDTO;
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -257,10 +275,10 @@ export class RoomsHttpService extends BaseService implements RoomsHttpServiceInt
 
         let localVarPath = `/rooms`;
         const { basePath, withCredentials } = this.configuration;
-        return this.httpClient.request<RoomsIdGet200ResponseDTO>('post', `${basePath}${localVarPath}`,
+        return this.httpClient.request<RoomResponseDTO>('post', `${basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
-                body: roomsPostRequestDTO,
+                body: roomCreateDTO,
                 responseType: <any>responseType_,
                 ...(withCredentials ? { withCredentials } : {}),
                 headers: localVarHeaders,

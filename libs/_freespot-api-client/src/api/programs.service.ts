@@ -17,40 +17,55 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
-import { ProgramsIdGet200ResponseDTO } from '../model/programs-id-get200-response';
+import { ProgramCreateDTO } from '../model/program-create';
 // @ts-ignore
-import { ProgramsIdPatchRequestDTO } from '../model/programs-id-patch-request';
+import { ProgramResponseDTO } from '../model/program-response';
 // @ts-ignore
-import { ProgramsPostRequestDTO } from '../model/programs-post-request';
+import { ProgramUpdateDTO } from '../model/program-update';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 import { BaseService } from '../api.base.service';
-import {
-    ProgramsHttpServiceInterface
-} from './programs.serviceInterface';
 
+
+export interface ProgramsIdDeleteRequestParams {
+    id: string;
+}
+
+export interface ProgramsIdGetRequestParams {
+    id: string;
+}
+
+export interface ProgramsIdPatchRequestParams {
+    id: string;
+    programUpdateDTO?: ProgramUpdateDTO;
+}
+
+export interface ProgramsPostRequestParams {
+    programCreateDTO?: ProgramCreateDTO;
+}
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class ProgramsHttpService extends BaseService implements ProgramsHttpServiceInterface {
+export class ProgramsHttpService extends BaseService {
 
     constructor(protected httpClient: HttpClient, @Optional() @Inject(BASE_PATH) basePath: string|string[], @Optional() configuration?: Configuration) {
         super(basePath, configuration);
     }
 
     /**
-     * @param id 
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public programsIdDelete(id: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any>;
-    public programsIdDelete(id: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
-    public programsIdDelete(id: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
-    public programsIdDelete(id: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public programsIdDelete(requestParameters: ProgramsIdDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any>;
+    public programsIdDelete(requestParameters: ProgramsIdDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
+    public programsIdDelete(requestParameters: ProgramsIdDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
+    public programsIdDelete(requestParameters: ProgramsIdDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling programsIdDelete.');
         }
@@ -95,14 +110,15 @@ export class ProgramsHttpService extends BaseService implements ProgramsHttpServ
     }
 
     /**
-     * @param id 
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public programsIdGet(id: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<ProgramsIdGet200ResponseDTO>;
-    public programsIdGet(id: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ProgramsIdGet200ResponseDTO>>;
-    public programsIdGet(id: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ProgramsIdGet200ResponseDTO>>;
-    public programsIdGet(id: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public programsIdGet(requestParameters: ProgramsIdGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<ProgramResponseDTO>;
+    public programsIdGet(requestParameters: ProgramsIdGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ProgramResponseDTO>>;
+    public programsIdGet(requestParameters: ProgramsIdGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ProgramResponseDTO>>;
+    public programsIdGet(requestParameters: ProgramsIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling programsIdGet.');
         }
@@ -134,7 +150,7 @@ export class ProgramsHttpService extends BaseService implements ProgramsHttpServ
 
         let localVarPath = `/programs/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
         const { basePath, withCredentials } = this.configuration;
-        return this.httpClient.request<ProgramsIdGet200ResponseDTO>('get', `${basePath}${localVarPath}`,
+        return this.httpClient.request<ProgramResponseDTO>('get', `${basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,
@@ -148,18 +164,19 @@ export class ProgramsHttpService extends BaseService implements ProgramsHttpServ
     }
 
     /**
-     * @param id 
-     * @param programsIdPatchRequestDTO 
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public programsIdPatch(id: string, programsIdPatchRequestDTO?: ProgramsIdPatchRequestDTO, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<ProgramsIdGet200ResponseDTO>;
-    public programsIdPatch(id: string, programsIdPatchRequestDTO?: ProgramsIdPatchRequestDTO, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ProgramsIdGet200ResponseDTO>>;
-    public programsIdPatch(id: string, programsIdPatchRequestDTO?: ProgramsIdPatchRequestDTO, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ProgramsIdGet200ResponseDTO>>;
-    public programsIdPatch(id: string, programsIdPatchRequestDTO?: ProgramsIdPatchRequestDTO, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public programsIdPatch(requestParameters: ProgramsIdPatchRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<ProgramResponseDTO>;
+    public programsIdPatch(requestParameters: ProgramsIdPatchRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ProgramResponseDTO>>;
+    public programsIdPatch(requestParameters: ProgramsIdPatchRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ProgramResponseDTO>>;
+    public programsIdPatch(requestParameters: ProgramsIdPatchRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling programsIdPatch.');
         }
+        const programUpdateDTO = requestParameters?.programUpdateDTO;
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -177,7 +194,7 @@ export class ProgramsHttpService extends BaseService implements ProgramsHttpServ
 
         // to determine the Content-Type header
         const consumes: string[] = [
-            'application/json'
+            'application/merge-patch+json'
         ];
         const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
         if (httpContentTypeSelected !== undefined) {
@@ -197,10 +214,10 @@ export class ProgramsHttpService extends BaseService implements ProgramsHttpServ
 
         let localVarPath = `/programs/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
         const { basePath, withCredentials } = this.configuration;
-        return this.httpClient.request<ProgramsIdGet200ResponseDTO>('patch', `${basePath}${localVarPath}`,
+        return this.httpClient.request<ProgramResponseDTO>('patch', `${basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
-                body: programsIdPatchRequestDTO,
+                body: programUpdateDTO,
                 responseType: <any>responseType_,
                 ...(withCredentials ? { withCredentials } : {}),
                 headers: localVarHeaders,
@@ -212,14 +229,15 @@ export class ProgramsHttpService extends BaseService implements ProgramsHttpServ
     }
 
     /**
-     * @param programsPostRequestDTO 
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public programsPost(programsPostRequestDTO?: ProgramsPostRequestDTO, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<ProgramsIdGet200ResponseDTO>;
-    public programsPost(programsPostRequestDTO?: ProgramsPostRequestDTO, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ProgramsIdGet200ResponseDTO>>;
-    public programsPost(programsPostRequestDTO?: ProgramsPostRequestDTO, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ProgramsIdGet200ResponseDTO>>;
-    public programsPost(programsPostRequestDTO?: ProgramsPostRequestDTO, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public programsPost(requestParameters?: ProgramsPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<ProgramResponseDTO>;
+    public programsPost(requestParameters?: ProgramsPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ProgramResponseDTO>>;
+    public programsPost(requestParameters?: ProgramsPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ProgramResponseDTO>>;
+    public programsPost(requestParameters?: ProgramsPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const programCreateDTO = requestParameters?.programCreateDTO;
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -257,10 +275,10 @@ export class ProgramsHttpService extends BaseService implements ProgramsHttpServ
 
         let localVarPath = `/programs`;
         const { basePath, withCredentials } = this.configuration;
-        return this.httpClient.request<ProgramsIdGet200ResponseDTO>('post', `${basePath}${localVarPath}`,
+        return this.httpClient.request<ProgramResponseDTO>('post', `${basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
-                body: programsPostRequestDTO,
+                body: programCreateDTO,
                 responseType: <any>responseType_,
                 ...(withCredentials ? { withCredentials } : {}),
                 headers: localVarHeaders,

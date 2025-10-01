@@ -7,19 +7,16 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { CohortTypeDTO } from './cohort-type';
 
 
 export interface CohortResponseDTO { 
     id: string;
-    type: CohortResponseDTOTypeEnum;
+    type: CohortTypeDTO;
     programYearId: string;
     name: string;
     parentGroupId?: string | null;
 }
-export enum CohortResponseDTOTypeEnum {
-    GROUP = 'GROUP',
-    SEMIGROUP = 'SEMIGROUP'
-};
 
 
 

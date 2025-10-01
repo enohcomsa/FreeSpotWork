@@ -7,21 +7,17 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { BookingsIdGet200ResponseSourceDTO } from './bookings-id-get200-response-source';
+import { SourceDTO } from './source';
+import { BookingStatusDTO } from './booking-status';
 
 
 export interface BookingCreateDTO { 
     activityId: string;
     userId: string;
-    status?: BookingCreateDTOStatusEnum;
+    status?: BookingStatusDTO;
     cohortId?: string | null;
-    source?: BookingsIdGet200ResponseSourceDTO | null;
+    source?: SourceDTO | null;
 }
-export enum BookingCreateDTOStatusEnum {
-    CONFIRMED = 'CONFIRMED',
-    WAITLISTED = 'WAITLISTED',
-    CANCELLED = 'CANCELLED'
-};
 
 
 

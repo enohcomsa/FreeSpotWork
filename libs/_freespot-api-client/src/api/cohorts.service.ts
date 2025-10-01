@@ -17,40 +17,55 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
-import { CohortsIdGet200ResponseDTO } from '../model/cohorts-id-get200-response';
+import { CohortCreateDTO } from '../model/cohort-create';
 // @ts-ignore
-import { CohortsIdPatchRequestDTO } from '../model/cohorts-id-patch-request';
+import { CohortResponseDTO } from '../model/cohort-response';
 // @ts-ignore
-import { CohortsPostRequestDTO } from '../model/cohorts-post-request';
+import { CohortUpdateDTO } from '../model/cohort-update';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 import { BaseService } from '../api.base.service';
-import {
-    CohortsHttpServiceInterface
-} from './cohorts.serviceInterface';
 
+
+export interface CohortsIdDeleteRequestParams {
+    id: string;
+}
+
+export interface CohortsIdGetRequestParams {
+    id: string;
+}
+
+export interface CohortsIdPatchRequestParams {
+    id: string;
+    cohortUpdateDTO?: CohortUpdateDTO;
+}
+
+export interface CohortsPostRequestParams {
+    cohortCreateDTO?: CohortCreateDTO;
+}
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class CohortsHttpService extends BaseService implements CohortsHttpServiceInterface {
+export class CohortsHttpService extends BaseService {
 
     constructor(protected httpClient: HttpClient, @Optional() @Inject(BASE_PATH) basePath: string|string[], @Optional() configuration?: Configuration) {
         super(basePath, configuration);
     }
 
     /**
-     * @param id 
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public cohortsIdDelete(id: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any>;
-    public cohortsIdDelete(id: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
-    public cohortsIdDelete(id: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
-    public cohortsIdDelete(id: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public cohortsIdDelete(requestParameters: CohortsIdDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any>;
+    public cohortsIdDelete(requestParameters: CohortsIdDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
+    public cohortsIdDelete(requestParameters: CohortsIdDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
+    public cohortsIdDelete(requestParameters: CohortsIdDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling cohortsIdDelete.');
         }
@@ -95,14 +110,15 @@ export class CohortsHttpService extends BaseService implements CohortsHttpServic
     }
 
     /**
-     * @param id 
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public cohortsIdGet(id: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<CohortsIdGet200ResponseDTO>;
-    public cohortsIdGet(id: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<CohortsIdGet200ResponseDTO>>;
-    public cohortsIdGet(id: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<CohortsIdGet200ResponseDTO>>;
-    public cohortsIdGet(id: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public cohortsIdGet(requestParameters: CohortsIdGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<CohortResponseDTO>;
+    public cohortsIdGet(requestParameters: CohortsIdGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<CohortResponseDTO>>;
+    public cohortsIdGet(requestParameters: CohortsIdGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<CohortResponseDTO>>;
+    public cohortsIdGet(requestParameters: CohortsIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling cohortsIdGet.');
         }
@@ -134,7 +150,7 @@ export class CohortsHttpService extends BaseService implements CohortsHttpServic
 
         let localVarPath = `/cohorts/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
         const { basePath, withCredentials } = this.configuration;
-        return this.httpClient.request<CohortsIdGet200ResponseDTO>('get', `${basePath}${localVarPath}`,
+        return this.httpClient.request<CohortResponseDTO>('get', `${basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,
@@ -148,18 +164,19 @@ export class CohortsHttpService extends BaseService implements CohortsHttpServic
     }
 
     /**
-     * @param id 
-     * @param cohortsIdPatchRequestDTO 
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public cohortsIdPatch(id: string, cohortsIdPatchRequestDTO?: CohortsIdPatchRequestDTO, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<CohortsIdGet200ResponseDTO>;
-    public cohortsIdPatch(id: string, cohortsIdPatchRequestDTO?: CohortsIdPatchRequestDTO, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<CohortsIdGet200ResponseDTO>>;
-    public cohortsIdPatch(id: string, cohortsIdPatchRequestDTO?: CohortsIdPatchRequestDTO, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<CohortsIdGet200ResponseDTO>>;
-    public cohortsIdPatch(id: string, cohortsIdPatchRequestDTO?: CohortsIdPatchRequestDTO, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public cohortsIdPatch(requestParameters: CohortsIdPatchRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<CohortResponseDTO>;
+    public cohortsIdPatch(requestParameters: CohortsIdPatchRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<CohortResponseDTO>>;
+    public cohortsIdPatch(requestParameters: CohortsIdPatchRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<CohortResponseDTO>>;
+    public cohortsIdPatch(requestParameters: CohortsIdPatchRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling cohortsIdPatch.');
         }
+        const cohortUpdateDTO = requestParameters?.cohortUpdateDTO;
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -177,7 +194,7 @@ export class CohortsHttpService extends BaseService implements CohortsHttpServic
 
         // to determine the Content-Type header
         const consumes: string[] = [
-            'application/json'
+            'application/merge-patch+json'
         ];
         const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
         if (httpContentTypeSelected !== undefined) {
@@ -197,10 +214,10 @@ export class CohortsHttpService extends BaseService implements CohortsHttpServic
 
         let localVarPath = `/cohorts/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
         const { basePath, withCredentials } = this.configuration;
-        return this.httpClient.request<CohortsIdGet200ResponseDTO>('patch', `${basePath}${localVarPath}`,
+        return this.httpClient.request<CohortResponseDTO>('patch', `${basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
-                body: cohortsIdPatchRequestDTO,
+                body: cohortUpdateDTO,
                 responseType: <any>responseType_,
                 ...(withCredentials ? { withCredentials } : {}),
                 headers: localVarHeaders,
@@ -212,14 +229,15 @@ export class CohortsHttpService extends BaseService implements CohortsHttpServic
     }
 
     /**
-     * @param cohortsPostRequestDTO 
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public cohortsPost(cohortsPostRequestDTO?: CohortsPostRequestDTO, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<CohortsIdGet200ResponseDTO>;
-    public cohortsPost(cohortsPostRequestDTO?: CohortsPostRequestDTO, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<CohortsIdGet200ResponseDTO>>;
-    public cohortsPost(cohortsPostRequestDTO?: CohortsPostRequestDTO, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<CohortsIdGet200ResponseDTO>>;
-    public cohortsPost(cohortsPostRequestDTO?: CohortsPostRequestDTO, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public cohortsPost(requestParameters?: CohortsPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<CohortResponseDTO>;
+    public cohortsPost(requestParameters?: CohortsPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<CohortResponseDTO>>;
+    public cohortsPost(requestParameters?: CohortsPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<CohortResponseDTO>>;
+    public cohortsPost(requestParameters?: CohortsPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const cohortCreateDTO = requestParameters?.cohortCreateDTO;
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -257,10 +275,10 @@ export class CohortsHttpService extends BaseService implements CohortsHttpServic
 
         let localVarPath = `/cohorts`;
         const { basePath, withCredentials } = this.configuration;
-        return this.httpClient.request<CohortsIdGet200ResponseDTO>('post', `${basePath}${localVarPath}`,
+        return this.httpClient.request<CohortResponseDTO>('post', `${basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
-                body: cohortsPostRequestDTO,
+                body: cohortCreateDTO,
                 responseType: <any>responseType_,
                 ...(withCredentials ? { withCredentials } : {}),
                 headers: localVarHeaders,

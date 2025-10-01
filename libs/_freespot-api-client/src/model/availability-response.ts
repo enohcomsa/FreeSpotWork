@@ -7,11 +7,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { AvailabilityGet200ResponseItemsInnerDTO } from './availability-get200-response-items-inner';
+import { AvailabilitySlotDTO } from './availability-slot';
 
 
 export interface AvailabilityResponseDTO { 
-    items: Array<AvailabilityGet200ResponseItemsInnerDTO>;
+    items: Array<AvailabilitySlotDTO>;
     total: number;
 }
 

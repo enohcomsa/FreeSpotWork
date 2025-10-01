@@ -7,19 +7,15 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { DegreeDTO } from './degree';
 
 
 export interface ProgramCreateDTO { 
     facultyId: string;
     name: string;
-    degree: ProgramCreateDTODegreeEnum;
+    degree: DegreeDTO;
     active: boolean;
 }
-export enum ProgramCreateDTODegreeEnum {
-    LIC = 'lic',
-    MASTER = 'master',
-    DOCT = 'doct'
-};
 
 
 

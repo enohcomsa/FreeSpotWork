@@ -7,31 +7,22 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { PreferredThemeDTO } from './preferred-theme';
+import { UserRoleDTO } from './user-role';
+import { PreferredLanguageDTO } from './preferred-language';
 
 
 export interface UserUpdateDTO { 
     firstName?: string;
     familyName?: string;
-    role?: UserUpdateDTORoleEnum;
-    preferredLanguage?: UserUpdateDTOPreferredLanguageEnum | null;
-    preferredTheme?: UserUpdateDTOPreferredThemeEnum | null;
+    role?: UserRoleDTO;
+    preferredLanguage?: PreferredLanguageDTO | null;
+    preferredTheme?: PreferredThemeDTO | null;
     facultyId?: string;
     programYearId?: string;
     groupCohortId?: string;
     semigroupCohortId?: string | null;
 }
-export enum UserUpdateDTORoleEnum {
-    ADMIN = 'ADMIN',
-    MEMBER = 'MEMBER'
-};
-export enum UserUpdateDTOPreferredLanguageEnum {
-    EN = 'en',
-    RO = 'ro'
-};
-export enum UserUpdateDTOPreferredThemeEnum {
-    DARK = 'DARK',
-    LIGHT = 'LIGHT'
-};
 
 
 

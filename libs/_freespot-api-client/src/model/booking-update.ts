@@ -7,17 +7,13 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { BookingStatusDTO } from './booking-status';
 
 
 export interface BookingUpdateDTO { 
     activityId?: string;
-    status?: BookingUpdateDTOStatusEnum;
+    status?: BookingStatusDTO;
 }
-export enum BookingUpdateDTOStatusEnum {
-    CONFIRMED = 'CONFIRMED',
-    WAITLISTED = 'WAITLISTED',
-    CANCELLED = 'CANCELLED'
-};
 
 
 

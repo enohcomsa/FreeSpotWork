@@ -7,44 +7,27 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { WeekParityDTO } from './week-parity';
+import { ActivityTypeDTO } from './activity-type';
+import { WeekDayDTO } from './week-day';
+import { CohortIdArrayDTO } from './cohort-id-array';
 
 
 export interface TimetableActivityUpdateDTO { 
     roomId?: string;
     subjectId?: string;
     date?: string;
-    weekDay?: TimetableActivityUpdateDTOWeekDayEnum;
-    activityType?: TimetableActivityUpdateDTOActivityTypeEnum;
-    cohortIds?: Array<string>;
+    weekDay?: WeekDayDTO;
+    activityType?: ActivityTypeDTO;
+    cohortIds?: CohortIdArrayDTO;
     startHour?: number;
     endHour?: number;
-    weekParity?: TimetableActivityUpdateDTOWeekParityEnum;
+    weekParity?: WeekParityDTO;
     capacity?: number;
     reservedSpots?: number;
     busySpots?: number;
     freeSpots?: number;
 }
-export enum TimetableActivityUpdateDTOWeekDayEnum {
-    MONDAY = 'MONDAY',
-    TUESDAY = 'TUESDAY',
-    WEDNESDAY = 'WEDNESDAY',
-    THURSDAY = 'THURSDAY',
-    FRIDAY = 'FRIDAY',
-    SATURDAY = 'SATURDAY',
-    SUNDAY = 'SUNDAY'
-};
-export enum TimetableActivityUpdateDTOActivityTypeEnum {
-    LABORATORY = 'LABORATORY',
-    COURSE = 'COURSE',
-    PROJECT = 'PROJECT',
-    SEMINAR = 'SEMINAR',
-    SPECIAL_EVENT = 'SPECIAL_EVENT'
-};
-export enum TimetableActivityUpdateDTOWeekParityEnum {
-    BOTH = 'BOTH',
-    EVEN = 'EVEN',
-    ODD = 'ODD'
-};
 
 
 

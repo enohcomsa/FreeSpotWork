@@ -1,9 +1,10 @@
 import { z } from "zod";
+import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
+extendZodWithOpenApi(z);
+
 import { ActivityType, CohortIdArray, ObjectIdStr, WeekDay, WeekParity } from "./common.zod";
 
-export const TimetableActivityIdParam = z.object({
-  id: ObjectIdStr,
-});
+export const TimetableActivityIdParam = z.object({ id: ObjectIdStr }).openapi("TimetableActivityIdParam");
 
 export const TimetableActivityCreate = z.object({
   roomId: ObjectIdStr,
@@ -21,12 +22,12 @@ export const TimetableActivityCreate = z.object({
   freeSpots: z.number().int().min(0),
 })
   .refine(
-    (data) =>
-      (data.activityType === "SPECIAL_EVENT" && data.cohortIds.length >= 0) ||
-      (["LABORATORY", "COURSE", "PROJECT", "SEMINAR"].includes(data.activityType) &&
-        data.cohortIds.length >= 1),
+    d =>
+      (d.activityType === "SPECIAL_EVENT" && d.cohortIds.length >= 0) ||
+      (["LABORATORY", "COURSE", "PROJECT", "SEMINAR"].includes(d.activityType) && d.cohortIds.length >= 1),
     { message: "Invalid cohortIds for activityType" }
-  );
+  )
+  .openapi("TimetableActivityCreate");
 
 export const TimetableActivityUpdate = z.object({
   roomId: ObjectIdStr.optional(),
@@ -43,9 +44,8 @@ export const TimetableActivityUpdate = z.object({
   busySpots: z.number().int().min(0).optional(),
   freeSpots: z.number().int().min(0).optional(),
 })
-  .refine(v => Object.keys(v).length > 0, {
-    message: "Provide at least one field to update",
-  });
+  .refine(v => Object.keys(v).length > 0, { message: "Provide at least one field to update" })
+  .openapi("TimetableActivityUpdate");
 
 export const TimetableActivityResponse = z.object({
   id: ObjectIdStr,
@@ -62,7 +62,7 @@ export const TimetableActivityResponse = z.object({
   reservedSpots: z.number().int().min(0),
   busySpots: z.number().int().min(0),
   freeSpots: z.number().int().min(0),
-});
+}).openapi("TimetableActivityResponse");
 
 export type TimetableActivityCreateInput = z.infer<typeof TimetableActivityCreate>;
 export type TimetableActivityUpdateInput = z.infer<typeof TimetableActivityUpdate>;

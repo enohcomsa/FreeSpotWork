@@ -17,46 +17,55 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
-import { AvailabilityGet200ResponseDTO } from '../model/availability-get200-response';
+import { AvailabilityResponseDTO } from '../model/availability-response';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 import { BaseService } from '../api.base.service';
-import {
-    AvailabilityHttpServiceInterface
-} from './availability.serviceInterface';
 
+
+export interface AvailabilityGetRequestParams {
+    date: string;
+    roomId?: string;
+    cohortId?: string;
+    subjectId?: string;
+    startHour?: number;
+    endHour?: number;
+    minFreeSpots?: number;
+    limit?: number;
+}
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class AvailabilityHttpService extends BaseService implements AvailabilityHttpServiceInterface {
+export class AvailabilityHttpService extends BaseService {
 
     constructor(protected httpClient: HttpClient, @Optional() @Inject(BASE_PATH) basePath: string|string[], @Optional() configuration?: Configuration) {
         super(basePath, configuration);
     }
 
     /**
-     * @param date 
-     * @param roomId 
-     * @param cohortId 
-     * @param subjectId 
-     * @param startHour 
-     * @param endHour 
-     * @param minFreeSpots 
-     * @param limit 
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public availabilityGet(date: string, roomId?: string, cohortId?: string, subjectId?: string, startHour?: number, endHour?: number, minFreeSpots?: number, limit?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<AvailabilityGet200ResponseDTO>;
-    public availabilityGet(date: string, roomId?: string, cohortId?: string, subjectId?: string, startHour?: number, endHour?: number, minFreeSpots?: number, limit?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<AvailabilityGet200ResponseDTO>>;
-    public availabilityGet(date: string, roomId?: string, cohortId?: string, subjectId?: string, startHour?: number, endHour?: number, minFreeSpots?: number, limit?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<AvailabilityGet200ResponseDTO>>;
-    public availabilityGet(date: string, roomId?: string, cohortId?: string, subjectId?: string, startHour?: number, endHour?: number, minFreeSpots?: number, limit?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public availabilityGet(requestParameters: AvailabilityGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<AvailabilityResponseDTO>;
+    public availabilityGet(requestParameters: AvailabilityGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<AvailabilityResponseDTO>>;
+    public availabilityGet(requestParameters: AvailabilityGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<AvailabilityResponseDTO>>;
+    public availabilityGet(requestParameters: AvailabilityGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const date = requestParameters?.date;
         if (date === null || date === undefined) {
             throw new Error('Required parameter date was null or undefined when calling availabilityGet.');
         }
+        const roomId = requestParameters?.roomId;
+        const cohortId = requestParameters?.cohortId;
+        const subjectId = requestParameters?.subjectId;
+        const startHour = requestParameters?.startHour;
+        const endHour = requestParameters?.endHour;
+        const minFreeSpots = requestParameters?.minFreeSpots;
+        const limit = requestParameters?.limit;
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
         localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
@@ -103,7 +112,7 @@ export class AvailabilityHttpService extends BaseService implements Availability
 
         let localVarPath = `/availability`;
         const { basePath, withCredentials } = this.configuration;
-        return this.httpClient.request<AvailabilityGet200ResponseDTO>('get', `${basePath}${localVarPath}`,
+        return this.httpClient.request<AvailabilityResponseDTO>('get', `${basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,

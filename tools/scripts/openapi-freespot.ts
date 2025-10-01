@@ -8,12 +8,12 @@ const OUT_DIR = path.join(OUT_LIB, "src");
 const ADDITIONAL = [
   "ngVersion=20.3.3",
   "fileNaming=kebab-case",
-  "withInterfaces=true",
   "stringEnums=true",
   "enumPropertyNaming=UPPERCASE",
   "serviceSuffix=HttpService",
   "modelSuffix=DTO",
-  "providedIn=root"
+  "providedIn=root",
+  "useSingleRequestParameter=true"
 ].join(",");
 
 console.log("▶ Generating Angular client from:", OPENAPI_URL);

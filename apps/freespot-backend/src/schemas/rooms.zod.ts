@@ -1,10 +1,10 @@
 import { z } from "zod";
+import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
+extendZodWithOpenApi(z);
+
 import { ObjectIdStr, SubjectIdArray } from "./common.zod";
 
-
-export const RoomIdParam = z.object({
-  id: ObjectIdStr,
-});
+export const RoomIdParam = z.object({ id: ObjectIdStr }).openapi("RoomIdParam");
 
 export const RoomCreate = z.object({
   buildingId: ObjectIdStr,
@@ -13,7 +13,7 @@ export const RoomCreate = z.object({
   totalSpotsNumber: z.number().int().min(0),
   unavailableSpots: z.number().int().min(0),
   subjectList: SubjectIdArray.default([]),
-});
+}).openapi("RoomCreate");
 
 export const RoomUpdate = z.object({
   floorId: ObjectIdStr.optional(),
@@ -21,10 +21,7 @@ export const RoomUpdate = z.object({
   totalSpotsNumber: z.number().int().min(0).optional(),
   unavailableSpots: z.number().int().min(0).optional(),
   subjectList: SubjectIdArray.optional(),
-})
-  .refine(v => Object.keys(v).length > 0, {
-    message: "Provide at least one field to update",
-  });
+}).refine(v => Object.keys(v).length > 0, { message: "Provide at least one field to update" }).openapi("RoomUpdate");
 
 export const RoomResponse = z.object({
   id: ObjectIdStr,
@@ -34,7 +31,7 @@ export const RoomResponse = z.object({
   totalSpotsNumber: z.number().int().min(0),
   unavailableSpots: z.number().int().min(0),
   subjectList: z.array(ObjectIdStr),
-});
+}).openapi("RoomResponse");
 
 export type RoomCreateInput = z.infer<typeof RoomCreate>;
 export type RoomUpdateInput = z.infer<typeof RoomUpdate>;
