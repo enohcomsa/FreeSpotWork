@@ -11,14 +11,14 @@ import {
   WritableSignal,
 } from '@angular/core';
 
-import { Floor, Building } from '@free-spot/models';
+import { Floor, BuildingLegacy } from '@free-spot/models';
 import { AdminFloorCardComponent } from '../admin-floor-card/admin-floor-card.component';
 import { AbstractControl, FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { AddItemCardComponent } from '@free-spot/ui';
-import { AdminBuildingService } from '@free-spot-service/building';
+import { BuildingService } from '@free-spot-service/building';
 import { AdminFloorService } from '@free-spot-service/floor';
 import { ConfirmModalService } from '@free-spot-service/confirm-modal';
 import { FormErrorMessage } from '@free-spot/util';
@@ -42,13 +42,13 @@ import { FormErrorMessage } from '@free-spot/util';
 export class AdminBuildingDetailComponent implements OnInit {
   private _formBuilder: FormBuilder = inject(FormBuilder);
   private _adminFloorService: AdminFloorService = inject(AdminFloorService);
-  private _adminBuildingService: AdminBuildingService = inject(AdminBuildingService);
+  private _adminBuildingService: BuildingService = inject(BuildingService);
   private _confirmService: ConfirmModalService = inject(ConfirmModalService);
   private _formErrorMessage: FormErrorMessage = inject(FormErrorMessage);
 
   editFloor = viewChild<ElementRef>('editFloor');
   buildingNameSig = input.required<string>();
-  buildingSig!: Signal<Building>;
+  buildingSig!: Signal<BuildingLegacy>;
   oldFloorSig: WritableSignal<Floor> = signal({} as Floor);
 
   addingFloor = false;
@@ -72,7 +72,7 @@ export class AdminBuildingDetailComponent implements OnInit {
 
   onAddFloor(): void {
     const newFloor: Floor = this._createFloor(this.addFloorFormControl.value);
-    const updatedBuilding: Building = {
+    const updatedBuilding: BuildingLegacy = {
       ...this.buildingSig(),
       floorList: this.buildingSig().floorList ? [...this.buildingSig().floorList, newFloor] : [newFloor],
     };
@@ -91,7 +91,7 @@ export class AdminBuildingDetailComponent implements OnInit {
 
   onEditFloor(): void {
     const newFloor: Floor = { ...this.oldFloorSig(), name: this.addFloorFormControl.value };
-    const updatedBuilding: Building = {
+    const updatedBuilding: BuildingLegacy = {
       ...this.buildingSig(),
       floorList: this.buildingSig().floorList.map((floor: Floor) => (floor === this.oldFloorSig() ? newFloor : floor)),
     };
@@ -109,7 +109,7 @@ export class AdminBuildingDetailComponent implements OnInit {
       .afterClosed()
       .subscribe((result: boolean) => {
         if (result) {
-          const updatedBuilding: Building = {
+          const updatedBuilding: BuildingLegacy = {
             ...this.buildingSig(),
             floorList: this.buildingSig().floorList.filter((floor: Floor) => floor !== deletedFloor),
           };

@@ -9,11 +9,8 @@ type Parts = {
 
 function isParts(v: unknown): v is Parts {
   return (
-    typeof v === "object" &&
-    v !== null &&
-    ("body" in (v as Record<string, unknown>) ||
-      "params" in (v as Record<string, unknown>) ||
-      "query" in (v as Record<string, unknown>))
+    typeof v === "object" && v !== null && ("body" in (v as Record<string, unknown>) ||
+      "params" in (v as Record<string, unknown>) || "query" in (v as Record<string, unknown>))
   );
 }
 

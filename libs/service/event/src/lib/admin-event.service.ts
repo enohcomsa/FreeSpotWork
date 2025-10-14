@@ -1,5 +1,5 @@
 import { computed, inject, Injectable, signal, Signal, WritableSignal } from '@angular/core';
-import { Building } from '@free-spot/models';
+import { BuildingLegacy } from '@free-spot/models';
 import { SignalArrayUtil } from '@free-spot/util';
 import { HttpEventService } from '@http-free-spot/event';
 import { take } from 'rxjs';
@@ -9,7 +9,7 @@ import { take } from 'rxjs';
 })
 export class AdminEventService {
   private _httpEventService: HttpEventService = inject(HttpEventService);
-  private _eventListSig: WritableSignal<Building[]> = signal([]);
+  private _eventListSig: WritableSignal<BuildingLegacy[]> = signal([]);
   eventListSig = this._eventListSig.asReadonly();
 
   init(): void {
@@ -17,14 +17,14 @@ export class AdminEventService {
       this._httpEventService
         .getEventList()
         .pipe(take(1))
-        .subscribe((eventList: Building[]) => {
-          this._eventListSig.set(eventList?.filter((event: Building) => event !== null));
+        .subscribe((eventList: BuildingLegacy[]) => {
+          this._eventListSig.set(eventList?.filter((event: BuildingLegacy) => event !== null));
         });
     }
   }
 
   updateEventSpots(eventName: string, addingBooking: boolean): void {
-    const newEventList: Building[] = this._eventListSig().map((event: Building) => {
+    const newEventList: BuildingLegacy[] = this._eventListSig().map((event: BuildingLegacy) => {
       if (event.name === eventName) {
         return {
           ...event,
@@ -40,21 +40,21 @@ export class AdminEventService {
     this._httpEventService.storeEventList(this._eventListSig());
   }
 
-  getEventByName(eventName: string): Signal<Building> {
-    return computed(() => this.eventListSig().find((event: Building) => event.name === eventName) || ({} as Building));
+  getEventByName(eventName: string): Signal<BuildingLegacy> {
+    return computed(() => this.eventListSig().find((event: BuildingLegacy) => event.name === eventName) || ({} as BuildingLegacy));
   }
 
-  addEvent(newEvent: Building): void {
+  addEvent(newEvent: BuildingLegacy): void {
     SignalArrayUtil.addItem(newEvent, this._eventListSig);
     this._httpEventService.storeEventList(this._eventListSig());
   }
 
-  updateEvent(oldEvent: Building, updatedEvent: Building): void {
+  updateEvent(oldEvent: BuildingLegacy, updatedEvent: BuildingLegacy): void {
     SignalArrayUtil.replaceItem(oldEvent, this._eventListSig, updatedEvent);
     this._httpEventService.storeEventList(this._eventListSig());
   }
 
-  deleteEvent(deletedEvent: Building): void {
+  deleteEvent(deletedEvent: BuildingLegacy): void {
     SignalArrayUtil.deleteItem(deletedEvent, this._eventListSig);
     this._httpEventService.storeEventList(this._eventListSig());
   }

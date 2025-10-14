@@ -1,6 +1,7 @@
 import "dotenv/config";
 import express from "express";
 import path from "path";
+import cors from "cors";
 import apiV1 from "./routes";
 import { errorHandler } from "./middlewares/error";
 import { connectToDatabase } from "./db";
@@ -9,7 +10,18 @@ import { setupSwagger } from "./swagger";
 async function bootstrap() {
   const app = express();
 
-  app.use(express.json());
+  const allowedOrigins = ["http://localhost:4200"];
+  app.use(
+    cors({
+      origin: allowedOrigins, // or a function if you need logic
+      methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+      allowedHeaders: ["Content-Type", "Authorization"],
+      credentials: false, // only if you actually use cookies/credentials
+      maxAge: 600, // cache preflight for 10 minutes
+    })
+  );
+  app.options("*", cors());
+  app.use(express.json({ type: ['application/json', 'application/merge-patch+json'] }));
   app.use("/assets", express.static(path.join(__dirname, "assets")));
 
   app.get("/api/health", (_req, res) => res.json({ ok: true }));

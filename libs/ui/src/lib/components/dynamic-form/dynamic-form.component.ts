@@ -22,7 +22,7 @@ import { Event, WeekParity } from '@free-spot/enums';
 import { BookingItemComponent } from '../booking-item/booking-item.component';
 import {
   BookedEvent,
-  Building,
+  BuildingLegacy,
   FreeSpotDate,
   FreeSpotUser,
   Room,
@@ -90,16 +90,16 @@ export class DynamicFormComponent implements OnInit {
   eventListSig: Signal<Event[]> = input<Event[]>(Object.values(Event).filter((event: Event) => event !== Event.COURSE));
   searchForm!: FormGroup;
   searchActiveSig: WritableSignal<boolean> = signal(false);
-  specialEventListSig: Signal<Building[]> = this._adminEventService.eventListSig;
-  filteredSpecialEventListSig: Signal<Building[]> = computed(() =>
+  specialEventListSig: Signal<BuildingLegacy[]> = this._adminEventService.eventListSig;
+  filteredSpecialEventListSig: Signal<BuildingLegacy[]> = computed(() =>
     this.specialEventListSig()
       .filter(
-        (specialEvent: Building) =>
+        (specialEvent: BuildingLegacy) =>
           !this.currentUserSig().eventList?.some(
             (bookedSpecialEvent: BookedEvent) => bookedSpecialEvent.name === specialEvent.name,
           ),
       )
-      .filter((event: Building) => new Date().getTime() - new Date(event.date as Date).getTime() <= 0),
+      .filter((event: BuildingLegacy) => new Date().getTime() - new Date(event.date as Date).getTime() <= 0),
   );
   timetableActivityListFoundSig: WritableSignal<TimetableActivityItem[]> = signal([]);
   oldTimetableActivitySig: WritableSignal<TimetableActivityItem> = signal({} as TimetableActivityItem);
@@ -211,7 +211,7 @@ export class DynamicFormComponent implements OnInit {
         ) || ({} as BookedEvent);
 
       if (!Object.keys(oldBookedSpecialEvent).length) {
-        const specialEvent: Building = this.searchForm.controls['event'].value;
+        const specialEvent: BuildingLegacy = this.searchForm.controls['event'].value;
 
         const timetableActivityListFound: TimetableActivityItem[] = [
           {

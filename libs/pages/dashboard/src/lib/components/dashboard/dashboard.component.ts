@@ -2,9 +2,9 @@ import { ChangeDetectionStrategy, Component, computed, inject, OnInit, Signal, W
 
 import { DynamicFormComponent } from '@free-spot/ui';
 import { BuildingCardComponent } from '../building-card/building-card.component';
-import { AdminBuildingService } from '@free-spot-service/building';
+import { BuildingService } from '@free-spot-service/building';
 import {
-  Building,
+  BuildingLegacy,
   Faculty,
   Floor,
   FreeSpotDate,
@@ -40,7 +40,7 @@ export class DashboardComponent implements OnInit {
   private _dialog: MatDialog = inject(MatDialog);
   private _adminRoomService: AdminRoomService = inject(AdminRoomService);
   private _adminFloorService: AdminFloorService = inject(AdminFloorService);
-  private _adminBuildingService: AdminBuildingService = inject(AdminBuildingService);
+  private _adminBuildingService: BuildingService = inject(BuildingService);
   private _adminFacultyService: AdminFacultyService = inject(AdminFacultyService);
   private _userService: UserService = inject(UserService);
   private _appDateService: AppDateService = inject(AppDateService);
@@ -52,12 +52,12 @@ export class DashboardComponent implements OnInit {
   userListSig: Signal<FreeSpotUser[]> = this._userService.userListSig;
   dateChangedSig: WritableSignal<boolean> = this._appDateService.appDateChanged;
   appDateSig: Signal<FreeSpotDate> = this._appDateService.appDateSig;
-  buildingListSig: Signal<Building[]> = this._adminBuildingService.buildingListSig;
-  eventListSig: Signal<Building[]> = computed(() =>
+  buildingListSig: Signal<BuildingLegacy[]> = this._adminBuildingService.buildingListSigLegacy;
+  eventListSig: Signal<BuildingLegacy[]> = computed(() =>
     this._adminEventService
       .eventListSig()
       .sort((event1, event2) => new Date(event1.date as Date).getTime() - new Date(event2.date as Date).getTime())
-      .filter((event: Building) => new Date().getTime() - new Date(event.date as Date).getTime() <= 0),
+      .filter((event: BuildingLegacy) => new Date().getTime() - new Date(event.date as Date).getTime() <= 0),
   );
   currentUserGroupSig: Signal<Group> = computed(() =>
     this._adminFacultyService.getGroupByName(this.currentUserSig().group as string)(),
@@ -173,8 +173,8 @@ export class DashboardComponent implements OnInit {
   }
 
   private _updateBuilding(changedFloor: Floor): void {
-    const oldBuilding: Building = this._adminBuildingService.getBuildingByName(changedFloor.buildingName)();
-    const updatedBuilding: Building = {
+    const oldBuilding: BuildingLegacy = this._adminBuildingService.getBuildingByName(changedFloor.buildingName)();
+    const updatedBuilding: BuildingLegacy = {
       ...oldBuilding,
       floorList: oldBuilding.floorList.map((floor: Floor) => (floor.name === changedFloor.name ? changedFloor : floor)),
     };

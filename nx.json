@@ -52,6 +52,11 @@
       "cache": true,
       "dependsOn": ["^build"],
       "inputs": ["production", "^production"]
+    },
+    "@nx/js:tsc": {
+      "cache": true,
+      "dependsOn": ["^build"],
+      "inputs": ["production", "^production"]
     }
   },
   "plugins": [
@@ -96,5 +101,10 @@
       "unitTestRunner": "jest"
     }
   },
-  "nxCloudAccessToken": "NDRiYWYwY2UtN2QwMC00NjdmLWI0YTctNWU3ZTFiNjA3MTE2fHJlYWQtd3JpdGU="
+  "nxCloudAccessToken": "NDRiYWYwY2UtN2QwMC00NjdmLWI0YTctNWU3ZTFiNjA3MTE2fHJlYWQtd3JpdGU=",
+  "release": {
+    "version": {
+      "preVersionCommand": "npx nx run-many -t build"
+    }
+  }
 }

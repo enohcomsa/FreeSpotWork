@@ -1,5 +1,5 @@
 export { BookedEvent } from './lib/booked-event.model';
-export { Building } from './lib/building.model';
+export { BuildingLegacy } from './lib/building.model';
 export { DynamicSerach } from './lib/dynamic-search.model';
 export { Faculty } from './lib/faculty.model';
 export { Floor } from './lib/floor.model';

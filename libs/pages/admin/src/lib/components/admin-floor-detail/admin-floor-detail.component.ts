@@ -16,13 +16,13 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, Validators, AbstractCont
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { Building, Floor, Room, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
+import { BuildingLegacy, Floor, Room, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
 import { AdminRoomCardComponent } from '../admin-room-card/admin-room-card.component';
 import { AdminRoomService } from '@free-spot-service/room';
 import { WeekDay } from '@free-spot/enums';
 import { AddItemCardComponent } from '@free-spot/ui';
 import { AdminFloorService } from '@free-spot-service/floor';
-import { AdminBuildingService } from '@free-spot-service/building';
+import { BuildingService } from '@free-spot-service/building';
 import { AdminFacultyService } from '@free-spot-service/faculty';
 import { AppDateService } from '@free-spot-service/app-date';
 import { UserService } from '@free-spot-service/user';
@@ -49,7 +49,7 @@ export class AdminFloorDetailComponent implements OnInit {
   private _formBuilder: FormBuilder = inject(FormBuilder);
   private _adminRoomService: AdminRoomService = inject(AdminRoomService);
   private _adminFloorService: AdminFloorService = inject(AdminFloorService);
-  private _adminBuildingService: AdminBuildingService = inject(AdminBuildingService);
+  private _adminBuildingService: BuildingService = inject(BuildingService);
   private _adminFacultyService: AdminFacultyService = inject(AdminFacultyService);
   private _appDateService: AppDateService = inject(AppDateService);
   private _userService: UserService = inject(UserService);
@@ -60,7 +60,7 @@ export class AdminFloorDetailComponent implements OnInit {
   floorNameSig = input.required<string>();
   floorSig!: Signal<Floor>;
   buildingNameSig = input.required<string>();
-  buildingSig!: Signal<Building>;
+  buildingSig!: Signal<BuildingLegacy>;
 
   oldRoomSig: WritableSignal<Room> = signal({} as Room);
 
@@ -244,7 +244,7 @@ export class AdminFloorDetailComponent implements OnInit {
   }
 
   private _updateBuilding(changedFloor: Floor): void {
-    const updatedBuilding: Building = {
+    const updatedBuilding: BuildingLegacy = {
       ...this.buildingSig(),
       floorList: this.buildingSig().floorList.map((floor: Floor) => (floor.name === changedFloor.name ? changedFloor : floor)),
     };

@@ -7,7 +7,7 @@
     "start:backend": "nx serve freespot-backend",
     "build:FreeSpot": "npx nx build FreeSpot",
     "db:migrate": "node --loader ts-node/esm apps/freespot-backend/src/db/migrate/index.ts",
-    "openapi-generate:freespot-app": "npx ts-node tools/scripts/openapi-freespot.ts"
+    "openapi-generate:free-spot-app": "npx ts-node tools/scripts/openapi-free-spot.ts"
   },
   "private": true,
   "dependencies": {
@@ -26,6 +26,7 @@
     "@ngx-translate/http-loader": "^16.0.1",
     "@tailwindcss/container-queries": "^0.1.1",
     "axios": "^1.6.0",
+    "cors": "^2.8.5",
     "dotenv": "^17.2.2",
     "express": "^4.21.2",
     "mongodb": "^6.20.0",
@@ -70,7 +71,9 @@
     "@types/node": "^22.15.29",
     "@typescript-eslint/eslint-plugin": "^8.44.1",
     "@typescript-eslint/parser": "^8.44.1",
-    "@typescript-eslint/utils": "^8.32.1",
+    "@typescript-eslint/utils": "^8.40.0",
+    "angular-eslint": "^20.2.0",
+    "autoprefixer": "^10.4.0",
     "cypress": "^14.4.0",
     "eslint": "^9.28.0",
     "eslint-config-prettier": "^10.1.5",
@@ -79,6 +82,7 @@
     "jest-environment-jsdom": "29.7.0",
     "jest-environment-node": "^29.7.0",
     "jest-preset-angular": "^14.6.0",
+    "jest-util": "^29.7.0",
     "jsonc-eslint-parser": "^2.4.0",
     "ng-packagr": "^20.0.0",
     "nx": "^21.5.3",
@@ -91,10 +95,14 @@
     "ts-jest": "^29.3.4",
     "ts-node": "^10.9.2",
     "typescript": "5.8.3",
+    "verdaccio": "^6.0.5",
     "webpack-cli": "^5.1.4"
   },
   "overrides": {
     "typescript": "5.8.3",
     "jest-environment-jsdom": "29.7.0"
+  },
+  "nx": {
+    "includedScripts": []
   }
 }

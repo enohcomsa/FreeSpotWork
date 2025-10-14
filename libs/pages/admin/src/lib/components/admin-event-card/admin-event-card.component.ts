@@ -5,7 +5,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
-import { Building } from '@free-spot/models';
+import { BuildingLegacy } from '@free-spot/models';
 
 @Component({
   selector: 'free-spot-admin-event-card',
@@ -16,8 +16,8 @@ import { Building } from '@free-spot/models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminEventCardComponent {
-  adminEventSig = input.required<Building>();
+  adminEventSig = input.required<BuildingLegacy>();
   addingEventSig = model.required<boolean>();
-  editEvent = output<Building>();
-  deleteEvent = output<Building>();
+  editEvent = output<BuildingLegacy>();
+  deleteEvent = output<BuildingLegacy>();
 }

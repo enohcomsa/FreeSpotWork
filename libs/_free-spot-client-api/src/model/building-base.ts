@@ -9,8 +9,7 @@
  */
 
 
-export interface BuildingResponseDTO { 
-    id: string;
+export interface BuildingBaseDTO { 
     name: string;
     address: string;
     specialEvent: boolean;

@@ -6,7 +6,7 @@ import { DynamicChipListComponent, TimetableItemComponent } from '@free-spot/ui'
 import { Faculty, FreeSpotUser, Group, SemiGroup, TimetableActivityItem, TimeTableItem, Year } from '@free-spot/models';
 import { AdminFacultyService } from '@free-spot-service/faculty';
 import { FormsModule } from '@angular/forms';
-import { AdminBuildingService } from '@free-spot-service/building';
+import { BuildingService } from '@free-spot-service/building';
 import { AdminGroupTimetableComponent } from '../admin-group-timetable/admin-group-timetable.component';
 import { AdminRoomService } from '@free-spot-service/room';
 import { WeekDay } from '@free-spot/enums';
@@ -38,7 +38,7 @@ import { delay, of } from 'rxjs';
 export class GroupComponent implements OnInit {
   private _adminRoomService: AdminRoomService = inject(AdminRoomService);
   private _adminFacultyService: AdminFacultyService = inject(AdminFacultyService);
-  private _adminBuildingService: AdminBuildingService = inject(AdminBuildingService);
+  private _adminBuildingService: BuildingService = inject(BuildingService);
   private _appDateService: AppDateService = inject(AppDateService);
   private _userService: UserService = inject(UserService);
   private _bookingService: BookingService = inject(BookingService);

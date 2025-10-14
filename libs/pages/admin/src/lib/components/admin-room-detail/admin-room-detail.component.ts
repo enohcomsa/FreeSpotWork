@@ -2,9 +2,9 @@ import { ChangeDetectionStrategy, Component, inject, input, OnInit, Signal } fro
 
 import { DynamicChipListComponent, TimetableItemComponent } from '@free-spot/ui';
 import { AdminRoomTimetableItemComponent } from '../admin-room-timetable-item/admin-room-timetable-item.component';
-import { Building, Floor, Room, SubjectItem, TimeTableItem } from '@free-spot/models';
+import { BuildingLegacy, Floor, Room, SubjectItem, TimeTableItem } from '@free-spot/models';
 import { AdminRoomService } from '@free-spot-service/room';
-import { AdminBuildingService } from '@free-spot-service/building';
+import { BuildingService } from '@free-spot-service/building';
 import { AdminFloorService } from '@free-spot-service/floor';
 import { SUBJECT_LIST } from '@free-spot/constants';
 
@@ -19,14 +19,14 @@ import { SUBJECT_LIST } from '@free-spot/constants';
 export class AdminRoomDetailComponent implements OnInit {
   private _adminRoomService: AdminRoomService = inject(AdminRoomService);
   private _adminFloorService: AdminFloorService = inject(AdminFloorService);
-  private _adminBuildingService: AdminBuildingService = inject(AdminBuildingService);
+  private _adminBuildingService: BuildingService = inject(BuildingService);
 
   roomNameSig = input.required<string>();
   roomSig!: Signal<Room>;
   floorNameSig = input.required<string>();
   floorSig!: Signal<Floor>;
   buildingNameSig = input.required<string>();
-  buildingSig!: Signal<Building>;
+  buildingSig!: Signal<BuildingLegacy>;
 
   subjectList: SubjectItem[] = SUBJECT_LIST;
 
@@ -68,7 +68,7 @@ export class AdminRoomDetailComponent implements OnInit {
   }
 
   private _updateBuilding(changedFloor: Floor): void {
-    const updatedBuilding: Building = {
+    const updatedBuilding: BuildingLegacy = {
       ...this.buildingSig(),
       floorList: this.buildingSig().floorList.map((floor: Floor) => (floor.name === changedFloor.name ? changedFloor : floor)),
     };

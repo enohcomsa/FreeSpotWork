@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { AdminBuildingService } from '@free-spot-service/building';
+import { BuildingService } from '@free-spot-service/building';
 import { AdminEventService } from '@free-spot-service/event';
 import { AdminFacultyService } from '@free-spot-service/faculty';
 import { AdminFloorService } from '@free-spot-service/floor';
@@ -13,14 +13,14 @@ import { BookedEvent, Floor, Group, SemiGroup, TimetableActivityItem, TimeTableI
 export class BookingService {
   private _adminRoomService: AdminRoomService = inject(AdminRoomService);
   private _adminFloorService: AdminFloorService = inject(AdminFloorService);
-  private _adminBuildingService: AdminBuildingService = inject(AdminBuildingService);
+  // private _adminBuildingService: BuildingService = inject(BuildingService);
   private _adminFacultyService: AdminFacultyService = inject(AdminFacultyService);
   private _adminEventService: AdminEventService = inject(AdminEventService);
 
   init(): void {
     this._adminRoomService.init();
     this._adminFloorService.init();
-    this._adminBuildingService.init();
+    // this._adminBuildingService.init();
     this._adminFacultyService.init();
     this._adminEventService.init();
   }
@@ -56,7 +56,7 @@ export class BookingService {
       timeTableItem.activities.forEach((timetableActivity: TimetableActivityItem) => {
         newUserBookingList.push(this.generateBooking(timetableActivity));
         this._adminFacultyService.updateTimetableActivitySpots(timetableActivity, addingBooking);
-        this._adminBuildingService.updateTimetableActivitySpots(timetableActivity, addingBooking);
+        // this._adminBuildingService.updateTimetableActivitySpots(timetableActivity, addingBooking);
         this._adminFloorService.updateTimetableActivitySpots(timetableActivity, addingBooking);
         this._adminRoomService.updateTimetableActivitySpots(timetableActivity, addingBooking);
       });
@@ -70,7 +70,7 @@ export class BookingService {
     addingBooking: boolean,
     updateFaculty?: boolean,
   ): BookedEvent {
-    this._adminBuildingService.updateTimetableActivitySpots(timetableActivity, addingBooking);
+    // this._adminBuildingService.updateTimetableActivitySpots(timetableActivity, addingBooking);
     this._adminFloorService.updateTimetableActivitySpots(timetableActivity, addingBooking);
     this._adminRoomService.updateTimetableActivitySpots(timetableActivity, addingBooking);
     if (updateFaculty !== undefined && updateFaculty !== null && updateFaculty) {

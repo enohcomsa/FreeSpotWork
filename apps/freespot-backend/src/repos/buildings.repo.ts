@@ -1,80 +1,43 @@
-import { ObjectId, WithId, Collection, FindOneAndUpdateOptions } from "mongodb";
-import { connectToDatabase } from "../db";
 import {
-  BuildingCreateInput,
-  BuildingUpdateInput,
+  BuildingBaseT,
+  BuildingCreateRequest,
   BuildingResponseDto,
+  BuildingUpdateRequest,
 } from "../schemas/buildings.zod";
+import { getCollection, toObjectId, MongoDoc, mapToDto, MongoRecord, stripUndefined } from "../utils/mongo";
 
-interface BuildingDoc {
-  _id?: ObjectId;
-  name: string;
-  address: string;
-  specialEvent: boolean;
+type BuildingDoc = MongoDoc<BuildingBaseT>;
+type BuildingRecord = MongoRecord<BuildingBaseT>;
+const BUILDINGS_COLLECTION = "buildings";
+
+export async function listBuildings(): Promise<BuildingResponseDto[]> {
+  const col = await getCollection<BuildingDoc>(BUILDINGS_COLLECTION);
+  const docs = await col.find({}).sort({ name: 1 }).toArray();
+  return docs.map((doc) => mapToDto<BuildingDoc, BuildingResponseDto>(doc));
 }
 
-async function getCollection(): Promise<Collection<BuildingDoc>> {
-  const db = await connectToDatabase();
-  return db.collection<BuildingDoc>("buildings");
+export async function getBuildingById(id: string): Promise<BuildingResponseDto | null> {
+  const col = await getCollection<BuildingDoc>(BUILDINGS_COLLECTION);
+  const doc = await col.findOne({ _id: toObjectId(id) });
+  return doc ? mapToDto<BuildingDoc, BuildingResponseDto>(doc) : null;
 }
 
-function mapToDto(doc: WithId<BuildingDoc>): BuildingResponseDto {
-  return {
-    id: doc._id.toHexString(),
-    name: doc.name,
-    address: doc.address,
-    specialEvent: doc.specialEvent,
-  };
+export async function createBuilding(input: BuildingCreateRequest): Promise<BuildingResponseDto> {
+  const col = await getCollection<BuildingRecord>(BUILDINGS_COLLECTION);
+  const { insertedId } = await col.insertOne(input);
+  const doc: BuildingDoc = { _id: insertedId, ...input };
+  return mapToDto<BuildingDoc, BuildingResponseDto>(doc);
 }
 
-export async function findById(id: string): Promise<BuildingResponseDto | null> {
-  const col = await getCollection();
-  const doc = await col.findOne({ _id: new ObjectId(id) });
-  return doc ? mapToDto(doc as WithId<BuildingDoc>) : null;
+export async function updateBuildingById(id: string, patch: BuildingUpdateRequest): Promise<BuildingResponseDto | null> {
+  const col = await getCollection<BuildingDoc>(BUILDINGS_COLLECTION);
+  const setPatch = stripUndefined(patch);
+  const res = await col.findOneAndUpdate({ _id: toObjectId(id) }, { $set: setPatch }, { returnDocument: "after" });
+  return res ? mapToDto<BuildingDoc, BuildingResponseDto>(res) : null;
 }
 
-export async function insertOne(
-  input: BuildingCreateInput
-): Promise<BuildingResponseDto> {
-  const col = await getCollection();
-
-  const doc: BuildingDoc = {
-    name: input.name,
-    address: input.address,
-    specialEvent: input.specialEvent,
-  };
-
-  const result = await col.insertOne(doc);
-  const withId: WithId<BuildingDoc> = { _id: result.insertedId, ...doc };
-  return mapToDto(withId);
-}
-
-export async function updateById(
-  id: string,
-  patch: BuildingUpdateInput
-): Promise<BuildingResponseDto | null> {
-  const col = await getCollection();
-
-  const setPatch: Partial<BuildingDoc> = {};
-  if (patch.name) setPatch.name = patch.name;
-  if (patch.address) setPatch.address = patch.address;
-  if (typeof patch.specialEvent === "boolean") {
-    setPatch.specialEvent = patch.specialEvent;
-  }
-
-  const opts: FindOneAndUpdateOptions = { returnDocument: "after" };
-
-  const updated: WithId<BuildingDoc> | null = await col.findOneAndUpdate(
-    { _id: new ObjectId(id) },
-    { $set: setPatch },
-    opts
-  );
-
-  return updated ? mapToDto(updated) : null;
-}
-
-export async function deleteById(id: string): Promise<boolean> {
-  const col = await getCollection();
-  const { deletedCount } = await col.deleteOne({ _id: new ObjectId(id) });
+export async function deleteBuildingById(id: string): Promise<boolean> {
+  const col = await getCollection<BuildingDoc>(BUILDINGS_COLLECTION);
+  const { deletedCount } = await col.deleteOne({ _id: toObjectId(id) });
   return deletedCount === 1;
 }

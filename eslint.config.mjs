@@ -55,7 +55,7 @@ export default [
             },
             {
               sourceTag: 'scope:http-service',
-              onlyDependOnLibsWithTags: ['scope:model'],
+              onlyDependOnLibsWithTags: ['scope:api-client','scope:model'],
             },
             {
               sourceTag: 'scope:ui',

@@ -3,7 +3,7 @@ import * as path from "path";
 
 const OPENAPI_URL = "http://localhost:3333/openapi.json";
 const ROOT = process.env.INIT_CWD || process.cwd();
-const OUT_LIB = path.join(ROOT, "libs", "_freespot-api-client");
+const OUT_LIB = path.join(ROOT, "libs", "_free-spot-client-api");
 const OUT_DIR = path.join(OUT_LIB, "src");
 const ADDITIONAL = [
   "ngVersion=20.3.3",
@@ -20,8 +20,8 @@ console.log("▶ Generating Angular client from:", OPENAPI_URL);
 
 execSync(`rm -rf "${OUT_DIR}"`, { stdio: "inherit" });
 execSync(
-  `npx openapi-generator-cli generate -i ${OPENAPI_URL} -g typescript-angular -o "${OUT_DIR}" --additional-properties=${ADDITIONAL} --global-property apis,models,apiTests=false,modelTests=false --generate-alias-as-model`,
+  `npx openapi-generator-cli generate -i ${OPENAPI_URL} -g typescript-angular -o "${OUT_DIR}" --additional-properties=${ADDITIONAL} --global-property apis,models,supportingFiles,apiTests=false,modelTests=false --generate-alias-as-model`,
   { stdio: "inherit" }
 );
 
-console.log("✅ Done. Generated at libs/_freespot-api-client/src");
+console.log("✅ Done. Generated at libs/_free-spot-api-client/src");

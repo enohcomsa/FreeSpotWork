@@ -16,7 +16,7 @@ import { FacultyComponent } from '../faculty/faculty.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import {
   BookedEvent,
-  Building,
+  BuildingLegacy,
   Faculty,
   Floor,
   FreeSpotUser,
@@ -32,7 +32,7 @@ import { AbstractControl, FormBuilder, FormsModule, ReactiveFormsModule, Validat
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { AdminBuildingService } from '@free-spot-service/building';
+import { BuildingService } from '@free-spot-service/building';
 // import { FACULTY_LIST } from '@free-spot/constants';
 import { AdminFacultyService } from '@free-spot-service/faculty';
 import { UserService } from '@free-spot-service/user';
@@ -46,6 +46,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { filter, Subscription } from 'rxjs';
 import { AdminRoomService } from '@free-spot-service/room';
 import { BookingService } from '@free-spot-service/booking';
+import { Building, CreateBuildingCmd, UpdateBuildingCmd } from '@free-spot-domain/building';
+import { BuildingCardVM, toBuildingCardVM } from '@free-spot-presentation/building';
 
 @Component({
   selector: 'free-spot-admin',
@@ -65,7 +67,7 @@ import { BookingService } from '@free-spot-service/booking';
     AddItemCardComponent,
     MatDatepickerModule,
     MatSelectModule
-],
+  ],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.sass',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -73,7 +75,7 @@ import { BookingService } from '@free-spot-service/booking';
 export class AdminComponent implements OnInit, OnDestroy {
   private _formBuilder: FormBuilder = inject(FormBuilder);
   private _adminFacultyService: AdminFacultyService = inject(AdminFacultyService);
-  private _adminBuildingService: AdminBuildingService = inject(AdminBuildingService);
+  private _adminBuildingService: BuildingService = inject(BuildingService);
   private _userService: UserService = inject(UserService);
   private _confirmService: ConfirmModalService = inject(ConfirmModalService);
   private _formErrorMessage: FormErrorMessage = inject(FormErrorMessage);
@@ -84,13 +86,18 @@ export class AdminComponent implements OnInit, OnDestroy {
   editBuilding = viewChild<ElementRef>('editBuilding');
   editEvent = viewChild<ElementRef>('editEvent');
   facultyListSig: Signal<Faculty[]> = this._adminFacultyService.facultyListSig;
+  buildingListSigLegacy: Signal<BuildingLegacy[]> = this._adminBuildingService.buildingListSigLegacy;
   buildingListSig: Signal<Building[]> = this._adminBuildingService.buildingListSig;
-  eventListSig: Signal<Building[]> = this._adminEventService.eventListSig;
+  eventListSig: Signal<BuildingLegacy[]> = this._adminEventService.eventListSig;
   userListSig: Signal<FreeSpotUser[]> = this._userService.userListSig;
   oldYearSig: WritableSignal<Year> = signal({} as Year);
-  oldbuildingSig: WritableSignal<Building> = signal({} as Building);
-  oldEventSig: WritableSignal<Building> = signal({} as Building);
+  oldbuildingSigLegacy: WritableSignal<BuildingLegacy> = signal({} as BuildingLegacy);
+  oldbuildingSig: WritableSignal<BuildingCardVM> = signal({} as BuildingCardVM);
+  oldEventSig: WritableSignal<BuildingLegacy> = signal({} as BuildingLegacy);
   subscriptionList: Subscription[] = [];
+
+  cardVMs = computed<BuildingCardVM[]>(() => (this.buildingListSig() ?? []).map(toBuildingCardVM));
+
 
   addingYear = false;
   editingYear = false;
@@ -110,7 +117,7 @@ export class AdminComponent implements OnInit, OnDestroy {
     name: ['', [Validators.required, Validators.minLength(3)]],
     date: [new Date(), [Validators.required]],
     startHour: [this.startHourList[0], [Validators.required]],
-    building: [this.buildingListSig()[0], [Validators.required]],
+    building: [this.buildingListSigLegacy()[0], [Validators.required]],
     room: [{} as Room, [Validators.required]],
     unavailable: [0, [Validators.required]],
   });
@@ -129,7 +136,7 @@ export class AdminComponent implements OnInit, OnDestroy {
     this.subscriptionList.push(
       this.addEventFormGroup.controls['building'].valueChanges
         .pipe(filter((building) => !!building))
-        .subscribe((building: Building) => {
+        .subscribe((building: BuildingLegacy) => {
           this.foundRoomListSig.set(this._getBuildingRoomList(building));
           if (!this.editingEvent) {
             this.addEventFormGroup.controls['room'].reset();
@@ -224,45 +231,48 @@ export class AdminComponent implements OnInit, OnDestroy {
   }
 
   onAddBuilding(): void {
-    const newBuilding: Building = this._createBuilding(
-      this.addBuildingFormGroup.controls['name'].value,
-      this.addBuildingFormGroup.controls['adress'].value,
-    );
+    // const newBuilding: BuildingLegacy = this._createBuilding(
+    //   this.addBuildingFormGroup.controls['name'].value,
+    //   this.addBuildingFormGroup.controls['adress'].value,
+    // );
 
-    this._adminBuildingService.addBuilding(newBuilding);
+    // this._adminBuildingService.addBuilding(newBuilding);
+
+    const newBuilding: CreateBuildingCmd = {
+      name: this.addBuildingFormGroup.controls['name'].value,
+      address: this.addBuildingFormGroup.controls['adress'].value,
+      specialEvent: false
+
+    }
+    this._adminBuildingService.create(newBuilding);
     this.addingBuilding = false;
     this.editingBuilding = false;
   }
 
-  onEditingBuilding(buildingToEdit: Building): void {
+  onEditingBuildingVM(vm: BuildingCardVM): void {
     this.editingBuilding = true;
-    this.oldbuildingSig.set(buildingToEdit);
-    this.addBuildingFormGroup.setValue({ name: buildingToEdit.name, adress: buildingToEdit.adress });
+    this.addBuildingFormGroup.setValue({ name: vm.name, adress: vm.address });
+    this.oldbuildingSig.set(vm);
     this.editBuilding()?.nativeElement.scrollIntoView({ block: 'center', behavior: 'smooth' });
   }
 
   onEditBuilding(): void {
-    const updatedBuilding: Building = {
-      ...this._createBuilding(
-        this.addBuildingFormGroup.controls['name'].value,
-        this.addBuildingFormGroup.controls['adress'].value,
-      ),
-      floorList: this.oldbuildingSig().floorList ? this.oldbuildingSig().floorList : [],
+    const updatedBuilding: UpdateBuildingCmd = {
+      ...this.oldbuildingSig(),
+      name: this.addBuildingFormGroup.controls['name'].value,
+      address: this.addBuildingFormGroup.controls['adress'].value,
     };
-    this._adminBuildingService.updateBuilding(this.oldbuildingSig(), updatedBuilding);
+    this._adminBuildingService.update(this.oldbuildingSig().id, updatedBuilding);
     this.addBuildingFormGroup.reset();
     this.addingBuilding = false;
     this.editingBuilding = false;
   }
 
-  onDeleteBuilding(deletedBuilding: Building): void {
-    this._confirmService
-      .openConfirmDialog('Are you sure you want to delete this building?')
+  onDeleteBuildingVM(vm: BuildingCardVM): void {
+    this._confirmService.openConfirmDialog('Are you sure you want to delete this building?')
       .afterClosed()
-      .subscribe((result: boolean) => {
-        if (result) {
-          this._adminBuildingService.deleteBuilding(deletedBuilding);
-        }
+      .subscribe((ok) => {
+        if (ok) this._adminBuildingService.remove(vm.id);
       });
     this.addingBuilding = false;
     this.editingBuilding = false;
@@ -278,7 +288,7 @@ export class AdminComponent implements OnInit, OnDestroy {
   onAddEvent(): void {
     const eventDate: Date = this.addEventFormGroup.controls['date'].value;
     eventDate.setHours(this.addEventFormGroup.controls['startHour'].value, 0, 0, 0);
-    const newEvent: Building = {
+    const newEvent: BuildingLegacy = {
       name: this.addEventFormGroup.controls['name'].value,
       adress: this.addEventFormGroup.controls['building'].value.adress,
       floorList: [],
@@ -300,7 +310,7 @@ export class AdminComponent implements OnInit, OnDestroy {
     this.addingEvent = false;
   }
 
-  onEditingEvent(eventToEdit: Building): void {
+  onEditingEvent(eventToEdit: BuildingLegacy): void {
     this.editingEvent = true;
     this.oldEventSig.set(eventToEdit);
     this.addEventFormGroup.setValue({
@@ -320,7 +330,7 @@ export class AdminComponent implements OnInit, OnDestroy {
   onEditEvent(): void {
     const eventDate: Date = this.addEventFormGroup.controls['date'].value;
     eventDate.setHours(this.addEventFormGroup.controls['startHour'].value, 0, 0, 0);
-    const updatedEvent: Building = {
+    const updatedEvent: BuildingLegacy = {
       name: this.addEventFormGroup.controls['name'].value,
       adress: this.addEventFormGroup.controls['building'].value.adress,
       floorList: [],
@@ -366,7 +376,7 @@ export class AdminComponent implements OnInit, OnDestroy {
     this.addingEvent = false;
   }
 
-  onDeleteEvent(deletedEvent: Building): void {
+  onDeleteEvent(deletedEvent: BuildingLegacy): void {
     this._confirmService
       .openConfirmDialog('Are you sure you want to delete this event?')
       .afterClosed()
@@ -388,7 +398,7 @@ export class AdminComponent implements OnInit, OnDestroy {
     this.addingEvent = false;
   }
 
-  private _createBuilding(buildingName: string, buildingAdress: string): Building {
+  private _createBuilding(buildingName: string, buildingAdress: string): BuildingLegacy {
     return {
       name: buildingName,
       adress: buildingAdress,
@@ -397,7 +407,7 @@ export class AdminComponent implements OnInit, OnDestroy {
     };
   }
 
-  private _getBuildingRoomList(building: Building): Room[] {
+  private _getBuildingRoomList(building: BuildingLegacy): Room[] {
     const roomList: Room[] = [];
     building.floorList?.forEach((floor: Floor) => {
       floor.roomList?.forEach((room: Room) => {
