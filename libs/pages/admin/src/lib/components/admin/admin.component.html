@@ -37,7 +37,7 @@
 
   <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Buildings</h1>
   <div class="flex w-full flex-col gap-8 pb-4 md:grid md:grid-cols-2 md:place-items-stretch xl:grid-cols-3">
-    @for (vm of cardVMs(); track vm.id) {
+    @for (vm of buildingCardVMs(); track vm.id) {
     <free-spot-admin-building-card [adminBuildingSig]="vm" [addingBuildingSig]="addingBuilding"
       (addingBuildingSigChange)="addingBuilding = $event" (editBuilding)="onEditingBuildingVM($event)"
       (deleteBuilding)="onDeleteBuildingVM($event)"></free-spot-admin-building-card>

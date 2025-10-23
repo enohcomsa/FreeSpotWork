@@ -2,7 +2,7 @@ export { BookedEvent } from './lib/booked-event.model';
 export { BuildingLegacy } from './lib/building.model';
 export { DynamicSerach } from './lib/dynamic-search.model';
 export { Faculty } from './lib/faculty.model';
-export { Floor } from './lib/floor.model';
+export { FloorLegacy  } from './lib/floor.model';
 export { FreeSpotDate } from './lib/free-spot-app-date.model';
 export { FreeSpotUser } from './lib/free-spot-user.model';
 export { Group } from './lib/group.model';

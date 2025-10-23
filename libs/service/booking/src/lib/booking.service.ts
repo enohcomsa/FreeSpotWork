@@ -5,7 +5,7 @@ import { AdminFacultyService } from '@free-spot-service/faculty';
 import { AdminFloorService } from '@free-spot-service/floor';
 import { AdminRoomService } from '@free-spot-service/room';
 import { Event } from '@free-spot/enums';
-import { BookedEvent, Floor, Group, SemiGroup, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
+import { BookedEvent, FloorLegacy, Group, SemiGroup, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
 
 @Injectable({
   providedIn: 'root',
@@ -99,7 +99,7 @@ export class BookingService {
   }
 
   private _getLocation(roomName: string): Pick<BookedEvent, 'buildingName' | 'floorName' | 'roomName'> {
-    const activityFloor: Floor = this._adminFloorService.getFloorByName(
+    const activityFloor: FloorLegacy = this._adminFloorService.getFloorByName(
       this._adminRoomService.getRoomByName(roomName)().floorName,
     )();
     const newLocation: Pick<BookedEvent, 'buildingName' | 'floorName' | 'roomName'> = {

@@ -1,9 +1,9 @@
 import { z } from "zod";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
-extendZodWithOpenApi(z);
-
 import { ObjectIdStr } from "./common.zod";
 import { strictObj, nonEmptyPatch } from "../utils/zod-helpers";
+
+extendZodWithOpenApi(z);
 
 const BuildingBase = strictObj({
   name: z.string().trim().min(1),

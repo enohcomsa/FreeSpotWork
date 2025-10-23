@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, input, OnInit, Signal, signal, WritableSignal } from '@angular/core';
 
 import { FloorBookingDrawerComponent } from '../floor-booking-drawer/floor-booking-drawer.component';
-import { Floor } from '@free-spot/models';
+import { FloorLegacy } from '@free-spot/models';
 import { FloorRoomComponent } from '../floor-room/floor-room.component';
 import { AdminFloorService } from '@free-spot-service/floor';
 import { TranslateModule } from '@ngx-translate/core';
@@ -19,7 +19,7 @@ export class FloorDetailsComponent implements OnInit {
 
   floorNameSig = input.required<string>();
   toggleStateSig: WritableSignal<boolean> = signal(false);
-  floorSig: Signal<Floor> = signal({} as Floor);
+  floorSig: Signal<FloorLegacy> = signal({} as FloorLegacy);
   roomBookingSearchSig = signal<string>('');
 
   ngOnInit(): void {

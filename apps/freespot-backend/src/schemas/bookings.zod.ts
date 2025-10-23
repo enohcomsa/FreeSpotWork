@@ -1,12 +1,11 @@
 import { z } from "zod";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
+import { ObjectIdStr, BookingStatus, Source, ISODateStr } from "./common.zod";
+import { strictObj, nonEmptyPatch } from "../utils/zod-helpers";
+
 extendZodWithOpenApi(z);
 
-import { ObjectIdStr, BookingStatus, Source, ISODateStr } from "./common.zod";
-
-export const BookingIdParam = z.object({ id: ObjectIdStr }).openapi("BookingIdParam");
-
-export const BookingCreate = z.object({
+export const BookingBase = strictObj({
   activityId: ObjectIdStr,
   userId: ObjectIdStr,
   status: BookingStatus.default("WAITLISTED"),
@@ -14,23 +13,18 @@ export const BookingCreate = z.object({
   source: Source.nullable().optional(),
 }).openapi("BookingCreate");
 
-export const BookingUpdate = z.object({
-  activityId: ObjectIdStr.optional(),
-  status: BookingStatus.optional(),
-}).refine(v => Object.keys(v).length > 0, { message: "Provide at least one field to update" }).openapi("BookingUpdate");
-
-export const BookingResponse = z.object({
+export const BookingIdParam = z.object({ id: ObjectIdStr }).openapi("BookingIdParam");
+export const BookingCreate = BookingBase.openapi("BookingCreate");
+export const BookingUpdate = nonEmptyPatch(BookingBase.partial()).openapi("BookingUpdate");
+export const BookingResponse = BookingBase.extend({
   id: ObjectIdStr,
-  activityId: ObjectIdStr,
-  userId: ObjectIdStr,
-  cohortId: ObjectIdStr.nullable().optional(),
-  status: BookingStatus,
   createdAt: ISODateStr,
   updatedAt: ISODateStr.nullable().optional(),
-  source: Source.nullable().optional(),
 }).openapi("BookingResponse");
+export const BookingList = z.array(BookingResponse).openapi("BookingList");
 
-export type BookingCreateInput = z.infer<typeof BookingCreate>;
-export type BookingUpdateInput = z.infer<typeof BookingUpdate>;
-export type BookingIdParamInput = z.infer<typeof BookingIdParam>;
+export type BookingBaseT = z.infer<typeof BookingBase>;
+export type BookingCreateRequest = z.infer<typeof BookingCreate>;
+export type BookingUpdateRequest = z.infer<typeof BookingUpdate>;
+export type BookingIdParamT = z.infer<typeof BookingIdParam>;
 export type BookingResponseDto = z.infer<typeof BookingResponse>;

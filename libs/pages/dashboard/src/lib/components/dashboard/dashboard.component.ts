@@ -6,7 +6,7 @@ import { BuildingService } from '@free-spot-service/building';
 import {
   BuildingLegacy,
   Faculty,
-  Floor,
+  FloorLegacy,
   FreeSpotDate,
   FreeSpotUser,
   Group,
@@ -163,8 +163,8 @@ export class DashboardComponent implements OnInit {
   }
 
   private _updateFloorAndBuilding(updatedRoom: Room): void {
-    const oldFloor: Floor = this._adminFloorService.getFloorByName(updatedRoom.floorName)();
-    const updatedFloor: Floor = {
+    const oldFloor: FloorLegacy = this._adminFloorService.getFloorByName(updatedRoom.floorName)();
+    const updatedFloor: FloorLegacy = {
       ...oldFloor,
       roomList: oldFloor.roomList.map((room: Room) => (room.name === updatedRoom.name ? updatedRoom : room)),
     };
@@ -172,11 +172,11 @@ export class DashboardComponent implements OnInit {
     this._updateBuilding(updatedFloor);
   }
 
-  private _updateBuilding(changedFloor: Floor): void {
+  private _updateBuilding(changedFloor: FloorLegacy): void {
     const oldBuilding: BuildingLegacy = this._adminBuildingService.getBuildingByName(changedFloor.buildingName)();
     const updatedBuilding: BuildingLegacy = {
       ...oldBuilding,
-      floorList: oldBuilding.floorList.map((floor: Floor) => (floor.name === changedFloor.name ? changedFloor : floor)),
+      floorList: oldBuilding.floorList.map((floor: FloorLegacy) => (floor.name === changedFloor.name ? changedFloor : floor)),
     };
     this._adminBuildingService.updateBuilding(oldBuilding, updatedBuilding);
   }

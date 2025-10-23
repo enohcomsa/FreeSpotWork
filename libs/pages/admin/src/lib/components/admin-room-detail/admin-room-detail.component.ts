@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, input, OnInit, Signal } fro
 
 import { DynamicChipListComponent, TimetableItemComponent } from '@free-spot/ui';
 import { AdminRoomTimetableItemComponent } from '../admin-room-timetable-item/admin-room-timetable-item.component';
-import { BuildingLegacy, Floor, Room, SubjectItem, TimeTableItem } from '@free-spot/models';
+import { BuildingLegacy, FloorLegacy, Room, SubjectItem, TimeTableItem } from '@free-spot/models';
 import { AdminRoomService } from '@free-spot-service/room';
 import { BuildingService } from '@free-spot-service/building';
 import { AdminFloorService } from '@free-spot-service/floor';
@@ -24,7 +24,7 @@ export class AdminRoomDetailComponent implements OnInit {
   roomNameSig = input.required<string>();
   roomSig!: Signal<Room>;
   floorNameSig = input.required<string>();
-  floorSig!: Signal<Floor>;
+  floorSig!: Signal<FloorLegacy>;
   buildingNameSig = input.required<string>();
   buildingSig!: Signal<BuildingLegacy>;
 
@@ -59,7 +59,7 @@ export class AdminRoomDetailComponent implements OnInit {
   }
 
   private _updateFloorAndBuilding(updatedRoom: Room): void {
-    const updatedFloor: Floor = {
+    const updatedFloor: FloorLegacy = {
       ...this.floorSig(),
       roomList: this.floorSig().roomList.map((room: Room) => (room.name === updatedRoom.name ? updatedRoom : room)),
     };
@@ -67,10 +67,10 @@ export class AdminRoomDetailComponent implements OnInit {
     this._updateBuilding(updatedFloor);
   }
 
-  private _updateBuilding(changedFloor: Floor): void {
+  private _updateBuilding(changedFloor: FloorLegacy): void {
     const updatedBuilding: BuildingLegacy = {
       ...this.buildingSig(),
-      floorList: this.buildingSig().floorList.map((floor: Floor) => (floor.name === changedFloor.name ? changedFloor : floor)),
+      floorList: this.buildingSig().floorList.map((floor: FloorLegacy) => (floor.name === changedFloor.name ? changedFloor : floor)),
     };
     this._adminBuildingService.updateBuilding(this.buildingSig(), updatedBuilding);
   }

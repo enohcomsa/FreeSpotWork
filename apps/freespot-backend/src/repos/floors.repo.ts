@@ -24,7 +24,12 @@ export async function getFloorById(id: string): Promise<FloorResponseDto | null>
 
 export async function createFloor(input: FloorCreateRequest): Promise<FloorResponseDto> {
   const col = await getCollection<FloorRecord>(FLOOR_COLLECTION);
-  const { insertedId } = await col.insertOne(input);
+    const doc1 = {
+      ...input,
+    buildingId:toObjectId(input.buildingId),
+
+  };
+  const { insertedId } = await col.insertOne(doc1);
   const doc: FloorDoc = { _id: insertedId, ...input };
   return mapToDto<FloorDoc, FloorResponseDto>(doc);
 }

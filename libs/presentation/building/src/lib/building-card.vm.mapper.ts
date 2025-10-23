@@ -1,5 +1,6 @@
 import { Building } from '@free-spot-domain/building';
-import { BuildingCardVM } from './building-card.vm';
+import { BuildingCardFloorVM, BuildingCardVM } from './building-card.vm';
+import { Floor } from '@free-spot-domain/floor';
 
 
 export function toBuildingCardVM(building: Building): BuildingCardVM {
@@ -9,5 +10,13 @@ export function toBuildingCardVM(building: Building): BuildingCardVM {
     address: building.address,
     floors: [],
     specialEvent: building.specialEvent
+  };
+}
+
+export function toBuildingCardFloorVM(floor: Floor): BuildingCardFloorVM {
+  return {
+    name: floor.name,
+    total: floor.totalSpotsNumber,
+    unavailable: floor.unavailableSpots,
   };
 }

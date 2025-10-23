@@ -1,39 +1,27 @@
 import { z } from "zod";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
+import { ObjectIdStr, SubjectIdArray } from "./common.zod";
+import { strictObj, nonEmptyPatch } from "../utils/zod-helpers";
+
 extendZodWithOpenApi(z);
 
-import { ObjectIdStr, SubjectIdArray } from "./common.zod";
-
-export const RoomIdParam = z.object({ id: ObjectIdStr }).openapi("RoomIdParam");
-
-export const RoomCreate = z.object({
+export const RoomBase = strictObj({
   buildingId: ObjectIdStr,
   floorId: ObjectIdStr,
-  name: z.string().min(1),
+  name: z.string().trim().min(1),
   totalSpotsNumber: z.number().int().min(0),
   unavailableSpots: z.number().int().min(0),
   subjectList: SubjectIdArray.default([]),
-}).openapi("RoomCreate");
+}).openapi("RoomBase");
 
-export const RoomUpdate = z.object({
-  floorId: ObjectIdStr.optional(),
-  name: z.string().min(1).optional(),
-  totalSpotsNumber: z.number().int().min(0).optional(),
-  unavailableSpots: z.number().int().min(0).optional(),
-  subjectList: SubjectIdArray.optional(),
-}).refine(v => Object.keys(v).length > 0, { message: "Provide at least one field to update" }).openapi("RoomUpdate");
+export const RoomIdParam = z.object({ id: ObjectIdStr }).openapi("RoomIdParam");
+export const RoomCreate = RoomBase.openapi("RoomCreate");
+export const RoomUpdate = nonEmptyPatch(RoomBase.partial()).openapi("RoomUpdate");
+export const RoomResponse = RoomBase.extend({ id: ObjectIdStr }).openapi("RoomResponse");
+export const RoomList = z.array(RoomResponse).openapi("RoomList");
 
-export const RoomResponse = z.object({
-  id: ObjectIdStr,
-  buildingId: ObjectIdStr,
-  floorId: ObjectIdStr,
-  name: z.string(),
-  totalSpotsNumber: z.number().int().min(0),
-  unavailableSpots: z.number().int().min(0),
-  subjectList: z.array(ObjectIdStr),
-}).openapi("RoomResponse");
-
-export type RoomCreateInput = z.infer<typeof RoomCreate>;
-export type RoomUpdateInput = z.infer<typeof RoomUpdate>;
-export type RoomIdParamInput = z.infer<typeof RoomIdParam>;
+export type RoomBaseT = z.infer<typeof RoomBase>;
+export type RoomCreateRequest = z.infer<typeof RoomCreate>;
+export type RoomUpdateRequest = z.infer<typeof RoomUpdate>;
+export type RoomIdParamT = z.infer<typeof RoomIdParam>;
 export type RoomResponseDto = z.infer<typeof RoomResponse>;

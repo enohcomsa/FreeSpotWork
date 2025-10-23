@@ -16,7 +16,9 @@
     "baseUrl": ".",
     "paths": {
       "@free-spot-domain/building": ["libs/domain/building/src/index.ts"],
+      "@free-spot-domain/floor": ["libs/domain/floor/src/index.ts"],
       "@free-spot-presentation/building": ["libs/presentation/building/src/index.ts"],
+      "@free-spot-presentation/floor": ["libs/presentation/floor/src/index.ts"],
       "@free-spot-service/app-date": ["libs/service/app-date/src/index.ts"],
       "@free-spot-service/auth": ["libs/service/auth/src/index.ts"],
       "@free-spot-service/booking": ["libs/service/booking/src/index.ts"],

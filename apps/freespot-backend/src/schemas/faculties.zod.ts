@@ -1,28 +1,23 @@
 import { z } from "zod";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
+import { ObjectIdStr } from "./common.zod";
+import { strictObj, nonEmptyPatch } from "../utils/zod-helpers";
+
 extendZodWithOpenApi(z);
 
-import { ObjectIdStr } from "./common.zod";
+export const FacultyBase = strictObj({
+  name: z.string().trim().min(1),
+  shortName: z.string().trim().min(1),
+}).openapi("FacultyBase");
 
 export const FacultyIdParam = z.object({ id: ObjectIdStr }).openapi("FacultyIdParam");
+export const FacultyCreate = FacultyBase.openapi("FacultyCreate");
+export const FacultyUpdate = nonEmptyPatch(FacultyBase.partial()).openapi("FacultyUpdate");
+export const FacultyResponse = FacultyBase.extend({ id: ObjectIdStr }).openapi("FacultyResponse");
+export const FacultyList = z.array(FacultyResponse).openapi("FacultyList");
 
-export const FacultyCreate = z.object({
-  name: z.string().min(1),
-  shortName: z.string().min(1),
-}).openapi("FacultyCreate");
-
-export const FacultyUpdate = z.object({
-  name: z.string().min(1).optional(),
-  shortName: z.string().min(1).optional(),
-}).refine(v => Object.keys(v).length > 0, { message: "Provide at least one field to update" }).openapi("FacultyUpdate");
-
-export const FacultyResponse = z.object({
-  id: ObjectIdStr,
-  name: z.string(),
-  shortName: z.string(),
-}).openapi("FacultyResponse");
-
-export type FacultyCreateInput = z.infer<typeof FacultyCreate>;
-export type FacultyUpdateInput = z.infer<typeof FacultyUpdate>;
-export type FacultyIdParamInput = z.infer<typeof FacultyIdParam>;
+export type FacultyBaseT = z.infer<typeof FacultyBase>;
+export type FacultyCreateRequest = z.infer<typeof FacultyCreate>;
+export type FacultyUpdateRequest = z.infer<typeof FacultyUpdate>;
+export type FacultyIdParamT = z.infer<typeof FacultyIdParam>;
 export type FacultyResponseDto = z.infer<typeof FacultyResponse>;

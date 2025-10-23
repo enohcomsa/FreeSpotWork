@@ -18,7 +18,7 @@ import {
   BookedEvent,
   BuildingLegacy,
   Faculty,
-  Floor,
+  FloorLegacy,
   FreeSpotUser,
   Room,
   SubjectItem,
@@ -47,7 +47,9 @@ import { filter, Subscription } from 'rxjs';
 import { AdminRoomService } from '@free-spot-service/room';
 import { BookingService } from '@free-spot-service/booking';
 import { Building, CreateBuildingCmd, UpdateBuildingCmd } from '@free-spot-domain/building';
-import { BuildingCardVM, toBuildingCardVM } from '@free-spot-presentation/building';
+import { BuildingCardVM, toBuildingCardVM, toBuildingCardFloorVM } from '@free-spot-presentation/building';
+import { Floor } from '@free-spot-domain/floor';
+import { AdminFloorService } from '@free-spot-service/floor';
 
 @Component({
   selector: 'free-spot-admin',
@@ -82,12 +84,14 @@ export class AdminComponent implements OnInit, OnDestroy {
   private _adminEventService: AdminEventService = inject(AdminEventService);
   private _adminRoomService: AdminRoomService = inject(AdminRoomService);
   private _bookingService: BookingService = inject(BookingService);
+  private _adminFloorService: AdminFloorService = inject(AdminFloorService);
 
   editBuilding = viewChild<ElementRef>('editBuilding');
   editEvent = viewChild<ElementRef>('editEvent');
   facultyListSig: Signal<Faculty[]> = this._adminFacultyService.facultyListSig;
   buildingListSigLegacy: Signal<BuildingLegacy[]> = this._adminBuildingService.buildingListSigLegacy;
   buildingListSig: Signal<Building[]> = this._adminBuildingService.buildingListSig;
+  readonly floorListSig: Signal<Floor[]> = this._adminFloorService.floorListSig;
   eventListSig: Signal<BuildingLegacy[]> = this._adminEventService.eventListSig;
   userListSig: Signal<FreeSpotUser[]> = this._userService.userListSig;
   oldYearSig: WritableSignal<Year> = signal({} as Year);
@@ -96,7 +100,14 @@ export class AdminComponent implements OnInit, OnDestroy {
   oldEventSig: WritableSignal<BuildingLegacy> = signal({} as BuildingLegacy);
   subscriptionList: Subscription[] = [];
 
-  cardVMs = computed<BuildingCardVM[]>(() => (this.buildingListSig() ?? []).map(toBuildingCardVM));
+  readonly buildingCardVMs = computed<BuildingCardVM[]>(() => {
+    const buildings = this.buildingListSig();
+    const floors = this.floorListSig();
+    return buildings.map((building: Building) => ({
+      ...toBuildingCardVM(building),
+      floors: floors.filter((floor: Floor) => floor.buildingId === building.id).map(toBuildingCardFloorVM),
+    }));
+  });
 
 
   addingYear = false;
@@ -110,6 +121,7 @@ export class AdminComponent implements OnInit, OnDestroy {
   });
 
   addingEvent = false;
+
   editingEvent = false;
   startHourList: number[] = [8, 10, 12, 14, 16, 18];
   foundRoomListSig: WritableSignal<Room[]> = signal([]);
@@ -409,7 +421,7 @@ export class AdminComponent implements OnInit, OnDestroy {
 
   private _getBuildingRoomList(building: BuildingLegacy): Room[] {
     const roomList: Room[] = [];
-    building.floorList?.forEach((floor: Floor) => {
+    building.floorList?.forEach((floor: FloorLegacy) => {
       floor.roomList?.forEach((room: Room) => {
         roomList.push(room);
       });

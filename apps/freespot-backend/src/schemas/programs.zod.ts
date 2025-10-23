@@ -1,33 +1,25 @@
 import { z } from "zod";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
+import { Degree, ObjectIdStr } from "./common.zod";
+import { strictObj, nonEmptyPatch } from "../utils/zod-helpers";
+
 extendZodWithOpenApi(z);
 
-import { Degree, ObjectIdStr } from "./common.zod";
+export const ProgramBase = strictObj({
+  facultyId: ObjectIdStr,
+  name: z.string().trim().min(1),
+  degree: Degree,
+  active: z.boolean(),
+}).openapi("ProgramBase");
 
 export const ProgramIdParam = z.object({ id: ObjectIdStr }).openapi("ProgramIdParam");
+export const ProgramCreate = ProgramBase.openapi("ProgramCreate");
+export const ProgramUpdate = nonEmptyPatch(ProgramBase.partial()).openapi("ProgramUpdate");
+export const ProgramResponse = ProgramBase.extend({ id: ObjectIdStr }).openapi("ProgramResponse");
+export const ProgramList = z.array(ProgramResponse).openapi("ProgramList");
 
-export const ProgramCreate = z.object({
-  facultyId: ObjectIdStr,
-  name: z.string().min(1),
-  degree: Degree,
-  active: z.boolean(),
-}).openapi("ProgramCreate");
-
-export const ProgramUpdate = z.object({
-  name: z.string().min(1).optional(),
-  degree: Degree.optional(),
-  active: z.boolean().optional(),
-}).refine(v => Object.keys(v).length > 0, { message: "Provide at least one field to update" }).openapi("ProgramUpdate");
-
-export const ProgramResponse = z.object({
-  id: ObjectIdStr,
-  facultyId: ObjectIdStr,
-  name: z.string(),
-  degree: Degree,
-  active: z.boolean(),
-}).openapi("ProgramResponse");
-
-export type ProgramCreateInput = z.infer<typeof ProgramCreate>;
-export type ProgramUpdateInput = z.infer<typeof ProgramUpdate>;
-export type ProgramIdParamInput = z.infer<typeof ProgramIdParam>;
+export type ProgramBaseT = z.infer<typeof ProgramBase>;
+export type ProgramCreateRequest = z.infer<typeof ProgramCreate>;
+export type ProgramUpdateRequest = z.infer<typeof ProgramUpdate>;
+export type ProgramIdParamT = z.infer<typeof ProgramIdParam>;
 export type ProgramResponseDto = z.infer<typeof ProgramResponse>;

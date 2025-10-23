@@ -16,7 +16,7 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, Validators, AbstractCont
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { BuildingLegacy, Floor, Room, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
+import { BuildingLegacy, FloorLegacy, Room, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
 import { AdminRoomCardComponent } from '../admin-room-card/admin-room-card.component';
 import { AdminRoomService } from '@free-spot-service/room';
 import { WeekDay } from '@free-spot/enums';
@@ -58,7 +58,7 @@ export class AdminFloorDetailComponent implements OnInit {
 
   editRoom = viewChild.required<ElementRef>('editRoom');
   floorNameSig = input.required<string>();
-  floorSig!: Signal<Floor>;
+  floorSig!: Signal<FloorLegacy>;
   buildingNameSig = input.required<string>();
   buildingSig!: Signal<BuildingLegacy>;
 
@@ -105,7 +105,7 @@ export class AdminFloorDetailComponent implements OnInit {
       this.addRoomFormGroup.controls['totalSpotsNumber'].value as number,
       this.addRoomFormGroup.controls['unavailableSpots'].value as number,
     );
-    const updatedFloor: Floor = this._createNewRoomFloor(newRoom);
+    const updatedFloor: FloorLegacy = this._createNewRoomFloor(newRoom);
 
     this._adminRoomService.addRoom(newRoom);
     this._adminFloorService.updateFloor(this.floorSig(), updatedFloor);
@@ -156,7 +156,7 @@ export class AdminFloorDetailComponent implements OnInit {
       totalSpotsNumber: newRoom.totalSpotsNumber - (this.oldRoomSig().totalSpotsNumber as number),
       unavailableSpots: newRoom.unavailableSpots - (this.oldRoomSig().unavailableSpots as number),
     };
-    const updatedFloor: Floor = this._createEditRoomFloor(diffRoom, newRoom);
+    const updatedFloor: FloorLegacy = this._createEditRoomFloor(diffRoom, newRoom);
 
     this._adminRoomService.updateRoom(this.oldRoomSig() as Room, newRoom);
     this._adminFloorService.updateFloor(this.floorSig(), updatedFloor);
@@ -177,7 +177,7 @@ export class AdminFloorDetailComponent implements OnInit {
             totalSpotsNumber: -deletedRoom.totalSpotsNumber,
             unavailableSpots: -deletedRoom.unavailableSpots,
           };
-          const updatedFloor: Floor = this._createDeleteRoomFloor(diffRoom, deletedRoom);
+          const updatedFloor: FloorLegacy = this._createDeleteRoomFloor(diffRoom, deletedRoom);
 
           this._userService.removeTimetableActivitiesByRoomName(deletedRoom.name);
           this._adminFacultyService.removeTimetableActivitiesByRoomName(deletedRoom.name);
@@ -202,7 +202,7 @@ export class AdminFloorDetailComponent implements OnInit {
     };
   }
 
-  private _createNewRoomFloor(addedRoom: Room): Floor {
+  private _createNewRoomFloor(addedRoom: Room): FloorLegacy {
     return {
       ...this.floorSig(),
       roomList: this.floorSig().roomList ? [...this.floorSig().roomList, addedRoom] : [addedRoom],
@@ -211,7 +211,7 @@ export class AdminFloorDetailComponent implements OnInit {
     };
   }
 
-  private _createEditRoomFloor(diffRoom: Room, newRoom: Room): Floor {
+  private _createEditRoomFloor(diffRoom: Room, newRoom: Room): FloorLegacy {
     return {
       ...this.floorSig(),
       roomList: this.floorSig().roomList.map((room: Room) => (room === this.oldRoomSig() ? newRoom : room)),
@@ -219,7 +219,7 @@ export class AdminFloorDetailComponent implements OnInit {
       unavailableSpots: this._reduceSpotNumber('unavailableSpots', diffRoom),
     };
   }
-  private _createDeleteRoomFloor(diffRoom: Room, deletedRoom: Room): Floor {
+  private _createDeleteRoomFloor(diffRoom: Room, deletedRoom: Room): FloorLegacy {
     return {
       ...this.floorSig(),
       roomList: this.floorSig().roomList.filter((room: Room) => room.name !== deletedRoom.name),
@@ -243,10 +243,10 @@ export class AdminFloorDetailComponent implements OnInit {
     }
   }
 
-  private _updateBuilding(changedFloor: Floor): void {
+  private _updateBuilding(changedFloor: FloorLegacy): void {
     const updatedBuilding: BuildingLegacy = {
       ...this.buildingSig(),
-      floorList: this.buildingSig().floorList.map((floor: Floor) => (floor.name === changedFloor.name ? changedFloor : floor)),
+      floorList: this.buildingSig().floorList.map((floor: FloorLegacy) => (floor.name === changedFloor.name ? changedFloor : floor)),
     };
     this._adminBuildingService.updateBuilding(this.buildingSig(), updatedBuilding);
   }

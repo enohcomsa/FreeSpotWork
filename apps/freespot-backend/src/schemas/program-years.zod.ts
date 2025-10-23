@@ -1,30 +1,25 @@
+
 import { z } from "zod";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
+import { ObjectIdStr } from "./common.zod";
+import { strictObj, nonEmptyPatch } from "../utils/zod-helpers";
+
 extendZodWithOpenApi(z);
 
-import { ObjectIdStr } from "./common.zod";
+export const ProgramYearBase = strictObj({
+  programId: ObjectIdStr,
+  yearNumber: z.number().int().min(1).max(10),
+  label: z.string().trim().min(1),
+}).openapi("ProgramYearBase");
 
 export const ProgramYearIdParam = z.object({ id: ObjectIdStr }).openapi("ProgramYearIdParam");
+export const ProgramYearCreate = ProgramYearBase.openapi("ProgramYearCreate");
+export const ProgramYearUpdate = nonEmptyPatch(ProgramYearBase.partial()).openapi("ProgramYearUpdate");
+export const ProgramYearResponse = ProgramYearBase.extend({ id: ObjectIdStr }).openapi("ProgramYearResponse");
+export const ProgramYearList = z.array(ProgramYearResponse).openapi("ProgramYearList");
 
-export const ProgramYearCreate = z.object({
-  programId: ObjectIdStr,
-  yearNumber: z.number().int().min(1).max(10),
-  label: z.string().min(1),
-}).openapi("ProgramYearCreate");
-
-export const ProgramYearUpdate = z.object({
-  yearNumber: z.number().int().min(1).max(10).optional(),
-  label: z.string().min(1).optional(),
-}).refine(v => Object.keys(v).length > 0, { message: "Provide at least one field to update" }).openapi("ProgramYearUpdate");
-
-export const ProgramYearResponse = z.object({
-  id: ObjectIdStr,
-  programId: ObjectIdStr,
-  yearNumber: z.number().int().min(1).max(10),
-  label: z.string(),
-}).openapi("ProgramYearResponse");
-
-export type ProgramYearCreateInput = z.infer<typeof ProgramYearCreate>;
-export type ProgramYearUpdateInput = z.infer<typeof ProgramYearUpdate>;
-export type ProgramYearIdParamInput = z.infer<typeof ProgramYearIdParam>;
+export type ProgramYearBaseT = z.infer<typeof ProgramYearBase>;
+export type ProgramYearCreateRequest = z.infer<typeof ProgramYearCreate>;
+export type ProgramYearUpdateRequest = z.infer<typeof ProgramYearUpdate>;
+export type ProgramYearIdParamT = z.infer<typeof ProgramYearIdParam>;
 export type ProgramYearResponseDto = z.infer<typeof ProgramYearResponse>;

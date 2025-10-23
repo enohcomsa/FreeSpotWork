@@ -1,6 +1,6 @@
 import { Room } from './room.model';
-
-export interface Floor {
+/** @deprecated Firebase-era nested model; remove after migration */
+export interface FloorLegacy {
   name: string;
   buildingName: string;
   roomList: Room[];

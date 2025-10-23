@@ -1,51 +1,31 @@
 import { z } from "zod";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
+import { ObjectIdStr, PreferredLanguage, PreferredTheme, UserRole } from "./common.zod";
+import { strictObj, nonEmptyPatch } from "../utils/zod-helpers";
+
 extendZodWithOpenApi(z);
 
-import { ObjectIdStr, PreferredLanguage, PreferredTheme, UserRole } from "./common.zod";
+export const UserBase = strictObj({
+  email: z.string().email().min(3),
+  firstName: z.string().trim().min(1),
+  familyName: z.string().trim().min(1),
+  role: UserRole,
+  preferredLanguage: PreferredLanguage.nullable().optional(),
+  preferredTheme: PreferredTheme.nullable().optional(),
+  facultyId: ObjectIdStr,
+  programYearId: ObjectIdStr,
+  groupCohortId: ObjectIdStr,
+  semigroupCohortId: ObjectIdStr.nullable().optional(),
+}).openapi("UserBase");
 
 export const UserIdParam = z.object({ id: ObjectIdStr }).openapi("UserIdParam");
+export const UserCreate = UserBase.openapi("UserCreate");
+export const UserUpdate = nonEmptyPatch(UserBase.partial().omit({ email: true })).openapi("UserUpdate");
+export const UserResponse = UserBase.extend({ id: ObjectIdStr }).openapi("UserResponse");
+export const UserList = z.array(UserResponse).openapi("UserList");
 
-export const UserCreate = z.object({
-  email: z.string().email().min(3),
-  firstName: z.string().min(1),
-  familyName: z.string().min(1),
-  role: UserRole,
-  preferredLanguage: PreferredLanguage.nullable().optional(),
-  preferredTheme: PreferredTheme.nullable().optional(),
-  facultyId: ObjectIdStr,
-  programYearId: ObjectIdStr,
-  groupCohortId: ObjectIdStr,
-  semigroupCohortId: ObjectIdStr.nullable().optional(),
-}).openapi("UserCreate");
-
-export const UserUpdate = z.object({
-  firstName: z.string().min(1).optional(),
-  familyName: z.string().min(1).optional(),
-  role: UserRole.optional(),
-  preferredLanguage: PreferredLanguage.nullable().optional(),
-  preferredTheme: PreferredTheme.nullable().optional(),
-  facultyId: ObjectIdStr.optional(),
-  programYearId: ObjectIdStr.optional(),
-  groupCohortId: ObjectIdStr.optional(),
-  semigroupCohortId: ObjectIdStr.nullable().optional(),
-}).refine(v => Object.keys(v).length > 0, { message: "Provide at least one field to update" }).openapi("UserUpdate");
-
-export const UserResponse = z.object({
-  id: ObjectIdStr,
-  email: z.string().email(),
-  firstName: z.string(),
-  familyName: z.string(),
-  role: UserRole,
-  preferredLanguage: PreferredLanguage.nullable().optional(),
-  preferredTheme: PreferredTheme.nullable().optional(),
-  facultyId: ObjectIdStr,
-  programYearId: ObjectIdStr,
-  groupCohortId: ObjectIdStr,
-  semigroupCohortId: ObjectIdStr.nullable().optional(),
-}).openapi("UserResponse");
-
-export type UserCreateInput = z.infer<typeof UserCreate>;
-export type UserUpdateInput = z.infer<typeof UserUpdate>;
-export type UserIdParamInput = z.infer<typeof UserIdParam>;
+export type UserBaseT = z.infer<typeof UserBase>;
+export type UserCreateRequest = z.infer<typeof UserCreate>;
+export type UserUpdateRequest = z.infer<typeof UserUpdate>;
+export type UserIdParamT = z.infer<typeof UserIdParam>;
 export type UserResponseDto = z.infer<typeof UserResponse>;

@@ -1,5 +1,5 @@
 import { computed, DestroyRef, inject, Injectable, signal, Signal, WritableSignal } from '@angular/core';
-import { BuildingLegacy, Floor, Room, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
+import { BuildingLegacy, FloorLegacy, Room, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
 import { SignalArrayUtil } from '@free-spot/util';
 import { HttpBuildingService } from '@http-free-spot/building';
 import { Building } from '@free-spot-domain/building';
@@ -53,6 +53,10 @@ export class BuildingService {
     );
   }
 
+  getSignalById(id: string): Signal<Building> {
+    return computed(() => this.buildingListSig().find((building: Building) => building.id === id) || ({} as Building))
+  }
+
   getById(id: string): Observable<Building> {
     return this._httpBuildingsService.getBuildingById$(id);
   }
@@ -81,7 +85,7 @@ export class BuildingService {
       return {
         ...building,
         floorList:
-          building.floorList?.map((floor: Floor) => {
+          building.floorList?.map((floor: FloorLegacy) => {
             return {
               ...floor,
               roomList:
