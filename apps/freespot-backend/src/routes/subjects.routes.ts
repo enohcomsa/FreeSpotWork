@@ -5,6 +5,7 @@ import * as ctrl from "../controllers/subjects.controller";
 
 const r = Router();
 
+r.get("/", ctrl.list);
 r.get("/:id", validate({ params: SubjectIdParam }), ctrl.getById);
 r.post("/", validate({ body: SubjectCreate }), ctrl.create);
 r.patch("/:id", validate({ params: SubjectIdParam, body: SubjectUpdate }), ctrl.update);

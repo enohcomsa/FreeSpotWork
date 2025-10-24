@@ -1,66 +1,42 @@
-import { ObjectId, WithId, Collection, FindOneAndUpdateOptions } from "mongodb";
-import { connectToDatabase } from "../db";
-import {
-  SubjectCreateInput,
-  SubjectUpdateInput,
-  SubjectResponseDto,
-} from "../schemas/subjects.zod";
+import { SubjectDbDoc, SubjectDbRecord } from "../db/types";
+import { subjectPatchToDbSet, subjectToDbRecord, subjectToDto } from "../mappers";
+import { SubjectCreateRequest, SubjectResponseDto, SubjectUpdateRequest } from "../schemas/subjects.zod";
+import { getCollection, isEmptySet, toObjectId } from "../utils/mongo";
 
-interface SubjectDoc {
-  _id?: ObjectId;
-  name: string;
-  shortName: string;
+const SUBJECTS_COLLECTION = "subjects";
+
+export async function listSubjects(): Promise<SubjectResponseDto[]> {
+  const collection = await getCollection<SubjectDbDoc>(SUBJECTS_COLLECTION);
+  const docs = await collection.find({}).sort({ name: 1 }).toArray();
+  return docs.map(subjectToDto);
 }
 
-async function getCollection(): Promise<Collection<SubjectDoc>> {
-  const db = await connectToDatabase();
-  return db.collection<SubjectDoc>("subjects");
+export async function getSubjectById(id: string): Promise<SubjectResponseDto | null> {
+  const collection = await getCollection<SubjectDbDoc>(SUBJECTS_COLLECTION);
+  const doc = await collection.findOne({ _id: toObjectId(id) });
+  return doc ? subjectToDto(doc) : null;
 }
 
-function mapToDto(doc: WithId<SubjectDoc>): SubjectResponseDto {
-  return {
-    id: doc._id.toHexString(),
-    name: doc.name,
-    shortName: doc.shortName,
-  };
+export async function createSubject(input: SubjectCreateRequest): Promise<SubjectResponseDto> {
+  const collection = await getCollection<SubjectDbRecord>(SUBJECTS_COLLECTION);
+  const record = subjectToDbRecord(input);
+  const result = await collection.insertOne(record);
+  return subjectToDto({ _id: result.insertedId, ...record });
 }
 
-export async function findById(id: string): Promise<SubjectResponseDto | null> {
-  const col = await getCollection();
-  const doc = await col.findOne({ _id: new ObjectId(id) });
-  return doc ? mapToDto(doc as WithId<SubjectDoc>) : null;
+export async function updateSubjectById(id: string, patch: SubjectUpdateRequest): Promise<SubjectResponseDto | null> {
+  const collection = await getCollection<SubjectDbDoc>(SUBJECTS_COLLECTION);
+  const updateSet = subjectPatchToDbSet(patch);
+  if (isEmptySet(updateSet)) {
+    const current = await collection.findOne({ _id: toObjectId(id) });
+    return current ? subjectToDto(current) : null;
+  }
+  const updated = await collection.findOneAndUpdate({ _id: toObjectId(id) }, { $set: updateSet }, { returnDocument: "after" });
+  return updated ? subjectToDto(updated) : null;
 }
 
-export async function insertOne(input: SubjectCreateInput): Promise<SubjectResponseDto> {
-  const col = await getCollection();
-  const doc: SubjectDoc = {
-    name: input.name,
-    shortName: input.shortName,
-  };
-  const result = await col.insertOne(doc);
-  const withId: WithId<SubjectDoc> = { _id: result.insertedId, ...doc };
-  return mapToDto(withId);
-}
-
-export async function updateById(
-  id: string,
-  patch: SubjectUpdateInput
-): Promise<SubjectResponseDto | null> {
-  const col = await getCollection();
-  const setPatch: Partial<SubjectDoc> = {};
-  if (patch.name) setPatch.name = patch.name;
-  if (patch.shortName) setPatch.shortName = patch.shortName;
-  const opts: FindOneAndUpdateOptions = { returnDocument: "after" };
-  const updated: WithId<SubjectDoc> | null = await col.findOneAndUpdate(
-    { _id: new ObjectId(id) },
-    { $set: setPatch },
-    opts
-  );
-  return updated ? mapToDto(updated) : null;
-}
-
-export async function deleteById(id: string): Promise<boolean> {
-  const col = await getCollection();
-  const { deletedCount } = await col.deleteOne({ _id: new ObjectId(id) });
+export async function deleteSubjectById(id: string): Promise<boolean> {
+  const collection = await getCollection<SubjectDbDoc>(SUBJECTS_COLLECTION);
+  const { deletedCount } = await collection.deleteOne({ _id: toObjectId(id) });
   return deletedCount === 1;
 }

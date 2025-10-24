@@ -1,6 +1,6 @@
 import type { RoomBaseT, RoomUpdateRequest, RoomResponseDto } from "../schemas/rooms.zod";
 import type { RoomDbDoc, RoomDbRecord } from "../db/types/rooms.db";
-import { toObjectId } from "../utils/mongo";
+import { stripUndefined, toObjectId } from "../utils/mongo";
 
 export function roomToDbRecord(input: RoomBaseT): RoomDbRecord {
   return {
@@ -26,24 +26,15 @@ export function roomToDto(doc: RoomDbDoc): RoomResponseDto {
 }
 
 export function roomPatchToDbSet(patch: RoomUpdateRequest): Partial<RoomDbRecord> {
+  const cleaned = stripUndefined(patch);
   const set: Partial<RoomDbRecord> = {};
-  if (Object.prototype.hasOwnProperty.call(patch, "buildingId") && patch.buildingId !== undefined) {
-    set.buildingId = toObjectId(patch.buildingId);
-  }
-  if (Object.prototype.hasOwnProperty.call(patch, "floorId") && patch.floorId !== undefined) {
-    set.floorId = toObjectId(patch.floorId);
-  }
-  if (Object.prototype.hasOwnProperty.call(patch, "name") && patch.name !== undefined) {
-    set.name = patch.name;
-  }
-  if (Object.prototype.hasOwnProperty.call(patch, "totalSpotsNumber") && patch.totalSpotsNumber !== undefined) {
-    set.totalSpotsNumber = patch.totalSpotsNumber;
-  }
-  if (Object.prototype.hasOwnProperty.call(patch, "unavailableSpots") && patch.unavailableSpots !== undefined) {
-    set.unavailableSpots = patch.unavailableSpots;
-  }
-  if (Object.prototype.hasOwnProperty.call(patch, "subjectList") && patch.subjectList !== undefined) {
-    set.subjectList = patch.subjectList.map((id) => toObjectId(id));
-  }
+
+  if (cleaned.buildingId !== undefined) set.buildingId = toObjectId(cleaned.buildingId);
+  if (cleaned.floorId !== undefined) set.floorId = toObjectId(cleaned.floorId);
+  if (cleaned.name !== undefined) set.name = cleaned.name;
+  if (cleaned.totalSpotsNumber !== undefined) set.totalSpotsNumber = cleaned.totalSpotsNumber;
+  if (cleaned.unavailableSpots !== undefined) set.unavailableSpots = cleaned.unavailableSpots;
+  if (cleaned.subjectList !== undefined) set.subjectList = cleaned.subjectList.map(toObjectId);
+
   return set;
 }

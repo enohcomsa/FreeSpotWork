@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { ObjectIdStr, PreferredLanguage, PreferredTheme, UserRole } from "./common.zod";
-import { strictObj, nonEmptyPatch } from "../utils/zod-helpers";
+import { strictObj, nonEmptyDefinedPatch } from "../utils/zod-helpers";
 
 extendZodWithOpenApi(z);
 
@@ -20,7 +20,7 @@ export const UserBase = strictObj({
 
 export const UserIdParam = z.object({ id: ObjectIdStr }).openapi("UserIdParam");
 export const UserCreate = UserBase.openapi("UserCreate");
-export const UserUpdate = nonEmptyPatch(UserBase.partial().omit({ email: true })).openapi("UserUpdate");
+export const UserUpdate = nonEmptyDefinedPatch(UserBase.partial().omit({ email: true })).openapi("UserUpdate");
 export const UserResponse = UserBase.extend({ id: ObjectIdStr }).openapi("UserResponse");
 export const UserList = z.array(UserResponse).openapi("UserList");
 

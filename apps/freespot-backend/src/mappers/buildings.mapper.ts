@@ -1,5 +1,6 @@
 import type { BuildingBaseT, BuildingResponseDto } from "../schemas/buildings.zod";
 import type { BuildingDbDoc, BuildingDbRecord } from "../db/types/buildings.db";
+import { stripUndefined } from "../utils/mongo";
 
 export function buildingToDbRecord(input: BuildingBaseT): BuildingDbRecord {
   return {
@@ -19,9 +20,12 @@ export function buildingToDto(doc: BuildingDbDoc): BuildingResponseDto {
 }
 
 export function buildingPatchToDbSet(patch: Partial<BuildingBaseT>): Partial<BuildingDbRecord> {
+  const cleaned = stripUndefined(patch);
   const set: Partial<BuildingDbRecord> = {};
-  if (Object.prototype.hasOwnProperty.call(patch, "name") && patch.name !== undefined) set.name = patch.name;
-  if (Object.prototype.hasOwnProperty.call(patch, "address") && patch.address !== undefined) set.address = patch.address;
-  if (Object.prototype.hasOwnProperty.call(patch, "specialEvent") && patch.specialEvent !== undefined) set.specialEvent = patch.specialEvent;
+
+  if (cleaned.name !== undefined) set.name = cleaned.name;
+  if (cleaned.address !== undefined) set.address = cleaned.address;
+  if (cleaned.specialEvent !== undefined) set.specialEvent = cleaned.specialEvent;
+
   return set;
 }

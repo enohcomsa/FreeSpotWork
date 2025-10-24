@@ -1,5 +1,6 @@
 import type { FacultyBaseT, FacultyResponseDto } from "../schemas/faculties.zod";
 import type { FacultyDbDoc, FacultyDbRecord } from "../db/types/faculties.db";
+import { stripUndefined } from "../utils/mongo";
 
 export function facultyToDbRecord(input: FacultyBaseT): FacultyDbRecord {
   return {
@@ -17,8 +18,11 @@ export function facultyToDto(doc: FacultyDbDoc): FacultyResponseDto {
 }
 
 export function facultyPatchToDbSet(patch: Partial<FacultyBaseT>): Partial<FacultyDbRecord> {
+  const cleaned = stripUndefined(patch);
   const set: Partial<FacultyDbRecord> = {};
-  if (Object.prototype.hasOwnProperty.call(patch, "name") && patch.name !== undefined) set.name = patch.name;
-  if (Object.prototype.hasOwnProperty.call(patch, "shortName") && patch.shortName !== undefined) set.shortName = patch.shortName;
+
+  if (cleaned.name !== undefined) set.name = cleaned.name;
+  if (cleaned.shortName !== undefined) set.shortName = cleaned.shortName;
+
   return set;
 }

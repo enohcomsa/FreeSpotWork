@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { ObjectIdStr, SubjectIdArray } from "./common.zod";
-import { strictObj, nonEmptyPatch } from "../utils/zod-helpers";
+import { strictObj, nonEmptyDefinedPatch } from "../utils/zod-helpers";
 
 extendZodWithOpenApi(z);
 
@@ -16,7 +16,7 @@ export const RoomBase = strictObj({
 
 export const RoomIdParam = z.object({ id: ObjectIdStr }).openapi("RoomIdParam");
 export const RoomCreate = RoomBase.openapi("RoomCreate");
-export const RoomUpdate = nonEmptyPatch(RoomBase.partial()).openapi("RoomUpdate");
+export const RoomUpdate = nonEmptyDefinedPatch(RoomBase.partial()).openapi("RoomUpdate");
 export const RoomResponse = RoomBase.extend({ id: ObjectIdStr }).openapi("RoomResponse");
 export const RoomList = z.array(RoomResponse).openapi("RoomList");
 

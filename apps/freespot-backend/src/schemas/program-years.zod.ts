@@ -2,7 +2,7 @@
 import { z } from "zod";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { ObjectIdStr } from "./common.zod";
-import { strictObj, nonEmptyPatch } from "../utils/zod-helpers";
+import { strictObj, nonEmptyDefinedPatch } from "../utils/zod-helpers";
 
 extendZodWithOpenApi(z);
 
@@ -14,7 +14,7 @@ export const ProgramYearBase = strictObj({
 
 export const ProgramYearIdParam = z.object({ id: ObjectIdStr }).openapi("ProgramYearIdParam");
 export const ProgramYearCreate = ProgramYearBase.openapi("ProgramYearCreate");
-export const ProgramYearUpdate = nonEmptyPatch(ProgramYearBase.partial()).openapi("ProgramYearUpdate");
+export const ProgramYearUpdate = nonEmptyDefinedPatch(ProgramYearBase.partial()).openapi("ProgramYearUpdate");
 export const ProgramYearResponse = ProgramYearBase.extend({ id: ObjectIdStr }).openapi("ProgramYearResponse");
 export const ProgramYearList = z.array(ProgramYearResponse).openapi("ProgramYearList");
 

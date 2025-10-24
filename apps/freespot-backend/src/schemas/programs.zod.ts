@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { Degree, ObjectIdStr } from "./common.zod";
-import { strictObj, nonEmptyPatch } from "../utils/zod-helpers";
+import { strictObj, nonEmptyDefinedPatch } from "../utils/zod-helpers";
 
 extendZodWithOpenApi(z);
 
@@ -14,7 +14,7 @@ export const ProgramBase = strictObj({
 
 export const ProgramIdParam = z.object({ id: ObjectIdStr }).openapi("ProgramIdParam");
 export const ProgramCreate = ProgramBase.openapi("ProgramCreate");
-export const ProgramUpdate = nonEmptyPatch(ProgramBase.partial()).openapi("ProgramUpdate");
+export const ProgramUpdate = nonEmptyDefinedPatch(ProgramBase.partial()).openapi("ProgramUpdate");
 export const ProgramResponse = ProgramBase.extend({ id: ObjectIdStr }).openapi("ProgramResponse");
 export const ProgramList = z.array(ProgramResponse).openapi("ProgramList");
 

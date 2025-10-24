@@ -1,6 +1,6 @@
 import { FloorBaseT, FloorResponseDto } from "../schemas/floors.zod";
 import { FloorDbDoc, FloorDbRecord } from "../db/types/floors.db";
-import { toObjectId } from "../utils/mongo";
+import { stripUndefined, toObjectId } from "../utils/mongo";
 
 export function floorToDbRecord(input: FloorBaseT): FloorDbRecord {
   return {
@@ -19,4 +19,16 @@ export function floorToDto(doc: FloorDbDoc): FloorResponseDto {
     totalSpotsNumber: doc.totalSpotsNumber,
     unavailableSpots: doc.unavailableSpots,
   };
+}
+
+export function floorPatchToDbSet(patch: Partial<FloorBaseT>): Partial<FloorDbRecord> {
+  const cleaned = stripUndefined(patch);
+  const set: Partial<FloorDbRecord> = {};
+
+  if (cleaned.buildingId !== undefined) set.buildingId = toObjectId(cleaned.buildingId);
+  if (cleaned.name !== undefined) set.name = cleaned.name;
+  if (cleaned.totalSpotsNumber !== undefined) set.totalSpotsNumber = cleaned.totalSpotsNumber;
+  if (cleaned.unavailableSpots !== undefined) set.unavailableSpots = cleaned.unavailableSpots;
+
+  return set;
 }

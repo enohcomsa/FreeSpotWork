@@ -9,6 +9,7 @@ import * as ctrl from "../controllers/timetable-activities.controller";
 
 const r = Router();
 
+r.get("/", ctrl.list);
 r.get("/:id", validate({ params: TimetableActivityIdParam }), ctrl.getById);
 r.post("/", validate({ body: TimetableActivityCreate }), ctrl.create);
 r.patch("/:id", validate({ params: TimetableActivityIdParam, body: TimetableActivityUpdate }), ctrl.update);

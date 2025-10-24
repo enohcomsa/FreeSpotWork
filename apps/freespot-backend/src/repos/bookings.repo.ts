@@ -1,89 +1,42 @@
-import { FindOneAndUpdateOptions, ObjectId, WithId } from "mongodb";
-import { connectToDatabase } from "../db";
-import {
-  BookingCreateInput,
-  BookingUpdateInput,
-  BookingResponseDto,
-} from "../schemas/bookings.zod";
-import { BookingStatusT, SourceTypeT } from "../schemas/common.zod";
+import { BookingCreateRequest, BookingUpdateRequest, BookingResponseDto } from "../schemas/bookings.zod";
+import { getCollection, isEmptySet, toObjectId } from "../utils/mongo";
+import { BookingDbDoc, BookingDbRecord } from "../db/types";
+import { bookingToDbRecord, bookingToDto, bookingPatchToDbSet } from "../mappers";
 
-type BookingSourceDoc = { type: SourceTypeT; id: ObjectId } | null;
+const BOOKINGS_COLLECTION = "bookings";
 
-interface BookingDoc {
-  _id?: ObjectId;
-  activityId: ObjectId;
-  userId: ObjectId;
-  cohortId: ObjectId | null;
-  status: BookingStatusT;
-  createdAt: Date;
-  updatedAt: Date | null;
-  source: BookingSourceDoc;
+export async function listBookings(): Promise<BookingResponseDto[]> {
+  const collection = await getCollection<BookingDbDoc>(BOOKINGS_COLLECTION);
+  const docs = await collection.find({}).sort({ name: 1 }).toArray();
+  return docs.map(bookingToDto);
 }
 
-function mapToDto(doc: WithId<BookingDoc>): BookingResponseDto {
-  return {
-    id: doc._id.toHexString(),
-    activityId: doc.activityId.toHexString(),
-    userId: doc.userId.toHexString(),
-    cohortId: doc.cohortId ? doc.cohortId.toHexString() : null,
-    status: doc.status,
-    createdAt: doc.createdAt.toISOString(),
-    updatedAt: doc.updatedAt ? doc.updatedAt.toISOString() : null,
-    source: doc.source
-      ? { type: doc.source.type, id: doc.source.id.toHexString() }
-      : null,
-  };
+export async function getBookingById(id: string): Promise<BookingResponseDto | null> {
+  const collection = await getCollection<BookingDbDoc>(BOOKINGS_COLLECTION);
+  const doc = await collection.findOne({ _id: toObjectId(id) });
+  return doc ? bookingToDto(doc) : null;
 }
 
-async function getCollection() {
-  const db = await connectToDatabase();
-  return db.collection("bookings");
+export async function createBooking(input: BookingCreateRequest): Promise<BookingResponseDto> {
+  const collection = await getCollection<BookingDbRecord>(BOOKINGS_COLLECTION);
+  const record = bookingToDbRecord(input);
+  const result = await collection.insertOne(record);
+  return bookingToDto({ _id: result.insertedId, ...record });
 }
 
-export async function findById(id: string): Promise<BookingResponseDto | null> {
-  const col = await getCollection();
-  const doc = await col.findOne({ _id: new ObjectId(id) });
-  return doc ? mapToDto(doc as WithId<BookingDoc>) : null;
+export async function updateBookingById(id: string, patch: BookingUpdateRequest): Promise<BookingResponseDto | null> {
+  const collection = await getCollection<BookingDbDoc>(BOOKINGS_COLLECTION);
+  const updateSet = bookingPatchToDbSet(patch);
+  if (isEmptySet(updateSet)) {
+    const current = await collection.findOne({ _id: toObjectId(id) });
+    return current ? bookingToDto(current) : null;
+  }
+  const updated = await collection.findOneAndUpdate({ _id: toObjectId(id) }, { $set: updateSet }, { returnDocument: "after" });
+  return updated ? bookingToDto(updated) : null;
 }
 
-export async function insertOne(input: BookingCreateInput): Promise<BookingResponseDto> {
-  const col = await getCollection();
-  const now = new Date();
-
-  const doc = {
-    activityId: new ObjectId(input.activityId),
-    userId: new ObjectId(input.userId),
-    cohortId: input.cohortId ? new ObjectId(input.cohortId) : null,
-    status: input.status,
-    createdAt: now,
-    updatedAt: null,
-    source: input.source ? { type: input.source.type, id: new ObjectId(input.source.id) } : null,
-  };
-
-  const result = await col.insertOne(doc);
-  return mapToDto({ _id: result.insertedId, ...doc });
-}
-
-export async function updateById(
-  id: string,
-  patch: BookingUpdateInput
-): Promise<BookingResponseDto | null> {
-  const col = await getCollection();
-
-  const setPatch: Partial<Pick<BookingDoc, "activityId" | "status" | "updatedAt">> = {
-    updatedAt: new Date(),
-  };
-  if (patch.activityId) setPatch.activityId = new ObjectId(patch.activityId);
-  if (patch.status) setPatch.status = patch.status as BookingStatusT;
-
-  const opts: FindOneAndUpdateOptions = { returnDocument: "after" };
-
-  const updated = await col.findOneAndUpdate({ _id: new ObjectId(id) }, { $set: setPatch }, opts);
-  return updated ? mapToDto(updated as WithId<BookingDoc>) : null;
-}
-
-export async function deleteById(id: string): Promise<boolean> {
-  const col = await getCollection();
-  const result = await col.deleteOne({ _id: new ObjectId(id) });
-  return result.deletedCount === 1;
+export async function deleteBookingById(id: string): Promise<boolean> {
+  const collection = await getCollection<BookingDbDoc>(BOOKINGS_COLLECTION);
+  const { deletedCount } = await collection.deleteOne({ _id: toObjectId(id) });
+  return deletedCount === 1;
 }

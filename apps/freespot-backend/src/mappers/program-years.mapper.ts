@@ -1,6 +1,6 @@
 import type { ProgramYearBaseT, ProgramYearUpdateRequest, ProgramYearResponseDto } from "../schemas/program-years.zod";
 import type { ProgramYearDbDoc, ProgramYearDbRecord } from "../db/types/program-years.db";
-import { toObjectId } from "../utils/mongo";
+import { stripUndefined, toObjectId } from "../utils/mongo";
 
 export function programYearToDbRecord(input: ProgramYearBaseT): ProgramYearDbRecord {
   return {
@@ -20,15 +20,18 @@ export function programYearToDto(doc: ProgramYearDbDoc): ProgramYearResponseDto 
 }
 
 export function programYearPatchToDbSet(patch: ProgramYearUpdateRequest): Partial<ProgramYearDbRecord> {
+  const cleaned = stripUndefined(patch);
   const set: Partial<ProgramYearDbRecord> = {};
-  if (Object.prototype.hasOwnProperty.call(patch, "programId") && (patch).programId !== undefined) {
-    set.programId = toObjectId((patch).programId);
+
+  if (cleaned.programId !== undefined) {
+    set.programId = toObjectId(cleaned.programId);
   }
-  if (Object.prototype.hasOwnProperty.call(patch, "yearNumber") && patch.yearNumber !== undefined) {
-    set.yearNumber = patch.yearNumber;
+  if (cleaned.yearNumber !== undefined) {
+    set.yearNumber = cleaned.yearNumber;
   }
-  if (Object.prototype.hasOwnProperty.call(patch, "label") && patch.label !== undefined) {
-    set.label = patch.label;
+  if (cleaned.label !== undefined) {
+    set.label = cleaned.label;
   }
+
   return set;
 }

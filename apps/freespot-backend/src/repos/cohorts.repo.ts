@@ -1,76 +1,42 @@
-import { ObjectId, WithId, Collection, FindOneAndUpdateOptions } from "mongodb";
-import { connectToDatabase } from "../db";
-import {
-  CohortCreateInput,
-  CohortUpdateInput,
-  CohortResponseDto,
-} from "../schemas/cohorts.zod";
-import { CohortTypeT } from "../schemas/common.zod";
+import { CohortDbDoc, CohortDbRecord } from "../db/types";
+import { cohortPatchToDbSet, cohortToDbRecord, cohortToDto } from "../mappers";
+import { CohortCreateRequest, CohortResponseDto, CohortUpdateRequest } from "../schemas/cohorts.zod";
+import { getCollection, isEmptySet, toObjectId } from "../utils/mongo";
 
-interface CohortDoc {
-  _id?: ObjectId;
-  type: CohortTypeT;
-  programYearId: ObjectId;
-  name: string;
-  parentGroupId: ObjectId | null;
-}
-async function getCollection(): Promise<Collection<CohortDoc>> {
-  const db = await connectToDatabase();
-  return db.collection<CohortDoc>("cohorts");
+const COHORTS_COLLECTION = "cohorts";
+
+export async function listCohorts(): Promise<CohortResponseDto[]> {
+  const collection = await getCollection<CohortDbDoc>(COHORTS_COLLECTION);
+  const docs = await collection.find({}).sort({ name: 1 }).toArray();
+  return docs.map(cohortToDto);
 }
 
-function mapToDto(doc: WithId<CohortDoc>): CohortResponseDto {
-  return {
-    id: doc._id.toHexString(),
-    type: doc.type,
-    programYearId: doc.programYearId.toHexString(),
-    name: doc.name,
-    parentGroupId: doc.parentGroupId ? doc.parentGroupId.toHexString() : null,
-  };
+export async function getCohortById(id: string): Promise<CohortResponseDto | null> {
+  const collection = await getCollection<CohortDbDoc>(COHORTS_COLLECTION);
+  const doc = await collection.findOne({ _id: toObjectId(id) });
+  return doc ? cohortToDto(doc) : null;
 }
 
-export async function findById(id: string): Promise<CohortResponseDto | null> {
-  const col = await getCollection();
-  const doc = await col.findOne({ _id: new ObjectId(id) });
-  return doc ? mapToDto(doc as WithId<CohortDoc>) : null;
+export async function createCohort(input: CohortCreateRequest): Promise<CohortResponseDto> {
+  const collection = await getCollection<CohortDbRecord>(COHORTS_COLLECTION);
+  const record = cohortToDbRecord(input);
+  const result = await collection.insertOne(record);
+  return cohortToDto({ _id: result.insertedId, ...record });
 }
 
-export async function insertOne(input: CohortCreateInput): Promise<CohortResponseDto> {
-  const col = await getCollection();
-
-  const doc: CohortDoc = {
-    type: input.type as CohortTypeT,
-    programYearId: new ObjectId(input.programYearId),
-    name: input.name,
-    parentGroupId: input.parentGroupId ? new ObjectId(input.parentGroupId) : null,
-  };
-
-  const result = await col.insertOne(doc);
-  const withId: WithId<CohortDoc> = { _id: result.insertedId, ...doc };
-  return mapToDto(withId);
-}
-
-export async function updateById(
-  id: string,
-  patch: CohortUpdateInput
-): Promise<CohortResponseDto | null> {
-  const col = await getCollection();
-
-  const setPatch: Partial<Pick<CohortDoc, "type" | "name" | "parentGroupId">> = {};
-  if (patch.type) setPatch.type = patch.type as CohortTypeT;
-  if (patch.name) setPatch.name = patch.name;
-  if ("parentGroupId" in patch) {
-    setPatch.parentGroupId = patch.parentGroupId ? new ObjectId(patch.parentGroupId) : null;
+export async function updateCohortById(id: string, patch: CohortUpdateRequest): Promise<CohortResponseDto | null> {
+  const collection = await getCollection<CohortDbDoc>(COHORTS_COLLECTION);
+  const updateSet = cohortPatchToDbSet(patch);
+  if (isEmptySet(updateSet)) {
+    const current = await collection.findOne({ _id: toObjectId(id) });
+    return current ? cohortToDto(current) : null;
   }
-
-  const opts: FindOneAndUpdateOptions = { returnDocument: "after" };
-  const updated = await col.findOneAndUpdate({ _id: new ObjectId(id) }, { $set: setPatch }, opts);
-
-  return updated ? mapToDto(updated as WithId<CohortDoc>) : null;
+  const updated = await collection.findOneAndUpdate({ _id: toObjectId(id) }, { $set: updateSet }, { returnDocument: "after" });
+  return updated ? cohortToDto(updated) : null;
 }
 
-export async function deleteById(id: string): Promise<boolean> {
-  const col = await getCollection();
-  const { deletedCount } = await col.deleteOne({ _id: new ObjectId(id) });
+export async function deleteCohortById(id: string): Promise<boolean> {
+  const collection = await getCollection<CohortDbDoc>(COHORTS_COLLECTION);
+  const { deletedCount } = await collection.deleteOne({ _id: toObjectId(id) });
   return deletedCount === 1;
 }

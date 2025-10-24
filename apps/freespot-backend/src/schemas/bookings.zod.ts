@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { ObjectIdStr, BookingStatus, Source, ISODateStr } from "./common.zod";
-import { strictObj, nonEmptyPatch } from "../utils/zod-helpers";
+import { strictObj, nonEmptyDefinedPatch } from "../utils/zod-helpers";
 
 extendZodWithOpenApi(z);
 
@@ -15,7 +15,7 @@ export const BookingBase = strictObj({
 
 export const BookingIdParam = z.object({ id: ObjectIdStr }).openapi("BookingIdParam");
 export const BookingCreate = BookingBase.openapi("BookingCreate");
-export const BookingUpdate = nonEmptyPatch(BookingBase.partial()).openapi("BookingUpdate");
+export const BookingUpdate = nonEmptyDefinedPatch(BookingBase.partial()).openapi("BookingUpdate");
 export const BookingResponse = BookingBase.extend({
   id: ObjectIdStr,
   createdAt: ISODateStr,

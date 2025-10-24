@@ -1,113 +1,42 @@
-import { ObjectId, WithId, Collection, FindOneAndUpdateOptions } from "mongodb";
-import { connectToDatabase } from "../db";
-import {
-  UserCreateInput,
-  UserUpdateInput,
-  UserResponseDto,
-} from "../schemas/users.zod";
-import { UserRole, PreferredLanguage, PreferredTheme } from "../schemas/common.zod";
-import { z } from "zod";
+import { UserDbDoc, UserDbRecord } from "../db/types";
+import { userPatchToDbSet, userToDbRecord, userToDto } from "../mappers";
+import { UserCreateRequest, UserResponseDto, UserUpdateRequest } from "../schemas/users.zod";
+import { getCollection, isEmptySet, toObjectId } from "../utils/mongo";
 
-type UserRoleT = z.infer<typeof UserRole>;
-type PreferredLanguageT = z.infer<typeof PreferredLanguage> | null;
-type PreferredThemeT = z.infer<typeof PreferredTheme> | null;
+const USERS_COLLECTION = "users";
 
-interface UserDoc {
-  _id?: ObjectId;
-  email: string;
-  firstName: string;
-  familyName: string;
-  role: UserRoleT;
-  preferredLanguage: PreferredLanguageT;
-  preferredTheme: PreferredThemeT;
-  facultyId: ObjectId;
-  programYearId: ObjectId;
-  groupCohortId: ObjectId;
-  semigroupCohortId: ObjectId | null;
+export async function listUsers(): Promise<UserResponseDto[]> {
+  const collection = await getCollection<UserDbDoc>(USERS_COLLECTION);
+  const docs = await collection.find({}).sort({ familyName: 1, firstName: 1 }).toArray();
+  return docs.map(userToDto);
 }
 
-async function getCollection(): Promise<Collection<UserDoc>> {
-  const db = await connectToDatabase();
-  return db.collection<UserDoc>("users");
+export async function getUserById(id: string): Promise<UserResponseDto | null> {
+  const collection = await getCollection<UserDbDoc>(USERS_COLLECTION);
+  const doc = await collection.findOne({ _id: toObjectId(id) });
+  return doc ? userToDto(doc) : null;
 }
 
-function mapToDto(doc: WithId<UserDoc>): UserResponseDto {
-  return {
-    id: doc._id.toHexString(),
-    email: doc.email,
-    firstName: doc.firstName,
-    familyName: doc.familyName,
-    role: doc.role,
-    preferredLanguage: doc.preferredLanguage,
-    preferredTheme: doc.preferredTheme,
-    facultyId: doc.facultyId.toHexString(),
-    programYearId: doc.programYearId.toHexString(),
-    groupCohortId: doc.groupCohortId.toHexString(),
-    semigroupCohortId: doc.semigroupCohortId ? doc.semigroupCohortId.toHexString() : null,
-  };
+export async function createUser(input: UserCreateRequest): Promise<UserResponseDto> {
+  const collection = await getCollection<UserDbRecord>(USERS_COLLECTION);
+  const record = userToDbRecord(input);
+  const result = await collection.insertOne(record);
+  return userToDto({ _id: result.insertedId, ...record });
 }
 
-export async function findById(id: string): Promise<UserResponseDto | null> {
-  const col = await getCollection();
-  const doc = await col.findOne({ _id: new ObjectId(id) });
-  return doc ? mapToDto(doc as WithId<UserDoc>) : null;
-}
-
-export async function insertOne(input: UserCreateInput): Promise<UserResponseDto> {
-  const col = await getCollection();
-  const doc: UserDoc = {
-    email: input.email,
-    firstName: input.firstName,
-    familyName: input.familyName,
-    role: input.role as UserRoleT,
-    preferredLanguage:
-      typeof input.preferredLanguage === "string" ? (input.preferredLanguage as PreferredLanguageT) : null,
-    preferredTheme:
-      typeof input.preferredTheme === "string" ? (input.preferredTheme as PreferredThemeT) : null,
-    facultyId: new ObjectId(input.facultyId),
-    programYearId: new ObjectId(input.programYearId),
-    groupCohortId: new ObjectId(input.groupCohortId),
-    semigroupCohortId: input.semigroupCohortId ? new ObjectId(input.semigroupCohortId) : null,
-  };
-  const result = await col.insertOne(doc);
-  const withId: WithId<UserDoc> = { _id: result.insertedId, ...doc };
-  return mapToDto(withId);
-}
-
-export async function updateById(
-  id: string,
-  patch: UserUpdateInput
-): Promise<UserResponseDto | null> {
-  const col = await getCollection();
-  const setPatch: Partial<UserDoc> = {};
-  if (patch.firstName) setPatch.firstName = patch.firstName;
-  if (patch.familyName) setPatch.familyName = patch.familyName;
-  if (patch.role) setPatch.role = patch.role as UserRoleT;
-  if ("preferredLanguage" in patch) {
-    setPatch.preferredLanguage =
-      typeof patch.preferredLanguage === "string" ? (patch.preferredLanguage as PreferredLanguageT) : null;
+export async function updateUserById(id: string, patch: UserUpdateRequest): Promise<UserResponseDto | null> {
+  const collection = await getCollection<UserDbDoc>(USERS_COLLECTION);
+  const updateSet = userPatchToDbSet(patch);
+  if (isEmptySet(updateSet)) {
+    const current = await collection.findOne({ _id: toObjectId(id) });
+    return current ? userToDto(current) : null;
   }
-  if ("preferredTheme" in patch) {
-    setPatch.preferredTheme =
-      typeof patch.preferredTheme === "string" ? (patch.preferredTheme as PreferredThemeT) : null;
-  }
-  if (patch.facultyId) setPatch.facultyId = new ObjectId(patch.facultyId);
-  if (patch.programYearId) setPatch.programYearId = new ObjectId(patch.programYearId);
-  if (patch.groupCohortId) setPatch.groupCohortId = new ObjectId(patch.groupCohortId);
-  if ("semigroupCohortId" in patch) {
-    setPatch.semigroupCohortId = patch.semigroupCohortId ? new ObjectId(patch.semigroupCohortId) : null;
-  }
-  const opts: FindOneAndUpdateOptions = { returnDocument: "after" };
-  const updated: WithId<UserDoc> | null = await col.findOneAndUpdate(
-    { _id: new ObjectId(id) },
-    { $set: setPatch },
-    opts
-  );
-  return updated ? mapToDto(updated) : null;
+  const updated = await collection.findOneAndUpdate({ _id: toObjectId(id) }, { $set: updateSet }, { returnDocument: "after" });
+  return updated ? userToDto(updated) : null;
 }
 
-export async function deleteById(id: string): Promise<boolean> {
-  const col = await getCollection();
-  const { deletedCount } = await col.deleteOne({ _id: new ObjectId(id) });
+export async function deleteUserById(id: string): Promise<boolean> {
+  const collection = await getCollection<UserDbDoc>(USERS_COLLECTION);
+  const { deletedCount } = await collection.deleteOne({ _id: toObjectId(id) });
   return deletedCount === 1;
 }

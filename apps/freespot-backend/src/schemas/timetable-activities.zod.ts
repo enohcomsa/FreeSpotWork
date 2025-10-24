@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { ActivityType, CohortIdArray, ObjectIdStr, WeekDay, WeekParity } from "./common.zod";
-import { strictObj, nonEmptyPatch } from "../utils/zod-helpers";
+import { strictObj, nonEmptyDefinedPatch } from "../utils/zod-helpers";
 
 extendZodWithOpenApi(z);
 
@@ -27,7 +27,7 @@ export const TimetableActivityCreate = TimetableActivityBaseRaw.refine((d) =>
   (["LABORATORY", "COURSE", "PROJECT", "SEMINAR"].includes(d.activityType) && d.cohortIds.length >= 1),
   { message: "Invalid cohortIds for activityType" }).openapi("TimetableActivityCreate");
 export const TimetableActivityIdParam = z.object({ id: ObjectIdStr }).openapi("TimetableActivityIdParam");
-export const TimetableActivityUpdate = nonEmptyPatch(TimetableActivityBaseRaw.partial()).openapi("TimetableActivityUpdate");
+export const TimetableActivityUpdate = nonEmptyDefinedPatch(TimetableActivityBaseRaw.partial()).openapi("TimetableActivityUpdate");
 export const TimetableActivityResponse = TimetableActivityBaseRaw.extend({ id: ObjectIdStr }).openapi("TimetableActivityResponse");
 export const TimetableActivityList = z.array(TimetableActivityResponse).openapi("TimetableActivityList");
 

@@ -1,74 +1,42 @@
-import { ObjectId, WithId, Collection, FindOneAndUpdateOptions } from "mongodb";
-import { connectToDatabase } from "../db";
-import {
-  FacultyCreateInput,
-  FacultyUpdateInput,
-  FacultyResponseDto,
-} from "../schemas/faculties.zod";
+import { FacultyDbDoc, FacultyDbRecord } from "../db/types";
+import { facultyPatchToDbSet, facultyToDbRecord, facultyToDto } from "../mappers";
+import { FacultyCreateRequest, FacultyResponseDto, FacultyUpdateRequest } from "../schemas/faculties.zod";
+import { getCollection, isEmptySet, toObjectId } from "../utils/mongo";
 
-interface FacultyDoc {
-  _id?: ObjectId;
-  name: string;
-  shortName: string;
+const FACULTIES_COLLECTION = "faculties";
+
+export async function listFaculties(): Promise<FacultyResponseDto[]> {
+  const collection = await getCollection<FacultyDbDoc>(FACULTIES_COLLECTION);
+  const docs = await collection.find({}).sort({ name: 1 }).toArray();
+  return docs.map(facultyToDto);
 }
 
-async function getCollection(): Promise<Collection<FacultyDoc>> {
-  const db = await connectToDatabase();
-  return db.collection<FacultyDoc>("faculties");
+export async function getFacultyById(id: string): Promise<FacultyResponseDto | null> {
+  const collection = await getCollection<FacultyDbDoc>(FACULTIES_COLLECTION);
+  const doc = await collection.findOne({ _id: toObjectId(id) });
+  return doc ? facultyToDto(doc) : null;
 }
 
-function mapToDto(doc: WithId<FacultyDoc>): FacultyResponseDto {
-  return {
-    id: doc._id.toHexString(),
-    name: doc.name,
-    shortName: doc.shortName,
-  };
+export async function createFaculty(input: FacultyCreateRequest): Promise<FacultyResponseDto> {
+  const collection = await getCollection<FacultyDbRecord>(FACULTIES_COLLECTION);
+  const record = facultyToDbRecord(input);
+  const result = await collection.insertOne(record);
+  return facultyToDto({ _id: result.insertedId, ...record });
 }
 
-export async function findById(id: string): Promise<FacultyResponseDto | null> {
-  const col = await getCollection();
-  const doc = await col.findOne({ _id: new ObjectId(id) });
-  return doc ? mapToDto(doc as WithId<FacultyDoc>) : null;
+export async function updateFacultyById(id: string, patch: FacultyUpdateRequest): Promise<FacultyResponseDto | null> {
+  const collection = await getCollection<FacultyDbDoc>(FACULTIES_COLLECTION);
+  const updateSet = facultyPatchToDbSet(patch);
+  if (isEmptySet(updateSet)) {
+    const current = await collection.findOne({ _id: toObjectId(id) });
+    return current ? facultyToDto(current) : null;
+  }
+  const updated = await collection.findOneAndUpdate({ _id: toObjectId(id) }, { $set: updateSet }, { returnDocument: "after" });
+  return updated ? facultyToDto(updated) : null;
 }
 
-export async function insertOne(
-  input: FacultyCreateInput
-): Promise<FacultyResponseDto> {
-  const col = await getCollection();
-
-  const doc: FacultyDoc = {
-    name: input.name,
-    shortName: input.shortName,
-  };
-
-  const result = await col.insertOne(doc);
-  const withId: WithId<FacultyDoc> = { _id: result.insertedId, ...doc };
-  return mapToDto(withId);
-}
-
-export async function updateById(
-  id: string,
-  patch: FacultyUpdateInput
-): Promise<FacultyResponseDto | null> {
-  const col = await getCollection();
-
-  const setPatch: Partial<FacultyDoc> = {};
-  if (patch.name) setPatch.name = patch.name;
-  if (patch.shortName) setPatch.shortName = patch.shortName;
-
-  const opts: FindOneAndUpdateOptions = { returnDocument: "after" };
-
-  const updated: WithId<FacultyDoc> | null = await col.findOneAndUpdate(
-    { _id: new ObjectId(id) },
-    { $set: setPatch },
-    opts
-  );
-
-  return updated ? mapToDto(updated) : null;
-}
-
-export async function deleteById(id: string): Promise<boolean> {
-  const col = await getCollection();
-  const { deletedCount } = await col.deleteOne({ _id: new ObjectId(id) });
+export async function deleteFacultyById(id: string): Promise<boolean> {
+  const collection = await getCollection<FacultyDbDoc>(FACULTIES_COLLECTION);
+  const { deletedCount } = await collection.deleteOne({ _id: toObjectId(id) });
   return deletedCount === 1;
 }

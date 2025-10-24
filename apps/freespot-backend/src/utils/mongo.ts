@@ -43,10 +43,32 @@ export function mapToDto<T extends { _id: ObjectId }, U>(doc: T): U {
 }
 
 /**
+ * Make all keys optional and remove `undefined` from value types.
+ */
+type StripUndef<T extends object> = {
+  [K in keyof T]?: Exclude<T[K], undefined>;
+};
+
+/**
  * Removes all properties with `undefined` values from an object.
  * Useful for building MongoDB `$set` patches so only explicitly
  * provided fields are updated.
  */
-export function stripUndefined<T extends Record<string, unknown>>(obj: T): Partial<T> {
-  return Object.fromEntries(Object.entries(obj).filter(([, v]) => v !== undefined)) as Partial<T>;
+export function stripUndefined<T extends object>(obj: T): StripUndef<T> {
+  return Object.fromEntries(Object.entries(obj as Record<string, unknown>).filter(([, v]) => v !== undefined)) as StripUndef<T>;
+}
+
+/**
+ * Checks whether the given object has no own enumerable properties.
+ *
+ * @template T - The type of object being checked.
+ * @param obj - The object to inspect.
+ * @returns `true` if the object has no keys, otherwise `false`.
+ *
+ * @example
+ * isEmptySet({}); // true
+ * isEmptySet({ a: 1 }); // false
+ */
+export function isEmptySet<T extends Record<string, unknown>>(obj: T): boolean {
+  return Object.keys(obj).length === 0;
 }

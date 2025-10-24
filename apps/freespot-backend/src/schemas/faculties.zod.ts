@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { ObjectIdStr } from "./common.zod";
-import { strictObj, nonEmptyPatch } from "../utils/zod-helpers";
+import { strictObj, nonEmptyDefinedPatch } from "../utils/zod-helpers";
 
 extendZodWithOpenApi(z);
 
@@ -12,7 +12,7 @@ export const FacultyBase = strictObj({
 
 export const FacultyIdParam = z.object({ id: ObjectIdStr }).openapi("FacultyIdParam");
 export const FacultyCreate = FacultyBase.openapi("FacultyCreate");
-export const FacultyUpdate = nonEmptyPatch(FacultyBase.partial()).openapi("FacultyUpdate");
+export const FacultyUpdate = nonEmptyDefinedPatch(FacultyBase.partial()).openapi("FacultyUpdate");
 export const FacultyResponse = FacultyBase.extend({ id: ObjectIdStr }).openapi("FacultyResponse");
 export const FacultyList = z.array(FacultyResponse).openapi("FacultyList");
 

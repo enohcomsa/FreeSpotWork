@@ -1,71 +1,42 @@
-import { ObjectId, WithId, Collection, FindOneAndUpdateOptions } from "mongodb";
-import { connectToDatabase } from "../db";
-import {
-  ProgramYearCreateInput,
-  ProgramYearUpdateInput,
-  ProgramYearResponseDto,
-} from "../schemas/program-years.zod";
+import { ProgramYearDbDoc, ProgramYearDbRecord } from "../db/types";
+import { programYearPatchToDbSet, programYearToDbRecord, programYearToDto } from "../mappers";
+import { ProgramYearCreateRequest, ProgramYearResponseDto, ProgramYearUpdateRequest } from "../schemas/program-years.zod";
+import { getCollection, isEmptySet, toObjectId } from "../utils/mongo";
 
-interface ProgramYearDoc {
-  _id?: ObjectId;
-  programId: ObjectId;
-  yearNumber: number;
-  label: string;
+const PROGRAM_YEARS_COLLECTION = "program_years";
+
+export async function listProgramYears(): Promise<ProgramYearResponseDto[]> {
+  const collection = await getCollection<ProgramYearDbDoc>(PROGRAM_YEARS_COLLECTION);
+  const docs = await collection.find({}).sort({ yearNumber: 1 }).toArray();
+  return docs.map(programYearToDto);
 }
 
-async function getCollection(): Promise<Collection<ProgramYearDoc>> {
-  const db = await connectToDatabase();
-  return db.collection<ProgramYearDoc>("program_years");
+export async function getProgramYearById(id: string): Promise<ProgramYearResponseDto | null> {
+  const collection = await getCollection<ProgramYearDbDoc>(PROGRAM_YEARS_COLLECTION);
+  const doc = await collection.findOne({ _id: toObjectId(id) });
+  return doc ? programYearToDto(doc) : null;
 }
 
-function mapToDto(doc: WithId<ProgramYearDoc>): ProgramYearResponseDto {
-  return {
-    id: doc._id.toHexString(),
-    programId: doc.programId.toHexString(),
-    yearNumber: doc.yearNumber,
-    label: doc.label,
-  };
+export async function createProgramYear(input: ProgramYearCreateRequest): Promise<ProgramYearResponseDto> {
+  const collection = await getCollection<ProgramYearDbRecord>(PROGRAM_YEARS_COLLECTION);
+  const record = programYearToDbRecord(input);
+  const result = await collection.insertOne(record);
+  return programYearToDto({ _id: result.insertedId, ...record });
 }
 
-export async function findById(id: string): Promise<ProgramYearResponseDto | null> {
-  const col = await getCollection();
-  const doc = await col.findOne({ _id: new ObjectId(id) });
-  return doc ? mapToDto(doc as WithId<ProgramYearDoc>) : null;
+export async function updateProgramYearById(id: string, patch: ProgramYearUpdateRequest): Promise<ProgramYearResponseDto | null> {
+  const collection = await getCollection<ProgramYearDbDoc>(PROGRAM_YEARS_COLLECTION);
+  const updateSet = programYearPatchToDbSet(patch);
+  if (isEmptySet(updateSet)) {
+    const current = await collection.findOne({ _id: toObjectId(id) });
+    return current ? programYearToDto(current) : null;
+  }
+  const updated = await collection.findOneAndUpdate({ _id: toObjectId(id) }, { $set: updateSet }, { returnDocument: "after" });
+  return updated ? programYearToDto(updated) : null;
 }
 
-export async function insertOne(
-  input: ProgramYearCreateInput
-): Promise<ProgramYearResponseDto> {
-  const col = await getCollection();
-  const doc: ProgramYearDoc = {
-    programId: new ObjectId(input.programId),
-    yearNumber: input.yearNumber,
-    label: input.label,
-  };
-  const result = await col.insertOne(doc);
-  const withId: WithId<ProgramYearDoc> = { _id: result.insertedId, ...doc };
-  return mapToDto(withId);
-}
-
-export async function updateById(
-  id: string,
-  patch: ProgramYearUpdateInput
-): Promise<ProgramYearResponseDto | null> {
-  const col = await getCollection();
-  const setPatch: Partial<ProgramYearDoc> = {};
-  if (patch.yearNumber !== undefined) setPatch.yearNumber = patch.yearNumber;
-  if (patch.label) setPatch.label = patch.label;
-  const opts: FindOneAndUpdateOptions = { returnDocument: "after" };
-  const updated: WithId<ProgramYearDoc> | null = await col.findOneAndUpdate(
-    { _id: new ObjectId(id) },
-    { $set: setPatch },
-    opts
-  );
-  return updated ? mapToDto(updated) : null;
-}
-
-export async function deleteById(id: string): Promise<boolean> {
-  const col = await getCollection();
-  const { deletedCount } = await col.deleteOne({ _id: new ObjectId(id) });
+export async function deleteProgramYearById(id: string): Promise<boolean> {
+  const collection = await getCollection<ProgramYearDbDoc>(PROGRAM_YEARS_COLLECTION);
+  const { deletedCount } = await collection.deleteOne({ _id: toObjectId(id) });
   return deletedCount === 1;
 }

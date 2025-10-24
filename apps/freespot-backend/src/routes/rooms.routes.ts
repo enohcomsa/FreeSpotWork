@@ -5,6 +5,7 @@ import * as ctrl from "../controllers/rooms.controller";
 
 const r = Router();
 
+r.get("/", ctrl.list);
 r.get("/:id", validate({ params: RoomIdParam }), ctrl.getById);
 r.post("/", validate({ body: RoomCreate }), ctrl.create);
 r.patch("/:id", validate({ params: RoomIdParam, body: RoomUpdate }), ctrl.update);

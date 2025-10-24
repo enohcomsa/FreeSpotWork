@@ -1,7 +1,7 @@
 import type { BookingBaseT, BookingResponseDto } from "../schemas/bookings.zod";
-import type { SourceT, BookingStatusT } from "../schemas/common.zod";
+import type { BookingStatusT } from "../schemas/common.zod";
 import type { BookingDbDoc, BookingDbRecord } from "../db/types/bookings.db";
-import { toObjectId } from "../utils/mongo";
+import { stripUndefined, toObjectId } from "../utils/mongo";
 
 export function bookingToDbRecord(input: BookingBaseT, now = new Date()): BookingDbRecord {
   return {
@@ -36,33 +36,16 @@ export function bookingToDto(doc: BookingDbDoc): BookingResponseDto {
 }
 
 export function bookingPatchToDbSet(patch: Partial<BookingBaseT> & { status?: BookingStatusT }, now = new Date()): Partial<BookingDbRecord> {
+  const cleaned = stripUndefined(patch);
   const set: Partial<BookingDbRecord> = {};
 
-  if (Object.prototype.hasOwnProperty.call(patch, "activityId")) {
-    if (patch.activityId !== undefined) set.activityId = toObjectId(patch.activityId);
+  if (cleaned.activityId !== undefined) set.activityId = toObjectId(cleaned.activityId);
+  if (cleaned.userId !== undefined) set.userId = toObjectId(cleaned.userId);
+  if (cleaned.cohortId !== undefined) set.cohortId = cleaned.cohortId === null ? null : toObjectId(cleaned.cohortId);
+  if (cleaned.status !== undefined) set.status = cleaned.status;
+  if (cleaned.source !== undefined) {
+    set.source = cleaned.source === null ? null : { type: cleaned.source.type, id: toObjectId(cleaned.source.id) };
   }
-
-  if (Object.prototype.hasOwnProperty.call(patch, "userId")) {
-    if (patch.userId !== undefined) set.userId = toObjectId(patch.userId);
-  }
-
-  if (Object.prototype.hasOwnProperty.call(patch, "cohortId")) {
-    set.cohortId = patch.cohortId == null ? null : toObjectId(patch.cohortId);
-  }
-
-  if (Object.prototype.hasOwnProperty.call(patch, "status")) {
-    if (patch.status !== undefined) set.status = patch.status;
-  }
-
-  if (Object.prototype.hasOwnProperty.call(patch, "source")) {
-    const s: SourceT = patch.source;
-    if (s === null) {
-      set.source = null;
-    } else if (s !== undefined) {
-      set.source = { type: s.type, id: toObjectId(s.id) };
-    }
-  }
-
   if (Object.keys(set).length > 0) set.updatedAt = now;
 
   return set;

@@ -5,6 +5,7 @@ import * as ctrl from "../controllers/programs.controller";
 
 const r = Router();
 
+r.get("/", ctrl.list);
 r.get("/:id", validate({ params: ProgramIdParam }), ctrl.getById);
 r.post("/", validate({ body: ProgramCreate }), ctrl.create);
 r.patch("/:id", validate({ params: ProgramIdParam, body: ProgramUpdate }), ctrl.update);

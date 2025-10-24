@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { CohortType, ObjectIdStr } from "./common.zod";
-import { strictObj, nonEmptyPatch } from "../utils/zod-helpers";
+import { strictObj, nonEmptyDefinedPatch } from "../utils/zod-helpers";
 
 extendZodWithOpenApi(z);
 
@@ -14,7 +14,7 @@ export const CohortBase = strictObj({
 
 export const CohortIdParam = z.object({ id: ObjectIdStr }).openapi("CohortIdParam");
 export const CohortCreate = CohortBase.openapi("CohortCreate");
-export const CohortUpdate = nonEmptyPatch(CohortBase.partial()).openapi("CohortUpdate");
+export const CohortUpdate = nonEmptyDefinedPatch(CohortBase.partial()).openapi("CohortUpdate");
 export const CohortResponse = CohortBase.extend({ id: ObjectIdStr }).openapi("CohortResponse");
 export const CohortList = z.array(CohortResponse).openapi("CohortList");
 

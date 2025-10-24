@@ -1,77 +1,42 @@
-import { ObjectId, WithId, Collection, FindOneAndUpdateOptions } from "mongodb";
-import { connectToDatabase } from "../db";
-import {
-  ProgramCreateInput,
-  ProgramUpdateInput,
-  ProgramResponseDto,
-} from "../schemas/programs.zod";
-import { Degree } from "../schemas/common.zod";
-import { z } from "zod";
+import { ProgramDbDoc, ProgramDbRecord } from "../db/types";
+import { programPatchToDbSet, programToDbRecord, programToDto } from "../mappers";
+import { ProgramCreateRequest, ProgramResponseDto, ProgramUpdateRequest } from "../schemas/programs.zod";
+import { getCollection, isEmptySet, toObjectId } from "../utils/mongo";
 
-type DegreeT = z.infer<typeof Degree>;
+const PROGRAMS_COLLECTION = "programs";
 
-interface ProgramDoc {
-  _id?: ObjectId;
-  facultyId: ObjectId;
-  name: string;
-  degree: DegreeT;
-  active: boolean;
+export async function listPrograms(): Promise<ProgramResponseDto[]> {
+  const collection = await getCollection<ProgramDbDoc>(PROGRAMS_COLLECTION);
+  const docs = await collection.find({}).sort({ name: 1 }).toArray();
+  return docs.map(programToDto);
 }
 
-async function getCollection(): Promise<Collection<ProgramDoc>> {
-  const db = await connectToDatabase();
-  return db.collection<ProgramDoc>("programs");
+export async function getProgramById(id: string): Promise<ProgramResponseDto | null> {
+  const collection = await getCollection<ProgramDbDoc>(PROGRAMS_COLLECTION);
+  const doc = await collection.findOne({ _id: toObjectId(id) });
+  return doc ? programToDto(doc) : null;
 }
 
-function mapToDto(doc: WithId<ProgramDoc>): ProgramResponseDto {
-  return {
-    id: doc._id.toHexString(),
-    facultyId: doc.facultyId.toHexString(),
-    name: doc.name,
-    degree: doc.degree,
-    active: doc.active,
-  };
+export async function createProgram(input: ProgramCreateRequest): Promise<ProgramResponseDto> {
+  const collection = await getCollection<ProgramDbRecord>(PROGRAMS_COLLECTION);
+  const record = programToDbRecord(input);
+  const result = await collection.insertOne(record);
+  return programToDto({ _id: result.insertedId, ...record });
 }
 
-export async function findById(id: string): Promise<ProgramResponseDto | null> {
-  const col = await getCollection();
-  const doc = await col.findOne({ _id: new ObjectId(id) });
-  return doc ? mapToDto(doc as WithId<ProgramDoc>) : null;
+export async function updateProgramById(id: string, patch: ProgramUpdateRequest): Promise<ProgramResponseDto | null> {
+  const collection = await getCollection<ProgramDbDoc>(PROGRAMS_COLLECTION);
+  const updateSet = programPatchToDbSet(patch);
+  if (isEmptySet(updateSet)) {
+    const current = await collection.findOne({ _id: toObjectId(id) });
+    return current ? programToDto(current) : null;
+  }
+  const updated = await collection.findOneAndUpdate({ _id: toObjectId(id) }, { $set: updateSet }, { returnDocument: "after" });
+  return updated ? programToDto(updated) : null;
 }
 
-export async function insertOne(input: ProgramCreateInput): Promise<ProgramResponseDto> {
-  const col = await getCollection();
-  const doc: ProgramDoc = {
-    facultyId: new ObjectId(input.facultyId),
-    name: input.name,
-    degree: input.degree as DegreeT,
-    active: input.active,
-  };
-  const result = await col.insertOne(doc);
-  const withId: WithId<ProgramDoc> = { _id: result.insertedId, ...doc };
-  return mapToDto(withId);
-}
-
-export async function updateById(
-  id: string,
-  patch: ProgramUpdateInput
-): Promise<ProgramResponseDto | null> {
-  const col = await getCollection();
-  const setPatch: Partial<ProgramDoc> = {};
-  if (patch.name) setPatch.name = patch.name;
-  if (patch.degree) setPatch.degree = patch.degree as DegreeT;
-  if (patch.active !== undefined) setPatch.active = patch.active;
-  const opts: FindOneAndUpdateOptions = { returnDocument: "after" };
-  const updated: WithId<ProgramDoc> | null = await col.findOneAndUpdate(
-    { _id: new ObjectId(id) },
-    { $set: setPatch },
-    opts
-  );
-  return updated ? mapToDto(updated) : null;
-}
-
-export async function deleteById(id: string): Promise<boolean> {
-  const col = await getCollection();
-  const { deletedCount } = await col.deleteOne({ _id: new ObjectId(id) });
+export async function deleteProgramById(id: string): Promise<boolean> {
+  const collection = await getCollection<ProgramDbDoc>(PROGRAMS_COLLECTION);
+  const { deletedCount } = await collection.deleteOne({ _id: toObjectId(id) });
   return deletedCount === 1;
 }

@@ -5,6 +5,7 @@ import * as ctrl from "../controllers/program-years.controller";
 
 const r = Router();
 
+r.get("/", ctrl.list);
 r.get("/:id", validate({ params: ProgramYearIdParam }), ctrl.getById);
 r.post("/", validate({ body: ProgramYearCreate }), ctrl.create);
 r.patch("/:id", validate({ params: ProgramYearIdParam, body: ProgramYearUpdate }), ctrl.update);

@@ -1,6 +1,6 @@
 import type { UserBaseT, UserUpdateRequest, UserResponseDto } from "../schemas/users.zod";
 import type { UserDbDoc, UserDbRecord } from "../db/types/users.db";
-import { toObjectId } from "../utils/mongo";
+import { stripUndefined, toObjectId } from "../utils/mongo";
 
 export function userToDbRecord(input: UserBaseT): UserDbRecord {
   return {
@@ -34,18 +34,19 @@ export function userToDto(doc: UserDbDoc): UserResponseDto {
 }
 
 export function userPatchToDbSet(patch: UserUpdateRequest): Partial<UserDbRecord> {
+  const cleaned = stripUndefined(patch);
   const set: Partial<UserDbRecord> = {};
-  if (Object.prototype.hasOwnProperty.call(patch, "firstName") && patch.firstName !== undefined) set.firstName = patch.firstName;
-  if (Object.prototype.hasOwnProperty.call(patch, "familyName") && patch.familyName !== undefined) set.familyName = patch.familyName;
-  if (Object.prototype.hasOwnProperty.call(patch, "role") && patch.role !== undefined) set.role = patch.role;
-  if (Object.prototype.hasOwnProperty.call(patch, "preferredLanguage")) set.preferredLanguage = patch.preferredLanguage ?? null;
-  if (Object.prototype.hasOwnProperty.call(patch, "preferredTheme")) set.preferredTheme = patch.preferredTheme ?? null;
-  if (Object.prototype.hasOwnProperty.call(patch, "facultyId") && patch.facultyId !== undefined) set.facultyId = toObjectId(patch.facultyId);
-  if (Object.prototype.hasOwnProperty.call(patch, "programYearId") && patch.programYearId !== undefined) set.programYearId = toObjectId(patch.programYearId);
-  if (Object.prototype.hasOwnProperty.call(patch, "groupCohortId") && patch.groupCohortId !== undefined) set.groupCohortId = toObjectId(patch.groupCohortId);
-  if (Object.prototype.hasOwnProperty.call(patch, "semigroupCohortId")) {
-    const sg = patch.semigroupCohortId as string | null | undefined;
-    set.semigroupCohortId = sg == null ? null : toObjectId(sg);
-  }
+
+  if (cleaned.firstName !== undefined) set.firstName = cleaned.firstName;
+  if (cleaned.familyName !== undefined) set.familyName = cleaned.familyName;
+  if (cleaned.role !== undefined) set.role = cleaned.role;
+  if (cleaned.preferredLanguage !== undefined) set.preferredLanguage = cleaned.preferredLanguage ?? null;
+  if (cleaned.preferredTheme !== undefined) set.preferredTheme = cleaned.preferredTheme ?? null;
+  if (cleaned.facultyId !== undefined) set.facultyId = toObjectId(cleaned.facultyId);
+  if (cleaned.programYearId !== undefined) set.programYearId = toObjectId(cleaned.programYearId);
+  if (cleaned.groupCohortId !== undefined) set.groupCohortId = toObjectId(cleaned.groupCohortId);
+  if (cleaned.semigroupCohortId !== undefined)
+    set.semigroupCohortId = cleaned.semigroupCohortId === null ? null : toObjectId(cleaned.semigroupCohortId);
+
   return set;
 }

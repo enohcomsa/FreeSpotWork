@@ -1,81 +1,42 @@
-import { ObjectId, WithId, Collection, FindOneAndUpdateOptions } from "mongodb";
-import { connectToDatabase } from "../db";
-import {
-  RoomCreateInput,
-  RoomUpdateInput,
-  RoomResponseDto,
-} from "../schemas/rooms.zod";
+import { RoomDbDoc, RoomDbRecord } from "../db/types";
+import { roomPatchToDbSet, roomToDbRecord, roomToDto } from "../mappers";
+import { RoomCreateRequest, RoomResponseDto, RoomUpdateRequest } from "../schemas/rooms.zod";
+import { getCollection, isEmptySet, toObjectId } from "../utils/mongo";
 
-interface RoomDoc {
-  _id?: ObjectId;
-  buildingId: ObjectId;
-  floorId: ObjectId;
-  name: string;
-  totalSpotsNumber: number;
-  unavailableSpots: number;
-  subjectList: ObjectId[];
+const ROOMS_COLLECTION = "rooms";
+
+export async function listRooms(): Promise<RoomResponseDto[]> {
+  const collection = await getCollection<RoomDbDoc>(ROOMS_COLLECTION);
+  const docs = await collection.find({}).sort({ name: 1 }).toArray();
+  return docs.map(roomToDto);
 }
 
-async function getCollection(): Promise<Collection<RoomDoc>> {
-  const db = await connectToDatabase();
-  return db.collection<RoomDoc>("rooms");
+export async function getRoomById(id: string): Promise<RoomResponseDto | null> {
+  const collection = await getCollection<RoomDbDoc>(ROOMS_COLLECTION);
+  const doc = await collection.findOne({ _id: toObjectId(id) });
+  return doc ? roomToDto(doc) : null;
 }
 
-function mapToDto(doc: WithId<RoomDoc>): RoomResponseDto {
-  return {
-    id: doc._id.toHexString(),
-    buildingId: doc.buildingId.toHexString(),
-    floorId: doc.floorId.toHexString(),
-    name: doc.name,
-    totalSpotsNumber: doc.totalSpotsNumber,
-    unavailableSpots: doc.unavailableSpots,
-    subjectList: doc.subjectList.map((s) => s.toHexString()),
-  };
+export async function createRoom(input: RoomCreateRequest): Promise<RoomResponseDto> {
+  const collection = await getCollection<RoomDbRecord>(ROOMS_COLLECTION);
+  const record = roomToDbRecord(input);
+  const result = await collection.insertOne(record);
+  return roomToDto({ _id: result.insertedId, ...record });
 }
 
-export async function findById(id: string): Promise<RoomResponseDto | null> {
-  const col = await getCollection();
-  const doc = await col.findOne({ _id: new ObjectId(id) });
-  return doc ? mapToDto(doc as WithId<RoomDoc>) : null;
+export async function updateRoomById(id: string, patch: RoomUpdateRequest): Promise<RoomResponseDto | null> {
+  const collection = await getCollection<RoomDbDoc>(ROOMS_COLLECTION);
+  const updateSet = roomPatchToDbSet(patch);
+  if (isEmptySet(updateSet)) {
+    const current = await collection.findOne({ _id: toObjectId(id) });
+    return current ? roomToDto(current) : null;
+  }
+  const updated = await collection.findOneAndUpdate({ _id: toObjectId(id) }, { $set: updateSet }, { returnDocument: "after" });
+  return updated ? roomToDto(updated) : null;
 }
 
-export async function insertOne(input: RoomCreateInput): Promise<RoomResponseDto> {
-  const col = await getCollection();
-  const doc: RoomDoc = {
-    buildingId: new ObjectId(input.buildingId),
-    floorId: new ObjectId(input.floorId),
-    name: input.name,
-    totalSpotsNumber: input.totalSpotsNumber,
-    unavailableSpots: input.unavailableSpots,
-    subjectList: input.subjectList.map((id) => new ObjectId(id)),
-  };
-  const result = await col.insertOne(doc);
-  const withId: WithId<RoomDoc> = { _id: result.insertedId, ...doc };
-  return mapToDto(withId);
-}
-
-export async function updateById(
-  id: string,
-  patch: RoomUpdateInput
-): Promise<RoomResponseDto | null> {
-  const col = await getCollection();
-  const setPatch: Partial<RoomDoc> = {};
-  if (patch.floorId) setPatch.floorId = new ObjectId(patch.floorId);
-  if (patch.name) setPatch.name = patch.name;
-  if (patch.totalSpotsNumber !== undefined) setPatch.totalSpotsNumber = patch.totalSpotsNumber;
-  if (patch.unavailableSpots !== undefined) setPatch.unavailableSpots = patch.unavailableSpots;
-  if (patch.subjectList) setPatch.subjectList = patch.subjectList.map((id) => new ObjectId(id));
-  const opts: FindOneAndUpdateOptions = { returnDocument: "after" };
-  const updated: WithId<RoomDoc> | null = await col.findOneAndUpdate(
-    { _id: new ObjectId(id) },
-    { $set: setPatch },
-    opts
-  );
-  return updated ? mapToDto(updated) : null;
-}
-
-export async function deleteById(id: string): Promise<boolean> {
-  const col = await getCollection();
-  const { deletedCount } = await col.deleteOne({ _id: new ObjectId(id) });
+export async function deleteRoomById(id: string): Promise<boolean> {
+  const collection = await getCollection<RoomDbDoc>(ROOMS_COLLECTION);
+  const { deletedCount } = await collection.deleteOne({ _id: toObjectId(id) });
   return deletedCount === 1;
 }

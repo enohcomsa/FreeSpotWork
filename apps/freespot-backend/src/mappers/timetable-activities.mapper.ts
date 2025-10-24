@@ -7,7 +7,7 @@ import type {
   TimetableActivityDbDoc,
   TimetableActivityDbRecord,
 } from "../db/types/timetable-activities.db";
-import { toObjectId } from "../utils/mongo";
+import { stripUndefined, toObjectId } from "../utils/mongo";
 
 export function timetableActivityToDbRecord(input: TimetableActivityBaseT): TimetableActivityDbRecord {
   return {
@@ -47,45 +47,23 @@ export function timetableActivityToDto(doc: TimetableActivityDbDoc): TimetableAc
 }
 
 export function timetableActivityPatchToDbSet(patch: TimetableActivityUpdateRequest): Partial<TimetableActivityDbRecord> {
+  const cleaned = stripUndefined(patch);
   const set: Partial<TimetableActivityDbRecord> = {};
-  if (Object.prototype.hasOwnProperty.call(patch, "roomId") && patch.roomId !== undefined) {
-    set.roomId = toObjectId(patch.roomId);
-  }
-  if (Object.prototype.hasOwnProperty.call(patch, "subjectId") && patch.subjectId !== undefined) {
-    set.subjectId = toObjectId(patch.subjectId);
-  }
-  if (Object.prototype.hasOwnProperty.call(patch, "date") && patch.date !== undefined) {
-    set.date = patch.date;
-  }
-  if (Object.prototype.hasOwnProperty.call(patch, "weekDay") && patch.weekDay !== undefined) {
-    set.weekDay = patch.weekDay;
-  }
-  if (Object.prototype.hasOwnProperty.call(patch, "activityType") && patch.activityType !== undefined) {
-    set.activityType = patch.activityType;
-  }
-  if (Object.prototype.hasOwnProperty.call(patch, "cohortIds") && patch.cohortIds !== undefined) {
-    set.cohortIds = patch.cohortIds.map((id) => toObjectId(id));
-  }
-  if (Object.prototype.hasOwnProperty.call(patch, "startHour") && patch.startHour !== undefined) {
-    set.startHour = patch.startHour;
-  }
-  if (Object.prototype.hasOwnProperty.call(patch, "endHour") && patch.endHour !== undefined) {
-    set.endHour = patch.endHour;
-  }
-  if (Object.prototype.hasOwnProperty.call(patch, "weekParity") && patch.weekParity !== undefined) {
-    set.weekParity = patch.weekParity;
-  }
-  if (Object.prototype.hasOwnProperty.call(patch, "capacity") && patch.capacity !== undefined) {
-    set.capacity = patch.capacity;
-  }
-  if (Object.prototype.hasOwnProperty.call(patch, "reservedSpots") && patch.reservedSpots !== undefined) {
-    set.reservedSpots = patch.reservedSpots;
-  }
-  if (Object.prototype.hasOwnProperty.call(patch, "busySpots") && patch.busySpots !== undefined) {
-    set.busySpots = patch.busySpots;
-  }
-  if (Object.prototype.hasOwnProperty.call(patch, "freeSpots") && patch.freeSpots !== undefined) {
-    set.freeSpots = patch.freeSpots;
-  }
+
+  if (cleaned.roomId !== undefined) set.roomId = toObjectId(cleaned.roomId);
+  if (cleaned.subjectId !== undefined) set.subjectId = toObjectId(cleaned.subjectId);
+  if (cleaned.date !== undefined) set.date = cleaned.date;
+  if (cleaned.weekDay !== undefined) set.weekDay = cleaned.weekDay;
+  if (cleaned.activityType !== undefined) set.activityType = cleaned.activityType;
+  if (cleaned.cohortIds !== undefined) set.cohortIds = cleaned.cohortIds.map((id) => toObjectId(id));
+  if (cleaned.startHour !== undefined) set.startHour = cleaned.startHour;
+  if (cleaned.endHour !== undefined) set.endHour = cleaned.endHour;
+  if (cleaned.weekParity !== undefined) set.weekParity = cleaned.weekParity;
+  if (cleaned.capacity !== undefined) set.capacity = cleaned.capacity;
+  if (cleaned.reservedSpots !== undefined) set.reservedSpots = cleaned.reservedSpots;
+  if (cleaned.busySpots !== undefined) set.busySpots = cleaned.busySpots;
+  if (cleaned.freeSpots !== undefined) set.freeSpots = cleaned.freeSpots;
+
   return set;
 }
+

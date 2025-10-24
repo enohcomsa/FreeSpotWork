@@ -1,6 +1,6 @@
 import type { CohortBaseT, CohortUpdateRequest, CohortResponseDto } from "../schemas/cohorts.zod";
 import type { CohortDbDoc, CohortDbRecord } from "../db/types/cohorts.db";
-import { toObjectId } from "../utils/mongo";
+import { stripUndefined, toObjectId } from "../utils/mongo";
 
 export function cohortToDbRecord(input: CohortBaseT): CohortDbRecord {
   return {
@@ -22,13 +22,14 @@ export function cohortToDto(doc: CohortDbDoc): CohortResponseDto {
 }
 
 export function cohortPatchToDbSet(patch: CohortUpdateRequest): Partial<CohortDbRecord> {
+  const cleaned = stripUndefined(patch);
   const set: Partial<CohortDbRecord> = {};
-  if (Object.prototype.hasOwnProperty.call(patch, "type") && patch.type !== undefined) set.type = patch.type;
-  if (Object.prototype.hasOwnProperty.call(patch, "programYearId") && (patch).programYearId !== undefined) set.programYearId = toObjectId((patch).programYearId);
-  if (Object.prototype.hasOwnProperty.call(patch, "name") && patch.name !== undefined) set.name = patch.name;
-  if (Object.prototype.hasOwnProperty.call(patch, "parentGroupId")) {
-    const p = patch.parentGroupId as string | null | undefined;
-    set.parentGroupId = p == null ? null : toObjectId(p);
-  }
+
+  if (cleaned.type !== undefined) set.type = cleaned.type;
+  if (cleaned.programYearId !== undefined) set.programYearId = toObjectId(cleaned.programYearId);
+  if (cleaned.name !== undefined) set.name = cleaned.name;
+  if (cleaned.parentGroupId !== undefined)
+    set.parentGroupId = cleaned.parentGroupId === null ? null : toObjectId(cleaned.parentGroupId);
+
   return set;
 }

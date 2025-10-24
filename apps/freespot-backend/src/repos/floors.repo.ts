@@ -1,48 +1,42 @@
-import {
-  FloorBaseT,
-  FloorCreateRequest,
-  FloorUpdateRequest,
-  FloorResponseDto,
-} from "../schemas/floors.zod";
-import { getCollection, toObjectId, MongoDoc, mapToDto, MongoRecord, stripUndefined } from "../utils/mongo";
+import { FloorDbDoc, FloorDbRecord } from "../db/types";
+import { floorPatchToDbSet, floorToDbRecord, floorToDto } from "../mappers";
+import { FloorCreateRequest, FloorResponseDto, FloorUpdateRequest } from "../schemas/floors.zod";
+import { getCollection, isEmptySet, toObjectId } from "../utils/mongo";
 
-type FloorDoc = MongoDoc<FloorBaseT>;
-type FloorRecord = MongoRecord<FloorBaseT>;
-const FLOOR_COLLECTION = 'floors';
+const FLOORS_COLLECTION = "floors";
 
 export async function listFloors(): Promise<FloorResponseDto[]> {
-  const col = await getCollection<FloorDoc>(FLOOR_COLLECTION);
-  const docs = await col.find({}).sort({ name: 1 }).toArray();
-  return docs.map((doc) => mapToDto<FloorDoc, FloorResponseDto>(doc));
+  const collection = await getCollection<FloorDbDoc>(FLOORS_COLLECTION);
+  const docs = await collection.find({}).sort({ name: 1 }).toArray();
+  return docs.map(floorToDto);
 }
 
 export async function getFloorById(id: string): Promise<FloorResponseDto | null> {
-  const col = await getCollection<FloorDoc>(FLOOR_COLLECTION);
-  const doc = await col.findOne({ _id: toObjectId(id) });
-  return doc ? mapToDto<FloorDoc, FloorResponseDto>(doc) : null;
+  const collection = await getCollection<FloorDbDoc>(FLOORS_COLLECTION);
+  const doc = await collection.findOne({ _id: toObjectId(id) });
+  return doc ? floorToDto(doc) : null;
 }
 
 export async function createFloor(input: FloorCreateRequest): Promise<FloorResponseDto> {
-  const col = await getCollection<FloorRecord>(FLOOR_COLLECTION);
-    const doc1 = {
-      ...input,
-    buildingId:toObjectId(input.buildingId),
-
-  };
-  const { insertedId } = await col.insertOne(doc1);
-  const doc: FloorDoc = { _id: insertedId, ...input };
-  return mapToDto<FloorDoc, FloorResponseDto>(doc);
+  const collection = await getCollection<FloorDbRecord>(FLOORS_COLLECTION);
+  const record = floorToDbRecord(input);
+  const result = await collection.insertOne(record);
+  return floorToDto({ _id: result.insertedId, ...record });
 }
 
 export async function updateFloorById(id: string, patch: FloorUpdateRequest): Promise<FloorResponseDto | null> {
-  const col = await getCollection<FloorDoc>(FLOOR_COLLECTION);
-  const setPatch = stripUndefined(patch);
-  const res = await col.findOneAndUpdate({ _id: toObjectId(id) }, { $set: setPatch }, { returnDocument: "after" });
-  return res ? mapToDto<FloorDoc, FloorResponseDto>(res) : null;
+  const collection = await getCollection<FloorDbDoc>(FLOORS_COLLECTION);
+  const updateSet = floorPatchToDbSet(patch);
+  if (isEmptySet(updateSet)) {
+    const current = await collection.findOne({ _id: toObjectId(id) });
+    return current ? floorToDto(current) : null;
+  }
+  const updated = await collection.findOneAndUpdate({ _id: toObjectId(id) }, { $set: updateSet }, { returnDocument: "after" });
+  return updated ? floorToDto(updated) : null;
 }
 
 export async function deleteFloorById(id: string): Promise<boolean> {
-  const col = await getCollection<FloorRecord>(FLOOR_COLLECTION);
-  const { deletedCount } = await col.deleteOne({ _id: toObjectId(id) });
+  const collection = await getCollection<FloorDbDoc>(FLOORS_COLLECTION);
+  const { deletedCount } = await collection.deleteOne({ _id: toObjectId(id) });
   return deletedCount === 1;
 }
