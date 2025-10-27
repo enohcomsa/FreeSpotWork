@@ -50,6 +50,10 @@ export class AdminFloorService {
     return computed(() => this.floorListSig().filter((floor: Floor) => floor.buildingId === buildingId));
   }
 
+  getSignalById(id: string): Signal<Floor> {
+    return computed(() => this.floorListSig().find((floor: Floor) => floor.id === id) || ({} as Floor))
+  }
+
   getById(id: string): Observable<Floor> {
     return this._httpFloorService.getFloorById$(id);
   }

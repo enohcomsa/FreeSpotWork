@@ -26,14 +26,14 @@ export const adminRoutes: Route[] = [
         },
       },
       {
-        path: 'building/:buildingIdSig/:floorNameSig',
+        path: 'building/:buildingIdSig/:floorIdSig',
         loadComponent: async () => {
           const mod = await import('./components/admin-floor-detail/admin-floor-detail.component');
           return mod.AdminFloorDetailComponent;
         },
       },
       {
-        path: 'building/:buildingIdSig/:floorNameSig/:roomNameSig',
+        path: 'building/:buildingIdSig/:floorIdSig/:roomNameSig',
         loadComponent: async () => {
           const mod = await import('./components/admin-room-detail/admin-room-detail.component');
           return mod.AdminRoomDetailComponent;
