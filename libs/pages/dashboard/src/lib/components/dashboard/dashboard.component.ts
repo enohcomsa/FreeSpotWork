@@ -10,7 +10,7 @@ import {
   FreeSpotDate,
   FreeSpotUser,
   Group,
-  Room,
+  RoomLegacy,
   SemiGroup,
   TimetableActivityItem,
   TimeTableItem,
@@ -47,7 +47,7 @@ export class DashboardComponent implements OnInit {
   private _bookingService: BookingService = inject(BookingService);
   private _adminEventService: AdminEventService = inject(AdminEventService);
 
-  roomListSig: Signal<Room[]> = this._adminRoomService.roomListSig;
+  roomListSig: Signal<RoomLegacy[]> = this._adminRoomService.roomListSigLegacy;
   facultyListSig: Signal<Faculty[]> = this._adminFacultyService.facultyListSig;
   userListSig: Signal<FreeSpotUser[]> = this._userService.userListSig;
   dateChangedSig: WritableSignal<boolean> = this._appDateService.appDateChanged;
@@ -69,8 +69,8 @@ export class DashboardComponent implements OnInit {
       take(1),
       delay(1200),
       switchMap(() => {
-        this.roomListSig().forEach((room: Room) => {
-          const updatedRoom: Room = {
+        this.roomListSig().forEach((room: RoomLegacy) => {
+          const updatedRoom: RoomLegacy = {
             ...room,
             timetable: room.timetable.map((timetableItem: TimeTableItem) => this._updateTimetableItem(timetableItem)),
           };
@@ -162,11 +162,11 @@ export class DashboardComponent implements OnInit {
     this._adminEventService.init();
   }
 
-  private _updateFloorAndBuilding(updatedRoom: Room): void {
+  private _updateFloorAndBuilding(updatedRoom: RoomLegacy): void {
     const oldFloor: FloorLegacy = this._adminFloorService.getFloorByName(updatedRoom.floorName)();
     const updatedFloor: FloorLegacy = {
       ...oldFloor,
-      roomList: oldFloor.roomList.map((room: Room) => (room.name === updatedRoom.name ? updatedRoom : room)),
+      roomList: oldFloor.roomList.map((room: RoomLegacy) => (room.name === updatedRoom.name ? updatedRoom : room)),
     };
     this._adminFloorService.updateFloor(oldFloor, updatedFloor);
     this._updateBuilding(updatedFloor);

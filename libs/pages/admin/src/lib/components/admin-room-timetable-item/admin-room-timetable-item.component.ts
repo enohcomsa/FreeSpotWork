@@ -8,7 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { Room, SubjectItem, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
+import { RoomLegacy, SubjectItem, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
 import { Event, WeekParity } from '@free-spot/enums';
 import { AdminFacultyService } from '@free-spot-service/faculty';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -40,7 +40,7 @@ export class AdminRoomTimetableItemComponent implements OnInit {
   private _confirmService: ConfirmModalService = inject(ConfirmModalService);
   private _formErrorMessage: FormErrorMessage = inject(FormErrorMessage);
 
-  roomSig = input.required<Room>();
+  roomSig = input.required<RoomLegacy>();
   timetableItemSig = model.required<TimeTableItem>();
   subjectListSig = input.required<SubjectItem[]>();
 

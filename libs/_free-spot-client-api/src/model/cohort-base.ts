@@ -10,10 +10,10 @@
 import { CohortTypeDTO } from './cohort-type';
 
 
-export interface CohortUpdateDTO { 
-    type?: CohortTypeDTO;
-    programYearId?: string;
-    name?: string;
+export interface CohortBaseDTO { 
+    type: CohortTypeDTO;
+    programYearId: string;
+    name: string;
     parentGroupId?: string | null;
 }
 

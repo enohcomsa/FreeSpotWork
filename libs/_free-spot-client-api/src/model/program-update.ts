@@ -11,6 +11,7 @@ import { DegreeDTO } from './degree';
 
 
 export interface ProgramUpdateDTO { 
+    facultyId?: string;
     name?: string;
     degree?: DegreeDTO;
     active?: boolean;

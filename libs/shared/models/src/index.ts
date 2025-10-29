@@ -6,7 +6,7 @@ export { FloorLegacy  } from './lib/floor.model';
 export { FreeSpotDate } from './lib/free-spot-app-date.model';
 export { FreeSpotUser } from './lib/free-spot-user.model';
 export { Group } from './lib/group.model';
-export { Room } from './lib/room.model';
+export { RoomLegacy } from './lib/room.model';
 export { SemiGroup } from './lib/semi-group.model';
 export { SubjectItem } from './lib/subject.model';
 export { TimetableActivityItem } from './lib/timetable-activity-item.model';

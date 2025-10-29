@@ -33,7 +33,7 @@ export const adminRoutes: Route[] = [
         },
       },
       {
-        path: 'building/:buildingIdSig/:floorIdSig/:roomNameSig',
+        path: 'building/:buildingIdSig/:floorIdSig/:roomIdSig',
         loadComponent: async () => {
           const mod = await import('./components/admin-room-detail/admin-room-detail.component');
           return mod.AdminRoomDetailComponent;

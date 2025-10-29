@@ -7,15 +7,14 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { CohortTypeDTO } from './cohort-type';
 
 
-export interface CohortUpdateDTO { 
-    type?: CohortTypeDTO;
-    programYearId?: string;
-    name?: string;
-    parentGroupId?: string | null;
+export interface RoomBaseDTO { 
+    buildingId: string;
+    floorId: string;
+    name: string;
+    totalSpotsNumber: number;
+    unavailableSpots: number;
+    subjectList: Array<string>;
 }
-
-
 

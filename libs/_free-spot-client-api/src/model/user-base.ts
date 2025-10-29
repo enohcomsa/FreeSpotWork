@@ -12,7 +12,7 @@ import { UserRoleDTO } from './user-role';
 import { PreferredLanguageDTO } from './preferred-language';
 
 
-export interface UserResponseDTO { 
+export interface UserBaseDTO { 
     email: string;
     firstName: string;
     familyName: string;
@@ -23,7 +23,6 @@ export interface UserResponseDTO {
     programYearId: string;
     groupCohortId: string;
     semigroupCohortId?: string | null;
-    id: string;
 }
 
 

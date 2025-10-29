@@ -12,13 +12,26 @@ export const RoomBase = strictObj({
   totalSpotsNumber: z.number().int().min(0),
   unavailableSpots: z.number().int().min(0),
   subjectList: SubjectIdArray.default([]),
-}).openapi("RoomBase");
+});
 
 export const RoomIdParam = z.object({ id: ObjectIdStr }).openapi("RoomIdParam");
-export const RoomCreate = RoomBase.openapi("RoomCreate");
-export const RoomUpdate = nonEmptyDefinedPatch(RoomBase.partial()).openapi("RoomUpdate");
-export const RoomResponse = RoomBase.extend({ id: ObjectIdStr }).openapi("RoomResponse");
-export const RoomList = z.array(RoomResponse).openapi("RoomList");
+export const RoomCreate = RoomBase;
+export const RoomUpdate = nonEmptyDefinedPatch(RoomBase.partial());
+export const RoomResponse = RoomBase.extend({ id: ObjectIdStr });
+export const RoomList = z.array(RoomResponse);
+
+export const RoomBase_OA = strictObj({
+  buildingId: ObjectIdStr,
+  floorId: ObjectIdStr,
+  name: z.string().trim().min(1),
+  totalSpotsNumber: z.number().int().min(0),
+  unavailableSpots: z.number().int().min(0),
+  subjectList: z.array(ObjectIdStr),
+}).openapi("RoomBase");
+
+export const RoomCreate_OA = RoomBase_OA.openapi("RoomCreate");
+export const RoomUpdate_OA = nonEmptyDefinedPatch(RoomBase_OA.partial()).openapi("RoomUpdate");
+export const RoomResponse_OA = RoomBase_OA.extend({ id: ObjectIdStr }).openapi("RoomResponse");
 
 export type RoomBaseT = z.infer<typeof RoomBase>;
 export type RoomCreateRequest = z.infer<typeof RoomCreate>;

@@ -16,7 +16,7 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, Validators, AbstractCont
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { BuildingLegacy, FloorLegacy, Room, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
+import { BuildingLegacy, FloorLegacy, RoomLegacy, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
 import { AdminRoomCardComponent } from '../admin-room-card/admin-room-card.component';
 import { AdminRoomService } from '@free-spot-service/room';
 import { WeekDay } from '@free-spot/enums';
@@ -29,6 +29,8 @@ import { UserService } from '@free-spot-service/user';
 import { ConfirmModalService } from '@free-spot-service/confirm-modal';
 import { FormErrorMessage } from '@free-spot/util';
 import { Floor } from '@free-spot-domain/floor';
+import { RoomCardVM, toRoomCardVM } from '@free-spot-presentation/room';
+import { CreateRoomCmd, Room, UpdateRoomCmd } from '@free-spot-domain/room';
 
 @Component({
   selector: 'free-spot-admin-floor-detail',
@@ -49,34 +51,31 @@ export class AdminFloorDetailComponent implements OnInit {
   private _formBuilder: FormBuilder = inject(FormBuilder);
   private _adminRoomService: AdminRoomService = inject(AdminRoomService);
   private _adminFloorService: AdminFloorService = inject(AdminFloorService);
-  // private _adminBuildingService: BuildingService = inject(BuildingService);
-  // private _adminFacultyService: AdminFacultyService = inject(AdminFacultyService);
-  private _appDateService: AppDateService = inject(AppDateService);
-  // private _userService: UserService = inject(UserService);
   private _confirmService: ConfirmModalService = inject(ConfirmModalService);
   private _formErrorMessage: FormErrorMessage = inject(FormErrorMessage);
+  private _appDateService: AppDateService = inject(AppDateService);
+  // private _adminBuildingService: BuildingService = inject(BuildingService);
+  // private _adminFacultyService: AdminFacultyService = inject(AdminFacultyService);
+
+  // private _userService: UserService = inject(UserService);
+
 
   editRoom = viewChild.required<ElementRef>('editRoom');
   floorIdSig = input.required<string>();
   readonly floorSig = computed(() => this._adminFloorService.getSignalById(this.floorIdSig())());
-  roomlist = [];
-  //
   readonly editingRoomIdSig: WritableSignal<string | null> = signal<string | null>(null);
-  // readonly editingRoomSig: Signal<Room | null> = computed(() => {
-  //   const id = this.editingRoomSig();
-  //   if (!id) return null;
-  //   return this.buildingFloorList().find((floor: Floor) => floor.id === id) ?? null;
-  // });
-  readonly floorRoomList: Signal<Floor[]> = computed(() => this._adminFloorService.selectFloorsByBuildingId(this.floorIdSig())());
-  // readonly roomCardVMs = computed<FloorCardVM[]>(() => (this.buildingFloorList()).map(toFloorCardVM));
-
+  readonly editingRoomSig: Signal<Room | null> = computed(() => {
+    const id = this.editingRoomIdSig();
+    if (!id) return null;
+    return this.floorRoomList().find((room: Room) => room.id === id) ?? null;
+  });
 
   //
   floorSigLegacy!: Signal<FloorLegacy>;
   // buildingNameSig = input.required<string>();
   // buildingSig!: Signal<BuildingLegacy>;
 
-  oldRoomSig: WritableSignal<Room> = signal({} as Room);
+  // oldRoomSig: WritableSignal<RoomLegacy> = signal({} as RoomLegacy);
 
   addingRoom = false;
   editingRoom = false;
@@ -93,12 +92,18 @@ export class AdminFloorDetailComponent implements OnInit {
     { weekDay: WeekDay.FRIDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.FRIDAY) },
   ]);
 
+  readonly floorRoomList: Signal<Room[]> = computed(() => this._adminRoomService.selectRoomsByFloorId(this.floorIdSig())());
+  readonly roomCardVMs = computed<RoomCardVM[]>(() => (this.floorRoomList()).map(toRoomCardVM));
+
+
+
   ngOnInit(): void {
     this._adminRoomService.init();
     this._adminFloorService.init();
+    this._appDateService.init();
+
     // this._adminBuildingService.init();
     // this._adminFacultyService.init();
-    this._appDateService.init();
     // this._userService.init();
     // this.floorSigLegacy = this._adminFloorService.getFloorByName(this.floorNameSig());
     // this.buildingSig = this._adminBuildingService.getBuildingByName(this.buildingNameSig());
@@ -114,24 +119,34 @@ export class AdminFloorDetailComponent implements OnInit {
   }
 
   onAddRoom(): void {
-    const newRoom: Room = this._createRoom(
-      this.addRoomFormGroup.controls['roomName'].value as string,
-      this.addRoomFormGroup.controls['totalSpotsNumber'].value as number,
-      this.addRoomFormGroup.controls['unavailableSpots'].value as number,
-    );
-    const updatedFloor: FloorLegacy = this._createNewRoomFloor(newRoom);
+    // const newRoom: RoomLegacy = this._createRoom(
+    //   this.addRoomFormGroup.controls['roomName'].value as string,
+    //   this.addRoomFormGroup.controls['totalSpotsNumber'].value as number,
+    //   this.addRoomFormGroup.controls['unavailableSpots'].value as number,
+    // );
 
-    this._adminRoomService.addRoom(newRoom);
-    this._adminFloorService.updateFloor(this.floorSigLegacy(), updatedFloor);
+    const newRoom: CreateRoomCmd = {
+      buildingId: this.floorSig().buildingId,
+      floorId: this.floorIdSig(),
+      name: this.addRoomFormGroup.controls['roomName'].value,
+      totalSpotsNumber: this.addRoomFormGroup.controls['totalSpotsNumber'].value,
+      unavailableSpots: this.addRoomFormGroup.controls['unavailableSpots'].value,
+      subjectList: [],
+    }
+    // const updatedFloor: FloorLegacy = this._createNewRoomFloor(newRoom);
+
+    this._adminRoomService.create(newRoom);
+    // this._adminFloorService.updateFloor(this.floorSigLegacy(), updatedFloor);
     // this._updateBuilding(updatedFloor);
     this.addRoomFormGroup.reset();
     this.addingRoom = false;
     this.editingRoom = false;
   }
 
-  onEditingRoom(roomToEdit: Room): void {
+  onEditingRoom(roomToEdit: RoomCardVM): void {
     this.editingRoom = true;
-    this.oldRoomSig.set(roomToEdit);
+    this.editingRoomIdSig.set(roomToEdit.id);
+    // this.oldRoomSig.set(roomToEdit);
     this.addRoomFormGroup.setValue({
       roomName: roomToEdit.name,
       totalSpotsNumber: roomToEdit.totalSpotsNumber,
@@ -141,62 +156,72 @@ export class AdminFloorDetailComponent implements OnInit {
   }
 
   onEditRoom(): void {
-    const freeSpotsModifier =
-      (this.addRoomFormGroup.controls['totalSpotsNumber'].value as number) -
-      this.oldRoomSig().totalSpotsNumber -
-      ((this.addRoomFormGroup.controls['unavailableSpots'].value as number) - this.oldRoomSig().unavailableSpots);
-    const newRoom: Room = {
-      ...this._createRoom(
-        this.addRoomFormGroup.controls['roomName'].value as string,
-        this.addRoomFormGroup.controls['totalSpotsNumber'].value as number,
-        this.addRoomFormGroup.controls['unavailableSpots'].value as number,
-      ),
-      subjectList: this.oldRoomSig().subjectList,
-      timetable: this.oldRoomSig().timetable.map((timeTableItem: TimeTableItem) => {
-        return {
-          ...timeTableItem,
-          activities: timeTableItem.activities?.map((timetebleActivity: TimetableActivityItem) => {
-            return {
-              ...timetebleActivity,
-              freeSpots: timetebleActivity.freeSpots + freeSpotsModifier,
-            };
-          }),
-        };
-      }),
-    };
+    const id: string | null = this.editingRoomIdSig();
+    if (!id) return;
 
-    const diffRoom: Room = {
-      ...this.oldRoomSig(),
-      totalSpotsNumber: newRoom.totalSpotsNumber - (this.oldRoomSig().totalSpotsNumber as number),
-      unavailableSpots: newRoom.unavailableSpots - (this.oldRoomSig().unavailableSpots as number),
-    };
-    const updatedFloor: FloorLegacy = this._createEditRoomFloor(diffRoom, newRoom);
+    const updatedRoom: UpdateRoomCmd = {
+      name: this.addRoomFormGroup.controls['roomName'].value,
+      totalSpotsNumber: this.addRoomFormGroup.controls['totalSpotsNumber'].value,
+      unavailableSpots: this.addRoomFormGroup.controls['unavailableSpots'].value,
+    }
 
-    this._adminRoomService.updateRoom(this.oldRoomSig() as Room, newRoom);
-    this._adminFloorService.updateFloor(this.floorSigLegacy(), updatedFloor);
+
+    // const freeSpotsModifier =
+    //   (this.addRoomFormGroup.controls['totalSpotsNumber'].value as number) -
+    //   this.oldRoomSig().totalSpotsNumber -
+    //   ((this.addRoomFormGroup.controls['unavailableSpots'].value as number) - this.oldRoomSig().unavailableSpots);
+    // const newRoom: RoomLegacy = {
+    //   ...this._createRoom(
+    //     this.addRoomFormGroup.controls['roomName'].value as string,
+    //     this.addRoomFormGroup.controls['totalSpotsNumber'].value as number,
+    //     this.addRoomFormGroup.controls['unavailableSpots'].value as number,
+    //   ),
+    //   subjectList: this.oldRoomSig().subjectList,
+    //   timetable: this.oldRoomSig().timetable.map((timeTableItem: TimeTableItem) => {
+    //     return {
+    //       ...timeTableItem,
+    //       activities: timeTableItem.activities?.map((timetebleActivity: TimetableActivityItem) => {
+    //         return {
+    //           ...timetebleActivity,
+    //           freeSpots: timetebleActivity.freeSpots + freeSpotsModifier,
+    //         };
+    //       }),
+    //     };
+    //   }),
+    // };
+
+    // const diffRoom: RoomLegacy = {
+    //   ...this.oldRoomSig(),
+    //   totalSpotsNumber: newRoom.totalSpotsNumber - (this.oldRoomSig().totalSpotsNumber as number),
+    //   unavailableSpots: newRoom.unavailableSpots - (this.oldRoomSig().unavailableSpots as number),
+    // };
+    // const updatedFloor: FloorLegacy = this._createEditRoomFloor(diffRoom, newRoom);
+
+    this._adminRoomService.update(id, updatedRoom);
+    // this._adminFloorService.updateFloor(this.floorSigLegacy(), updatedFloor);
     // this._updateBuilding(updatedFloor);
     this.addRoomFormGroup.reset();
     this.addingRoom = false;
     this.editingRoom = false;
   }
 
-  onDeleteRoom(deletedRoom: Room): void {
+  onDeleteRoom(deletedRoom: RoomCardVM): void {
     this._confirmService
       .openConfirmDialog('Are you sure you want to delete this room?')
       .afterClosed()
       .subscribe((result: boolean) => {
         if (result) {
-          const diffRoom: Room = {
-            ...this.oldRoomSig(),
-            totalSpotsNumber: -deletedRoom.totalSpotsNumber,
-            unavailableSpots: -deletedRoom.unavailableSpots,
-          };
-          const updatedFloor: FloorLegacy = this._createDeleteRoomFloor(diffRoom, deletedRoom);
+          // const diffRoom: RoomLegacy = {
+          //   ...this.oldRoomSig(),
+          //   totalSpotsNumber: -deletedRoom.totalSpotsNumber,
+          //   unavailableSpots: -deletedRoom.unavailableSpots,
+          // };
+          // const updatedFloor: FloorLegacy = this._createDeleteRoomFloor(diffRoom, deletedRoom);
 
           // this._userService.removeTimetableActivitiesByRoomName(deletedRoom.name);
           // this._adminFacultyService.removeTimetableActivitiesByRoomName(deletedRoom.name);
-          this._adminRoomService.deleteRoom(deletedRoom);
-          this._adminFloorService.updateFloor(this.floorSigLegacy(), updatedFloor);
+          this._adminRoomService.remove(deletedRoom.id);
+          // this._adminFloorService.updateFloor(this.floorSigLegacy(), updatedFloor);
           // this._updateBuilding(updatedFloor);
           this.addRoomFormGroup.reset();
           this.addingRoom = false;
@@ -205,57 +230,57 @@ export class AdminFloorDetailComponent implements OnInit {
       });
   }
 
-  private _createRoom(roomName: string, totalSpotsNumber: number, unavailableSpots: number): Room {
-    return {
-      name: roomName,
-      floorName: this.floorSig().name,
-      subjectList: [],
-      timetable: this.roomEmptyTimetable(),
-      totalSpotsNumber: totalSpotsNumber,
-      unavailableSpots: unavailableSpots,
-    };
-  }
+  // private _createRoom(roomName: string, totalSpotsNumber: number, unavailableSpots: number): RoomLegacy {
+  //   return {
+  //     name: roomName,
+  //     floorName: this.floorSig().name,
+  //     subjectList: [],
+  //     timetable: this.roomEmptyTimetable(),
+  //     totalSpotsNumber: totalSpotsNumber,
+  //     unavailableSpots: unavailableSpots,
+  //   };
+  // }
 
-  private _createNewRoomFloor(addedRoom: Room): FloorLegacy {
-    return {
-      ...this.floorSigLegacy(),
-      roomList: this.floorSigLegacy().roomList ? [...this.floorSigLegacy().roomList, addedRoom] : [addedRoom],
-      totalSpotsNumber: this._reduceSpotNumber('totalSpotsNumber', addedRoom),
-      unavailableSpots: this._reduceSpotNumber('unavailableSpots', addedRoom),
-    };
-  }
+  // private _createNewRoomFloor(addedRoom: RoomLegacy): FloorLegacy {
+  //   return {
+  //     ...this.floorSigLegacy(),
+  //     roomList: this.floorSigLegacy().roomList ? [...this.floorSigLegacy().roomList, addedRoom] : [addedRoom],
+  //     totalSpotsNumber: this._reduceSpotNumber('totalSpotsNumber', addedRoom),
+  //     unavailableSpots: this._reduceSpotNumber('unavailableSpots', addedRoom),
+  //   };
+  // }
 
-  private _createEditRoomFloor(diffRoom: Room, newRoom: Room): FloorLegacy {
-    return {
-      ...this.floorSigLegacy(),
-      roomList: this.floorSigLegacy().roomList.map((room: Room) => (room === this.oldRoomSig() ? newRoom : room)),
-      totalSpotsNumber: this._reduceSpotNumber('totalSpotsNumber', diffRoom),
-      unavailableSpots: this._reduceSpotNumber('unavailableSpots', diffRoom),
-    };
-  }
-  private _createDeleteRoomFloor(diffRoom: Room, deletedRoom: Room): FloorLegacy {
-    return {
-      ...this.floorSigLegacy(),
-      roomList: this.floorSigLegacy().roomList.filter((room: Room) => room.name !== deletedRoom.name),
-      totalSpotsNumber: this._reduceSpotNumber('totalSpotsNumber', diffRoom),
-      unavailableSpots: this._reduceSpotNumber('unavailableSpots', diffRoom),
-    };
-  }
+  // private _createEditRoomFloor(diffRoom: RoomLegacy, newRoom: RoomLegacy): FloorLegacy {
+  //   return {
+  //     ...this.floorSigLegacy(),
+  //     roomList: this.floorSigLegacy().roomList.map((room: RoomLegacy) => (room === this.oldRoomSig() ? newRoom : room)),
+  //     totalSpotsNumber: this._reduceSpotNumber('totalSpotsNumber', diffRoom),
+  //     unavailableSpots: this._reduceSpotNumber('unavailableSpots', diffRoom),
+  //   };
+  // }
+  // private _createDeleteRoomFloor(diffRoom: RoomLegacy, deletedRoom: RoomLegacy): FloorLegacy {
+  //   return {
+  //     ...this.floorSigLegacy(),
+  //     roomList: this.floorSigLegacy().roomList.filter((room: RoomLegacy) => room.name !== deletedRoom.name),
+  //     totalSpotsNumber: this._reduceSpotNumber('totalSpotsNumber', diffRoom),
+  //     unavailableSpots: this._reduceSpotNumber('unavailableSpots', diffRoom),
+  //   };
+  // }
 
-  private _reduceSpotNumber(
-    spotType: keyof Omit<Room, 'subjectList' | 'name' | 'timetable' | 'floorName'>,
-    newRoom?: Room,
-  ): number {
-    if (this.floorSigLegacy().roomList) {
-      const totalNumber: number = this.floorSigLegacy().roomList.reduce<number>(
-        (totalNumber: number, room: Room) => (totalNumber += room[spotType]),
-        0,
-      );
-      return totalNumber + (newRoom ? newRoom[spotType] : 0);
-    } else {
-      return newRoom ? newRoom[spotType] : 0;
-    }
-  }
+  // private _reduceSpotNumber(
+  //   spotType: keyof Omit<RoomLegacy, 'subjectList' | 'name' | 'timetable' | 'floorName'>,
+  //   newRoom?: RoomLegacy,
+  // ): number {
+  //   if (this.floorSigLegacy().roomList) {
+  //     const totalNumber: number = this.floorSigLegacy().roomList.reduce<number>(
+  //       (totalNumber: number, room: RoomLegacy) => (totalNumber += room[spotType]),
+  //       0,
+  //     );
+  //     return totalNumber + (newRoom ? newRoom[spotType] : 0);
+  //   } else {
+  //     return newRoom ? newRoom[spotType] : 0;
+  //   }
+  // }
 
   // private _updateBuilding(changedFloor: FloorLegacy): void {
   //   const updatedBuilding: BuildingLegacy = {

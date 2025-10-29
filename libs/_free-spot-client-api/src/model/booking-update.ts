@@ -7,12 +7,16 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { SourceDTO } from './source';
 import { BookingStatusDTO } from './booking-status';
 
 
 export interface BookingUpdateDTO { 
     activityId?: string;
+    userId?: string;
     status?: BookingStatusDTO;
+    cohortId?: string | null;
+    source?: SourceDTO | null;
 }
 
 

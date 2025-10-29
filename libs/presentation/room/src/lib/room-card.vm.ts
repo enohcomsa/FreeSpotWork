@@ -1,5 +1,4 @@
-export interface Floor {
-  buildingId: string;
+export interface RoomCardVM {
   name: string;
   totalSpotsNumber: number;
   unavailableSpots: number;

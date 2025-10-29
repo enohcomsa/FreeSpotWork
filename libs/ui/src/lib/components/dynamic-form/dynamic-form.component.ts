@@ -25,7 +25,7 @@ import {
   BuildingLegacy,
   FreeSpotDate,
   FreeSpotUser,
-  Room,
+  RoomLegacy,
   SubjectItem,
   TimetableActivityItem,
   TimeTableItem,
@@ -85,7 +85,7 @@ export class DynamicFormComponent implements OnInit {
   currentUserSig: Signal<FreeSpotUser> = this._userService.getFreeSpotUserByEmail(this._currentUserEmail);
   eventBookingSelectedSig = input<Event>(Event.LABORATORY);
   subjectItemListSig: InputSignal<SubjectItem[]> = input<SubjectItem[]>(SUBJECT_LIST);
-  roomListSig = this._adminRoomService.roomListSig;
+  roomListSig = this._adminRoomService.roomListSigLegacy;
 
   eventListSig: Signal<Event[]> = input<Event[]>(Object.values(Event).filter((event: Event) => event !== Event.COURSE));
   searchForm!: FormGroup;
@@ -146,7 +146,7 @@ export class DynamicFormComponent implements OnInit {
         ) || ({} as BookedEvent);
 
       if (Object.keys(oldBookedEvent).length) {
-        this.roomListSig().forEach((room: Room) => {
+        this.roomListSig().forEach((room: RoomLegacy) => {
           if (
             room.subjectList?.some(
               (roomSubject: SubjectItem) => roomSubject.name === this.searchForm.controls['subject'].value.name,

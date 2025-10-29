@@ -1,5 +1,5 @@
 import { computed, DestroyRef, inject, Injectable, signal, Signal, WritableSignal } from '@angular/core';
-import { BuildingLegacy, FloorLegacy, Room, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
+import { BuildingLegacy, FloorLegacy, RoomLegacy, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
 import { SignalArrayUtil } from '@free-spot/util';
 import { HttpBuildingService } from '@http-free-spot/building';
 import { Building } from '@free-spot-domain/building';
@@ -89,7 +89,7 @@ export class BuildingService {
             return {
               ...floor,
               roomList:
-                floor.roomList?.map((room: Room) =>
+                floor.roomList?.map((room: RoomLegacy) =>
                   this._updateTimetableActivityFromRoom(room, changedTimetableActivity, addingBooking),
                 ) || [],
             };
@@ -119,11 +119,11 @@ export class BuildingService {
   }
 
   private _updateTimetableActivityFromRoom(
-    room: Room,
+    room: RoomLegacy,
     changedTimetableActivity: TimetableActivityItem,
     addingBooking: boolean,
-  ): Room {
-    const updated: Room = {
+  ): RoomLegacy {
+    const updated: RoomLegacy = {
       ...room,
       timetable: room.timetable.map((timeTableItem: TimeTableItem) => {
         return {

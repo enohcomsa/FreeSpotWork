@@ -23,6 +23,7 @@ import { ConfirmModalService } from '@free-spot-service/confirm-modal';
 import { FormErrorMessage } from '@free-spot/util';
 import { CreateFloorCmd, Floor, UpdateFloorCmd } from '@free-spot-domain/floor';
 import { FloorCardVM, toFloorCardVM } from '@free-spot-presentation/floor';
+import { AdminRoomService } from '@free-spot-service/room';
 
 @Component({
   selector: 'free-spot-admin-building-detail',
@@ -42,8 +43,10 @@ import { FloorCardVM, toFloorCardVM } from '@free-spot-presentation/floor';
 })
 export class AdminBuildingDetailComponent implements OnInit {
   private _formBuilder: FormBuilder = inject(FormBuilder);
-  private _adminFloorService: AdminFloorService = inject(AdminFloorService);
   private _adminBuildingService: BuildingService = inject(BuildingService);
+
+  private _adminFloorService: AdminFloorService = inject(AdminFloorService);
+  private _adminRoomService: AdminRoomService = inject(AdminRoomService);
   private _confirmService: ConfirmModalService = inject(ConfirmModalService);
   private _formErrorMessage: FormErrorMessage = inject(FormErrorMessage);
 
@@ -61,10 +64,14 @@ export class AdminBuildingDetailComponent implements OnInit {
   editingFloor = false;
   addFloorFormControl = this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(3)]);
   readonly buildingFloorList: Signal<Floor[]> = computed(() => this._adminFloorService.selectFloorsByBuildingId(this.buildingIdSig())());
-  readonly floorCardVMs = computed<FloorCardVM[]>(() => (this.buildingFloorList()).map(toFloorCardVM));
+  readonly floorCardVMs = computed<FloorCardVM[]>(() => this.buildingFloorList().map((floorVM: Floor) => ({
+    ...toFloorCardVM(floorVM),
+    roomsCount: this._adminRoomService.selectRoomsByFloorId(floorVM.id)().length,
+  })));
 
 
   ngOnInit(): void {
+    this._adminRoomService.init();
     this._adminFloorService.init();
     this._adminBuildingService.init();
   }
@@ -93,6 +100,7 @@ export class AdminBuildingDetailComponent implements OnInit {
     // };
 
     this._adminFloorService.create(newFloor);
+    this.addFloorFormControl.reset();
     // this._adminBuildingService.updateBuilding(this.buildingSig(), updatedBuilding);
     this.addingFloor = false;
     this.editingFloor = false;

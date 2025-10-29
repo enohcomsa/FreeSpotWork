@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, input, model, output } from '@angular/core';
 
 import { MatCardModule } from '@angular/material/card';
-import { Room } from '@free-spot/models';
+import { RoomLegacy } from '@free-spot/models';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatButtonModule } from '@angular/material/button';
 import { TranslateModule } from '@ngx-translate/core';
@@ -15,7 +15,7 @@ import { TranslateModule } from '@ngx-translate/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FloorRoomComponent {
-  roomDataSig = input.required<Room>();
+  roomDataSig = input.required<RoomLegacy>();
   buildingNameSig = input.required<string>();
   toggleStateSig = model.required<boolean>();
   roomBookingSearchSig = output<string>();

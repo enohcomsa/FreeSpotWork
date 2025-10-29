@@ -7,14 +7,14 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { SubjectIdArrayDTO } from './subject-id-array';
 
 
 export interface RoomUpdateDTO { 
+    buildingId?: string;
     floorId?: string;
     name?: string;
     totalSpotsNumber?: number;
     unavailableSpots?: number;
-    subjectList?: SubjectIdArrayDTO;
+    subjectList?: Array<string>;
 }
 

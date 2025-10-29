@@ -20,7 +20,7 @@ import {
   Faculty,
   FloorLegacy,
   FreeSpotUser,
-  Room,
+  RoomLegacy,
   SubjectItem,
   TimetableActivityItem,
   Year,
@@ -101,11 +101,9 @@ export class AdminComponent implements OnInit, OnDestroy {
   subscriptionList: Subscription[] = [];
 
   readonly buildingCardVMs = computed<BuildingCardVM[]>(() => {
-    const buildings = this.buildingListSig();
-    const floors = this.floorListSig();
-    return buildings.map((building: Building) => ({
+    return this.buildingListSig().map((building: Building) => ({
       ...toBuildingCardVM(building),
-      floors: floors.filter((floor: Floor) => floor.buildingId === building.id).map(toBuildingCardFloorVM),
+      floors: this.floorListSig().filter((floor: Floor) => floor.buildingId === building.id).map(toBuildingCardFloorVM),
     }));
   });
 
@@ -124,13 +122,13 @@ export class AdminComponent implements OnInit, OnDestroy {
 
   editingEvent = false;
   startHourList: number[] = [8, 10, 12, 14, 16, 18];
-  foundRoomListSig: WritableSignal<Room[]> = signal([]);
+  foundRoomListSig: WritableSignal<RoomLegacy[]> = signal([]);
   addEventFormGroup = this._formBuilder.nonNullable.group({
     name: ['', [Validators.required, Validators.minLength(3)]],
     date: [new Date(), [Validators.required]],
     startHour: [this.startHourList[0], [Validators.required]],
     building: [this.buildingListSigLegacy()[0], [Validators.required]],
-    room: [{} as Room, [Validators.required]],
+    room: [{} as RoomLegacy, [Validators.required]],
     unavailable: [0, [Validators.required]],
   });
 
@@ -330,11 +328,11 @@ export class AdminComponent implements OnInit, OnDestroy {
       date: new Date(eventToEdit.date as Date),
       startHour: eventToEdit.startHour as number,
       building: this._adminBuildingService.getBuildingByName(eventToEdit.building as string)(),
-      room: this._adminRoomService.getRoomByName(eventToEdit.roomName as string)() as Room,
+      room: this._adminRoomService.getRoomByName(eventToEdit.roomName as string)() as RoomLegacy,
       unavailable: eventToEdit.reservedSpots as number,
     });
     this.addEventFormGroup.controls['room'].setValue(
-      this.foundRoomListSig().filter((room: Room) => room.name === eventToEdit.roomName)[0] as Room,
+      this.foundRoomListSig().filter((room: RoomLegacy) => room.name === eventToEdit.roomName)[0] as RoomLegacy,
     );
     this.editEvent()?.nativeElement.scrollIntoView({ block: 'center', behavior: 'smooth' });
   }
@@ -419,10 +417,10 @@ export class AdminComponent implements OnInit, OnDestroy {
     };
   }
 
-  private _getBuildingRoomList(building: BuildingLegacy): Room[] {
-    const roomList: Room[] = [];
+  private _getBuildingRoomList(building: BuildingLegacy): RoomLegacy[] {
+    const roomList: RoomLegacy[] = [];
     building.floorList?.forEach((floor: FloorLegacy) => {
-      floor.roomList?.forEach((room: Room) => {
+      floor.roomList?.forEach((room: RoomLegacy) => {
         roomList.push(room);
       });
     });

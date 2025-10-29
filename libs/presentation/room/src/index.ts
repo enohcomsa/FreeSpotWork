@@ -1,1 +1,2 @@
-export * from './lib/room-presentation/room-presentation';
+export * from './lib/room-card.vm';
+export * from './lib/room-card.vm.mapper';

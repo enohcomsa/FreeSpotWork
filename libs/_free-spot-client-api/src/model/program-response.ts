@@ -11,11 +11,11 @@ import { DegreeDTO } from './degree';
 
 
 export interface ProgramResponseDTO { 
-    id: string;
     facultyId: string;
     name: string;
     degree: DegreeDTO;
     active: boolean;
+    id: string;
 }
 
 

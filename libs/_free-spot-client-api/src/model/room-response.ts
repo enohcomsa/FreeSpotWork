@@ -10,12 +10,12 @@
 
 
 export interface RoomResponseDTO { 
-    id: string;
     buildingId: string;
     floorId: string;
     name: string;
     totalSpotsNumber: number;
     unavailableSpots: number;
     subjectList: Array<string>;
+    id: string;
 }
 

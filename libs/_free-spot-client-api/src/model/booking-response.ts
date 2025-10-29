@@ -12,14 +12,14 @@ import { BookingStatusDTO } from './booking-status';
 
 
 export interface BookingResponseDTO { 
-    id: string;
     activityId: string;
     userId: string;
+    status?: BookingStatusDTO;
     cohortId?: string | null;
-    status: BookingStatusDTO;
+    source?: SourceDTO | null;
+    id: string;
     createdAt: string;
     updatedAt?: string | null;
-    source?: SourceDTO | null;
 }
 
 

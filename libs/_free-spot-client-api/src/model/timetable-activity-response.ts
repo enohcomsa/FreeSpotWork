@@ -10,16 +10,16 @@
 import { WeekParityDTO } from './week-parity';
 import { ActivityTypeDTO } from './activity-type';
 import { WeekDayDTO } from './week-day';
+import { CohortIdArrayDTO } from './cohort-id-array';
 
 
 export interface TimetableActivityResponseDTO { 
-    id: string;
     roomId: string;
     subjectId: string;
     date: string;
     weekDay: WeekDayDTO;
     activityType: ActivityTypeDTO;
-    cohortIds: Array<string>;
+    cohortIds: CohortIdArrayDTO;
     startHour: number;
     endHour: number;
     weekParity: WeekParityDTO;
@@ -27,6 +27,7 @@ export interface TimetableActivityResponseDTO {
     reservedSpots: number;
     busySpots: number;
     freeSpots: number;
+    id: string;
 }
 
 

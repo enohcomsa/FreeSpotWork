@@ -10,8 +10,8 @@
 
 
 export interface FacultyResponseDTO { 
-    id: string;
     name: string;
     shortName: string;
+    id: string;
 }
 

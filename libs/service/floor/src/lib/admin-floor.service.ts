@@ -1,7 +1,7 @@
 import { computed, DestroyRef, inject, Injectable, Signal, signal, WritableSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CreateFloorCmd, Floor, UpdateFloorCmd } from '@free-spot-domain/floor';
-import { FloorLegacy, Room, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
+import { FloorLegacy, RoomLegacy, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
 import { SignalArrayUtil } from '@free-spot/util';
 import { HttpFloorService } from '@http-free-spot/floor';
 import { Observable, take } from 'rxjs';
@@ -82,7 +82,7 @@ export class AdminFloorService {
       return {
         ...floor,
         roomList:
-          floor.roomList?.map((room: Room) =>
+          floor.roomList?.map((room: RoomLegacy) =>
             this._updateTimetableActivityFromRoom(room, changedTimetableActivity, addingBooking),
           ) || [],
       };
@@ -107,10 +107,10 @@ export class AdminFloorService {
   }
 
   private _updateTimetableActivityFromRoom(
-    room: Room,
+    room: RoomLegacy,
     changedTimetableActivity: TimetableActivityItem,
     addingBooking: boolean,
-  ): Room {
+  ): RoomLegacy {
     room = {
       ...room,
       timetable: room.timetable.map((timeTableItem: TimeTableItem) => {

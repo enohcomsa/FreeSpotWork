@@ -10,6 +10,7 @@
 
 
 export interface ProgramYearUpdateDTO { 
+    programId?: string;
     yearNumber?: number;
     label?: string;
 }

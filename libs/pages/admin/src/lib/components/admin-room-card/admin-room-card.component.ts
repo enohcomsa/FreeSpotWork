@@ -1,11 +1,10 @@
 import { ChangeDetectionStrategy, Component, inject, input, model, output } from '@angular/core';
-
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { Room } from '@free-spot/models';
 import { MatDividerModule } from '@angular/material/divider';
+import { RoomCardVM } from '@free-spot-presentation/room';
 
 @Component({
   selector: 'free-spot-admin-room-card',
@@ -19,12 +18,12 @@ export class AdminRoomCardComponent {
   private _router: Router = inject(Router);
   private _activatedRoute = inject(ActivatedRoute);
 
-  adminRoomSig = input.required<Room>();
+  adminRoomSig = input.required<RoomCardVM>();
   addingRoomSig = model.required<boolean>();
-  editRoom = output<Room>();
-  deleteRoom = output<Room>();
+  editRoom = output<RoomCardVM>();
+  deleteRoom = output<RoomCardVM>();
 
   onOpenClick(): void {
-    this._router.navigate([this.adminRoomSig().name], { relativeTo: this._activatedRoute });
+    this._router.navigate([this.adminRoomSig().id], { relativeTo: this._activatedRoute });
   }
 }

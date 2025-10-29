@@ -9,6 +9,8 @@
  */
 
 
-export interface SubjectIdArrayDTO { 
+export interface FacultyBaseDTO { 
+    name: string;
+    shortName: string;
 }
 

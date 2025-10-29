@@ -1,15 +1,15 @@
 <div class="container">
-  <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Room: {{ roomNameSig() }}</h1>
+  <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Room: {{ roomSig().name }}</h1>
   <h2 class="pb-4 pt-8 text-2xl font-bold md:pb-8 md:pt-12">Room subjects</h2>
-  <free-spot-dynamic-chip-list
+  <!-- <free-spot-dynamic-chip-list
     [optionListSig]="subjectList"
     [itemListSig]="roomSig().subjectList ? roomSig().subjectList : []"
     itemKeyDysplay="name"
     itemLabelSig="subject"
     (itemListSigChange)="onSubjectListChange($event)"
-  ></free-spot-dynamic-chip-list>
+  ></free-spot-dynamic-chip-list> -->
   <h2 class="pb-4 pt-8 text-2xl font-bold md:pb-8 md:pt-12">Room timetable items</h2>
-  @for (roomTimetableItem of roomSig().timetable; track roomTimetableItem.weekDay) {
+  <!-- @for (roomTimetableItem of roomSig().timetable; track roomTimetableItem.weekDay) {
     <h2 class="pb-4 pt-8 text-xl font-bold md:pb-8 md:pt-12">{{ roomTimetableItem.weekDay }}</h2>
     <free-spot-admin-room-timetable-item
       class="grow"
@@ -18,12 +18,12 @@
       [timetableItemSig]="roomTimetableItem"
       (timetableItemSigChange)="onTimetableItemChange($event)"
     ></free-spot-admin-room-timetable-item>
-  }
+  } -->
 
   <h2 class="pb-4 pt-8 text-2xl font-bold md:pb-8 md:pt-12">Room timetable</h2>
   <div class="flex flex-wrap gap-4 lg:items-center lg:gap-0">
-    @for (timetableItem of roomSig().timetable; track timetableItem) {
+    <!-- @for (timetableItem of roomSig().timetable; track timetableItem) {
       <free-spot-timetable-item class="grow" [timetableItemSig]="timetableItem"></free-spot-timetable-item>
-    }
+    } -->
   </div>
 </div>

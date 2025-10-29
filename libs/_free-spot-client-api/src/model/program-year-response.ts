@@ -10,9 +10,9 @@
 
 
 export interface ProgramYearResponseDTO { 
-    id: string;
     programId: string;
     yearNumber: number;
     label: string;
+    id: string;
 }
 

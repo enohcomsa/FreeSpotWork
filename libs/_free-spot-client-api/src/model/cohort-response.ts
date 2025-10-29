@@ -11,11 +11,11 @@ import { CohortTypeDTO } from './cohort-type';
 
 
 export interface CohortResponseDTO { 
-    id: string;
     type: CohortTypeDTO;
     programYearId: string;
     name: string;
     parentGroupId?: string | null;
+    id: string;
 }
 
 
