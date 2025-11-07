@@ -1,5 +1,6 @@
 import { Router } from "express";
 import buildings from "./buildings.routes";
+import buildingsCards from "./buildings.card.routes";
 import floors from "./floors.routes";
 import rooms from "./rooms.routes";
 import subjects from "./subjects.routes";
@@ -15,6 +16,7 @@ import availability from "./availability.routes";
 const api = Router();
 
 api.use("/buildings", buildings);
+api.use("/buildings-cards", buildingsCards);
 api.use("/floors", floors);
 api.use("/rooms", rooms);
 api.use("/subjects", subjects);

@@ -40,6 +40,7 @@ export class AdminRoomDetailComponent implements OnInit {
   subjectListLegacy: SubjectItemLegacy[] = SUBJECT_LIST;
   subjectListSig: Signal<SubjectItem[]> = this._adminSubjectService.subjectListSig;
 
+
   ngOnInit(): void {
     this._adminRoomService.init();
     this._adminFloorService.init();

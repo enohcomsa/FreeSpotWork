@@ -2,18 +2,11 @@ import "../swagger/zod-openapi";
 import { Express } from "express";
 import swaggerUi from "swagger-ui-express";
 import { OpenAPIRegistry, OpenApiGeneratorV3 } from "@asteasolutions/zod-to-openapi";
-import { registerBookings } from "./registrars/bookings.openapi";
-import { registerProgramYears } from "./registrars/program-years.openapi";
-import { registerPrograms } from "./registrars/programs.openapi";
-import { registerRooms } from "./registrars/rooms.openapi";
-import { registerSubjects } from "./registrars/subjects.openapi";
-import { registerTimetableActivities } from "./registrars/timetable-activities.openapi";
-import { registerUsers } from "./registrars/users.openapi";
-import { registerAvailability } from "./registrars/availability.openapi";
-import { registerBuildings } from "./registrars/buildings.openapi";
-import { registerFloors } from "./registrars/floors.openapi";
-import { registerFaculties } from "./registrars/faculties.openapi";
-import { registerCohorts } from "./registrars/cohorts.openapi";
+import {
+  registerAvailability, registerBookings, registerBuildings, registerBuildingsCards, registerCohorts,
+  registerFaculties, registerFloors, registerPrograms, registerProgramYears, registerRooms, registerSubjects, registerTimetableActivities, registerUsers
+} from "./registrars";
+
 
 export function setupSwagger(app: Express) {
   const registry = new OpenAPIRegistry();
@@ -27,6 +20,7 @@ export function setupSwagger(app: Express) {
   registerUsers(registry);
   registerAvailability(registry);
   registerBuildings(registry);
+  registerBuildingsCards(registry);
   registerFloors(registry);
   registerFaculties(registry);
   registerCohorts(registry);
@@ -46,6 +40,7 @@ export function setupSwagger(app: Express) {
       { name: "Users" },
       { name: "Availability" },
       { name: "Buildings" },
+      { name: "Buildings Cards" },
       { name: "Floors" },
       { name: "Faculties" },
       { name: "Cohorts" },
