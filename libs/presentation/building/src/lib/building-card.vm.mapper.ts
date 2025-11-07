@@ -16,7 +16,5 @@ export function toBuildingCardVM(building: Building): BuildingCardVM {
 export function toBuildingCardFloorVM(floor: Floor): BuildingCardFloorVM {
   return {
     name: floor.name,
-    total: floor.totalSpotsNumber,
-    unavailable: floor.unavailableSpots,
   };
 }

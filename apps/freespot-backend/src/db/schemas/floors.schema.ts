@@ -4,13 +4,11 @@ export const floorsSpec: CollectionSpec = {
   name: "floors",
   validator: {
     bsonType: "object",
-    required: ["buildingId", "name", "totalSpotsNumber", "unavailableSpots"],
+    required: ["buildingId", "name"],
     properties: {
       _id: { bsonType: "objectId" },
       buildingId: { bsonType: "objectId" },
       name: { bsonType: "string", minLength: 1 },
-      totalSpotsNumber: { bsonType: "int", minimum: 0 },
-      unavailableSpots: { bsonType: "int", minimum: 0 }
     },
     additionalProperties: false
   },

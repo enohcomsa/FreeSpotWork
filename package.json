@@ -6,7 +6,7 @@
     "start": "nx serve FreeSpot",
     "start:backend": "nx serve freespot-backend",
     "build:FreeSpot": "npx nx build FreeSpot",
-    "db:migrate": "node --loader ts-node/esm apps/freespot-backend/src/db/migrate/index.ts",
+    "db:migrate": "tsx apps/freespot-backend/src/db/migrate/index.ts",
     "openapi-generate:free-spot-app": "npx ts-node tools/scripts/openapi-free-spot.ts"
   },
   "private": true,
@@ -94,6 +94,7 @@
     "tailwindcss": "^4.1.7",
     "ts-jest": "^29.3.4",
     "ts-node": "^10.9.2",
+    "tsx": "^4.20.6",
     "typescript": "5.8.3",
     "verdaccio": "^6.0.5",
     "webpack-cli": "^5.1.4"

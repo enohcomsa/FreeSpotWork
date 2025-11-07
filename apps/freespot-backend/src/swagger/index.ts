@@ -2,7 +2,6 @@ import "../swagger/zod-openapi";
 import { Express } from "express";
 import swaggerUi from "swagger-ui-express";
 import { OpenAPIRegistry, OpenApiGeneratorV3 } from "@asteasolutions/zod-to-openapi";
-
 import { registerBookings } from "./registrars/bookings.openapi";
 import { registerProgramYears } from "./registrars/program-years.openapi";
 import { registerPrograms } from "./registrars/programs.openapi";

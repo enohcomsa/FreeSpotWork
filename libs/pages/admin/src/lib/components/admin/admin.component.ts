@@ -21,7 +21,7 @@ import {
   FloorLegacy,
   FreeSpotUser,
   RoomLegacy,
-  SubjectItem,
+  SubjectItemLegacy,
   TimetableActivityItem,
   Year,
 } from '@free-spot/models';
@@ -47,7 +47,7 @@ import { filter, Subscription } from 'rxjs';
 import { AdminRoomService } from '@free-spot-service/room';
 import { BookingService } from '@free-spot-service/booking';
 import { Building, CreateBuildingCmd, UpdateBuildingCmd } from '@free-spot-domain/building';
-import { BuildingCardVM, toBuildingCardVM, toBuildingCardFloorVM } from '@free-spot-presentation/building';
+import { BuildingCardVM, toBuildingCardFloorVM, toBuildingCardVM } from '@free-spot-presentation/building';
 import { Floor } from '@free-spot-domain/floor';
 import { AdminFloorService } from '@free-spot-service/floor';
 
@@ -361,7 +361,7 @@ export class AdminComponent implements OnInit, OnDestroy {
     const timetableActivityFound: TimetableActivityItem = {
       startHour: updatedEvent.startHour as number,
       endHour: (updatedEvent.startHour as number) + 2,
-      subjectItem: {} as SubjectItem,
+      subjectItem: {} as SubjectItemLegacy,
       roomName: updatedEvent.roomName as string,
       activityType: Event.SPECIAL_EVENT,
       weekParity: WeekParity.BOTH,

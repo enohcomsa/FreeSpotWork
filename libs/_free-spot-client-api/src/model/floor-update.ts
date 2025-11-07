@@ -12,7 +12,5 @@
 export interface FloorUpdateDTO { 
     buildingId?: string;
     name?: string;
-    totalSpotsNumber?: number;
-    unavailableSpots?: number;
 }
 

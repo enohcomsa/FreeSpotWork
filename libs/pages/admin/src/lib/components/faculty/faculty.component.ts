@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, model, output } from '@angular/core';
 
-import { Faculty, Group, SubjectItem, Year } from '@free-spot/models';
+import { Faculty, Group, SubjectItemLegacy, Year } from '@free-spot/models';
 import { MatListModule } from '@angular/material/list';
 import { MatDividerModule } from '@angular/material/divider';
 import { DynamicChipListComponent } from '@free-spot/ui';
@@ -21,7 +21,7 @@ export class FacultyComponent {
   private _confirmService: ConfirmModalService = inject(ConfirmModalService);
 
   facultySig = model.required<Faculty>();
-  subjectList: SubjectItem[] = SUBJECT_LIST;
+  subjectList: SubjectItemLegacy[] = SUBJECT_LIST;
 
   editYear = output<Year>();
 
@@ -39,7 +39,7 @@ export class FacultyComponent {
       });
   }
 
-  onSubjectListChanged(newSubjectList: SubjectItem[]): void {
+  onSubjectListChanged(newSubjectList: SubjectItemLegacy[]): void {
     this.facultySig.set({ ...this.facultySig(), subjectList: newSubjectList });
   }
 

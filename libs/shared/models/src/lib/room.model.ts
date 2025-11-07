@@ -1,5 +1,5 @@
 import { TimeTableItem } from './timetable-item.model';
-import { SubjectItem } from './subject.model';
+import { SubjectItemLegacy } from './subject.model';
 
 /**
  * @deprecated Legacy Firebase-era interface.
@@ -9,7 +9,7 @@ import { SubjectItem } from './subject.model';
 export interface RoomLegacy {
   name: string;
   floorName: string;
-  subjectList: SubjectItem[];
+  subjectList: SubjectItemLegacy[];
   timetable: TimeTableItem[];
   totalSpotsNumber: number;
   unavailableSpots: number;

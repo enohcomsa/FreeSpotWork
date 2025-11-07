@@ -6,8 +6,6 @@ export function floorToDbRecord(input: FloorBaseT): FloorDbRecord {
   return {
     buildingId: toObjectId(input.buildingId),
     name: input.name,
-    totalSpotsNumber: input.totalSpotsNumber,
-    unavailableSpots: input.unavailableSpots,
   };
 }
 
@@ -16,8 +14,6 @@ export function floorToDto(doc: FloorDbDoc): FloorResponseDto {
     id: doc._id.toHexString(),
     buildingId: doc.buildingId.toHexString(),
     name: doc.name,
-    totalSpotsNumber: doc.totalSpotsNumber,
-    unavailableSpots: doc.unavailableSpots,
   };
 }
 
@@ -27,8 +23,6 @@ export function floorPatchToDbSet(patch: Partial<FloorBaseT>): Partial<FloorDbRe
 
   if (cleaned.buildingId !== undefined) set.buildingId = toObjectId(cleaned.buildingId);
   if (cleaned.name !== undefined) set.name = cleaned.name;
-  if (cleaned.totalSpotsNumber !== undefined) set.totalSpotsNumber = cleaned.totalSpotsNumber;
-  if (cleaned.unavailableSpots !== undefined) set.unavailableSpots = cleaned.unavailableSpots;
 
   return set;
 }

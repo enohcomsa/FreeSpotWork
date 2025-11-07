@@ -26,7 +26,7 @@ import {
   FreeSpotDate,
   FreeSpotUser,
   RoomLegacy,
-  SubjectItem,
+  SubjectItemLegacy,
   TimetableActivityItem,
   TimeTableItem,
 } from '@free-spot/models';
@@ -84,7 +84,7 @@ export class DynamicFormComponent implements OnInit {
   EVENT = Event;
   currentUserSig: Signal<FreeSpotUser> = this._userService.getFreeSpotUserByEmail(this._currentUserEmail);
   eventBookingSelectedSig = input<Event>(Event.LABORATORY);
-  subjectItemListSig: InputSignal<SubjectItem[]> = input<SubjectItem[]>(SUBJECT_LIST);
+  subjectItemListSig: InputSignal<SubjectItemLegacy[]> = input<SubjectItemLegacy[]>(SUBJECT_LIST);
   roomListSig = this._adminRoomService.roomListSigLegacy;
 
   eventListSig: Signal<Event[]> = input<Event[]>(Object.values(Event).filter((event: Event) => event !== Event.COURSE));
@@ -149,7 +149,7 @@ export class DynamicFormComponent implements OnInit {
         this.roomListSig().forEach((room: RoomLegacy) => {
           if (
             room.subjectList?.some(
-              (roomSubject: SubjectItem) => roomSubject.name === this.searchForm.controls['subject'].value.name,
+              (roomSubject: SubjectItemLegacy) => roomSubject.name === this.searchForm.controls['subject'].value.name,
             )
           ) {
             room.timetable.forEach((timetableItem: TimeTableItem) => {
@@ -217,7 +217,7 @@ export class DynamicFormComponent implements OnInit {
           {
             startHour: specialEvent.startHour as number,
             endHour: (specialEvent.startHour as number) + 2,
-            subjectItem: {} as SubjectItem,
+            subjectItem: {} as SubjectItemLegacy,
             roomName: specialEvent.roomName as string,
             activityType: Event.SPECIAL_EVENT,
             weekParity: WeekParity.BOTH,

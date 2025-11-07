@@ -8,7 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { RoomLegacy, SubjectItem, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
+import { RoomLegacy, SubjectItemLegacy, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
 import { Event, WeekParity } from '@free-spot/enums';
 import { AdminFacultyService } from '@free-spot-service/faculty';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -42,7 +42,7 @@ export class AdminRoomTimetableItemComponent implements OnInit {
 
   roomSig = input.required<RoomLegacy>();
   timetableItemSig = model.required<TimeTableItem>();
-  subjectListSig = input.required<SubjectItem[]>();
+  subjectListSig = input.required<SubjectItemLegacy[]>();
 
   startHourList: number[] = [8, 10, 12, 14, 16, 18];
   eventList: Event[] = Object.values(Event).filter((event: Event) => event !== Event.SPECIAL_EVENT);
@@ -62,7 +62,7 @@ export class AdminRoomTimetableItemComponent implements OnInit {
 
   displayError = (control: AbstractControl | null) => this._formErrorMessage.displayFormErrorMessage(control);
 
-  dysplaySubject(subjectItem: SubjectItem): string {
+  dysplaySubject(subjectItem: SubjectItemLegacy): string {
     if (subjectItem !== undefined && subjectItem !== null && Object.keys(subjectItem).length) {
       return subjectItem.shortName;
     }

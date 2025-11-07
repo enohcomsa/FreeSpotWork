@@ -67,7 +67,7 @@ export class AdminFloorDetailComponent implements OnInit {
   readonly editingRoomSig: Signal<Room | null> = computed(() => {
     const id = this.editingRoomIdSig();
     if (!id) return null;
-    return this.floorRoomList().find((room: Room) => room.id === id) ?? null;
+    return this.floorRoomListSig().find((room: Room) => room.id === id) ?? null;
   });
 
   //
@@ -92,8 +92,8 @@ export class AdminFloorDetailComponent implements OnInit {
     { weekDay: WeekDay.FRIDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.FRIDAY) },
   ]);
 
-  readonly floorRoomList: Signal<Room[]> = computed(() => this._adminRoomService.selectRoomsByFloorId(this.floorIdSig())());
-  readonly roomCardVMs = computed<RoomCardVM[]>(() => (this.floorRoomList()).map(toRoomCardVM));
+  readonly floorRoomListSig: Signal<Room[]> = computed(() => this._adminRoomService.selectRoomsByFloorId(this.floorIdSig())());
+  readonly roomCardVMs = computed<RoomCardVM[]>(() => (this.floorRoomListSig()).map(toRoomCardVM));
 
 
 

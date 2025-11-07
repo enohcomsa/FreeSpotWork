@@ -12,8 +12,6 @@
 export interface FloorResponseDTO { 
     buildingId: string;
     name: string;
-    totalSpotsNumber: number;
-    unavailableSpots: number;
     id: string;
 }
 

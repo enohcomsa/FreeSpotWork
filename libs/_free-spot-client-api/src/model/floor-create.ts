@@ -12,7 +12,5 @@
 export interface FloorCreateDTO { 
     buildingId: string;
     name: string;
-    totalSpotsNumber: number;
-    unavailableSpots: number;
 }
 

@@ -1,11 +1,5 @@
 import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
-import {
-  BuildingCreate,
-  BuildingUpdate,
-  BuildingResponse,
-  BuildingIdParam,
-
-} from "../../schemas/buildings.zod";
+import { BuildingCreate, BuildingUpdate, BuildingResponse, BuildingIdParam } from "../../schemas/buildings.zod";
 import { z } from "zod";
 
 

@@ -13,7 +13,7 @@ import {
 
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AdminRoomService } from '@free-spot-service/room';
-import { BookedEvent, FreeSpotUser, SemiGroup, SubjectItem, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
+import { BookedEvent, FreeSpotUser, SemiGroup, SubjectItemLegacy, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
 import { debounceTime } from 'rxjs';
 import { Event, WeekDay } from '@free-spot/enums';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -58,7 +58,7 @@ export class AdminSemisemiGroupTimetableComponent implements OnInit {
 
   userListSig: Signal<FreeSpotUser[]> = this._userService.userListSig;
   semiGroupSig = model.required<SemiGroup>();
-  subjectListSig = input.required<SubjectItem[]>();
+  subjectListSig = input.required<SubjectItemLegacy[]>();
   foundActivitiesSig: WritableSignal<TimetableActivityItem[]> = signal([]);
 
   startHourList: number[] = [8, 10, 12, 14, 16, 18];
@@ -102,7 +102,7 @@ export class AdminSemisemiGroupTimetableComponent implements OnInit {
   }
   displayError = (control: AbstractControl | null) => this._formErrorMessage.displayFormErrorMessage(control);
 
-  dysplaySubject(subjectItem: SubjectItem): string {
+  dysplaySubject(subjectItem: SubjectItemLegacy): string {
     if (subjectItem !== undefined && subjectItem !== null && Object.keys(subjectItem).length) {
       return subjectItem.shortName;
     }

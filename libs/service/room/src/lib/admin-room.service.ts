@@ -2,7 +2,7 @@ import { computed, DestroyRef, inject, Injectable, Signal, signal, WritableSigna
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CreateRoomCmd, Room, UpdateRoomCmd } from '@free-spot-domain/room';
 import { WeekDay } from '@free-spot/enums';
-import { RoomLegacy, SubjectItem, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
+import { RoomLegacy, SubjectItemLegacy, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
 import { SignalArrayUtil } from '@free-spot/util';
 import { HttpRoomService } from '@http-free-spot/room';
 import { Observable, take } from 'rxjs';
@@ -107,7 +107,7 @@ export class AdminRoomService {
    */
   getTimetableActivitiesByWeekDayAndSubject(
     weekDay: WeekDay,
-    subject: SubjectItem,
+    subject: SubjectItemLegacy,
   ): TimetableActivityItem[] {
     if (this._roomListSigLegacy()) {
       const weeDayTimetableActivities: TimetableActivityItem[] = (

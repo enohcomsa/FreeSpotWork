@@ -90,8 +90,6 @@ export class AdminBuildingDetailComponent implements OnInit {
     const newFloor: CreateFloorCmd = {
       buildingId: this.buildingIdSig(),
       name: this.addFloorFormControl.value,
-      totalSpotsNumber: 0,
-      unavailableSpots: 0,
     }
 
     // const updatedBuilding: BuildingLegacy = {

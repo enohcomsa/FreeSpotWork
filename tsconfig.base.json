@@ -47,6 +47,7 @@
       "@free-spot-service/floor": ["libs/service/floor/src/index.ts"],
       "@free-spot-service/group": ["libs/service/group/src/index.ts"],
       "@free-spot-service/room": ["libs/service/room/src/index.ts"],
+      "@free-spot-service/subject": ["libs/service/subject/src/index.ts"],
       "@free-spot-service/user": ["libs/service/user/src/index.ts"],
       "@free-spot/admin": ["libs/pages/admin/src/index.ts"],
       "@free-spot/api-client": ["libs/_free-spot-client-api/src/index.ts"],
@@ -65,6 +66,7 @@
       "@http-free-spot/floor": ["libs/http-free-spot/floor/src/index.ts"],
       "@http-free-spot/group": ["libs/http-free-spot/group/src/index.ts"],
       "@http-free-spot/room": ["libs/http-free-spot/room/src/index.ts"],
+      "@http-free-spot/subject": ["libs/http-free-spot/subject/src/index.ts"],
       "@http-free-spot/user": ["libs/http-free-spot/user/src/index.ts"]
     }
   },

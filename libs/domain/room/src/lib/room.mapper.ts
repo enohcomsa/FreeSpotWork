@@ -2,9 +2,6 @@ import { RoomCreateDTO, RoomResponseDTO, RoomUpdateDTO } from '@free-spot/api-cl
 import { CreateRoomCmd, UpdateRoomCmd } from './room.commands';
 import { Room } from './room.model';
 
-
-
-
 export function dtoToDomain(dto: RoomResponseDTO): Room {
   return {
     buildingId: dto.buildingId,

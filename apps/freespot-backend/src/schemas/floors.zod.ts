@@ -8,8 +8,6 @@ extendZodWithOpenApi(z);
 const FloorBase = strictObj({
   buildingId: ObjectIdStr,
   name: z.string().min(1),
-  totalSpotsNumber: z.number().int().min(0),
-  unavailableSpots: z.number().int().min(0),
 }).openapi("FloorCreate");
 
 export const FloorIdParam = z.object({ id: ObjectIdStr }).openapi("FloorIdParam");

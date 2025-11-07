@@ -8,7 +8,7 @@ export { FreeSpotUser } from './lib/free-spot-user.model';
 export { Group } from './lib/group.model';
 export { RoomLegacy } from './lib/room.model';
 export { SemiGroup } from './lib/semi-group.model';
-export { SubjectItem } from './lib/subject.model';
+export { SubjectItemLegacy } from './lib/subject.model';
 export { TimetableActivityItem } from './lib/timetable-activity-item.model';
 export { TimetableDayItem } from './lib/timetable-day-item.model';
 export { TimeTableItem } from './lib/timetable-item.model';

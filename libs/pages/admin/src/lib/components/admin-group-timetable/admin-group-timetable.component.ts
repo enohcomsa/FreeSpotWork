@@ -11,7 +11,7 @@ import {
   WritableSignal,
 } from '@angular/core';
 
-import { BookedEvent, FreeSpotUser, Group, SubjectItem, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
+import { BookedEvent, FreeSpotUser, Group, SubjectItemLegacy, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
 import { Event, WeekDay } from '@free-spot/enums';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -58,7 +58,7 @@ export class AdminGroupTimetableComponent implements OnInit {
 
   userListSig: Signal<FreeSpotUser[]> = this._userService.userListSig;
   groupSig = model.required<Group>();
-  subjectListSig = input.required<SubjectItem[]>();
+  subjectListSig = input.required<SubjectItemLegacy[]>();
   foundActivitiesSig: WritableSignal<TimetableActivityItem[]> = signal([]);
 
   startHourList: number[] = [8, 10, 12, 14, 16, 18];
@@ -103,7 +103,7 @@ export class AdminGroupTimetableComponent implements OnInit {
 
   displayError = (control: AbstractControl | null) => this._formErrorMessage.displayFormErrorMessage(control);
 
-  dysplaySubject(subjectItem: SubjectItem): string {
+  dysplaySubject(subjectItem: SubjectItemLegacy): string {
     if (subjectItem !== undefined && subjectItem !== null && Object.keys(subjectItem).length) {
       return subjectItem.shortName;
     }
