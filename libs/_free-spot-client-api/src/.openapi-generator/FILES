@@ -6,6 +6,7 @@ api.module.ts
 api/api.ts
 api/availability.service.ts
 api/bookings.service.ts
+api/buildings-cards.service.ts
 api/buildings.service.ts
 api/cohorts.service.ts
 api/faculties.service.ts
@@ -30,10 +31,14 @@ model/booking-response.ts
 model/booking-status.ts
 model/booking-update.ts
 model/building-base.ts
+model/building-card-floor.ts
+model/building-card-id-param.ts
+model/building-card.ts
 model/building-create.ts
 model/building-id-param.ts
 model/building-response.ts
 model/building-update.ts
+model/buildings-card-response.ts
 model/cohort-base.ts
 model/cohort-create.ts
 model/cohort-id-array.ts

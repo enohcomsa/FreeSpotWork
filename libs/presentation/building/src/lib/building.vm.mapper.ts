@@ -1,5 +1,5 @@
 import { Building } from '@free-spot-domain/building';
-import { BuildingCardFloorVM, BuildingCardVM } from './building-card.vm';
+import { BuildingCardFloorVM, BuildingCardVM } from './building.vm';
 import { Floor } from '@free-spot-domain/floor';
 
 

@@ -1,2 +1,2 @@
-export * from './lib/building-card.vm';
-export * from './lib/building-card.vm.mapper';
+export * from './lib/building.vm';
+export * from './lib/building.vm.mapper';

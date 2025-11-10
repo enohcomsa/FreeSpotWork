@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { BuildingCardVM } from '@free-spot-presentation/building';
+import { BuildingCardVM } from '@free-spot-presentation/building-card';
 
 @Component({
   selector: 'free-spot-admin-building-card',

@@ -33,6 +33,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { BuildingService } from '@free-spot-service/building';
+import { BuildingCardService } from '@free-spot-service/building-card';
 // import { FACULTY_LIST } from '@free-spot/constants';
 import { AdminFacultyService } from '@free-spot-service/faculty';
 import { UserService } from '@free-spot-service/user';
@@ -47,7 +48,7 @@ import { filter, Subscription } from 'rxjs';
 import { AdminRoomService } from '@free-spot-service/room';
 import { BookingService } from '@free-spot-service/booking';
 import { Building, CreateBuildingCmd, UpdateBuildingCmd } from '@free-spot-domain/building';
-import { BuildingCardVM, toBuildingCardFloorVM, toBuildingCardVM } from '@free-spot-presentation/building';
+import { BuildingCardVM} from '@free-spot-presentation/building-card';
 import { Floor } from '@free-spot-domain/floor';
 import { AdminFloorService } from '@free-spot-service/floor';
 
@@ -78,6 +79,7 @@ export class AdminComponent implements OnInit, OnDestroy {
   private _formBuilder: FormBuilder = inject(FormBuilder);
   private _adminFacultyService: AdminFacultyService = inject(AdminFacultyService);
   private _adminBuildingService: BuildingService = inject(BuildingService);
+  private _adminBuildingCardService: BuildingCardService = inject(BuildingCardService);
   private _userService: UserService = inject(UserService);
   private _confirmService: ConfirmModalService = inject(ConfirmModalService);
   private _formErrorMessage: FormErrorMessage = inject(FormErrorMessage);
@@ -100,12 +102,7 @@ export class AdminComponent implements OnInit, OnDestroy {
   oldEventSig: WritableSignal<BuildingLegacy> = signal({} as BuildingLegacy);
   subscriptionList: Subscription[] = [];
 
-  readonly buildingCardVMs = computed<BuildingCardVM[]>(() => {
-    return this.buildingListSig().map((building: Building) => ({
-      ...toBuildingCardVM(building),
-      floors: this.floorListSig().filter((floor: Floor) => floor.buildingId === building.id).map(toBuildingCardFloorVM),
-    }));
-  });
+  readonly buildingCardVMs: Signal<BuildingCardVM[]> = this._adminBuildingCardService.buildingCardListSig;
 
 
   addingYear = false;
@@ -138,6 +135,7 @@ export class AdminComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this._adminBuildingService.init();
+    this._adminBuildingCardService.init();
     this._adminFacultyService.init();
     this._userService.init();
     this._adminEventService.init();
