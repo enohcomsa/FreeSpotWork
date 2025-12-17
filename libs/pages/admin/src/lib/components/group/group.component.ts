@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, OnInit, Si
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSlideToggle, MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { DynamicChipListComponent, TimetableItemComponent } from '@free-spot/ui';
-import { Faculty, FreeSpotUser, Group, SemiGroup, TimetableActivityItem, TimeTableItem, Year } from '@free-spot/models';
+import { Faculty, FreeSpotUser, Group, SemiGroup, TimetableActivityItemLegacy, TimeTableItemLecagy, Year } from '@free-spot/models';
 import { AdminFacultyService } from '@free-spot-service/faculty';
 import { FormsModule } from '@angular/forms';
 import { BuildingService } from '@free-spot-service/building';
@@ -58,7 +58,7 @@ export class GroupComponent implements OnInit {
   addingYear = false;
   editingYear = false;
 
-  emptyTimetable: Signal<TimeTableItem[]> = computed(() => [
+  emptyTimetable: Signal<TimeTableItemLecagy[]> = computed(() => [
     { weekDay: WeekDay.MONDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.MONDAY) },
     { weekDay: WeekDay.TUESDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.TUESDAY) },
     { weekDay: WeekDay.WEDNESDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.WEDNESDAY) },
@@ -155,10 +155,10 @@ export class GroupComponent implements OnInit {
         currentYear: this.yearSig().name,
         group: this.groupSig().name,
       };
-      updatedGroup.timetable = updatedGroup.timetable.map((timetableItem: TimeTableItem) => {
+      updatedGroup.timetable = updatedGroup.timetable.map((timetableItem: TimeTableItemLecagy) => {
         return {
           ...timetableItem,
-          activities: timetableItem.activities?.map((timetableActivity: TimetableActivityItem) => {
+          activities: timetableItem.activities?.map((timetableActivity: TimetableActivityItemLegacy) => {
             return {
               ...timetableActivity,
               freeSpots: timetableActivity.freeSpots - 1,
@@ -192,10 +192,10 @@ export class GroupComponent implements OnInit {
       };
       newUser.bookingList = [];
 
-      updatedGroup.timetable = updatedGroup.timetable.map((timetableItem: TimeTableItem) => {
+      updatedGroup.timetable = updatedGroup.timetable.map((timetableItem: TimeTableItemLecagy) => {
         return {
           ...timetableItem,
-          activities: timetableItem.activities?.map((timetableActivity: TimetableActivityItem) => {
+          activities: timetableItem.activities?.map((timetableActivity: TimetableActivityItemLegacy) => {
             return {
               ...timetableActivity,
               freeSpots: timetableActivity.freeSpots + 1,
@@ -241,10 +241,10 @@ export class GroupComponent implements OnInit {
         semiGroup: oldSemiGroup.name,
       };
 
-      updatedSemiGroup.timetable = updatedSemiGroup.timetable.map((timetableItem: TimeTableItem) => {
+      updatedSemiGroup.timetable = updatedSemiGroup.timetable.map((timetableItem: TimeTableItemLecagy) => {
         return {
           ...timetableItem,
-          activities: timetableItem.activities?.map((timetableActivity: TimetableActivityItem) => {
+          activities: timetableItem.activities?.map((timetableActivity: TimetableActivityItemLegacy) => {
             return {
               ...timetableActivity,
               freeSpots: timetableActivity.freeSpots - 1,
@@ -278,10 +278,10 @@ export class GroupComponent implements OnInit {
         semiGroup: undefined,
       };
       newUser.bookingList = [];
-      updatedSemiGroup.timetable = updatedSemiGroup.timetable.map((timetableItem: TimeTableItem) => {
+      updatedSemiGroup.timetable = updatedSemiGroup.timetable.map((timetableItem: TimeTableItemLecagy) => {
         return {
           ...timetableItem,
-          activities: timetableItem.activities?.map((timetableActivity: TimetableActivityItem) => {
+          activities: timetableItem.activities?.map((timetableActivity: TimetableActivityItemLegacy) => {
             return {
               ...timetableActivity,
               freeSpots: timetableActivity.freeSpots + 1,

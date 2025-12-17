@@ -4,7 +4,7 @@ import swaggerUi from "swagger-ui-express";
 import { OpenAPIRegistry, OpenApiGeneratorV3 } from "@asteasolutions/zod-to-openapi";
 import {
   registerAvailability, registerBookings, registerBuildings, registerBuildingsCards, registerCohorts,
-  registerFaculties, registerFloors, registerPrograms, registerProgramYears, registerRooms, registerSubjects, registerTimetableActivities, registerUsers
+  registerFaculties, registerFloors, registerPrograms, registerProgramYears, registerRooms, registerSubjects, registerTimetableActivities, registerTimetableActivityCards, registerUsers
 } from "./registrars";
 
 
@@ -17,6 +17,7 @@ export function setupSwagger(app: Express) {
   registerSubjects(registry);
   registerRooms(registry);
   registerTimetableActivities(registry);
+  registerTimetableActivityCards(registry);
   registerUsers(registry);
   registerAvailability(registry);
   registerBuildings(registry);
@@ -37,6 +38,7 @@ export function setupSwagger(app: Express) {
       { name: "Subjects" },
       { name: "Rooms" },
       { name: "Timetable Activities" },
+      { name: "Timetable Activity Cards" },
       { name: "Users" },
       { name: "Availability" },
       { name: "Buildings" },

@@ -9,6 +9,7 @@
  */
 
 
-export interface CohortIdArrayDTO { 
+export interface TimetableActivityCardIdParamDTO { 
+    id: string;
 }
 

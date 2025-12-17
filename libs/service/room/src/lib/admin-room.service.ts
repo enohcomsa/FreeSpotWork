@@ -2,7 +2,7 @@ import { computed, DestroyRef, inject, Injectable, Signal, signal, WritableSigna
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CreateRoomCmd, Room, UpdateRoomCmd } from '@free-spot-domain/room';
 import { WeekDay } from '@free-spot/enums';
-import { RoomLegacy, SubjectItemLegacy, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
+import { RoomLegacy, SubjectItemLegacy, TimetableActivityItemLegacy, TimeTableItemLecagy } from '@free-spot/models';
 import { SignalArrayUtil } from '@free-spot/util';
 import { HttpRoomService } from '@http-free-spot/room';
 import { Observable, take } from 'rxjs';
@@ -108,23 +108,23 @@ export class AdminRoomService {
   getTimetableActivitiesByWeekDayAndSubject(
     weekDay: WeekDay,
     subject: SubjectItemLegacy,
-  ): TimetableActivityItem[] {
+  ): TimetableActivityItemLegacy[] {
     if (this._roomListSigLegacy()) {
-      const weeDayTimetableActivities: TimetableActivityItem[] = (
+      const weeDayTimetableActivities: TimetableActivityItemLegacy[] = (
         [
           ...this._roomListSigLegacy().map((room: RoomLegacy) =>
             room.timetable.filter(
-              (timetableItem: TimeTableItem) => timetableItem.weekDay === weekDay && !!timetableItem.activities,
+              (timetableItem: TimeTableItemLecagy) => timetableItem.weekDay === weekDay && !!timetableItem.activities,
             ),
           ),
-        ].flat(Infinity) as TimeTableItem[]
+        ].flat(Infinity) as TimeTableItemLecagy[]
       )
-        .map((timetableItem: TimeTableItem) => timetableItem.activities)
-        .flat(Infinity) as TimetableActivityItem[];
+        .map((timetableItem: TimeTableItemLecagy) => timetableItem.activities)
+        .flat(Infinity) as TimetableActivityItemLegacy[];
 
       const foundTimetableActivities =
         weeDayTimetableActivities?.filter(
-          (timetableActivity: TimetableActivityItem) => timetableActivity.subjectItem?.name === subject?.name,
+          (timetableActivity: TimetableActivityItemLegacy) => timetableActivity.subjectItem?.name === subject?.name,
         ) || [];
       return foundTimetableActivities;
     } else {
@@ -137,7 +137,7 @@ export class AdminRoomService {
    * Use dedicated endpoints and server-side concurrency controls.
    */
   updateTimetableActivitySpots(
-    changedTimetableActivity: TimetableActivityItem,
+    changedTimetableActivity: TimetableActivityItemLegacy,
     addingBooking: boolean,
   ): void {
     const newRoomList: RoomLegacy[] = this._roomListSigLegacy().map((room: RoomLegacy) => {
@@ -183,15 +183,15 @@ export class AdminRoomService {
    */
   private _updateTimetableActivityFromRoom(
     room: RoomLegacy,
-    changedTimetableActivity: TimetableActivityItem,
+    changedTimetableActivity: TimetableActivityItemLegacy,
     addingBooking: boolean,
   ): RoomLegacy {
     room = {
       ...room,
-      timetable: room.timetable.map((timeTableItem: TimeTableItem) => {
+      timetable: room.timetable.map((timeTableItem: TimeTableItemLecagy) => {
         return {
           ...timeTableItem,
-          activities: timeTableItem.activities?.map((timetableActivity: TimetableActivityItem) => {
+          activities: timeTableItem.activities?.map((timetableActivity: TimetableActivityItemLegacy) => {
             return this._checkTimetebleActivityEquality(changedTimetableActivity, timetableActivity)
               ? {
                 ...timetableActivity,
@@ -211,8 +211,8 @@ export class AdminRoomService {
    * @deprecated Legacy Firebase-era equality helper.
    */
   private _checkTimetebleActivityEquality(
-    timetableActivity1: TimetableActivityItem,
-    timetableActivity2: TimetableActivityItem,
+    timetableActivity1: TimetableActivityItemLegacy,
+    timetableActivity2: TimetableActivityItemLegacy,
   ): boolean {
     return (
       timetableActivity1.roomName === timetableActivity2.roomName &&

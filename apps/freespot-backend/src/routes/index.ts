@@ -11,6 +11,7 @@ import cohorts from "./cohorts.routes";
 import users from "./users.routes";
 import bookings from "./bookings.routes";
 import timetableActivities from "./timetable-activities.routes";
+import timetableActivitiesCards from "./timetable-activities.card.routes";
 import availability from "./availability.routes";
 
 const api = Router();
@@ -27,6 +28,7 @@ api.use("/cohorts", cohorts);
 api.use("/users", users);
 api.use("/bookings", bookings);
 api.use("/timetable-activities", timetableActivities);
+api.use("/timetable-activities-cards", timetableActivitiesCards);
 api.use("/availability", availability);
 
 export default api;

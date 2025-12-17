@@ -52,20 +52,6 @@ export const timetableActivitiesSpec: CollectionSpec = {
       busySpots: { bsonType: "int", minimum: 0 },
       freeSpots: { bsonType: "int", minimum: 0 }
     },
-    oneOf: [
-      {
-        properties: {
-          activityType: { enum: ["SPECIAL_EVENT"] },
-          cohortIds: { minItems: 0 }
-        }
-      },
-      {
-        properties: {
-          activityType: { enum: ["LABORATORY", "COURSE", "PROJECT", "SEMINAR"] },
-          cohortIds: { minItems: 1 }
-        }
-      }
-    ],
     additionalProperties: false
   },
   indexes: [

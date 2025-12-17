@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
-import { ActivityType, CohortIdArray, ObjectIdStr, WeekDay, WeekParity } from "./common.zod";
+import { ActivityType, ObjectIdStr, WeekDay, WeekParity } from "./common.zod";
 import { strictObj, nonEmptyDefinedPatch } from "../utils/zod-helpers";
 
 extendZodWithOpenApi(z);
@@ -11,7 +11,7 @@ const TimetableActivityBaseRaw = strictObj({
   date: z.string(),
   weekDay: WeekDay,
   activityType: ActivityType,
-  cohortIds: CohortIdArray,
+  cohortIds: z.array(ObjectIdStr),
   startHour: z.number().int().min(0).max(23),
   endHour: z.number().int().min(1).max(24),
   weekParity: WeekParity,
@@ -22,10 +22,8 @@ const TimetableActivityBaseRaw = strictObj({
 });
 
 export const TimetableActivityBase = TimetableActivityBaseRaw.openapi("TimetableActivityBase");
-export const TimetableActivityCreate = TimetableActivityBaseRaw.refine((d) =>
-  (d.activityType === "SPECIAL_EVENT" && d.cohortIds.length >= 0) ||
-  (["LABORATORY", "COURSE", "PROJECT", "SEMINAR"].includes(d.activityType) && d.cohortIds.length >= 1),
-  { message: "Invalid cohortIds for activityType" }).openapi("TimetableActivityCreate");
+export const TimetableActivityCreate = TimetableActivityBaseRaw.refine((d) => d.cohortIds.length === 0,
+  { message: "cohortIds must be empty on create" }).openapi("TimetableActivityCreate");
 export const TimetableActivityIdParam = z.object({ id: ObjectIdStr }).openapi("TimetableActivityIdParam");
 export const TimetableActivityUpdate = nonEmptyDefinedPatch(TimetableActivityBaseRaw.partial()).openapi("TimetableActivityUpdate");
 export const TimetableActivityResponse = TimetableActivityBaseRaw.extend({ id: ObjectIdStr }).openapi("TimetableActivityResponse");

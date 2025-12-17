@@ -1,4 +1,4 @@
-import { TimeTableItem } from './timetable-item.model';
+import { TimeTableItemLecagy } from './timetable-item.model';
 import { SubjectItemLegacy } from './subject.model';
 
 /**
@@ -10,7 +10,7 @@ export interface RoomLegacy {
   name: string;
   floorName: string;
   subjectList: SubjectItemLegacy[];
-  timetable: TimeTableItem[];
+  timetable: TimeTableItemLecagy[];
   totalSpotsNumber: number;
   unavailableSpots: number;
 }

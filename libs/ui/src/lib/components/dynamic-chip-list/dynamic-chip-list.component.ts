@@ -8,7 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TimeTableItem } from '@free-spot/models';
+import { TimeTableItemLecagy } from '@free-spot/models';
 import { WeekDay } from '@free-spot/enums';
 import { AppDateService } from '@free-spot-service/app-date';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -73,7 +73,7 @@ export class DynamicChipListComponent<T> implements OnInit {
   addItemFormControl = this._formBuilder.nonNullable.control({} as T, Validators.required);
   addingItem = false;
 
-  emptyTimetable: Signal<TimeTableItem[]> = computed(() => [
+  emptyTimetable: Signal<TimeTableItemLecagy[]> = computed(() => [
     { weekDay: WeekDay.MONDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.MONDAY) },
     { weekDay: WeekDay.TUESDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.TUESDAY) },
     { weekDay: WeekDay.WEDNESDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.WEDNESDAY) },

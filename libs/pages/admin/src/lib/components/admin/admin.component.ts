@@ -22,7 +22,7 @@ import {
   FreeSpotUser,
   RoomLegacy,
   SubjectItemLegacy,
-  TimetableActivityItem,
+  TimetableActivityItemLegacy,
   Year,
 } from '@free-spot/models';
 import { AddItemCardComponent, DynamicChipListComponent } from '@free-spot/ui';
@@ -239,13 +239,6 @@ export class AdminComponent implements OnInit, OnDestroy {
   }
 
   onAddBuilding(): void {
-    // const newBuilding: BuildingLegacy = this._createBuilding(
-    //   this.addBuildingFormGroup.controls['name'].value,
-    //   this.addBuildingFormGroup.controls['adress'].value,
-    // );
-
-    // this._adminBuildingService.addBuilding(newBuilding);
-
     const newBuilding: CreateBuildingCmd = {
       name: this.addBuildingFormGroup.controls['name'].value,
       address: this.addBuildingFormGroup.controls['adress'].value,
@@ -356,7 +349,7 @@ export class AdminComponent implements OnInit, OnDestroy {
       startHour: this.addEventFormGroup.controls['startHour'].value,
     };
 
-    const timetableActivityFound: TimetableActivityItem = {
+    const timetableActivityFound: TimetableActivityItemLegacy = {
       startHour: updatedEvent.startHour as number,
       endHour: (updatedEvent.startHour as number) + 2,
       subjectItem: {} as SubjectItemLegacy,
@@ -404,15 +397,6 @@ export class AdminComponent implements OnInit, OnDestroy {
 
     this.editingEvent = false;
     this.addingEvent = false;
-  }
-
-  private _createBuilding(buildingName: string, buildingAdress: string): BuildingLegacy {
-    return {
-      name: buildingName,
-      adress: buildingAdress,
-      floorList: [],
-      specialEvent: false,
-    };
   }
 
   private _getBuildingRoomList(building: BuildingLegacy): RoomLegacy[] {

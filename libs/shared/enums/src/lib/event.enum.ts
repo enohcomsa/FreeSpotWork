@@ -5,3 +5,12 @@ export enum Event {
   SEMINAR = 'SEMINAR',
   SPECIAL_EVENT = 'SPECIAL_EVENT',
 }
+
+export enum ActivityType {
+  LABORATORY = 'LABORATORY',
+  COURSE = 'COURSE',
+  PROJECT = 'PROJECT',
+  SEMINAR = 'SEMINAR',
+  SPECIAL_EVENT = 'SPECIAL_EVENT'
+}
+

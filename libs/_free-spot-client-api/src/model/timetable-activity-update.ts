@@ -10,7 +10,6 @@
 import { WeekParityDTO } from './week-parity';
 import { ActivityTypeDTO } from './activity-type';
 import { WeekDayDTO } from './week-day';
-import { CohortIdArrayDTO } from './cohort-id-array';
 
 
 export interface TimetableActivityUpdateDTO { 
@@ -19,7 +18,7 @@ export interface TimetableActivityUpdateDTO {
     date?: string;
     weekDay?: WeekDayDTO;
     activityType?: ActivityTypeDTO;
-    cohortIds?: CohortIdArrayDTO;
+    cohortIds?: Array<string>;
     startHour?: number;
     endHour?: number;
     weekParity?: WeekParityDTO;

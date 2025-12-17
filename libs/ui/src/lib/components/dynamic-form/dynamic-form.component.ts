@@ -27,8 +27,8 @@ import {
   FreeSpotUser,
   RoomLegacy,
   SubjectItemLegacy,
-  TimetableActivityItem,
-  TimeTableItem,
+  TimetableActivityItemLegacy,
+  TimeTableItemLecagy,
 } from '@free-spot/models';
 import { SUBJECT_LIST } from '@free-spot/constants';
 import { UserService } from '@free-spot-service/user';
@@ -101,8 +101,8 @@ export class DynamicFormComponent implements OnInit {
       )
       .filter((event: BuildingLegacy) => new Date().getTime() - new Date(event.date as Date).getTime() <= 0),
   );
-  timetableActivityListFoundSig: WritableSignal<TimetableActivityItem[]> = signal([]);
-  oldTimetableActivitySig: WritableSignal<TimetableActivityItem> = signal({} as TimetableActivityItem);
+  timetableActivityListFoundSig: WritableSignal<TimetableActivityItemLegacy[]> = signal([]);
+  oldTimetableActivitySig: WritableSignal<TimetableActivityItemLegacy> = signal({} as TimetableActivityItemLegacy);
 
   ngOnInit(): void {
     this._userService.init();
@@ -137,7 +137,7 @@ export class DynamicFormComponent implements OnInit {
 
   onSubmit(): void {
     if (this.searchForm.controls['eventBooking'].value !== Event.SPECIAL_EVENT) {
-      let timetableActivityListFound: TimetableActivityItem[] = [];
+      let timetableActivityListFound: TimetableActivityItemLegacy[] = [];
       const oldBookedEvent: BookedEvent =
         this.currentUserSig().bookingList.find(
           (bookedEvent: BookedEvent) =>
@@ -152,8 +152,8 @@ export class DynamicFormComponent implements OnInit {
               (roomSubject: SubjectItemLegacy) => roomSubject.name === this.searchForm.controls['subject'].value.name,
             )
           ) {
-            room.timetable.forEach((timetableItem: TimeTableItem) => {
-              timetableItem.activities?.forEach((timetableActivity: TimetableActivityItem) => {
+            room.timetable.forEach((timetableItem: TimeTableItemLecagy) => {
+              timetableItem.activities?.forEach((timetableActivity: TimetableActivityItemLegacy) => {
                 if (
                   timetableActivity.subjectItem.name === this.searchForm.controls['subject'].value.name &&
                   timetableActivity.activityType === this.searchForm.controls['eventBooking'].value
@@ -167,18 +167,18 @@ export class DynamicFormComponent implements OnInit {
 
         this.oldTimetableActivitySig.set(
           timetableActivityListFound.find(
-            (timetableActivity: TimetableActivityItem) =>
+            (timetableActivity: TimetableActivityItemLegacy) =>
               timetableActivity.startHour === oldBookedEvent.startHour &&
               timetableActivity.date === oldBookedEvent.date &&
               timetableActivity.weekParity === oldBookedEvent.weekParity,
-          ) || ({} as TimetableActivityItem),
+          ) || ({} as TimetableActivityItemLegacy),
         );
 
-        timetableActivityListFound = timetableActivityListFound.filter((timetableActivity: TimetableActivityItem) => {
+        timetableActivityListFound = timetableActivityListFound.filter((timetableActivity: TimetableActivityItemLegacy) => {
           return timetableActivity.weekParity === WeekParity.BOTH || timetableActivity.weekParity === this.weekParitySig();
         });
 
-        timetableActivityListFound = timetableActivityListFound.filter((timetableActivity: TimetableActivityItem) =>
+        timetableActivityListFound = timetableActivityListFound.filter((timetableActivity: TimetableActivityItemLegacy) =>
           timetableActivity.startHour !== oldBookedEvent.startHour
             ? true
             : timetableActivity.date !== oldBookedEvent.date
@@ -187,18 +187,18 @@ export class DynamicFormComponent implements OnInit {
         );
 
         timetableActivityListFound = timetableActivityListFound.filter(
-          (timetableActivity: TimetableActivityItem) =>
+          (timetableActivity: TimetableActivityItemLegacy) =>
             new Date().setHours(0, 0, 0, 0) - new Date(timetableActivity.date).getTime() <= 0,
         );
 
-        timetableActivityListFound = timetableActivityListFound.filter((timetableActivity: TimetableActivityItem) =>
+        timetableActivityListFound = timetableActivityListFound.filter((timetableActivity: TimetableActivityItemLegacy) =>
           new Date().setHours(0, 0, 0, 0) - new Date(timetableActivity.date).getTime() === 0
             ? new Date().getHours() < timetableActivity.startHour
             : true,
         );
 
         timetableActivityListFound = timetableActivityListFound.filter(
-          (timetableActivity: TimetableActivityItem) => timetableActivity.freeSpots > 0,
+          (timetableActivity: TimetableActivityItemLegacy) => timetableActivity.freeSpots > 0,
         );
       }
 
@@ -213,7 +213,7 @@ export class DynamicFormComponent implements OnInit {
       if (!Object.keys(oldBookedSpecialEvent).length) {
         const specialEvent: BuildingLegacy = this.searchForm.controls['event'].value;
 
-        const timetableActivityListFound: TimetableActivityItem[] = [
+        const timetableActivityListFound: TimetableActivityItemLegacy[] = [
           {
             startHour: specialEvent.startHour as number,
             endHour: (specialEvent.startHour as number) + 2,

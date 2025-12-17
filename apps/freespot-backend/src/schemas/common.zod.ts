@@ -20,10 +20,6 @@ export const SubjectIdArray = z.array(ObjectIdStr).superRefine((arr, ctx) => {
   if (new Set(arr).size !== arr.length) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "subjectList must contain unique ids" });
 }).openapi("SubjectIdArray");
 
-export const CohortIdArray = z.array(ObjectIdStr).superRefine((arr, ctx) => {
-  if (new Set(arr).size !== arr.length) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "cohortIds must contain unique ids" });
-}).openapi("CohortIdArray");
-
 export const Source = z.object({ type: SourceType, id: ObjectIdStr }).strict().openapi("Source");
 
 export type ObjectIdStrT = z.infer<typeof ObjectIdStr>;
@@ -34,7 +30,6 @@ export type SourceT = z.infer<typeof Source>;
 export type CohortTypeT = z.infer<typeof CohortType>;
 export type DegreeT = z.infer<typeof Degree>;
 export type SubjectIdArrayT = z.infer<typeof SubjectIdArray>;
-export type CohortIdArrayT = z.infer<typeof CohortIdArray>;
 export type WeekDayT = z.infer<typeof WeekDay>;
 export type ActivityTypeT = z.infer<typeof ActivityType>;
 export type WeekParityT = z.infer<typeof WeekParity>;

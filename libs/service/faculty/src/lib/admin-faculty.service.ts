@@ -1,5 +1,5 @@
 import { computed, inject, Injectable, signal, Signal, WritableSignal } from '@angular/core';
-import { Faculty, Group, SemiGroup, TimetableActivityItem, TimeTableItem, Year } from '@free-spot/models';
+import { Faculty, Group, SemiGroup, TimetableActivityItemLegacy, TimeTableItemLecagy, Year } from '@free-spot/models';
 import { SignalArrayUtil } from '@free-spot/util';
 import { HttpFacultyService } from '@http-free-spot/faculty';
 import { take } from 'rxjs';
@@ -55,7 +55,7 @@ export class AdminFacultyService {
     });
   }
 
-  removeDeletedTimetableActivity(removedTimetableActivity: TimetableActivityItem): void {
+  removeDeletedTimetableActivity(removedTimetableActivity: TimetableActivityItemLegacy): void {
     const newFacultyList: Faculty[] = this._facultyListSig().map((faculty: Faculty) => {
       return {
         ...faculty,
@@ -93,7 +93,7 @@ export class AdminFacultyService {
     this._httpFacultyService.storeFacultyList(this._facultyListSig());
   }
 
-  updateTimetableActivitySpots(changedTimetableActivity: TimetableActivityItem, addingBooking: boolean): void {
+  updateTimetableActivitySpots(changedTimetableActivity: TimetableActivityItemLegacy, addingBooking: boolean): void {
     const newFacultyList: Faculty[] = this._facultyListSig().map((faculty: Faculty) => {
       return {
         ...faculty,
@@ -129,17 +129,17 @@ export class AdminFacultyService {
     this._httpFacultyService.storeFacultyList(this._facultyListSig());
   }
 
-  private _removeTimetableActivityFromGroup(group: Group, removedTimetableActivity: TimetableActivityItem): Group {
+  private _removeTimetableActivityFromGroup(group: Group, removedTimetableActivity: TimetableActivityItemLegacy): Group {
     if (group.semigroups !== null && group.semigroups !== undefined) {
       group = {
         ...group,
         semigroups: group.semigroups.map((semigroup: SemiGroup) => {
           return {
             ...semigroup,
-            timetable: semigroup.timetable.map((timeTableItem: TimeTableItem) => {
+            timetable: semigroup.timetable.map((timeTableItem: TimeTableItemLecagy) => {
               return {
                 ...timeTableItem,
-                activities: timeTableItem.activities?.filter((timetableActivity: TimetableActivityItem) => {
+                activities: timeTableItem.activities?.filter((timetableActivity: TimetableActivityItemLegacy) => {
                   return !this._checkTimetebleActivityEquality(timetableActivity, removedTimetableActivity);
                 }),
               };
@@ -150,10 +150,10 @@ export class AdminFacultyService {
     } else {
       group = {
         ...group,
-        timetable: group.timetable.map((timeTableItem: TimeTableItem) => {
+        timetable: group.timetable.map((timeTableItem: TimeTableItemLecagy) => {
           return {
             ...timeTableItem,
-            activities: timeTableItem.activities?.filter((timetableActivity: TimetableActivityItem) => {
+            activities: timeTableItem.activities?.filter((timetableActivity: TimetableActivityItemLegacy) => {
               return !this._checkTimetebleActivityEquality(timetableActivity, removedTimetableActivity);
             }),
           };
@@ -171,11 +171,11 @@ export class AdminFacultyService {
         semigroups: group.semigroups.map((semigroup: SemiGroup) => {
           return {
             ...semigroup,
-            timetable: semigroup.timetable.map((timeTableItem: TimeTableItem) => {
+            timetable: semigroup.timetable.map((timeTableItem: TimeTableItemLecagy) => {
               return {
                 ...timeTableItem,
                 activities: timeTableItem.activities?.filter(
-                  (timetableActivity: TimetableActivityItem) => timetableActivity.roomName !== deletedRoomName,
+                  (timetableActivity: TimetableActivityItemLegacy) => timetableActivity.roomName !== deletedRoomName,
                 ),
               };
             }),
@@ -185,11 +185,11 @@ export class AdminFacultyService {
     } else {
       group = {
         ...group,
-        timetable: group.timetable.map((timeTableItem: TimeTableItem) => {
+        timetable: group.timetable.map((timeTableItem: TimeTableItemLecagy) => {
           return {
             ...timeTableItem,
             activities: timeTableItem.activities?.filter(
-              (timetableActivity: TimetableActivityItem) => timetableActivity.roomName !== deletedRoomName,
+              (timetableActivity: TimetableActivityItemLegacy) => timetableActivity.roomName !== deletedRoomName,
             ),
           };
         }),
@@ -201,7 +201,7 @@ export class AdminFacultyService {
 
   private _updateTimetableActivityFromGroup(
     group: Group,
-    changedTimetableActivity: TimetableActivityItem,
+    changedTimetableActivity: TimetableActivityItemLegacy,
     addingBooking: boolean,
   ): Group {
     if (group.semigroups !== null && group.semigroups !== undefined) {
@@ -210,10 +210,10 @@ export class AdminFacultyService {
         semigroups: group.semigroups.map((semigroup: SemiGroup) => {
           return {
             ...semigroup,
-            timetable: semigroup.timetable.map((timeTableItem: TimeTableItem) => {
+            timetable: semigroup.timetable.map((timeTableItem: TimeTableItemLecagy) => {
               return {
                 ...timeTableItem,
-                activities: timeTableItem.activities?.map((timetableActivity: TimetableActivityItem) => {
+                activities: timeTableItem.activities?.map((timetableActivity: TimetableActivityItemLegacy) => {
                   return this._checkTimetebleActivityEquality(changedTimetableActivity, timetableActivity)
                     ? {
                         ...timetableActivity,
@@ -230,10 +230,10 @@ export class AdminFacultyService {
     } else {
       group = {
         ...group,
-        timetable: group.timetable.map((timeTableItem: TimeTableItem) => {
+        timetable: group.timetable.map((timeTableItem: TimeTableItemLecagy) => {
           return {
             ...timeTableItem,
-            activities: timeTableItem.activities?.map((timetableActivity: TimetableActivityItem) => {
+            activities: timeTableItem.activities?.map((timetableActivity: TimetableActivityItemLegacy) => {
               return this._checkTimetebleActivityEquality(changedTimetableActivity, timetableActivity)
                 ? {
                     ...timetableActivity,
@@ -250,8 +250,8 @@ export class AdminFacultyService {
   }
 
   private _checkTimetebleActivityEquality(
-    timetableActivity1: TimetableActivityItem,
-    timetableActivity2: TimetableActivityItem,
+    timetableActivity1: TimetableActivityItemLegacy,
+    timetableActivity2: TimetableActivityItemLegacy,
   ): boolean {
     return (
       timetableActivity1.roomName === timetableActivity2.roomName &&

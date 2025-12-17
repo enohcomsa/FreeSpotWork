@@ -1,5 +1,5 @@
 import { computed, DestroyRef, inject, Injectable, signal, Signal, WritableSignal } from '@angular/core';
-import { BuildingLegacy, FloorLegacy, RoomLegacy, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
+import { BuildingLegacy, FloorLegacy, RoomLegacy, TimetableActivityItemLegacy, TimeTableItemLecagy } from '@free-spot/models';
 import { SignalArrayUtil } from '@free-spot/util';
 import { HttpBuildingService } from '@http-free-spot/building';
 import { Building } from '@free-spot-domain/building';
@@ -80,7 +80,7 @@ export class BuildingService {
   }
 
   /** @deprecated Legacy Firebase-era mutation of nested timetable state. */
-  updateTimetableActivitySpots(changedTimetableActivity: TimetableActivityItem, addingBooking: boolean): void {
+  updateTimetableActivitySpots(changedTimetableActivity: TimetableActivityItemLegacy, addingBooking: boolean): void {
     const newBuildingList: BuildingLegacy[] = this._buildingListSigLegacy().map((building: BuildingLegacy) => {
       return {
         ...building,
@@ -120,15 +120,15 @@ export class BuildingService {
 
   private _updateTimetableActivityFromRoom(
     room: RoomLegacy,
-    changedTimetableActivity: TimetableActivityItem,
+    changedTimetableActivity: TimetableActivityItemLegacy,
     addingBooking: boolean,
   ): RoomLegacy {
     const updated: RoomLegacy = {
       ...room,
-      timetable: room.timetable.map((timeTableItem: TimeTableItem) => {
+      timetable: room.timetable.map((timeTableItem: TimeTableItemLecagy) => {
         return {
           ...timeTableItem,
-          activities: timeTableItem.activities?.map((timetableActivity: TimetableActivityItem) => {
+          activities: timeTableItem.activities?.map((timetableActivity: TimetableActivityItemLegacy) => {
             return this._checkTimetebleActivityEquality(changedTimetableActivity, timetableActivity)
               ? {
                 ...timetableActivity,
@@ -144,8 +144,8 @@ export class BuildingService {
   }
 
   private _checkTimetebleActivityEquality(
-    timetableActivity1: TimetableActivityItem,
-    timetableActivity2: TimetableActivityItem,
+    timetableActivity1: TimetableActivityItemLegacy,
+    timetableActivity2: TimetableActivityItemLegacy,
   ): boolean {
     return (
       timetableActivity1.roomName === timetableActivity2.roomName &&

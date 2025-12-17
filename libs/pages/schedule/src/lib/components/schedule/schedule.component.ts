@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, OnInit, Signal } from '@angular/core';
 
 import { TimetableItemComponent } from '@free-spot/ui';
-import { FreeSpotUser, Group, SemiGroup, TimeTableItem } from '@free-spot/models';
+import { FreeSpotUser, Group, SemiGroup, TimeTableItemLecagy } from '@free-spot/models';
 import { WeekDay } from '@free-spot/enums';
 import { UserService } from '@free-spot-service/user';
 import { AdminFacultyService } from '@free-spot-service/faculty';
@@ -28,9 +28,9 @@ export class ScheduleComponent implements OnInit {
   ).email;
 
   currentUserSig: Signal<FreeSpotUser> = this._userService.getFreeSpotUserByEmail(this._currentUserEmail);
-  userTimetableItemsSig: Signal<TimeTableItem[]> = computed(() => this._getUserTimetableItemList());
+  userTimetableItemsSig: Signal<TimeTableItemLecagy[]> = computed(() => this._getUserTimetableItemList());
 
-  emptyTimetable: TimeTableItem[] = [
+  emptyTimetable: TimeTableItemLecagy[] = [
     { weekDay: WeekDay.MONDAY, activities: [], date: new Date() },
     { weekDay: WeekDay.TUESDAY, activities: [], date: new Date() },
     { weekDay: WeekDay.WEDNESDAY, activities: [], date: new Date() },
@@ -43,8 +43,8 @@ export class ScheduleComponent implements OnInit {
     this._adminFacultyService.init();
   }
 
-  private _getUserTimetableItemList(): TimeTableItem[] {
-    let userTimetableItemList: TimeTableItem[] = [];
+  private _getUserTimetableItemList(): TimeTableItemLecagy[] {
+    let userTimetableItemList: TimeTableItemLecagy[] = [];
     if (Object.keys(this.currentUserSig()).length) {
       const userGroup: Group = this._adminFacultyService.getGroupByName(this.currentUserSig().group as string)();
       const userSemiGroup: SemiGroup = this._getUserSemigroup(this.currentUserSig().semiGroup as string, userGroup);

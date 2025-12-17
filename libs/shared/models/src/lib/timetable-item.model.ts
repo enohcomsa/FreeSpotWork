@@ -1,8 +1,13 @@
 import { WeekDay } from '@free-spot/enums';
-import { TimetableActivityItem } from './timetable-activity-item.model';
+import { TimetableActivityItemLegacy } from './timetable-activity-item.model';
 
-export interface TimeTableItem {
-  activities: TimetableActivityItem[];
+/**
+ * @deprecated Firebase-era nested model;
+ * used only for backward compatibility with legacy timetable format.
+ * Remove once all timetable data is migrated.
+ */
+export interface TimeTableItemLecagy {
+  activities: TimetableActivityItemLegacy[];
   weekDay: WeekDay;
   date: Date;
 }

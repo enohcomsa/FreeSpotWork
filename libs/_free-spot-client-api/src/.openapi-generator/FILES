@@ -16,6 +16,7 @@ api/programs.service.ts
 api/rooms.service.ts
 api/subjects.service.ts
 api/timetable-activities.service.ts
+api/timetable-activity-cards.service.ts
 api/users.service.ts
 configuration.ts
 encoder.ts
@@ -41,7 +42,6 @@ model/building-update.ts
 model/buildings-card-response.ts
 model/cohort-base.ts
 model/cohort-create.ts
-model/cohort-id-array.ts
 model/cohort-id-param.ts
 model/cohort-response.ts
 model/cohort-type.ts
@@ -81,6 +81,9 @@ model/subject-create.ts
 model/subject-id-param.ts
 model/subject-response.ts
 model/subject-update.ts
+model/timetable-activity-card-id-param.ts
+model/timetable-activity-card-response.ts
+model/timetable-activity-card.ts
 model/timetable-activity-create.ts
 model/timetable-activity-id-param.ts
 model/timetable-activity-response.ts

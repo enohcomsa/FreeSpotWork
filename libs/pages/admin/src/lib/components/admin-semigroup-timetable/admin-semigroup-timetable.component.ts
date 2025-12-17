@@ -13,7 +13,7 @@ import {
 
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AdminRoomService } from '@free-spot-service/room';
-import { BookedEvent, FreeSpotUser, SemiGroup, SubjectItemLegacy, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
+import { BookedEvent, FreeSpotUser, SemiGroup, SubjectItemLegacy, TimetableActivityItemLegacy, TimeTableItemLecagy } from '@free-spot/models';
 import { debounceTime } from 'rxjs';
 import { Event, WeekDay } from '@free-spot/enums';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -59,7 +59,7 @@ export class AdminSemisemiGroupTimetableComponent implements OnInit {
   userListSig: Signal<FreeSpotUser[]> = this._userService.userListSig;
   semiGroupSig = model.required<SemiGroup>();
   subjectListSig = input.required<SubjectItemLegacy[]>();
-  foundActivitiesSig: WritableSignal<TimetableActivityItem[]> = signal([]);
+  foundActivitiesSig: WritableSignal<TimetableActivityItemLegacy[]> = signal([]);
 
   startHourList: number[] = [8, 10, 12, 14, 16, 18];
   eventList: Event[] = Object.values(Event).filter((event: Event) => event !== Event.SPECIAL_EVENT);
@@ -69,7 +69,7 @@ export class AdminSemisemiGroupTimetableComponent implements OnInit {
 
   emptyTimetableSig: Signal<boolean> = computed(() => {
     return !this.semiGroupSig()
-      ?.timetable.map((timetableItem: TimeTableItem) =>
+      ?.timetable.map((timetableItem: TimeTableItemLecagy) =>
         timetableItem.activities ? timetableItem.activities.length !== 0 : !!timetableItem.activities,
       )
       .some((timetableItem: boolean) => timetableItem === true);
@@ -84,15 +84,15 @@ export class AdminSemisemiGroupTimetableComponent implements OnInit {
       timetableActivity: [{}, [Validators.required, Validators.minLength(1)]],
     });
     this.addTimetableActivityFormSemiGroup.valueChanges.pipe(debounceTime(300)).subscribe(() => {
-      let foundTimetableActivities: TimetableActivityItem[] = this._adminRoomService.getTimetableActivitiesByWeekDayAndSubject(
+      let foundTimetableActivities: TimetableActivityItemLegacy[] = this._adminRoomService.getTimetableActivitiesByWeekDayAndSubject(
         this.addTimetableActivityFormSemiGroup.controls['weekDay'].value,
         this.addTimetableActivityFormSemiGroup.controls['subject'].value,
       );
-      const currentActivities: TimetableActivityItem[] = this._getActivitiesFromItemByWeekDay(
+      const currentActivities: TimetableActivityItemLegacy[] = this._getActivitiesFromItemByWeekDay(
         this.addTimetableActivityFormSemiGroup.controls['weekDay'].value,
       );
-      foundTimetableActivities = foundTimetableActivities.filter((timetableActivity: TimetableActivityItem) => {
-        return !currentActivities.some((exitentActivity: TimetableActivityItem) =>
+      foundTimetableActivities = foundTimetableActivities.filter((timetableActivity: TimetableActivityItemLegacy) => {
+        return !currentActivities.some((exitentActivity: TimetableActivityItemLegacy) =>
           this._checkTimetebleActivityEquality(exitentActivity, timetableActivity),
         );
       });
@@ -109,7 +109,7 @@ export class AdminSemisemiGroupTimetableComponent implements OnInit {
     return '';
   }
 
-  dysplayTimetableActivity(timetableActivity: TimetableActivityItem): string {
+  dysplayTimetableActivity(timetableActivity: TimetableActivityItemLegacy): string {
     if (timetableActivity !== undefined && timetableActivity !== null && Object.keys(timetableActivity).length) {
       return (
         timetableActivity.startHour +
@@ -145,7 +145,7 @@ export class AdminSemisemiGroupTimetableComponent implements OnInit {
 
   onAddTimetableActivity(): void {
     if (this.semiGroupSig !== undefined) {
-      const newTimetableActivity: TimetableActivityItem =
+      const newTimetableActivity: TimetableActivityItemLegacy =
         this.addTimetableActivityFormSemiGroup.controls['timetableActivity'].value;
 
       if (this.semiGroupSig().students && this.semiGroupSig().students?.length) {
@@ -167,21 +167,21 @@ export class AdminSemisemiGroupTimetableComponent implements OnInit {
         });
       }
 
-      const oldTimetableItem: TimeTableItem = this.semiGroupSig().timetable?.find(
-        (timetableItem: TimeTableItem) =>
+      const oldTimetableItem: TimeTableItemLecagy = this.semiGroupSig().timetable?.find(
+        (timetableItem: TimeTableItemLecagy) =>
           timetableItem.weekDay === this.addTimetableActivityFormSemiGroup.controls['weekDay'].value,
       ) || { weekDay: this.addTimetableActivityFormSemiGroup.controls['weekDay'].value, activities: [], date: new Date() };
 
-      const newTimetableItem: TimeTableItem = {
+      const newTimetableItem: TimeTableItemLecagy = {
         ...oldTimetableItem,
         activities: oldTimetableItem.activities ? [...oldTimetableItem.activities, newTimetableActivity] : [newTimetableActivity],
       };
       const updatedSemiGroup: SemiGroup = {
         ...this.semiGroupSig(),
         timetable: this.semiGroupSig().timetable
-          ? (this.semiGroupSig().timetable.map((timetableItem: TimeTableItem) =>
+          ? (this.semiGroupSig().timetable.map((timetableItem: TimeTableItemLecagy) =>
               timetableItem.weekDay === newTimetableItem.weekDay ? newTimetableItem : timetableItem,
-            ) as TimeTableItem[])
+            ) as TimeTableItemLecagy[])
           : [newTimetableItem],
       };
       this.semiGroupSig.set(updatedSemiGroup);
@@ -191,7 +191,7 @@ export class AdminSemisemiGroupTimetableComponent implements OnInit {
     this.addingTimetableActivity = false;
   }
 
-  onRemoveTimetableActivity(deletedTimetableActivity: TimetableActivityItem): void {
+  onRemoveTimetableActivity(deletedTimetableActivity: TimetableActivityItemLegacy): void {
     this._confirmService
       .openConfirmDialog('Are you sure you want to delete this activity?')
       .afterClosed()
@@ -223,21 +223,21 @@ export class AdminSemisemiGroupTimetableComponent implements OnInit {
             });
           }
 
-          const oldTimetableItem: TimeTableItem = this.semiGroupSig().timetable?.find(
-            (timetableItem: TimeTableItem) => timetableItem.date === deletedTimetableActivity.date,
-          ) as TimeTableItem;
+          const oldTimetableItem: TimeTableItemLecagy = this.semiGroupSig().timetable?.find(
+            (timetableItem: TimeTableItemLecagy) => timetableItem.date === deletedTimetableActivity.date,
+          ) as TimeTableItemLecagy;
 
-          const newTimetableItem: TimeTableItem = {
+          const newTimetableItem: TimeTableItemLecagy = {
             ...oldTimetableItem,
             activities: oldTimetableItem.activities?.filter(
-              (timetableActivity: TimetableActivityItem) => timetableActivity !== deletedTimetableActivity,
+              (timetableActivity: TimetableActivityItemLegacy) => timetableActivity !== deletedTimetableActivity,
             ),
           };
 
           const updatedSemiGroup: SemiGroup = {
             ...this.semiGroupSig(),
             timetable: this.semiGroupSig().timetable
-              ? this.semiGroupSig().timetable.map((timetableItem: TimeTableItem) =>
+              ? this.semiGroupSig().timetable.map((timetableItem: TimeTableItemLecagy) =>
                   timetableItem.weekDay === newTimetableItem.weekDay ? newTimetableItem : timetableItem,
                 )
               : [newTimetableItem],
@@ -248,8 +248,8 @@ export class AdminSemisemiGroupTimetableComponent implements OnInit {
   }
 
   private _checkTimetebleActivityEquality(
-    timetableActivity1: TimetableActivityItem,
-    timetableActivity2: TimetableActivityItem,
+    timetableActivity1: TimetableActivityItemLegacy,
+    timetableActivity2: TimetableActivityItemLegacy,
   ): boolean {
     return (
       timetableActivity1.roomName === timetableActivity2.roomName &&
@@ -271,9 +271,9 @@ export class AdminSemisemiGroupTimetableComponent implements OnInit {
     );
   }
 
-  private _getActivitiesFromItemByWeekDay(weekDay: WeekDay): TimetableActivityItem[] {
-    let activities: TimetableActivityItem[] = [];
-    this.semiGroupSig().timetable.forEach((timetableItem: TimeTableItem) => {
+  private _getActivitiesFromItemByWeekDay(weekDay: WeekDay): TimetableActivityItemLegacy[] {
+    let activities: TimetableActivityItemLegacy[] = [];
+    this.semiGroupSig().timetable.forEach((timetableItem: TimeTableItemLecagy) => {
       timetableItem.weekDay === weekDay ? (timetableItem.activities ? (activities = timetableItem.activities) : '') : '';
     });
 

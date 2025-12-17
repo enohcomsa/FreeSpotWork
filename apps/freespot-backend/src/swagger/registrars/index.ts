@@ -10,4 +10,5 @@ export * from './programs.openapi';
 export * from './rooms.openapi';
 export * from './subjects.openapi';
 export * from './timetable-activities.openapi';
+export * from './timetable-activities.card.openapi';
 export * from './users.openapi';

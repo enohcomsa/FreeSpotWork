@@ -12,8 +12,8 @@ import {
   Group,
   RoomLegacy,
   SemiGroup,
-  TimetableActivityItem,
-  TimeTableItem,
+  TimetableActivityItemLegacy,
+  TimeTableItemLecagy,
   Year,
 } from '@free-spot/models';
 import { UserService } from '@free-spot-service/user';
@@ -72,7 +72,7 @@ export class DashboardComponent implements OnInit {
         this.roomListSig().forEach((room: RoomLegacy) => {
           const updatedRoom: RoomLegacy = {
             ...room,
-            timetable: room.timetable.map((timetableItem: TimeTableItem) => this._updateTimetableItem(timetableItem)),
+            timetable: room.timetable.map((timetableItem: TimeTableItemLecagy) => this._updateTimetableItem(timetableItem)),
           };
 
           this._adminRoomService.updateRoom(room, updatedRoom);
@@ -87,11 +87,11 @@ export class DashboardComponent implements OnInit {
                 yearGroupList: year.yearGroupList?.map((group: Group) => {
                   return {
                     ...group,
-                    timetable: group.timetable.map((timetableItem: TimeTableItem) => this._updateTimetableItem(timetableItem)),
+                    timetable: group.timetable.map((timetableItem: TimeTableItemLecagy) => this._updateTimetableItem(timetableItem)),
                     semigroups: group.semigroups?.map((semiGroup: SemiGroup) => {
                       return {
                         ...semiGroup,
-                        timetable: semiGroup.timetable.map((timetableItem: TimeTableItem) =>
+                        timetable: semiGroup.timetable.map((timetableItem: TimeTableItemLecagy) =>
                           this._updateTimetableItem(timetableItem),
                         ),
                       };
@@ -181,11 +181,11 @@ export class DashboardComponent implements OnInit {
     this._adminBuildingService.updateBuilding(oldBuilding, updatedBuilding);
   }
 
-  private _updateTimetableItem(oldTimetableItem: TimeTableItem): TimeTableItem {
+  private _updateTimetableItem(oldTimetableItem: TimeTableItemLecagy): TimeTableItemLecagy {
     return {
       ...oldTimetableItem,
       date: this._appDateService.getAppDateByWeekDay(oldTimetableItem.weekDay),
-      activities: oldTimetableItem.activities?.map((timetableActivity: TimetableActivityItem) => {
+      activities: oldTimetableItem.activities?.map((timetableActivity: TimetableActivityItemLegacy) => {
         return {
           ...timetableActivity,
           freeSpots: timetableActivity.freeSpots + timetableActivity.busySpots,

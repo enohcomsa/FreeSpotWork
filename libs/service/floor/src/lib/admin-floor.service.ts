@@ -1,7 +1,7 @@
 import { computed, DestroyRef, inject, Injectable, Signal, signal, WritableSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CreateFloorCmd, Floor, UpdateFloorCmd } from '@free-spot-domain/floor';
-import { FloorLegacy, RoomLegacy, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
+import { FloorLegacy, RoomLegacy, TimetableActivityItemLegacy, TimeTableItemLecagy } from '@free-spot/models';
 import { SignalArrayUtil } from '@free-spot/util';
 import { HttpFloorService } from '@http-free-spot/floor';
 import { Observable, take } from 'rxjs';
@@ -77,7 +77,7 @@ export class AdminFloorService {
   }
 
   /** @deprecated Legacy Firebase-era mutation of nested timetable state. */
-  updateTimetableActivitySpots(changedTimetableActivity: TimetableActivityItem, addingBooking: boolean): void {
+  updateTimetableActivitySpots(changedTimetableActivity: TimetableActivityItemLegacy, addingBooking: boolean): void {
     const newFloorList: FloorLegacy[] = this._floorListSigLegacy().map((floor: FloorLegacy) => {
       return {
         ...floor,
@@ -108,15 +108,15 @@ export class AdminFloorService {
 
   private _updateTimetableActivityFromRoom(
     room: RoomLegacy,
-    changedTimetableActivity: TimetableActivityItem,
+    changedTimetableActivity: TimetableActivityItemLegacy,
     addingBooking: boolean,
   ): RoomLegacy {
     room = {
       ...room,
-      timetable: room.timetable.map((timeTableItem: TimeTableItem) => {
+      timetable: room.timetable.map((timeTableItem: TimeTableItemLecagy) => {
         return {
           ...timeTableItem,
-          activities: timeTableItem.activities?.map((timetableActivity: TimetableActivityItem) => {
+          activities: timeTableItem.activities?.map((timetableActivity: TimetableActivityItemLegacy) => {
             return this._checkTimetebleActivityEquality(changedTimetableActivity, timetableActivity)
               ? {
                 ...timetableActivity,
@@ -133,8 +133,8 @@ export class AdminFloorService {
   }
 
   private _checkTimetebleActivityEquality(
-    timetableActivity1: TimetableActivityItem,
-    timetableActivity2: TimetableActivityItem,
+    timetableActivity1: TimetableActivityItemLegacy,
+    timetableActivity2: TimetableActivityItemLegacy,
   ): boolean {
     return (
       timetableActivity1.roomName === timetableActivity2.roomName &&

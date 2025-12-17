@@ -11,5 +11,3 @@ export async function getBuildingCard(id: string): Promise<BuildingCardDto> {
   if (!res) throw new NotFoundError("Building not found");
   return res;
 }
-
-
