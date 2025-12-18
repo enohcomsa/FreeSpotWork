@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, OnInit, Si
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSlideToggle, MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { DynamicChipListComponent, TimetableItemComponent } from '@free-spot/ui';
-import { Faculty, FreeSpotUser, Group, SemiGroup, TimetableActivityItemLegacy, TimeTableItemLecagy, Year } from '@free-spot/models';
+import { FacultyLegacy, FreeSpotUser, Group, SemiGroup, TimetableActivityItemLegacy, TimeTableItemLecagy, Year } from '@free-spot/models';
 import { AdminFacultyService } from '@free-spot-service/faculty';
 import { FormsModule } from '@angular/forms';
 import { BuildingService } from '@free-spot-service/building';
@@ -47,7 +47,7 @@ export class GroupComponent implements OnInit {
   groupNameSig = input.required<string>();
   groupSig: Signal<Group> = signal<Group>({} as Group);
   yearSig: Signal<Year> = signal<Year>({} as Year);
-  facultySig: Signal<Faculty> = signal<Faculty>({} as Faculty);
+  facultySig: Signal<FacultyLegacy> = signal<FacultyLegacy>({} as FacultyLegacy);
   userListSig: Signal<FreeSpotUser[]> = this._userService.userListSig;
   deletableUserListSig: Signal<FreeSpotUser[]> = computed(() =>
     this.userListSig().filter((user: FreeSpotUser) => !this._checkUserInSemigroup(user)),
@@ -342,7 +342,7 @@ export class GroupComponent implements OnInit {
       ),
     };
 
-    const updatedFaculty: Faculty = {
+    const updatedFaculty: FacultyLegacy = {
       ...this.facultySig(),
       yearList: this.facultySig().yearList?.map((year: Year) => (year.name === updatedYear.name ? updatedYear : year)),
     };

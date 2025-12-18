@@ -1,5 +1,5 @@
 import { computed, inject, Injectable, signal, Signal, WritableSignal } from '@angular/core';
-import { Faculty, Group, SemiGroup, TimetableActivityItemLegacy, TimeTableItemLecagy, Year } from '@free-spot/models';
+import { FacultyLegacy, Group, SemiGroup, TimetableActivityItemLegacy, TimeTableItemLecagy, Year } from '@free-spot/models';
 import { SignalArrayUtil } from '@free-spot/util';
 import { HttpFacultyService } from '@http-free-spot/faculty';
 import { take } from 'rxjs';
@@ -9,7 +9,7 @@ import { take } from 'rxjs';
 })
 export class AdminFacultyService {
   private _httpFacultyService: HttpFacultyService = inject(HttpFacultyService);
-  private _facultyListSig: WritableSignal<Faculty[]> = signal([]);
+  private _facultyListSig: WritableSignal<FacultyLegacy[]> = signal([]);
   facultyListSig = this._facultyListSig.asReadonly();
 
   init(): void {
@@ -17,31 +17,31 @@ export class AdminFacultyService {
       this._httpFacultyService
         .getFacultyList()
         .pipe(take(1))
-        .subscribe((facultyList: Faculty[]) => {
-          this._facultyListSig.set(facultyList?.filter((faculty: Faculty) => faculty !== null));
+        .subscribe((facultyList: FacultyLegacy[]) => {
+          this._facultyListSig.set(facultyList?.filter((faculty: FacultyLegacy) => faculty !== null));
         });
     }
   }
 
-  getFacultyByName(facultyName: string): Signal<Faculty> {
-    return computed(() => this._facultyListSig().find((faculty: Faculty) => faculty.name === facultyName) || ({} as Faculty));
+  getFacultyByName(facultyName: string): Signal<FacultyLegacy> {
+    return computed(() => this._facultyListSig().find((faculty: FacultyLegacy) => faculty.name === facultyName) || ({} as FacultyLegacy));
   }
 
-  getFacultyByGroupName(groupName: string): Signal<Faculty> {
+  getFacultyByGroupName(groupName: string): Signal<FacultyLegacy> {
     return computed(
       () =>
-        this.facultyListSig().find((faculty: Faculty) => {
+        this.facultyListSig().find((faculty: FacultyLegacy) => {
           return faculty.yearList
             ?.map((year: Year) => year.yearGroupList?.some((group: Group) => group.name === groupName))
             .some((checkedYear: boolean) => checkedYear === true);
-        }) || ({} as Faculty),
+        }) || ({} as FacultyLegacy),
     );
   }
 
   getGroupByName(groupName: string): Signal<Group> {
     return computed(() => {
       let foundGroup: Group = {} as Group;
-      this.facultyListSig()?.forEach((faculty: Faculty) =>
+      this.facultyListSig()?.forEach((faculty: FacultyLegacy) =>
         faculty.yearList?.forEach((year: Year) =>
           year.yearGroupList.forEach((group: Group) => {
             if (group.name === groupName) {
@@ -56,7 +56,7 @@ export class AdminFacultyService {
   }
 
   removeDeletedTimetableActivity(removedTimetableActivity: TimetableActivityItemLegacy): void {
-    const newFacultyList: Faculty[] = this._facultyListSig().map((faculty: Faculty) => {
+    const newFacultyList: FacultyLegacy[] = this._facultyListSig().map((faculty: FacultyLegacy) => {
       return {
         ...faculty,
         yearList:
@@ -76,7 +76,7 @@ export class AdminFacultyService {
   }
 
   removeTimetableActivitiesByRoomName(deletedRoomName: string): void {
-    const newFacultyList: Faculty[] = this._facultyListSig().map((faculty: Faculty) => {
+    const newFacultyList: FacultyLegacy[] = this._facultyListSig().map((faculty: FacultyLegacy) => {
       return {
         ...faculty,
         yearList:
@@ -94,7 +94,7 @@ export class AdminFacultyService {
   }
 
   updateTimetableActivitySpots(changedTimetableActivity: TimetableActivityItemLegacy, addingBooking: boolean): void {
-    const newFacultyList: Faculty[] = this._facultyListSig().map((faculty: Faculty) => {
+    const newFacultyList: FacultyLegacy[] = this._facultyListSig().map((faculty: FacultyLegacy) => {
       return {
         ...faculty,
         yearList:
@@ -114,17 +114,17 @@ export class AdminFacultyService {
     this._httpFacultyService.storeFacultyList(this._facultyListSig());
   }
 
-  addFaculty(newFaculty: Faculty): void {
+  addFaculty(newFaculty: FacultyLegacy): void {
     SignalArrayUtil.addItem(newFaculty, this._facultyListSig);
     this._httpFacultyService.storeFacultyList(this._facultyListSig());
   }
 
-  updateFaculty(oldFaculty: Faculty, updatedFaculty: Faculty): void {
+  updateFaculty(oldFaculty: FacultyLegacy, updatedFaculty: FacultyLegacy): void {
     SignalArrayUtil.replaceItem(oldFaculty, this._facultyListSig, updatedFaculty);
     this._httpFacultyService.storeFacultyList(this._facultyListSig());
   }
 
-  deleteFaculty(deletedFaculty: Faculty): void {
+  deleteFaculty(deletedFaculty: FacultyLegacy): void {
     SignalArrayUtil.deleteItem(deletedFaculty, this._facultyListSig);
     this._httpFacultyService.storeFacultyList(this._facultyListSig());
   }

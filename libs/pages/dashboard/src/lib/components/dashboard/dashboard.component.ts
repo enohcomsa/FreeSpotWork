@@ -5,7 +5,7 @@ import { BuildingCardComponent } from '../building-card/building-card.component'
 import { BuildingService } from '@free-spot-service/building';
 import {
   BuildingLegacy,
-  Faculty,
+  FacultyLegacy,
   FloorLegacy,
   FreeSpotDate,
   FreeSpotUser,
@@ -48,7 +48,7 @@ export class DashboardComponent implements OnInit {
   private _adminEventService: AdminEventService = inject(AdminEventService);
 
   roomListSig: Signal<RoomLegacy[]> = this._adminRoomService.roomListSigLegacy;
-  facultyListSig: Signal<Faculty[]> = this._adminFacultyService.facultyListSig;
+  facultyListSig: Signal<FacultyLegacy[]> = this._adminFacultyService.facultyListSig;
   userListSig: Signal<FreeSpotUser[]> = this._userService.userListSig;
   dateChangedSig: WritableSignal<boolean> = this._appDateService.appDateChanged;
   appDateSig: Signal<FreeSpotDate> = this._appDateService.appDateSig;
@@ -78,8 +78,8 @@ export class DashboardComponent implements OnInit {
           this._adminRoomService.updateRoom(room, updatedRoom);
           this._updateFloorAndBuilding(updatedRoom);
         });
-        this.facultyListSig().forEach((faculty: Faculty) => {
-          const updatedFaculty: Faculty = {
+        this.facultyListSig().forEach((faculty: FacultyLegacy) => {
+          const updatedFaculty: FacultyLegacy = {
             ...faculty,
             yearList: faculty.yearList?.map((year: Year) => {
               return {

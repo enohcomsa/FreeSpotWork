@@ -7,7 +7,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { filter, Subscription } from 'rxjs';
 import { AdminFacultyService } from '@free-spot-service/faculty';
-import { Faculty, FreeSpotUser, Group, SemiGroup, Year } from '@free-spot/models';
+import { FacultyLegacy, FreeSpotUser, Group, SemiGroup, Year } from '@free-spot/models';
 import { UserService } from '@free-spot-service/user';
 import { Language, Theme } from '@free-spot/enums';
 
@@ -39,7 +39,7 @@ export class UserSetupDialogComponent implements OnInit, OnDestroy {
 
   protected user: FreeSpotUser = inject(MAT_DIALOG_DATA);
 
-  facultyListSig: Signal<Faculty[]> = this._adminFacultyService.facultyListSig;
+  facultyListSig: Signal<FacultyLegacy[]> = this._adminFacultyService.facultyListSig;
   foundYearListSig: WritableSignal<Year[]> = signal([]);
   foundGroupListSig: WritableSignal<Group[]> = signal([]);
   foundSemigroupListSig: WritableSignal<SemiGroup[]> = signal([]);
@@ -58,7 +58,7 @@ export class UserSetupDialogComponent implements OnInit, OnDestroy {
     this.subscriptionList.push(
       this.setupForm.controls['faculty'].valueChanges
         .pipe(filter((faculty) => !!faculty))
-        .subscribe((faculty: Faculty | null) => {
+        .subscribe((faculty: FacultyLegacy | null) => {
           this.foundYearListSig.set(faculty?.yearList || []);
           this.setupForm.controls['currentYear'].reset();
           this.setupForm.controls['group'].reset();
@@ -108,7 +108,7 @@ export class UserSetupDialogComponent implements OnInit, OnDestroy {
       this.setupForm.controls['faculty'].value?.name as string,
     )();
 
-    const updatedFaculty: Faculty = {
+    const updatedFaculty: FacultyLegacy = {
       ...newFacultyWithUpdatedSpots,
       yearList: newFacultyWithUpdatedSpots.yearList?.map((year: Year) => {
         if (year.name === this.setupForm.controls['currentYear'].value?.name) {
@@ -141,7 +141,7 @@ export class UserSetupDialogComponent implements OnInit, OnDestroy {
           return year;
         }
       }),
-    } as Faculty;
+    } as FacultyLegacy;
 
     this._adminFacultyService.updateFaculty(this._adminFacultyService.getFacultyByName(updatedFaculty.name)(), updatedFaculty);
     this._userService.updateFreeSpotUser(this.user, updatedUser);
