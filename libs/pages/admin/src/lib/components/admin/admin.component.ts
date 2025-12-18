@@ -90,7 +90,7 @@ export class AdminComponent implements OnInit, OnDestroy {
 
   editBuilding = viewChild<ElementRef>('editBuilding');
   editEvent = viewChild<ElementRef>('editEvent');
-  facultyListSig: Signal<FacultyLegacy[]> = this._adminFacultyService.facultyListSig;
+  facultyListSig: Signal<FacultyLegacy[]> = this._adminFacultyService.facultyListSigLegacy;
   buildingListSigLegacy: Signal<BuildingLegacy[]> = this._adminBuildingService.buildingListSigLegacy;
   buildingListSig: Signal<Building[]> = this._adminBuildingService.buildingListSig;
   readonly floorListSig: Signal<Floor[]> = this._adminFloorService.floorListSig;

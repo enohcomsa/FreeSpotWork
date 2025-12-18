@@ -39,7 +39,7 @@ export class UserSetupDialogComponent implements OnInit, OnDestroy {
 
   protected user: FreeSpotUser = inject(MAT_DIALOG_DATA);
 
-  facultyListSig: Signal<FacultyLegacy[]> = this._adminFacultyService.facultyListSig;
+  facultyListSig: Signal<FacultyLegacy[]> = this._adminFacultyService.facultyListSigLegacy;
   foundYearListSig: WritableSignal<Year[]> = signal([]);
   foundGroupListSig: WritableSignal<Group[]> = signal([]);
   foundSemigroupListSig: WritableSignal<SemiGroup[]> = signal([]);

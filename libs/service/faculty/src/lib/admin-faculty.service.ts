@@ -1,36 +1,88 @@
-import { computed, inject, Injectable, signal, Signal, WritableSignal } from '@angular/core';
+import { computed, DestroyRef, inject, Injectable, signal, Signal, WritableSignal } from '@angular/core';
+import { CreateFacultyCmd, Faculty, UpdateFacultyCmd } from '@free-spot-domain/faculty';
 import { FacultyLegacy, Group, SemiGroup, TimetableActivityItemLegacy, TimeTableItemLecagy, Year } from '@free-spot/models';
 import { SignalArrayUtil } from '@free-spot/util';
 import { HttpFacultyService } from '@http-free-spot/faculty';
-import { take } from 'rxjs';
+import { Observable, take } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
 
 @Injectable({
   providedIn: 'root',
 })
 export class AdminFacultyService {
   private _httpFacultyService: HttpFacultyService = inject(HttpFacultyService);
-  private _facultyListSig: WritableSignal<FacultyLegacy[]> = signal([]);
+  private readonly _destroyRef = inject(DestroyRef);
+
+  /** @deprecated Legacy Firebase-era state. */
+  private _facultyListSigLegacy: WritableSignal<FacultyLegacy[]> = signal([]);
+  private _facultyListSig: WritableSignal<Faculty[]> = signal([]);
+
+  /** @deprecated Legacy Firebase-era state. */
+  facultyListSigLegacy = this._facultyListSigLegacy.asReadonly();
   facultyListSig = this._facultyListSig.asReadonly();
 
   init(): void {
-    if (!this._facultyListSig().length) {
+    /** @deprecated Legacy Firebase-era fetch. */
+    if (!this._facultyListSigLegacy().length) {
       this._httpFacultyService
         .getFacultyList()
         .pipe(take(1))
         .subscribe((facultyList: FacultyLegacy[]) => {
-          this._facultyListSig.set(facultyList?.filter((faculty: FacultyLegacy) => faculty !== null));
+          this._facultyListSigLegacy.set(facultyList?.filter((faculty: FacultyLegacy) => faculty !== null));
+        });
+    }
+
+    if (!this._facultyListSig().length) {
+      this._httpFacultyService
+        .listFaculties$()
+        .pipe(take(1))
+        .subscribe((facultyList: Faculty[]) => {
+          this._facultyListSig.set(facultyList);
         });
     }
   }
 
-  getFacultyByName(facultyName: string): Signal<FacultyLegacy> {
-    return computed(() => this._facultyListSig().find((faculty: FacultyLegacy) => faculty.name === facultyName) || ({} as FacultyLegacy));
+  getSignalById(id: string): Signal<Faculty> {
+    return computed(() => this.facultyListSig().find((faculty: Faculty) => faculty.id === id) || ({} as Faculty))
   }
 
+  getById(id: string): Observable<Faculty> {
+    return this._httpFacultyService.getFacultyById$(id);
+  }
+
+  create(input: CreateFacultyCmd): void {
+    this._httpFacultyService.createFaculty$(input)
+      .pipe(take(1), takeUntilDestroyed(this._destroyRef))
+      .subscribe(created => SignalArrayUtil.upsertBy('id', created, this._facultyListSig));
+  }
+
+  update(id: string, patch: UpdateFacultyCmd): void {
+    this._httpFacultyService.updateFaculty$(id, patch)
+      .pipe(take(1), takeUntilDestroyed(this._destroyRef))
+      .subscribe(updated => SignalArrayUtil.upsertBy('id', updated, this._facultyListSig));
+  }
+
+  remove(id: string): void {
+    this._httpFacultyService.deleteFaculty$(id)
+      .pipe(take(1), takeUntilDestroyed(this._destroyRef))
+      .subscribe(() => SignalArrayUtil.removeBy('id', id, this._facultyListSig));
+  }
+
+   /**
+   * @deprecated Legacy faculty lookup by name; remove after migration.
+   */
+  getFacultyByName(facultyName: string): Signal<FacultyLegacy> {
+    return computed(() => this._facultyListSigLegacy().find((faculty: FacultyLegacy) => faculty.name === facultyName) || ({} as FacultyLegacy));
+  }
+
+   /**
+   * @deprecated Legacy faculty lookup by name; remove after migration.
+   */
   getFacultyByGroupName(groupName: string): Signal<FacultyLegacy> {
     return computed(
       () =>
-        this.facultyListSig().find((faculty: FacultyLegacy) => {
+        this.facultyListSigLegacy().find((faculty: FacultyLegacy) => {
           return faculty.yearList
             ?.map((year: Year) => year.yearGroupList?.some((group: Group) => group.name === groupName))
             .some((checkedYear: boolean) => checkedYear === true);
@@ -38,10 +90,13 @@ export class AdminFacultyService {
     );
   }
 
+   /**
+   * @deprecated Legacy faculty lookup by name; remove after migration.
+   */
   getGroupByName(groupName: string): Signal<Group> {
     return computed(() => {
       let foundGroup: Group = {} as Group;
-      this.facultyListSig()?.forEach((faculty: FacultyLegacy) =>
+      this.facultyListSigLegacy()?.forEach((faculty: FacultyLegacy) =>
         faculty.yearList?.forEach((year: Year) =>
           year.yearGroupList.forEach((group: Group) => {
             if (group.name === groupName) {
@@ -55,8 +110,11 @@ export class AdminFacultyService {
     });
   }
 
+   /**
+   * @deprecated Legacy faculty lookup by name; remove after migration.
+   */
   removeDeletedTimetableActivity(removedTimetableActivity: TimetableActivityItemLegacy): void {
-    const newFacultyList: FacultyLegacy[] = this._facultyListSig().map((faculty: FacultyLegacy) => {
+    const newFacultyList: FacultyLegacy[] = this._facultyListSigLegacy().map((faculty: FacultyLegacy) => {
       return {
         ...faculty,
         yearList:
@@ -71,12 +129,15 @@ export class AdminFacultyService {
           }) || [],
       };
     });
-    this._facultyListSig.set(newFacultyList);
-    this._httpFacultyService.storeFacultyList(this._facultyListSig());
+    this._facultyListSigLegacy.set(newFacultyList);
+    this._httpFacultyService.storeFacultyList(this._facultyListSigLegacy());
   }
 
+   /**
+   * @deprecated Legacy faculty lookup by name; remove after migration.
+   */
   removeTimetableActivitiesByRoomName(deletedRoomName: string): void {
-    const newFacultyList: FacultyLegacy[] = this._facultyListSig().map((faculty: FacultyLegacy) => {
+    const newFacultyList: FacultyLegacy[] = this._facultyListSigLegacy().map((faculty: FacultyLegacy) => {
       return {
         ...faculty,
         yearList:
@@ -89,12 +150,15 @@ export class AdminFacultyService {
           }) || [],
       };
     });
-    this._facultyListSig.set(newFacultyList);
-    this._httpFacultyService.storeFacultyList(this._facultyListSig());
+    this._facultyListSigLegacy.set(newFacultyList);
+    this._httpFacultyService.storeFacultyList(this._facultyListSigLegacy());
   }
 
+   /**
+   * @deprecated Legacy faculty lookup by name; remove after migration.
+   */
   updateTimetableActivitySpots(changedTimetableActivity: TimetableActivityItemLegacy, addingBooking: boolean): void {
-    const newFacultyList: FacultyLegacy[] = this._facultyListSig().map((faculty: FacultyLegacy) => {
+    const newFacultyList: FacultyLegacy[] = this._facultyListSigLegacy().map((faculty: FacultyLegacy) => {
       return {
         ...faculty,
         yearList:
@@ -110,25 +174,37 @@ export class AdminFacultyService {
       };
     });
 
-    this._facultyListSig.set(newFacultyList);
-    this._httpFacultyService.storeFacultyList(this._facultyListSig());
+    this._facultyListSigLegacy.set(newFacultyList);
+    this._httpFacultyService.storeFacultyList(this._facultyListSigLegacy());
   }
 
+   /**
+   * @deprecated Legacy faculty lookup by name; remove after migration.
+   */
   addFaculty(newFaculty: FacultyLegacy): void {
-    SignalArrayUtil.addItem(newFaculty, this._facultyListSig);
-    this._httpFacultyService.storeFacultyList(this._facultyListSig());
+    SignalArrayUtil.addItem(newFaculty, this._facultyListSigLegacy);
+    this._httpFacultyService.storeFacultyList(this._facultyListSigLegacy());
   }
 
+   /**
+   * @deprecated Legacy faculty lookup by name; remove after migration.
+   */
   updateFaculty(oldFaculty: FacultyLegacy, updatedFaculty: FacultyLegacy): void {
-    SignalArrayUtil.replaceItem(oldFaculty, this._facultyListSig, updatedFaculty);
-    this._httpFacultyService.storeFacultyList(this._facultyListSig());
+    SignalArrayUtil.replaceItem(oldFaculty, this._facultyListSigLegacy, updatedFaculty);
+    this._httpFacultyService.storeFacultyList(this._facultyListSigLegacy());
   }
 
+   /**
+   * @deprecated Legacy faculty lookup by name; remove after migration.
+   */
   deleteFaculty(deletedFaculty: FacultyLegacy): void {
-    SignalArrayUtil.deleteItem(deletedFaculty, this._facultyListSig);
-    this._httpFacultyService.storeFacultyList(this._facultyListSig());
+    SignalArrayUtil.deleteItem(deletedFaculty, this._facultyListSigLegacy);
+    this._httpFacultyService.storeFacultyList(this._facultyListSigLegacy());
   }
 
+   /**
+   * @deprecated Legacy faculty lookup by name; remove after migration.
+   */
   private _removeTimetableActivityFromGroup(group: Group, removedTimetableActivity: TimetableActivityItemLegacy): Group {
     if (group.semigroups !== null && group.semigroups !== undefined) {
       group = {
@@ -164,6 +240,9 @@ export class AdminFacultyService {
     return group;
   }
 
+   /**
+   * @deprecated Legacy faculty lookup by name; remove after migration.
+   */
   private _removeRoomTimetableActivity(group: Group, deletedRoomName: string): Group {
     if (group.semigroups !== null && group.semigroups !== undefined) {
       group = {
@@ -199,6 +278,9 @@ export class AdminFacultyService {
     return group;
   }
 
+   /**
+   * @deprecated Legacy faculty lookup by name; remove after migration.
+   */
   private _updateTimetableActivityFromGroup(
     group: Group,
     changedTimetableActivity: TimetableActivityItemLegacy,
@@ -216,10 +298,10 @@ export class AdminFacultyService {
                 activities: timeTableItem.activities?.map((timetableActivity: TimetableActivityItemLegacy) => {
                   return this._checkTimetebleActivityEquality(changedTimetableActivity, timetableActivity)
                     ? {
-                        ...timetableActivity,
-                        freeSpots: addingBooking ? timetableActivity.freeSpots - 1 : timetableActivity.freeSpots + 1,
-                        busySpots: addingBooking ? timetableActivity.busySpots + 1 : timetableActivity.busySpots - 1,
-                      }
+                      ...timetableActivity,
+                      freeSpots: addingBooking ? timetableActivity.freeSpots - 1 : timetableActivity.freeSpots + 1,
+                      busySpots: addingBooking ? timetableActivity.busySpots + 1 : timetableActivity.busySpots - 1,
+                    }
                     : timetableActivity;
                 }),
               };
@@ -236,10 +318,10 @@ export class AdminFacultyService {
             activities: timeTableItem.activities?.map((timetableActivity: TimetableActivityItemLegacy) => {
               return this._checkTimetebleActivityEquality(changedTimetableActivity, timetableActivity)
                 ? {
-                    ...timetableActivity,
-                    freeSpots: addingBooking ? timetableActivity.freeSpots - 1 : timetableActivity.freeSpots + 1,
-                    busySpots: addingBooking ? timetableActivity.busySpots + 1 : timetableActivity.busySpots - 1,
-                  }
+                  ...timetableActivity,
+                  freeSpots: addingBooking ? timetableActivity.freeSpots - 1 : timetableActivity.freeSpots + 1,
+                  busySpots: addingBooking ? timetableActivity.busySpots + 1 : timetableActivity.busySpots - 1,
+                }
                 : timetableActivity;
             }),
           };
@@ -249,6 +331,9 @@ export class AdminFacultyService {
     return group;
   }
 
+   /**
+   * @deprecated Legacy faculty lookup by name; remove after migration.
+   */
   private _checkTimetebleActivityEquality(
     timetableActivity1: TimetableActivityItemLegacy,
     timetableActivity2: TimetableActivityItemLegacy,

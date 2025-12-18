@@ -1,1 +1,2 @@
-export * from './lib/faculty-presentation/faculty-presentation';
+export * from './lib/faculty.vm';
+export * from './lib/faculty.vm.mapper';

@@ -1,1 +1,3 @@
-export * from './lib/faculty-domain/faculty-domain';
+export * from './lib/faculty.model';
+export * from './lib/faculty.commands';
+export * from './lib/faculty.mapper';

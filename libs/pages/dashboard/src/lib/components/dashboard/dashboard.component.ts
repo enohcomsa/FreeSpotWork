@@ -48,7 +48,7 @@ export class DashboardComponent implements OnInit {
   private _adminEventService: AdminEventService = inject(AdminEventService);
 
   roomListSig: Signal<RoomLegacy[]> = this._adminRoomService.roomListSigLegacy;
-  facultyListSig: Signal<FacultyLegacy[]> = this._adminFacultyService.facultyListSig;
+  facultyListSig: Signal<FacultyLegacy[]> = this._adminFacultyService.facultyListSigLegacy;
   userListSig: Signal<FreeSpotUser[]> = this._userService.userListSig;
   dateChangedSig: WritableSignal<boolean> = this._appDateService.appDateChanged;
   appDateSig: Signal<FreeSpotDate> = this._appDateService.appDateSig;
