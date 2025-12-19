@@ -1,1 +1,1 @@
-export * from './lib/http-free-spot-program/http-free-spot-program';
+export * from './lib/http-program.service';

@@ -1,1 +1,1 @@
-export * from './lib/http-free-spot-program-year/http-free-spot-program-year';
+export * from './lib/http-program-year.service';

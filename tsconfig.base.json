@@ -49,6 +49,8 @@
       "@free-spot-service/faculty": ["libs/service/faculty/src/index.ts"],
       "@free-spot-service/floor": ["libs/service/floor/src/index.ts"],
       "@free-spot-service/group": ["libs/service/group/src/index.ts"],
+      "@free-spot-service/program": ["libs/service/program/src/index.ts"],
+      "@free-spot-service/program-year": ["libs/service/program-year/src/index.ts"],
       "@free-spot-service/room": ["libs/service/room/src/index.ts"],
       "@free-spot-service/subject": ["libs/service/subject/src/index.ts"],
       "@free-spot-service/timetable-activity": ["libs/service/timetable-activity/src/index.ts"],
