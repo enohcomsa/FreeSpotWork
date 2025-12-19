@@ -71,6 +71,8 @@
       "@http-free-spot/faculty": ["libs/http-free-spot/faculty/src/index.ts"],
       "@http-free-spot/floor": ["libs/http-free-spot/floor/src/index.ts"],
       "@http-free-spot/group": ["libs/http-free-spot/group/src/index.ts"],
+      "@http-free-spot/program": ["libs/http-free-spot/program/src/index.ts"],
+      "@http-free-spot/program-year": ["libs/http-free-spot/program-year/src/index.ts"],
       "@http-free-spot/room": ["libs/http-free-spot/room/src/index.ts"],
       "@http-free-spot/subject": ["libs/http-free-spot/subject/src/index.ts"],
       "@http-free-spot/timetable-activity": ["libs/http-free-spot/timetable-activity/src/index.ts"],
