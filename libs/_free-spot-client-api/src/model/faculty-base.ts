@@ -12,5 +12,6 @@
 export interface FacultyBaseDTO { 
     name: string;
     shortName: string;
+    subjectList: Array<string>;
 }
 

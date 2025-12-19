@@ -11,7 +11,7 @@ async function main() {
   await withDb(uri, async (db) => {
     await init(db);               // creates/updates collections as they are now
     await dropFloorCounters(db);  // unsets fields, then reapplies updated floorsSpec
-  },dbName);
+  }, dbName);
   console.log('✅ Migrations applied');
 }
 main().catch((e) => { console.error(e); process.exit(1); });

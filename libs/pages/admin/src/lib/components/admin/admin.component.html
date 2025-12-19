@@ -6,13 +6,12 @@
 
   <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Faculties</h1>
   <mat-accordion>
-    @for (faculty of facultyListSig(); track $index) {
+    @for (faculty of facultyListSig(); track faculty.id) {
     <mat-expansion-panel outline="true">
       <mat-expansion-panel-header class="!h-fit !py-2">
         <mat-panel-title> {{ faculty.name }} </mat-panel-title>
       </mat-expansion-panel-header>
-      <free-spot-faculty [facultySig]="faculty" (facultySigChange)="onFacultyChange($event)"
-        (editYear)="onEditingYear($event)"></free-spot-faculty>
+      <free-spot-faculty [facultySig]="faculty" (editYear)="onEditingYear($event)"></free-spot-faculty>
       @if (addingYear || editingYear) {
       <form class="flex flex-col py-4 sm:flex-row sm:items-center sm:gap-4"
         (ngSubmit)="editingYear ? onEditYear(faculty) : onAddYear(faculty)">

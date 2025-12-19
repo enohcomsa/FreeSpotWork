@@ -34,7 +34,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { BuildingService } from '@free-spot-service/building';
 import { BuildingCardService } from '@free-spot-service/building-card';
-// import { FACULTY_LIST } from '@free-spot/constants';
 import { AdminFacultyService } from '@free-spot-service/faculty';
 import { UserService } from '@free-spot-service/user';
 import { Event, Role, WeekParity } from '@free-spot/enums';
@@ -48,9 +47,10 @@ import { filter, Subscription } from 'rxjs';
 import { AdminRoomService } from '@free-spot-service/room';
 import { BookingService } from '@free-spot-service/booking';
 import { Building, CreateBuildingCmd, UpdateBuildingCmd } from '@free-spot-domain/building';
-import { BuildingCardVM} from '@free-spot-presentation/building-card';
+import { BuildingCardVM } from '@free-spot-presentation/building-card';
 import { Floor } from '@free-spot-domain/floor';
 import { AdminFloorService } from '@free-spot-service/floor';
+import { Faculty } from '@free-spot-domain/faculty';
 
 @Component({
   selector: 'free-spot-admin',
@@ -90,7 +90,8 @@ export class AdminComponent implements OnInit, OnDestroy {
 
   editBuilding = viewChild<ElementRef>('editBuilding');
   editEvent = viewChild<ElementRef>('editEvent');
-  facultyListSig: Signal<FacultyLegacy[]> = this._adminFacultyService.facultyListSigLegacy;
+  facultyListSigLegacy: Signal<FacultyLegacy[]> = this._adminFacultyService.facultyListSigLegacy;
+  facultyListSig: Signal<Faculty[]> = this._adminFacultyService.facultyListSig;
   buildingListSigLegacy: Signal<BuildingLegacy[]> = this._adminBuildingService.buildingListSigLegacy;
   buildingListSig: Signal<Building[]> = this._adminBuildingService.buildingListSig;
   readonly floorListSig: Signal<Floor[]> = this._adminFloorService.floorListSig;
@@ -151,6 +152,8 @@ export class AdminComponent implements OnInit, OnDestroy {
           }
         }),
     );
+
+
   }
 
   ngOnDestroy(): void {
@@ -187,16 +190,16 @@ export class AdminComponent implements OnInit, OnDestroy {
     this.editingYear = false;
   }
 
-  onAddYear(faculty: FacultyLegacy): void {
-    const newYear: Year = {
-      name: this.addYearFormControl.value,
-      yearGroupList: [],
-    };
+  onAddYear(faculty: Faculty): void {
+    // const newYear: Year = {
+    //   name: this.addYearFormControl.value,
+    //   yearGroupList: [],
+    // };
 
-    const updatedFaculty: FacultyLegacy = { ...faculty, yearList: faculty.yearList ? [...faculty.yearList, newYear] : [newYear] };
-    this._adminFacultyService.updateFaculty(faculty, updatedFaculty);
-    this.addingYear = false;
-    this.editingYear = false;
+    // const updatedFaculty: FacultyLegacy = { ...faculty, yearList: faculty.yearList ? [...faculty.yearList, newYear] : [newYear] };
+    // // this._adminFacultyService.updateFaculty(faculty, updatedFaculty);
+    // this.addingYear = false;
+    // this.editingYear = false;
   }
 
   onEditingYear(yearToEdit: Year): void {
@@ -205,30 +208,30 @@ export class AdminComponent implements OnInit, OnDestroy {
     this.addYearFormControl.setValue(yearToEdit.name);
   }
 
-  onEditYear(faculty: FacultyLegacy): void {
-    const newYear: Year = {
-      name: this.addYearFormControl.value,
-      yearGroupList: this.oldYearSig().yearGroupList ? [...this.oldYearSig().yearGroupList] : [],
-    };
-    const updatedFaculty: FacultyLegacy = {
-      ...faculty,
-      yearList: faculty.yearList?.map((year: Year) => (year === this.oldYearSig() ? newYear : year)),
-    };
+  onEditYear(faculty: Faculty): void {
+    // const newYear: Year = {
+    //   name: this.addYearFormControl.value,
+    //   yearGroupList: this.oldYearSig().yearGroupList ? [...this.oldYearSig().yearGroupList] : [],
+    // };
+    // const updatedFaculty: FacultyLegacy = {
+    //   ...faculty,
+    //   yearList: faculty.yearList?.map((year: Year) => (year === this.oldYearSig() ? newYear : year)),
+    // };
 
-    this._adminFacultyService.updateFaculty(faculty, updatedFaculty);
-    this.addYearFormControl.reset();
-    this.addingYear = false;
-    this.editingYear = false;
+    // this._adminFacultyService.updateFaculty(faculty, updatedFaculty);
+    // this.addYearFormControl.reset();
+    // this.addingYear = false;
+    // this.editingYear = false;
   }
 
-  onFacultyChange(changedFaculty: FacultyLegacy): void {
-    const oldFaculty: FacultyLegacy =
-      this.facultyListSig().find((faculty: FacultyLegacy) => faculty.name === changedFaculty.name) || ({} as FacultyLegacy);
-    if (oldFaculty.name) {
-      this._adminFacultyService.updateFaculty(oldFaculty, changedFaculty);
-    }
-    this.addingYear = false;
-    this.editingYear = false;
+  onFacultyChange(changedFaculty: Faculty): void {
+    // const oldFaculty: FacultyLegacy =
+    //   this.facultyListSigLegacy().find((faculty: FacultyLegacy) => faculty.name === changedFaculty.name) || ({} as FacultyLegacy);
+    // if (oldFaculty.name) {
+    //   this._adminFacultyService.updateFaculty(oldFaculty, changedFaculty);
+    // }
+    // this.addingYear = false;
+    // this.editingYear = false;
   }
 
   onAddingBuilding(): void {

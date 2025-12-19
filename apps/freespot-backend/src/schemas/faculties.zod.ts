@@ -8,6 +8,7 @@ extendZodWithOpenApi(z);
 export const FacultyBase = strictObj({
   name: z.string().trim().min(1),
   shortName: z.string().trim().min(1),
+  subjectList: z.array(ObjectIdStr),
 }).openapi("FacultyBase");
 
 export const FacultyIdParam = z.object({ id: ObjectIdStr }).openapi("FacultyIdParam");

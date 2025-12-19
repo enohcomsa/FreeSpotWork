@@ -15,14 +15,35 @@ export class SubjectService {
   private _subjectListSig: WritableSignal<SubjectItem[]> = signal([]);
   subjectListSig = this._subjectListSig.asReadonly();
 
+  private _loading = false;
+  private _loaded = false;
 
   init(): void {
+    if (this._loaded || this._loading) {
+      return;
+    }
+
+    if (this._subjectListSig().length) {
+      this._loaded = true;
+      return;
+    }
+
+    this._loading = true;
     if (!this._subjectListSig().length) {
       this._httpSubjectService
         .listSubjectItems$()
         .pipe(take(1))
-        .subscribe((subjectList: SubjectItem[]) => {
-          this._subjectListSig.set(subjectList);
+        .subscribe({
+          next: (subjectList: SubjectItem[]) => {
+            this._subjectListSig.set(subjectList);
+          },
+          error: (err) => {
+            console.error('Failed to load subject list', err);
+            this._loading = false;
+          },
+          complete: () => {
+            this._loading = false;
+          },
         });
     }
   }

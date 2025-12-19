@@ -12,6 +12,7 @@
 export interface FacultyResponseDTO { 
     name: string;
     shortName: string;
+    subjectList: Array<string>;
     id: string;
 }
 
