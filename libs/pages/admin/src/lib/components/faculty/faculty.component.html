@@ -4,19 +4,68 @@
   [optionListSig]="subjectListSig()" itemLabelSig="subject" itemKeyDysplay="name">
 </free-spot-dynamic-chip-list>
 
+<h2 class="pb-4 pt-4 text-xl font-bold md:pb-4 md:pt-8">Programs</h2>
+<mat-chip-set>
+  @for (program of facultyProgramsSig(); track program.id) {
+  <mat-chip removable="true" (click)="onEditingProgram(program)">{{program.name}}
+    <button matChipRemove (click)="onDeleteProgram(program.id)" matTooltip="click to remove item"
+      matTooltipPosition="right" matTooltipShowDelay="500">
+      <mat-icon class="delete-icon">cancel</mat-icon>
+    </button>
+  </mat-chip>
+  }
+  <button mat-icon-button class="ml-2" (click)="onAddingProgram()" matTooltip="click to add item"
+    matTooltipPosition="right" matTooltipShowDelay="500">
+    <mat-icon class="primary-icon mb-2">add</mat-icon>
+  </button>
+</mat-chip-set>
+
+<div #editProgram class="h-auto min-h-24">
+  @if (addingProgram) {
+  <form [formGroup]="addProgramFormGroup" class="flex flex-col flex-wrap py-4 lg:flex-row lg:items-center lg:gap-4"
+    (ngSubmit)="editingProgram ? onEditProgram() : onAddProgram()">
+
+    <mat-form-field>
+      <mat-label>Program name</mat-label>
+      <input matInput formControlName="name" />
+      <mat-error>{{ displayError(addProgramFormGroup.controls['name']) }}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Degree</mat-label>
+      <mat-select formControlName="degree">
+        @for( degree of degreeOptions; track degree){
+        <mat-option [value]="degree">{{ degree }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <div class="flex flex-auto flex-col md:flex-row md:items-center md:gap-4">
+      <button mat-flat-button type="submit" class="sm:mb-5" [disabled]="!addProgramFormGroup.valid">
+        {{ editingProgram ? 'Edit program' : 'Add program' }}
+      </button>
+    </div>
+  </form>
+  }
+</div>
+
 <h2 class="pb-2 pt-4 text-xl font-bold md:pb-4 md:pt-8">Years</h2>
-<!-- @for (year of facultySig().yearList; track year.name) {
+@for (year of facultyProgramYearsSig(); track year.id) {
 <mat-list>
   <div mat-subheader class="flex cursor-pointer items-center gap-2 text-lg font-bold">
-    <span (click)="editYear.emit(year)" matTooltip="click to edit year" matTooltipPosition="right"
-      matTooltipPositionAtOrigin="true" matTooltipShowDelay="500">{{ year.name }}</span>
-    <mat-icon class="delete-icon" (click)="deleteYear(year)" matTooltip="click to delete year"
-      matTooltipPosition="right" matTooltipPositionAtOrigin="true" matTooltipShowDelay="500">cancel</mat-icon>
+    <span (click)="onEditingYear(year)" matTooltip="click to add year" matTooltipPosition="right"
+      matTooltipPositionAtOrigin="true" matTooltipShowDelay="500">
+      {{ getProgramById(year.programId).name}} ({{getProgramById(year.programId).degree}})-{{year.label}}
+    </span>
+    <mat-icon class="delete-icon cursor-pointer" (click)="onDeleteYear(year.id)" matTooltip="click to delete year"
+      matTooltipPosition="right" matTooltipPositionAtOrigin="true" matTooltipShowDelay="500">
+      cancel
+    </mat-icon>
   </div>
 
-  <free-spot-dynamic-chip-list [itemListSig]="year.yearGroupList ? year.yearGroupList : []"
+  <!-- <free-spot-dynamic-chip-list [itemListSig]="year.yearGroupList ? year.yearGroupList : []"
     (itemListSigChange)="onYearGroupListChange($event, year)" itemLabelSig="group" itemKeyDysplay="name"
-    itemDinamicRoute="group/"></free-spot-dynamic-chip-list>
+    itemDinamicRoute="group/"></free-spot-dynamic-chip-list> -->
 
   <mat-divider></mat-divider>
 </mat-list>
@@ -25,4 +74,40 @@
   <div mat-subheader class="text-lg font-bold">No year added yet</div>
   <mat-divider></mat-divider>
 </mat-list>
-} -->
+}
+
+<div #editYear class="h-auto min-h-24">
+  @if (addingYear) {
+  <form [formGroup]="addYearFormGroup" class="flex flex-col flex-wrap py-4 lg:flex-row lg:items-center lg:gap-4"
+    (ngSubmit)="editingYear ? onEditYear() : onAddYear()">
+
+    <mat-form-field>
+      <mat-label>Program</mat-label>
+      <mat-select formControlName="programId">
+        @for( program of facultyProgramsSig(); track program.id){
+        <mat-option [value]="program.id">{{ program.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Year label</mat-label>
+      <input matInput formControlName="label" />
+      <mat-error>{{ displayError(addYearFormGroup.controls['label']) }}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Year</mat-label>
+      <input matInput type="number" formControlName="yearNumber">
+    </mat-form-field>
+
+    <div class="flex flex-auto flex-col md:flex-row md:items-center md:gap-4">
+      <button mat-flat-button type="submit" class="sm:mb-5" [disabled]="!addYearFormGroup.valid">
+        {{ editingYear ? 'Edit year' : 'Add year' }}
+      </button>
+    </div>
+  </form>
+  } @else {
+  <free-spot-add-item-card class="block h-24 w-full md:h-28" (click)="onAddingYear()"></free-spot-add-item-card>
+  }
+</div>

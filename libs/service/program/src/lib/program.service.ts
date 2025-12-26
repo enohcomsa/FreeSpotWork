@@ -13,7 +13,7 @@ export class ProgramService {
   private readonly _destroyRef = inject(DestroyRef);
 
   private _programListSig: WritableSignal<Program[]> = signal([]);
-   programListSig = this._programListSig.asReadonly();
+  programListSig = this._programListSig.asReadonly();
 
   private _loading = false;
   private _loaded = false;
@@ -48,8 +48,12 @@ export class ProgramService {
     }
   }
 
+  selectProgramsByFacultyId(facultyId: string): Signal<Program[]> {
+    return computed(() => this.programListSig().filter((program: Program) => program.facultyId === facultyId));
+  }
+
   getSignalById(id: string): Signal<Program> {
-    return computed(() => this. programListSig().find((program: Program) => program.id === id) || ({} as Program));
+    return computed(() => this.programListSig().find((program: Program) => program.id === id) || ({} as Program));
   }
 
   getById(id: string): Observable<Program> {

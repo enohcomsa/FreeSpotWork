@@ -48,6 +48,10 @@ export class ProgramYerarService {
     }
   }
 
+  selectYearByProgramId(programId: string): Signal<ProgramYear[]> {
+    return computed(() => this.programYearListSig().filter((programYear: ProgramYear) => programYear.programId === programId));
+  }
+
   getSignalById(id: string): Signal<ProgramYear> {
     return computed(() => this.programYearListSig().find((programYear: ProgramYear) => programYear.id === id) || ({} as ProgramYear));
   }
