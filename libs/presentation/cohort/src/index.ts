@@ -1,1 +1,2 @@
-export * from './lib/cohort-presentation/cohort-presentation';
+export * from './lib/cohort.vm';
+export * from './lib/cohort.vm.mapper';

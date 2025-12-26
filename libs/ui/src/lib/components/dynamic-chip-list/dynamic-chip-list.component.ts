@@ -95,16 +95,7 @@ export class DynamicChipListComponent<T> implements OnInit {
 
   onAddItem(): void {
     this.addingItem = false;
-    if (this.itemLabelSig() === 'group') {
-      this.itemListSig.set([
-        ...this.itemListSig(),
-        { name: this.addItemFormControl.value, timetable: this.emptyTimetable() } as T,
-      ]);
-      console.log(this.itemListSig());
-    } else {
-      this.itemListSig.set([...this.itemListSig(), this.addItemFormControl.value as T]);
-    }
-
+    this.itemListSig.set([...this.itemListSig(), this.addItemFormControl.value as T]);
     this.addItemFormControl.reset();
   }
 

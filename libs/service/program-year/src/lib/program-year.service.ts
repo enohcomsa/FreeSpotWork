@@ -8,7 +8,7 @@ import { Observable, take } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class ProgramYerarService {
+export class ProgramYearService {
   private _httpProgramYearService: HttpProgramYearService = inject(HttpProgramYearService);
   private readonly _destroyRef = inject(DestroyRef);
 

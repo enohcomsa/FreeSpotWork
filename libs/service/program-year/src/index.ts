@@ -1,1 +1,1 @@
-export * from './lib/program-yerar.service';
+export * from './lib/program-year.service';

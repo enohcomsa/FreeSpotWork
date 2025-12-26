@@ -63,9 +63,9 @@
     </mat-icon>
   </div>
 
-  <!-- <free-spot-dynamic-chip-list [itemListSig]="year.yearGroupList ? year.yearGroupList : []"
-    (itemListSigChange)="onYearGroupListChange($event, year)" itemLabelSig="group" itemKeyDysplay="name"
-    itemDinamicRoute="group/"></free-spot-dynamic-chip-list> -->
+  <free-spot-dynamic-chip-list [itemListSig]="getCohortNameListSignalByYearId(year.id)()"
+    (itemListSigChange)="onYearGroupListChange($event, year.id)" itemLabelSig="group" itemDinamicRoute="group/">
+  </free-spot-dynamic-chip-list>
 
   <mat-divider></mat-divider>
 </mat-list>

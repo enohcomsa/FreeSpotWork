@@ -11,7 +11,7 @@ import { Faculty, UpdateFacultyCmd } from '@free-spot-domain/faculty';
 import { AdminFacultyService } from '@free-spot-service/faculty';
 import { CreateProgramCmd, Program, UpdateProgramCmd } from '@free-spot-domain/program';
 import { ProgramService } from '@free-spot-service/program';
-import { DegreeDTO } from '@free-spot/api-client';
+import { CohortTypeDTO, DegreeDTO } from '@free-spot/api-client';
 import { AbstractControl, FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormErrorMessage } from '@free-spot/util';
 import { take } from 'rxjs';
@@ -20,8 +20,10 @@ import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
-import { ProgramYerarService } from '@free-spot-service/program-year';
+import { ProgramYearService } from '@free-spot-service/program-year';
 import { CreateProgramYearCmd, ProgramYear, UpdateProgramYearCmd } from '@free-spot-domain/program-year';
+import { CohortService } from '@free-spot-service/cohort';
+import { Cohort, CreateCohortCmd } from '@free-spot-domain/cohort';
 
 @Component({
   selector: 'free-spot-faculty',
@@ -29,7 +31,7 @@ import { CreateProgramYearCmd, ProgramYear, UpdateProgramYearCmd } from '@free-s
     FormsModule,
     ReactiveFormsModule,
     MatInputModule,
-    MatSelectModule, CommonModule, MatButtonModule, MatChipsModule,AddItemCardComponent],
+    MatSelectModule, CommonModule, MatButtonModule, MatChipsModule, AddItemCardComponent],
   templateUrl: './faculty.component.html',
   styleUrl: './faculty.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -41,7 +43,8 @@ export class FacultyComponent implements OnInit {
   private _adminSubjectService: SubjectService = inject(SubjectService);
   private _adminFacultyService: AdminFacultyService = inject(AdminFacultyService);
   private _adminProgramService: ProgramService = inject(ProgramService);
-  private _adminProgramYearService: ProgramYerarService = inject(ProgramYerarService);
+  private _adminProgramYearService: ProgramYearService = inject(ProgramYearService);
+  private _adminCohortService: CohortService = inject(CohortService);
 
   editProgramRef = viewChild.required<ElementRef>('editProgram');
   editYearRef = viewChild.required<ElementRef>('editYear');
@@ -84,9 +87,18 @@ export class FacultyComponent implements OnInit {
     this._adminSubjectService.init();
     this._adminProgramService.init();
     this._adminProgramYearService.init();
+    this._adminCohortService.init();
   }
 
   displayError = (control: AbstractControl | null) => this._formErrorMessage.displayFormErrorMessage(control);
+
+  getProgramById(programId: string): Program {
+    return this._adminProgramService.getSignalById(programId)();
+  }
+
+  getCohortNameListSignalByYearId(yearId: string): Signal<string[]> {
+    return computed(() => this._adminCohortService.selectCohortsByProgramYearId(yearId)().map((cohort: Cohort) => cohort.name));
+  }
 
   onAddingProgram(): void {
     this.addProgramFormGroup.reset({ name: '', degree: DegreeDTO.LIC });
@@ -153,10 +165,6 @@ export class FacultyComponent implements OnInit {
     this.addingProgram = false;
     this.editingProgram = false;
     this.editingProgramId = null;
-  }
-
-  getProgramById(programId: string): Program {
-    return this._adminProgramService.getSignalById(programId)();
   }
 
   onAddingYear(): void {
@@ -228,5 +236,28 @@ export class FacultyComponent implements OnInit {
       subjectList: newSubjectList.map((subject: SubjectItem) => subject.id)
     }
     this._adminFacultyService.update(this.facultySig().id, updatedFacluty);
+  }
+
+  onYearGroupListChange(newYearGroupList: string[], yearId: string): void {
+    const existingCohorts: Cohort[] = this._adminCohortService.selectCohortsByProgramYearId(yearId)();
+    const existingNames = new Set(existingCohorts.map((cohort: Cohort) => cohort.name));
+    const newNames = new Set(newYearGroupList.map((group: string) => group));
+
+    if (newYearGroupList.length > existingCohorts.length) {
+      const addedGroup: string | undefined = newYearGroupList.find((group: string) => !existingNames.has(group));
+      if (addedGroup) {
+        const newCohort: CreateCohortCmd = {
+          type: CohortTypeDTO.GROUP,
+          programYearId: yearId,
+          name: addedGroup,
+        }
+        this._adminCohortService.create(newCohort);
+      }
+    } else if (newYearGroupList.length < existingCohorts.length) {
+      const removedCohort: Cohort | undefined = existingCohorts.find((cohort: Cohort) => !newNames.has(cohort.name));
+      if (removedCohort?.id) {
+        this._adminCohortService.remove(removedCohort.id);
+      }
+    }
   }
 }

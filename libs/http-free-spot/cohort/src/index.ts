@@ -1,1 +1,1 @@
-export * from './lib/http-free-spot-cohort/http-free-spot-cohort';
+export * from './lib/http-cohort.service';

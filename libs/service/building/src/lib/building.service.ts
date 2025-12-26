@@ -30,8 +30,6 @@ export class BuildingService {
         .getBuildingList()
         .pipe(take(1))
         .subscribe((buildingList: BuildingLegacy[]) => {
-          console.log(buildingList);
-
           this._buildingListSigLegacy.set(buildingList?.filter((building: BuildingLegacy) => building !== null));
         });
     }
