@@ -69,6 +69,7 @@
       "@http-free-spot/app-date": ["libs/http-free-spot/app-date/src/index.ts"],
       "@http-free-spot/building": ["libs/http-free-spot/building/src/index.ts"],
       "@http-free-spot/building-card": ["libs/http-free-spot/building-card/src/index.ts"],
+      "@http-free-spot/cohort": ["libs/http-free-spot/cohort/src/index.ts"],
       "@http-free-spot/event": ["libs/http-free-spot/event/src/index.ts"],
       "@http-free-spot/faculty": ["libs/http-free-spot/faculty/src/index.ts"],
       "@http-free-spot/floor": ["libs/http-free-spot/floor/src/index.ts"],
