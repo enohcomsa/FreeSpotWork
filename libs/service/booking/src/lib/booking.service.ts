@@ -5,7 +5,7 @@ import { AdminFacultyService } from '@free-spot-service/faculty';
 import { AdminFloorService } from '@free-spot-service/floor';
 import { AdminRoomService } from '@free-spot-service/room';
 import { Event } from '@free-spot/enums';
-import { BookedEvent, FloorLegacy, Group, SemiGroup, TimetableActivityItemLegacy, TimeTableItemLecagy } from '@free-spot/models';
+import { BookedEvent, FloorLegacy, GroupLegacy, SemiGroup, TimetableActivityItemLegacy, TimeTableItemLecagy } from '@free-spot/models';
 
 @Injectable({
   providedIn: 'root',
@@ -50,7 +50,7 @@ export class BookingService {
     }
   }
 
-  generateUserBookedItems(group: Group, addingBooking: boolean, semiGroup?: SemiGroup): BookedEvent[] {
+  generateUserBookedItems(group: GroupLegacy, addingBooking: boolean, semiGroup?: SemiGroup): BookedEvent[] {
     const newUserBookingList: BookedEvent[] = [];
     this._getUserTimetableItems(group, semiGroup).forEach((timeTableItem: TimeTableItemLecagy) => {
       timeTableItem.activities.forEach((timetableActivity: TimetableActivityItemLegacy) => {
@@ -84,7 +84,7 @@ export class BookingService {
     return this.generateBooking(timetableActivity);
   }
 
-  private _getUserTimetableItems(group: Group, semiGroup?: SemiGroup): TimeTableItemLecagy[] {
+  private _getUserTimetableItems(group: GroupLegacy, semiGroup?: SemiGroup): TimeTableItemLecagy[] {
     const timetableItemList: TimeTableItemLecagy[] = [];
     if (semiGroup !== null && semiGroup !== undefined) {
       semiGroup.timetable?.forEach((timetableItem: TimeTableItemLecagy) =>

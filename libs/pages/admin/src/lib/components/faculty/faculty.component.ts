@@ -96,8 +96,8 @@ export class FacultyComponent implements OnInit {
     return this._adminProgramService.getSignalById(programId)();
   }
 
-  getCohortNameListSignalByYearId(yearId: string): Signal<string[]> {
-    return computed(() => this._adminCohortService.selectCohortsByProgramYearId(yearId)().map((cohort: Cohort) => cohort.name));
+  getCohortNameListSignalByYearId(yearId: string): Signal<Cohort[]> {
+    return computed(() => this._adminCohortService.selectGroupsByProgramYearId(yearId)());
   }
 
   onAddingProgram(): void {
@@ -238,19 +238,19 @@ export class FacultyComponent implements OnInit {
     this._adminFacultyService.update(this.facultySig().id, updatedFacluty);
   }
 
-  onYearGroupListChange(newYearGroupList: string[], yearId: string): void {
-    const existingCohorts: Cohort[] = this._adminCohortService.selectCohortsByProgramYearId(yearId)();
+  onYearGroupListChange(newYearGroupList: Cohort[], yearId: string): void {
+    const existingCohorts: Cohort[] = this._adminCohortService.selectGroupsByProgramYearId(yearId)();
     const existingNames = new Set(existingCohorts.map((cohort: Cohort) => cohort.name));
-    const newNames = new Set(newYearGroupList.map((group: string) => group));
-
+    const newNames = new Set(newYearGroupList.map((cohort: Cohort) => cohort.name ?? cohort));
     if (newYearGroupList.length > existingCohorts.length) {
-      const addedGroup: string | undefined = newYearGroupList.find((group: string) => !existingNames.has(group));
+      const addedGroup: string | undefined = newNames.difference(existingNames).values().next().value;
       if (addedGroup) {
         const newCohort: CreateCohortCmd = {
           type: CohortTypeDTO.GROUP,
           programYearId: yearId,
           name: addedGroup,
         }
+
         this._adminCohortService.create(newCohort);
       }
     } else if (newYearGroupList.length < existingCohorts.length) {

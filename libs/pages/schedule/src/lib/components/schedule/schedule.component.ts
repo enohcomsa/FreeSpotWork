@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, OnInit, Signal } from '@angular/core';
 
 import { TimetableItemComponent } from '@free-spot/ui';
-import { FreeSpotUser, Group, SemiGroup, TimeTableItemLecagy } from '@free-spot/models';
+import { FreeSpotUser, GroupLegacy, SemiGroup, TimeTableItemLecagy } from '@free-spot/models';
 import { WeekDay } from '@free-spot/enums';
 import { UserService } from '@free-spot-service/user';
 import { AdminFacultyService } from '@free-spot-service/faculty';
@@ -46,7 +46,7 @@ export class ScheduleComponent implements OnInit {
   private _getUserTimetableItemList(): TimeTableItemLecagy[] {
     let userTimetableItemList: TimeTableItemLecagy[] = [];
     if (Object.keys(this.currentUserSig()).length) {
-      const userGroup: Group = this._adminFacultyService.getGroupByName(this.currentUserSig().group as string)();
+      const userGroup: GroupLegacy = this._adminFacultyService.getGroupByName(this.currentUserSig().group as string)();
       const userSemiGroup: SemiGroup = this._getUserSemigroup(this.currentUserSig().semiGroup as string, userGroup);
 
       if (Object.keys(userGroup).length) {
@@ -60,7 +60,7 @@ export class ScheduleComponent implements OnInit {
     return userTimetableItemList;
   }
 
-  private _getUserSemigroup(semiGroupName: string, userGroup: Group): SemiGroup {
+  private _getUserSemigroup(semiGroupName: string, userGroup: GroupLegacy): SemiGroup {
     return userGroup.semigroups?.find((semiGroup: SemiGroup) => semiGroup.name === semiGroupName) || ({} as SemiGroup);
   }
 }

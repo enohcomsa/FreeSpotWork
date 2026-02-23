@@ -4,6 +4,7 @@ import { CreateTimetableActivityCmd, TimetableActivity, UpdateTimetableActivityC
 import { HttpTimetableActivityService } from '@http-free-spot/timetable-activity';
 import { Observable, take } from 'rxjs';
 import { SignalArrayUtil } from '@free-spot/util';
+import { ActivityType, WeekDay } from '@free-spot/enums';
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +30,53 @@ export class AdminTimetableActivityService {
 
   getTimetableActivityListSignalByRoomId(roomId: string): Signal<TimetableActivity[]> {
     return computed(() => this.timetableActivityListSig().filter((timetableActivity: TimetableActivity) => timetableActivity.roomId === roomId));
+  }
+
+  selectTimetableActivityListSignalByCohortId(cohortId: string): Signal<TimetableActivity[]> {
+    return computed(() => this.timetableActivityListSig().filter((timetableActivity: TimetableActivity) => timetableActivity.cohortIds.includes(cohortId)));
+  }
+
+  selectTimetableActivityListSignalBysubjectIdAndWeekDay(subjectId: string, weekDay: WeekDay): Signal<TimetableActivity[]> {
+    return computed(() => this.timetableActivityListSig().filter((timetableActivity: TimetableActivity) => timetableActivity.subjectId === subjectId && timetableActivity.weekDay === weekDay && timetableActivity.activityType !== ActivityType.SPECIAL_EVENT));
+  }
+
+  addCohortToActivity(cohortId: string, timetableActivityId: string): void {
+    const activity: TimetableActivity = this.getSignalById(timetableActivityId)();
+    console.log(activity);
+
+    const updatedCohortIds = [...activity.cohortIds, cohortId];
+
+    this.update(timetableActivityId, {
+      cohortIds: updatedCohortIds
+    })
+  }
+
+  removeCohortFromAcitvity(cohortId: string, timetableActivityId: string): void {
+    const activity: TimetableActivity = this.getSignalById(timetableActivityId)();
+
+    if (!activity.cohortIds.includes(cohortId)) {
+      return;
+    }
+
+    const updatedCohortIds = activity.cohortIds.filter(id => id !== cohortId);
+    this.update(timetableActivityId, {
+      cohortIds: updatedCohortIds
+    });
+  }
+
+  removeCohortFromAllActivities(cohortId: string): void {
+    const activities = this._timetableActivityListSig();
+
+    activities.forEach((activity: TimetableActivity) => {
+      if (!activity.cohortIds.includes(cohortId)) {
+        return;
+      }
+
+      const updatedCohortIds = activity.cohortIds.filter(id => id !== cohortId);
+      this.update(activity.id, {
+        cohortIds: updatedCohortIds
+      });
+    });
   }
 
   getSignalById(id: string): Signal<TimetableActivity> {

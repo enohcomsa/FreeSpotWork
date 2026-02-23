@@ -12,7 +12,7 @@ export const adminRoutes: Route[] = [
         },
       },
       {
-        path: 'group/:groupNameSig',
+        path: 'group/:groupIdSig',
         loadComponent: async () => {
           const mod = await import('./components/group/group.component');
           return mod.GroupComponent;

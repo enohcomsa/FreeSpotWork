@@ -1,116 +1,90 @@
 <div class="container">
   <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Group: {{ groupSig().name }}</h1>
 
-  <mat-slide-toggle
-    #semigroupsToggle
-    [matTooltip]="
-      (groupSig().studentList ? groupSig().studentList.length !== 0 : false)
-        ? 'remove students from group before toggle semigroups'
-        : 'click to toogle semigoups'
-    "
-    matTooltipPosition="below"
-    matTooltipPositionAtOrigin="true"
-    matTooltipShowDelay="500"
-    [disabled]="groupSig().studentList ? groupSig().studentList.length !== 0 : false"
-    class="pb-8"
-    [checked]="semigroupsEnabledSig()"
-    (change)="toggleSemigroups($event.checked)"
-    >Enable semigroups</mat-slide-toggle
-  >
+  <mat-slide-toggle #semigroupsToggle [matTooltip]="(true)? 'remove students from group before toggle semigroups' : 'click to toogle semigoups'
+    " matTooltipPosition="below" matTooltipPositionAtOrigin="true" matTooltipShowDelay="500" [disabled]=" false"
+    class="pb-8" [checked]="semigroupsEnabledSig()" (change)="toggleSemigroups($event.checked)">
+    Enable semigroups
+  </mat-slide-toggle>
 
   <mat-tab-group dynamicHeight>
     <mat-tab label="Group">
       <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Students</h1>
-      <free-spot-dynamic-chip-list
-        [itemListSig]="groupSig().studentList || []"
-        (itemListSigChange)="updateGroupStudentList($event)"
-        [optionListSig]="userListSig()"
-        itemLabelSig="student"
-        [itemKeyDysplay]="'firstName'"
-        [itemKeyDysplay2]="'familyName'"
-        [deletableItemListSig]="deletableUserListSig()"
-      >
-      </free-spot-dynamic-chip-list>
+      <!-- <free-spot-dynamic-chip-list [itemListSig]="groupSig().studentList || []"
+        (itemListSigChange)="updateGroupStudentList($event)" [optionListSig]="userListSig()" itemLabelSig="student"
+        [itemKeyDysplay]="'firstName'" [itemKeyDysplay2]="'familyName'" [deletableItemListSig]="deletableUserListSig()">
+      </free-spot-dynamic-chip-list> -->
       @if (semigroupsEnabledSig()) {
-        @if (groupSig().semigroups && groupSig().semigroups?.length) {
-          <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Timetable semigroup 1</h1>
-          <div class="flex flex-wrap gap-4 lg:gap-0">
-            @for (timetableItem of groupSig().semigroups![0].timetable || []; track timetableItem) {
-              <free-spot-timetable-item class="grow" [timetableItemSigLegacy]="timetableItem"></free-spot-timetable-item>
-            }
-          </div>
-          <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Timetable semigroup 2</h1>
-          <div class="flex flex-wrap gap-4 lg:gap-0">
-            @for (timetableItem of groupSig().semigroups![1].timetable || []; track timetableItem) {
-              <free-spot-timetable-item class="grow" [timetableItemSigLegacy]="timetableItem"></free-spot-timetable-item>
-            }
-          </div>
+
+      @if ( semigroupListSig().length) {
+      <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Timetable semigroup 1</h1>
+      <div class="flex flex-wrap gap-4 lg:gap-0">
+        @for (dayItem of timetableSemigroup1PerDay(); track dayItem.day) {
+        <free-spot-timetable-item class="grow" [day]="dayItem.day"
+          [timetableItemSig]="dayItem.activities"></free-spot-timetable-item>
         }
+      </div>
+      <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Timetable semigroup 2</h1>
+      <div class="flex flex-wrap gap-4 lg:gap-0">
+        @for (dayItem of timetableSemigroup2PerDay(); track dayItem.day) {
+        <free-spot-timetable-item class="grow" [day]="dayItem.day"
+          [timetableItemSig]="dayItem.activities"></free-spot-timetable-item>
+        }
+      </div>
+      }
+
       } @else {
-        <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Timetable</h1>
-        <free-spot-admin-group-timetable
-          [groupSig]="groupSig()"
-          (groupSigChange)="updateGroupTimetable($event)"
-          [subjectListSig]="facultySig().subjectList || []"
-        >
-        </free-spot-admin-group-timetable>
-        <div class="flex flex-wrap gap-4 lg:gap-0">
-          @for (timetableItem of groupSig().timetable; track timetableItem) {
-            <free-spot-timetable-item class="grow" [timetableItemSigLegacy]="timetableItem"></free-spot-timetable-item>
-          }
-        </div>
+      <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Timetable</h1>
+      <free-spot-admin-group-timetable [groupIdSig]="groupIdSig()" [subjectListSig]="facultySubjectListSig() || []">
+      </free-spot-admin-group-timetable>
+      <div class="flex flex-wrap gap-4 lg:gap-0">
+        @for (dayItem of timetableGroupPerDay(); track dayItem.day) {
+        <free-spot-timetable-item class="grow" [day]="dayItem.day" [timetableItemSig]="dayItem.activities">
+        </free-spot-timetable-item>
+        }
+      </div>
       }
     </mat-tab>
+
     <mat-tab label="Semigroup 1" [disabled]="!semigroupsEnabledSig()">
-      @if (groupSig().semigroups && groupSig().semigroups?.length) {
-        <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Students</h1>
-        <free-spot-dynamic-chip-list
-          [itemListSig]="groupSig().semigroups![0].students || []"
-          (itemListSigChange)="updateSemiGroupStudentList($event, groupSig().semigroups![0])"
-          [optionListSig]="groupSig().studentList"
-          itemLabelSig="student"
-          [itemKeyDysplay]="'firstName'"
-          [itemKeyDysplay2]="'familyName'"
-        >
-        </free-spot-dynamic-chip-list>
-        <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Timetable</h1>
-        <free-spot-admin-semigroup-timetable
-          [semiGroupSig]="groupSig().semigroups![0]"
-          (semiGroupSigChange)="updateSemiGroupTimetable($event)"
-          [subjectListSig]="facultySig().subjectList || []"
-        >
-        </free-spot-admin-semigroup-timetable>
-        <div class="flex flex-wrap gap-4 lg:gap-0">
-          @for (timetableItem of groupSig().semigroups![0].timetable || []; track timetableItem) {
-            <free-spot-timetable-item class="grow" [timetableItemSigLegacy]="timetableItem"></free-spot-timetable-item>
-          }
-        </div>
+      @if (semigroupListSig().length) {
+      <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Students</h1>
+      <!-- <free-spot-dynamic-chip-list [itemListSig]="groupSig().semigroups![0].students || []"
+        (itemListSigChange)="updateSemiGroupStudentList($event, groupSig().semigroups![0])"
+        [optionListSig]="groupSig().studentList" itemLabelSig="student" [itemKeyDysplay]="'firstName'"
+        [itemKeyDysplay2]="'familyName'">
+      </free-spot-dynamic-chip-list> -->
+      <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Timetable</h1>
+      <free-spot-admin-semigroup-timetable [semiGroupIdSig]="semiGroup1IdSig()"
+        [subjectListSig]="facultySubjectListSig() || []">
+      </free-spot-admin-semigroup-timetable>
+      <div class="flex flex-wrap gap-4 lg:gap-0">
+        @for (dayItem of timetableSemigroup1PerDay(); track dayItem.day) {
+        <free-spot-timetable-item class="grow" [day]="dayItem.day"
+          [timetableItemSig]="dayItem.activities"></free-spot-timetable-item>
+        }
+      </div>
       }
     </mat-tab>
+
     <mat-tab label="Semigroup 2" [disabled]="!semigroupsEnabledSig()">
-      @if (groupSig().semigroups && groupSig().semigroups?.length) {
-        <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Students</h1>
-        <free-spot-dynamic-chip-list
-          [itemListSig]="groupSig().semigroups![1].students || []"
-          (itemListSigChange)="updateSemiGroupStudentList($event, groupSig().semigroups![1])"
-          [optionListSig]="groupSig().studentList"
-          itemLabelSig="student"
-          [itemKeyDysplay]="'firstName'"
-          [itemKeyDysplay2]="'familyName'"
-        >
-        </free-spot-dynamic-chip-list>
-        <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Timetable</h1>
-        <free-spot-admin-semigroup-timetable
-          [semiGroupSig]="groupSig().semigroups![1]"
-          (semiGroupSigChange)="updateSemiGroupTimetable($event)"
-          [subjectListSig]="facultySig().subjectList || []"
-        >
-        </free-spot-admin-semigroup-timetable>
-        <div class="flex flex-wrap gap-4 lg:gap-0">
-          @for (timetableItem of groupSig().semigroups![1].timetable || []; track timetableItem) {
-            <free-spot-timetable-item class="grow" [timetableItemSigLegacy]="timetableItem"></free-spot-timetable-item>
-          }
-        </div>
+      @if (semigroupListSig().length) {
+      <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Students</h1>
+      <!-- <free-spot-dynamic-chip-list [itemListSig]="groupSig().semigroups![1].students || []"
+        (itemListSigChange)="updateSemiGroupStudentList($event, groupSig().semigroups![1])"
+        [optionListSig]="groupSig().studentList" itemLabelSig="student" [itemKeyDysplay]="'firstName'"
+        [itemKeyDysplay2]="'familyName'">
+      </free-spot-dynamic-chip-list> -->
+      <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Timetable</h1>
+      <free-spot-admin-semigroup-timetable [semiGroupIdSig]="semiGroup2IdSig()"
+        [subjectListSig]="facultySubjectListSig() || []">
+      </free-spot-admin-semigroup-timetable>
+      <div class="flex flex-wrap gap-4 lg:gap-0">
+        @for (dayItem of timetableSemigroup2PerDay(); track dayItem.day) {
+        <free-spot-timetable-item class="grow" [day]="dayItem.day"
+          [timetableItemSig]="dayItem.activities"></free-spot-timetable-item>
+        }
+      </div>
       }
     </mat-tab>
   </mat-tab-group>

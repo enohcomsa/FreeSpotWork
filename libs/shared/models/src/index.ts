@@ -5,7 +5,7 @@ export { FacultyLegacy } from './lib/faculty.model';
 export { FloorLegacy } from './lib/floor.model';
 export { FreeSpotDate } from './lib/free-spot-app-date.model';
 export { FreeSpotUser } from './lib/free-spot-user.model';
-export { Group } from './lib/group.model';
+export { GroupLegacy } from './lib/group.model';
 export { RoomLegacy } from './lib/room.model';
 export { SemiGroup } from './lib/semi-group.model';
 export { SubjectItemLegacy } from './lib/subject.model';

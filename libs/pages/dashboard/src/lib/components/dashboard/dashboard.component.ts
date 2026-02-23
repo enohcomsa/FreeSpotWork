@@ -9,7 +9,7 @@ import {
   FloorLegacy,
   FreeSpotDate,
   FreeSpotUser,
-  Group,
+  GroupLegacy,
   RoomLegacy,
   SemiGroup,
   TimetableActivityItemLegacy,
@@ -59,7 +59,7 @@ export class DashboardComponent implements OnInit {
       .sort((event1, event2) => new Date(event1.date as Date).getTime() - new Date(event2.date as Date).getTime())
       .filter((event: BuildingLegacy) => new Date().getTime() - new Date(event.date as Date).getTime() <= 0),
   );
-  currentUserGroupSig: Signal<Group> = computed(() =>
+  currentUserGroupSig: Signal<GroupLegacy> = computed(() =>
     this._adminFacultyService.getGroupByName(this.currentUserSig().group as string)(),
   );
 
@@ -84,7 +84,7 @@ export class DashboardComponent implements OnInit {
             yearList: faculty.yearList?.map((year: Year) => {
               return {
                 ...year,
-                yearGroupList: year.yearGroupList?.map((group: Group) => {
+                yearGroupList: year.yearGroupList?.map((group: GroupLegacy) => {
                   return {
                     ...group,
                     timetable: group.timetable.map((timetableItem: TimeTableItemLecagy) => this._updateTimetableItem(timetableItem)),
@@ -196,7 +196,7 @@ export class DashboardComponent implements OnInit {
     };
   }
 
-  private _getUserSemigroup(semiGroupName: string, userGroup: Group): SemiGroup {
+  private _getUserSemigroup(semiGroupName: string, userGroup: GroupLegacy): SemiGroup {
     return userGroup.semigroups?.find((semiGroup: SemiGroup) => semiGroup.name === semiGroupName) || ({} as SemiGroup);
   }
 }

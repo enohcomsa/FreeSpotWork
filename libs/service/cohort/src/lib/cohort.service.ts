@@ -4,6 +4,7 @@ import { HttpCohortService } from '@http-free-spot/cohort';
 import { take, Observable } from 'rxjs';
 import { SignalArrayUtil } from '@free-spot/util';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { CohortTypeDTO } from '@free-spot/api-client';
 
 @Injectable({
   providedIn: 'root'
@@ -48,8 +49,12 @@ export class CohortService {
     }
   }
 
-  selectCohortsByProgramYearId(programYearId: string): Signal<Cohort[]> {
-    return computed(() => this.cohortListSig().filter((cohort: Cohort) => cohort.programYearId === programYearId));
+  selectGroupsByProgramYearId(programYearId: string): Signal<Cohort[]> {
+    return computed(() => this.cohortListSig().filter((cohort: Cohort) => cohort.programYearId === programYearId && cohort.type === CohortTypeDTO.GROUP));
+  }
+
+  selectSemigroupByparentGroupId(parentGroupId: string): Signal<Cohort[]> {
+    return computed(() => this.cohortListSig().filter((cohort: Cohort) => cohort.parentGroupId === parentGroupId) ?? []);
   }
 
   getSignalById(id: string): Signal<Cohort> {

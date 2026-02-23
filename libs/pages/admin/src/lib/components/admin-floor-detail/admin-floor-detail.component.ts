@@ -67,13 +67,13 @@ export class AdminFloorDetailComponent implements OnInit {
     totalSpotsNumber: [0, Validators.required],
     unavailableSpots: [0, Validators.required],
   });
-  roomEmptyTimetable: Signal<TimeTableItemLecagy[]> = computed(() => [
-    { weekDay: WeekDay.MONDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.MONDAY) },
-    { weekDay: WeekDay.TUESDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.TUESDAY) },
-    { weekDay: WeekDay.WEDNESDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.WEDNESDAY) },
-    { weekDay: WeekDay.THURSDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.THURSDAY) },
-    { weekDay: WeekDay.FRIDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.FRIDAY) },
-  ]);
+  // roomEmptyTimetable: Signal<TimeTableItemLecagy[]> = computed(() => [
+  //   { weekDay: WeekDay.MONDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.MONDAY) },
+  //   { weekDay: WeekDay.TUESDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.TUESDAY) },
+  //   { weekDay: WeekDay.WEDNESDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.WEDNESDAY) },
+  //   { weekDay: WeekDay.THURSDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.THURSDAY) },
+  //   { weekDay: WeekDay.FRIDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.FRIDAY) },
+  // ]);
 
   readonly floorRoomListSig: Signal<Room[]> = computed(() => this._adminRoomService.selectRoomsByFloorId(this.floorIdSig())());
   readonly roomCardVMs = computed<RoomCardVM[]>(() => (this.floorRoomListSig()).map(toRoomCardVM));

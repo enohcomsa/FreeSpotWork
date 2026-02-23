@@ -4,7 +4,6 @@ import {
   computed,
   inject,
   input,
-  model,
   OnInit,
   signal,
   Signal,
@@ -13,7 +12,7 @@ import {
 
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AdminRoomService } from '@free-spot-service/room';
-import { BookedEvent, FreeSpotUser, SemiGroup, SubjectItemLegacy, TimetableActivityItemLegacy, TimeTableItemLecagy } from '@free-spot/models';
+import { FreeSpotUser } from '@free-spot/models';
 import { debounceTime } from 'rxjs';
 import { Event, WeekDay } from '@free-spot/enums';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -28,6 +27,9 @@ import { UserService } from '@free-spot-service/user';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormErrorMessage } from '@free-spot/util';
 import { ConfirmModalService } from '@free-spot-service/confirm-modal';
+import { TimetableActivity } from '@free-spot-domain/timetable-activity';
+import { AdminTimetableActivityService } from '@free-spot-service/timetable-activity';
+import { SubjectService } from '@free-spot-service/subject';
 
 @Component({
   selector: 'free-spot-admin-semigroup-timetable',
@@ -43,7 +45,7 @@ import { ConfirmModalService } from '@free-spot-service/confirm-modal';
     MatFormFieldModule,
     MatSelectModule,
     MatTooltipModule
-],
+  ],
   templateUrl: './admin-semigroup-timetable.component.html',
   styleUrl: './admin-semigroup-timetable.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -55,12 +57,15 @@ export class AdminSemisemiGroupTimetableComponent implements OnInit {
   private _bookingService: BookingService = inject(BookingService);
   private _formErrorMessage: FormErrorMessage = inject(FormErrorMessage);
   private _confirmService: ConfirmModalService = inject(ConfirmModalService);
+  private _adminSubjectService: SubjectService = inject(SubjectService);
+  private _adminTimetableActivityService: AdminTimetableActivityService = inject(AdminTimetableActivityService);
 
   userListSig: Signal<FreeSpotUser[]> = this._userService.userListSig;
-  semiGroupSig = model.required<SemiGroup>();
-  subjectListSig = input.required<SubjectItemLegacy[]>();
-  foundActivitiesSig: WritableSignal<TimetableActivityItemLegacy[]> = signal([]);
+  semiGroupIdSig = input.required<string>();
+  subjectListSig = input.required<string[]>();
+  foundActivityListSig: WritableSignal<TimetableActivity[]> = signal([]);
 
+  protected semiGroupTimetableActivityListSig: Signal<TimetableActivity[]> = computed(() => this._adminTimetableActivityService.selectTimetableActivityListSignalByCohortId(this.semiGroupIdSig())());
   startHourList: number[] = [8, 10, 12, 14, 16, 18];
   eventList: Event[] = Object.values(Event).filter((event: Event) => event !== Event.SPECIAL_EVENT);
   weekDayList: WeekDay[] = Object.values(WeekDay);
@@ -68,60 +73,48 @@ export class AdminSemisemiGroupTimetableComponent implements OnInit {
   addingTimetableActivity = false;
 
   emptyTimetableSig: Signal<boolean> = computed(() => {
-    return !this.semiGroupSig()
-      ?.timetable.map((timetableItem: TimeTableItemLecagy) =>
-        timetableItem.activities ? timetableItem.activities.length !== 0 : !!timetableItem.activities,
-      )
-      .some((timetableItem: boolean) => timetableItem === true);
+    return this._adminTimetableActivityService.selectTimetableActivityListSignalByCohortId(this.semiGroupIdSig())()?.length === 0;
   });
+
 
   ngOnInit(): void {
     this._bookingService.init();
     this._userService.init();
+    this._adminTimetableActivityService.init();
+    this._adminSubjectService.init();
+
     this.addTimetableActivityFormSemiGroup = this._formBuilder.nonNullable.group({
       weekDay: [WeekDay.MONDAY, [Validators.required, Validators.minLength(1)]],
       subject: [this.subjectListSig()[0], [Validators.required, Validators.minLength(1)]],
       timetableActivity: [{}, [Validators.required, Validators.minLength(1)]],
     });
-    this.addTimetableActivityFormSemiGroup.valueChanges.pipe(debounceTime(300)).subscribe(() => {
-      let foundTimetableActivities: TimetableActivityItemLegacy[] = this._adminRoomService.getTimetableActivitiesByWeekDayAndSubject(
-        this.addTimetableActivityFormSemiGroup.controls['weekDay'].value,
-        this.addTimetableActivityFormSemiGroup.controls['subject'].value,
-      );
-      const currentActivities: TimetableActivityItemLegacy[] = this._getActivitiesFromItemByWeekDay(
-        this.addTimetableActivityFormSemiGroup.controls['weekDay'].value,
-      );
-      foundTimetableActivities = foundTimetableActivities.filter((timetableActivity: TimetableActivityItemLegacy) => {
-        return !currentActivities.some((exitentActivity: TimetableActivityItemLegacy) =>
-          this._checkTimetebleActivityEquality(exitentActivity, timetableActivity),
-        );
-      });
 
-      this.foundActivitiesSig.set(foundTimetableActivities);
+    this.addTimetableActivityFormSemiGroup.valueChanges.pipe(debounceTime(300)).subscribe(() => {
+      const foundTimetableActivities: TimetableActivity[] = this._adminTimetableActivityService
+        .selectTimetableActivityListSignalBysubjectIdAndWeekDay(
+          this.addTimetableActivityFormSemiGroup.controls['subject'].value,
+          this.addTimetableActivityFormSemiGroup.controls['weekDay'].value,
+        )().filter((timetableActivity: TimetableActivity) => !timetableActivity.cohortIds.includes(this.semiGroupIdSig()));
+
+      this.foundActivityListSig.set(foundTimetableActivities);
     });
   }
   displayError = (control: AbstractControl | null) => this._formErrorMessage.displayFormErrorMessage(control);
 
-  dysplaySubject(subjectItem: SubjectItemLegacy): string {
-    if (subjectItem !== undefined && subjectItem !== null && Object.keys(subjectItem).length) {
-      return subjectItem.shortName;
-    }
-    return '';
+  getSubjectShortNameById(subjectId: string): string {
+    return this._adminSubjectService.getSignalById(subjectId)().shortName;
   }
 
-  dysplayTimetableActivity(timetableActivity: TimetableActivityItemLegacy): string {
-    if (timetableActivity !== undefined && timetableActivity !== null && Object.keys(timetableActivity).length) {
-      return (
-        timetableActivity.startHour +
-        ' ' +
-        timetableActivity.activityType +
-        ' ' +
-        timetableActivity.roomName +
-        ' ' +
-        timetableActivity.weekParity
-      );
-    }
-    return '';
+  getRoomNameById(roomId: string): string {
+    return this._adminRoomService.getSignalById(roomId)().name;
+  }
+
+  displaySubject = (subjectId?: string | null): string => subjectId ? this.getSubjectShortNameById(subjectId) : '';
+
+  displayTimetableActivity = (timetableActivity?: TimetableActivity | null): string => {
+    if (!timetableActivity?.id) return '';
+
+    return `${timetableActivity.startHour} ${timetableActivity.activityType} ${this.getRoomNameById(timetableActivity.roomId)} ${timetableActivity.weekParity}`;
   }
 
   getTimeInterval(startHour: number): string {
@@ -144,139 +137,23 @@ export class AdminSemisemiGroupTimetableComponent implements OnInit {
   }
 
   onAddTimetableActivity(): void {
-    if (this.semiGroupSig !== undefined) {
-      const newTimetableActivity: TimetableActivityItemLegacy =
-        this.addTimetableActivityFormSemiGroup.controls['timetableActivity'].value;
-
-      if (this.semiGroupSig().students && this.semiGroupSig().students?.length) {
-        this.semiGroupSig().students?.forEach((student: FreeSpotUser) => {
-          const newBookedItem: BookedEvent = this._bookingService.generateUserBookedItemByActivity(newTimetableActivity, true);
-
-          newTimetableActivity.freeSpots = newTimetableActivity.freeSpots - 1;
-          newTimetableActivity.busySpots = newTimetableActivity.busySpots + 1;
-          const oldUser: FreeSpotUser =
-            this.userListSig().find(
-              (user: FreeSpotUser) => user.firstName === student.firstName && user.familyName === student.familyName,
-            ) || ({} as FreeSpotUser);
-          const newUser: FreeSpotUser = {
-            ...oldUser,
-            bookingList: oldUser.bookingList ? [...oldUser.bookingList, newBookedItem] : [newBookedItem],
-          };
-
-          this._userService.updateFreeSpotUser(oldUser, newUser);
-        });
-      }
-
-      const oldTimetableItem: TimeTableItemLecagy = this.semiGroupSig().timetable?.find(
-        (timetableItem: TimeTableItemLecagy) =>
-          timetableItem.weekDay === this.addTimetableActivityFormSemiGroup.controls['weekDay'].value,
-      ) || { weekDay: this.addTimetableActivityFormSemiGroup.controls['weekDay'].value, activities: [], date: new Date() };
-
-      const newTimetableItem: TimeTableItemLecagy = {
-        ...oldTimetableItem,
-        activities: oldTimetableItem.activities ? [...oldTimetableItem.activities, newTimetableActivity] : [newTimetableActivity],
-      };
-      const updatedSemiGroup: SemiGroup = {
-        ...this.semiGroupSig(),
-        timetable: this.semiGroupSig().timetable
-          ? (this.semiGroupSig().timetable.map((timetableItem: TimeTableItemLecagy) =>
-              timetableItem.weekDay === newTimetableItem.weekDay ? newTimetableItem : timetableItem,
-            ) as TimeTableItemLecagy[])
-          : [newTimetableItem],
-      };
-      this.semiGroupSig.set(updatedSemiGroup);
+    if (this.semiGroupIdSig() !== undefined) {
+      const timetableActivityId = this.addTimetableActivityFormSemiGroup.controls['timetableActivity'].value.id;
+      this._adminTimetableActivityService.addCohortToActivity(this.semiGroupIdSig(), timetableActivityId);
     }
 
     this.addTimetableActivityFormSemiGroup.reset();
     this.addingTimetableActivity = false;
   }
 
-  onRemoveTimetableActivity(deletedTimetableActivity: TimetableActivityItemLegacy): void {
+  onRemoveTimetableActivity(deletedTimetableActivityId: string): void {
     this._confirmService
       .openConfirmDialog('Are you sure you want to delete this activity?')
       .afterClosed()
       .subscribe((result: boolean) => {
         if (result) {
-          if (this.semiGroupSig().students && this.semiGroupSig().students?.length) {
-            this.semiGroupSig().students?.forEach((student: FreeSpotUser) => {
-              const newBookedItem: BookedEvent = this._bookingService.generateUserBookedItemByActivity(
-                deletedTimetableActivity,
-                false,
-              );
-
-              deletedTimetableActivity.freeSpots = deletedTimetableActivity.freeSpots + 1;
-              deletedTimetableActivity.busySpots = deletedTimetableActivity.busySpots - 1;
-              const oldUser: FreeSpotUser =
-                this.userListSig().find(
-                  (user: FreeSpotUser) => user.firstName === student.firstName && user.familyName === student.familyName,
-                ) || ({} as FreeSpotUser);
-              const newUser: FreeSpotUser = {
-                ...oldUser,
-                bookingList: oldUser.bookingList
-                  ? oldUser.bookingList.filter(
-                      (bookedEvent: BookedEvent) => !this._checkBookedEventEquality(bookedEvent, newBookedItem),
-                    )
-                  : [],
-              };
-
-              this._userService.updateFreeSpotUser(oldUser, newUser);
-            });
-          }
-
-          const oldTimetableItem: TimeTableItemLecagy = this.semiGroupSig().timetable?.find(
-            (timetableItem: TimeTableItemLecagy) => timetableItem.date === deletedTimetableActivity.date,
-          ) as TimeTableItemLecagy;
-
-          const newTimetableItem: TimeTableItemLecagy = {
-            ...oldTimetableItem,
-            activities: oldTimetableItem.activities?.filter(
-              (timetableActivity: TimetableActivityItemLegacy) => timetableActivity !== deletedTimetableActivity,
-            ),
-          };
-
-          const updatedSemiGroup: SemiGroup = {
-            ...this.semiGroupSig(),
-            timetable: this.semiGroupSig().timetable
-              ? this.semiGroupSig().timetable.map((timetableItem: TimeTableItemLecagy) =>
-                  timetableItem.weekDay === newTimetableItem.weekDay ? newTimetableItem : timetableItem,
-                )
-              : [newTimetableItem],
-          };
-          this.semiGroupSig.set(updatedSemiGroup);
+          this._adminTimetableActivityService.removeCohortFromAcitvity(this.semiGroupIdSig(), deletedTimetableActivityId);
         }
       });
-  }
-
-  private _checkTimetebleActivityEquality(
-    timetableActivity1: TimetableActivityItemLegacy,
-    timetableActivity2: TimetableActivityItemLegacy,
-  ): boolean {
-    return (
-      timetableActivity1.roomName === timetableActivity2.roomName &&
-      timetableActivity1.subjectItem.name === timetableActivity2.subjectItem.name &&
-      timetableActivity1.startHour === timetableActivity2.startHour &&
-      timetableActivity1.weekParity === timetableActivity2.weekParity &&
-      new Date(timetableActivity1.date).getTime() === new Date(timetableActivity2.date).getTime()
-    );
-  }
-
-  private _checkBookedEventEquality(bookedEvent1: BookedEvent, bookedEvent2: BookedEvent): boolean {
-    return (
-      bookedEvent1.roomName === bookedEvent2.roomName &&
-      bookedEvent1.subjectItem.name === bookedEvent2.subjectItem.name &&
-      bookedEvent1.startHour === bookedEvent2.startHour &&
-      bookedEvent1.date === bookedEvent2.date &&
-      bookedEvent1.activityType === bookedEvent2.activityType &&
-      bookedEvent1.weekParity === bookedEvent2.weekParity
-    );
-  }
-
-  private _getActivitiesFromItemByWeekDay(weekDay: WeekDay): TimetableActivityItemLegacy[] {
-    let activities: TimetableActivityItemLegacy[] = [];
-    this.semiGroupSig().timetable.forEach((timetableItem: TimeTableItemLecagy) => {
-      timetableItem.weekDay === weekDay ? (timetableItem.activities ? (activities = timetableItem.activities) : '') : '';
-    });
-
-    return activities;
   }
 }

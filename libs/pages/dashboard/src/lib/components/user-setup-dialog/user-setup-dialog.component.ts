@@ -7,7 +7,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { filter, Subscription } from 'rxjs';
 import { AdminFacultyService } from '@free-spot-service/faculty';
-import { FacultyLegacy, FreeSpotUser, Group, SemiGroup, Year } from '@free-spot/models';
+import { FacultyLegacy, FreeSpotUser, GroupLegacy, SemiGroup, Year } from '@free-spot/models';
 import { UserService } from '@free-spot-service/user';
 import { Language, Theme } from '@free-spot/enums';
 
@@ -41,13 +41,13 @@ export class UserSetupDialogComponent implements OnInit, OnDestroy {
 
   facultyListSig: Signal<FacultyLegacy[]> = this._adminFacultyService.facultyListSigLegacy;
   foundYearListSig: WritableSignal<Year[]> = signal([]);
-  foundGroupListSig: WritableSignal<Group[]> = signal([]);
+  foundGroupListSig: WritableSignal<GroupLegacy[]> = signal([]);
   foundSemigroupListSig: WritableSignal<SemiGroup[]> = signal([]);
 
   setupForm = this._formBuilder.group({
     faculty: [this.facultyListSig()[0] || null, [Validators.required, Validators.minLength(1)]],
     currentYear: [{} as Year, [Validators.required, Validators.minLength(1)]],
-    group: [{} as Group, [Validators.required, Validators.minLength(1)]],
+    group: [{} as GroupLegacy, [Validators.required, Validators.minLength(1)]],
     semigroup: {} as SemiGroup,
   });
   subscriptionList: Subscription[] = [];
@@ -75,7 +75,7 @@ export class UserSetupDialogComponent implements OnInit, OnDestroy {
     );
 
     this.subscriptionList.push(
-      this.setupForm.controls['group'].valueChanges.pipe(filter((group) => !!group)).subscribe((group: Group | null) => {
+      this.setupForm.controls['group'].valueChanges.pipe(filter((group) => !!group)).subscribe((group: GroupLegacy | null) => {
         this.foundSemigroupListSig.set(group?.semigroups || []);
         this.setupForm.controls['semigroup'].reset();
       }),
@@ -98,7 +98,7 @@ export class UserSetupDialogComponent implements OnInit, OnDestroy {
       preferdLanguage: Language.EN,
       preferedTheme: Theme.DARK,
       bookingList: this._bookingService.generateUserBookedItems(
-        this.setupForm.controls['group'].value as Group,
+        this.setupForm.controls['group'].value as GroupLegacy,
         true,
         this.setupForm.controls['semigroup'].value as SemiGroup,
       ),
@@ -114,7 +114,7 @@ export class UserSetupDialogComponent implements OnInit, OnDestroy {
         if (year.name === this.setupForm.controls['currentYear'].value?.name) {
           return {
             ...year,
-            yearGroupList: year.yearGroupList.map((group: Group) => {
+            yearGroupList: year.yearGroupList.map((group: GroupLegacy) => {
               if (group.name === this.setupForm.controls['group'].value?.name) {
                 return {
                   ...group,

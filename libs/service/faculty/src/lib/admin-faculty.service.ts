@@ -1,6 +1,6 @@
 import { computed, DestroyRef, inject, Injectable, signal, Signal, WritableSignal } from '@angular/core';
 import { CreateFacultyCmd, Faculty, UpdateFacultyCmd } from '@free-spot-domain/faculty';
-import { FacultyLegacy, Group, SemiGroup, TimetableActivityItemLegacy, TimeTableItemLecagy, Year } from '@free-spot/models';
+import { FacultyLegacy, GroupLegacy, SemiGroup, TimetableActivityItemLegacy, TimeTableItemLecagy, Year } from '@free-spot/models';
 import { SignalArrayUtil } from '@free-spot/util';
 import { HttpFacultyService } from '@http-free-spot/faculty';
 import { Observable, take } from 'rxjs';
@@ -84,7 +84,7 @@ export class AdminFacultyService {
       () =>
         this.facultyListSigLegacy().find((faculty: FacultyLegacy) => {
           return faculty.yearList
-            ?.map((year: Year) => year.yearGroupList?.some((group: Group) => group.name === groupName))
+            ?.map((year: Year) => year.yearGroupList?.some((group: GroupLegacy) => group.name === groupName))
             .some((checkedYear: boolean) => checkedYear === true);
         }) || ({} as FacultyLegacy),
     );
@@ -93,12 +93,12 @@ export class AdminFacultyService {
    /**
    * @deprecated Legacy faculty lookup by name; remove after migration.
    */
-  getGroupByName(groupName: string): Signal<Group> {
+  getGroupByName(groupName: string): Signal<GroupLegacy> {
     return computed(() => {
-      let foundGroup: Group = {} as Group;
+      let foundGroup: GroupLegacy = {} as GroupLegacy;
       this.facultyListSigLegacy()?.forEach((faculty: FacultyLegacy) =>
         faculty.yearList?.forEach((year: Year) =>
-          year.yearGroupList.forEach((group: Group) => {
+          year.yearGroupList.forEach((group: GroupLegacy) => {
             if (group.name === groupName) {
               foundGroup = group;
             }
@@ -122,7 +122,7 @@ export class AdminFacultyService {
             return {
               ...year,
               yearGroupList:
-                year.yearGroupList?.map((group: Group) =>
+                year.yearGroupList?.map((group: GroupLegacy) =>
                   this._removeTimetableActivityFromGroup(group, removedTimetableActivity),
                 ) || [],
             };
@@ -145,7 +145,7 @@ export class AdminFacultyService {
             return {
               ...year,
               yearGroupList:
-                year.yearGroupList?.map((group: Group) => this._removeRoomTimetableActivity(group, deletedRoomName)) || [],
+                year.yearGroupList?.map((group: GroupLegacy) => this._removeRoomTimetableActivity(group, deletedRoomName)) || [],
             };
           }) || [],
       };
@@ -166,7 +166,7 @@ export class AdminFacultyService {
             return {
               ...year,
               yearGroupList:
-                year.yearGroupList?.map((group: Group) =>
+                year.yearGroupList?.map((group: GroupLegacy) =>
                   this._updateTimetableActivityFromGroup(group, changedTimetableActivity, addingBooking),
                 ) || [],
             };
@@ -205,7 +205,7 @@ export class AdminFacultyService {
    /**
    * @deprecated Legacy faculty lookup by name; remove after migration.
    */
-  private _removeTimetableActivityFromGroup(group: Group, removedTimetableActivity: TimetableActivityItemLegacy): Group {
+  private _removeTimetableActivityFromGroup(group: GroupLegacy, removedTimetableActivity: TimetableActivityItemLegacy): GroupLegacy {
     if (group.semigroups !== null && group.semigroups !== undefined) {
       group = {
         ...group,
@@ -243,7 +243,7 @@ export class AdminFacultyService {
    /**
    * @deprecated Legacy faculty lookup by name; remove after migration.
    */
-  private _removeRoomTimetableActivity(group: Group, deletedRoomName: string): Group {
+  private _removeRoomTimetableActivity(group: GroupLegacy, deletedRoomName: string): GroupLegacy {
     if (group.semigroups !== null && group.semigroups !== undefined) {
       group = {
         ...group,
@@ -282,10 +282,10 @@ export class AdminFacultyService {
    * @deprecated Legacy faculty lookup by name; remove after migration.
    */
   private _updateTimetableActivityFromGroup(
-    group: Group,
+    group: GroupLegacy,
     changedTimetableActivity: TimetableActivityItemLegacy,
     addingBooking: boolean,
-  ): Group {
+  ): GroupLegacy {
     if (group.semigroups !== null && group.semigroups !== undefined) {
       group = {
         ...group,

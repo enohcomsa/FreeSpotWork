@@ -5,7 +5,7 @@ import { TimeTableItemLecagy } from './timetable-item.model';
  * @deprecated Use ProgramYear / Cohort-based structures instead.
  * This legacy Group model will be removed in a future version.
  */
-export interface Group {
+export interface GroupLegacy {
   name: string;
   studentList: FreeSpotUser[];
   timetable: TimeTableItemLecagy[];
