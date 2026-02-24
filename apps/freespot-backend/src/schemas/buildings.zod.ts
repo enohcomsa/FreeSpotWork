@@ -8,7 +8,6 @@ extendZodWithOpenApi(z);
 const BuildingBase = strictObj({
   name: z.string().trim().min(1),
   address: z.string().trim().min(1),
-  specialEvent: z.boolean(),
 }).openapi("BuildingBase");
 
 export const BuildingIdParam = strictObj({ id: ObjectIdStr }).openapi("BuildingIdParam");

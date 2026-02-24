@@ -10,3 +10,4 @@ export * from "./rooms.mapper";
 export * from "./subjects.mapper";
 export * from "./timetable-activities.mapper";
 export * from "./users.mapper";
+export * from "./events.mapper";

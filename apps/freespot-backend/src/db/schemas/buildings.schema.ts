@@ -4,12 +4,11 @@ export const buildingsSpec: CollectionSpec = {
   name: "buildings",
   validator: {
     bsonType: "object",
-    required: ["name", "address", "specialEvent"],
+    required: ["name", "address"],
     properties: {
       _id: { bsonType: "objectId" },
       name: { bsonType: "string", minLength: 1 },
       address: { bsonType: "string", minLength: 1 },
-      specialEvent: { bsonType: "bool" }
     },
     additionalProperties: false
   },

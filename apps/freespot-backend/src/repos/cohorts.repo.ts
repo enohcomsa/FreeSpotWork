@@ -31,7 +31,11 @@ export async function updateCohortById(id: string, patch: CohortUpdateRequest): 
     const current = await collection.findOne({ _id: toObjectId(id) });
     return current ? cohortToDto(current) : null;
   }
-  const updated = await collection.findOneAndUpdate({ _id: toObjectId(id) }, { $set: updateSet }, { returnDocument: "after" });
+  const updated = await collection.findOneAndUpdate(
+    { _id: toObjectId(id) },
+    { $set: updateSet },
+    { returnDocument: "after" });
+
   return updated ? cohortToDto(updated) : null;
 }
 

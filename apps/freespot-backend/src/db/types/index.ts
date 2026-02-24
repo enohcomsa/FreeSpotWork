@@ -10,3 +10,4 @@ export * from "./rooms.db";
 export * from "./subjects.db";
 export * from "./timetable-activities.db";
 export * from "./users.db";
+export * from "./events.db";

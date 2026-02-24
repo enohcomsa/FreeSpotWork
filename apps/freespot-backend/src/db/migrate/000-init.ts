@@ -5,6 +5,7 @@ import {
   facultiesSpec, programsSpec, programYearsSpec,
   subjectsSpec, usersSpec, cohortsSpec, timetableActivitiesSpec,
   bookingsSpec,
+  eventsSpec,
 } from "../schemas";
 
 export async function run(db: Db) {
@@ -19,4 +20,5 @@ export async function run(db: Db) {
   await ensureCollection(db, usersSpec);
   await ensureCollection(db, timetableActivitiesSpec);
   await ensureCollection(db, bookingsSpec);
+  await ensureCollection(db, eventsSpec);
 }

@@ -15,7 +15,6 @@ export const BuildingCard = strictObj({
   id: ObjectIdStr,
   name: z.string(),
   address: z.string(),
-  specialEvent: z.boolean(),
   floors: z.array(BuildingCardFloor),
 }).openapi("BuildingCard");
 export const BuildingCardIdParam = strictObj({ id: ObjectIdStr }).openapi("BuildingCardIdParam");

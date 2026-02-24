@@ -4,6 +4,7 @@ import swaggerUi from "swagger-ui-express";
 import { OpenAPIRegistry, OpenApiGeneratorV3 } from "@asteasolutions/zod-to-openapi";
 import {
   registerAvailability, registerBookings, registerBuildings, registerBuildingsCards, registerCohorts,
+  registerEvents,
   registerFaculties, registerFloors, registerPrograms, registerProgramYears, registerRooms, registerSubjects, registerTimetableActivities, registerTimetableActivityCards, registerUsers
 } from "./registrars";
 
@@ -25,6 +26,7 @@ export function setupSwagger(app: Express) {
   registerFloors(registry);
   registerFaculties(registry);
   registerCohorts(registry);
+  registerEvents(registry);
 
   const generator = new OpenApiGeneratorV3(registry.definitions);
   const doc = generator.generateDocument({
@@ -46,6 +48,7 @@ export function setupSwagger(app: Express) {
       { name: "Floors" },
       { name: "Faculties" },
       { name: "Cohorts" },
+      { name: "Events" }
     ],
   });
 
