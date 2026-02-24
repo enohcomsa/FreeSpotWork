@@ -12,6 +12,5 @@
 export interface BuildingBaseDTO { 
     name: string;
     address: string;
-    specialEvent: boolean;
 }
 

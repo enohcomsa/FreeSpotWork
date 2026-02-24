@@ -9,7 +9,6 @@ export function toBuildingCardVM(building: Building): BuildingCardVM {
     name: building.name,
     address: building.address,
     floors: [],
-    specialEvent: building.specialEvent
   };
 }
 

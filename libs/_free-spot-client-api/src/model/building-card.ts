@@ -14,7 +14,6 @@ export interface BuildingCardDTO {
     id: string;
     name: string;
     address: string;
-    specialEvent: boolean;
     floors: Array<BuildingCardFloorDTO>;
 }
 

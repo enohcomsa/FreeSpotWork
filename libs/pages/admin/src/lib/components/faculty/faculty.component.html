@@ -64,7 +64,8 @@
   </div>
 
   <free-spot-dynamic-chip-list [itemListSig]="getCohortNameListSignalByYearId(year.id)()"
-    (itemListSigChange)="onYearGroupListChange($event, year.id)" itemKeyDysplay="name" itemLabelSig="group" itemDinamicRoute="group/">
+    (itemListSigChange)="onYearGroupListChange($event, year.id)" itemKeyDysplay="name" itemLabelSig="group"
+    itemDinamicRoute="group/">
   </free-spot-dynamic-chip-list>
 
   <mat-divider></mat-divider>
@@ -83,6 +84,7 @@
 
     <mat-form-field>
       <mat-label>Program</mat-label>
+      <mat-hint>Enter faculty year name</mat-hint>
       <mat-select formControlName="programId">
         @for( program of facultyProgramsSig(); track program.id){
         <mat-option [value]="program.id">{{ program.name }}</mat-option>

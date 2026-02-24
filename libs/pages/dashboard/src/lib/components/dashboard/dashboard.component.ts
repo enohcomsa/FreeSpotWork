@@ -53,9 +53,9 @@ export class DashboardComponent implements OnInit {
   dateChangedSig: WritableSignal<boolean> = this._appDateService.appDateChanged;
   appDateSig: Signal<FreeSpotDate> = this._appDateService.appDateSig;
   buildingListSig: Signal<BuildingLegacy[]> = this._adminBuildingService.buildingListSigLegacy;
-  eventListSig: Signal<BuildingLegacy[]> = computed(() =>
+  eventListSigLegacy: Signal<BuildingLegacy[]> = computed(() =>
     this._adminEventService
-      .eventListSig()
+      .eventListSigLegacy()
       .sort((event1, event2) => new Date(event1.date as Date).getTime() - new Date(event2.date as Date).getTime())
       .filter((event: BuildingLegacy) => new Date().getTime() - new Date(event.date as Date).getTime() <= 0),
   );

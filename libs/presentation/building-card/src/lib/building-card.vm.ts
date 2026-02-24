@@ -8,7 +8,6 @@ export interface BuildingCardVM {
   id: string;
   name: string;
   address: string;
-  specialEvent: boolean;
   floors: BuildingCardFloorVM[];
 }
 

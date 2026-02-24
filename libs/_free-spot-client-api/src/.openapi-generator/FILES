@@ -9,6 +9,7 @@ api/bookings.service.ts
 api/buildings-cards.service.ts
 api/buildings.service.ts
 api/cohorts.service.ts
+api/events.service.ts
 api/faculties.service.ts
 api/floors.service.ts
 api/program-years.service.ts
@@ -47,6 +48,12 @@ model/cohort-response.ts
 model/cohort-type.ts
 model/cohort-update.ts
 model/degree.ts
+model/event-base.ts
+model/event-create.ts
+model/event-id-param.ts
+model/event-response.ts
+model/event-type.ts
+model/event-update.ts
 model/faculty-base.ts
 model/faculty-create.ts
 model/faculty-id-param.ts

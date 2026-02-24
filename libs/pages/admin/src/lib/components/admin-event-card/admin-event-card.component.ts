@@ -5,7 +5,9 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
-import { BuildingLegacy } from '@free-spot/models';
+import { SpecialEvent } from '@free-spot-domain/event';
+import { Building } from '@free-spot-domain/building';
+import { Room } from '@free-spot-domain/room';
 
 @Component({
   selector: 'free-spot-admin-event-card',
@@ -16,8 +18,20 @@ import { BuildingLegacy } from '@free-spot/models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminEventCardComponent {
-  adminEventSig = input.required<BuildingLegacy>();
+  adminEventSig = input.required<SpecialEvent>();
+  adminEventBuildingSig = input.required<Building>();
+  adminEventRoomSig = input.required<Room>();
   addingEventSig = model.required<boolean>();
-  editEvent = output<BuildingLegacy>();
-  deleteEvent = output<BuildingLegacy>();
+  editEvent = output<SpecialEvent>();
+  deleteEvent = output<SpecialEvent>();
+
+
+  getRoomFreeSpots(): number {
+    return this.adminEventRoomSig().totalSpotsNumber - this.adminEventRoomSig().unavailableSpots - this.adminEventSig().reservedSpots;
+  }
+
+  getRoomBookedSports(): number {
+    //TO DO: implement after booking service
+    return 0;
+  }
 }

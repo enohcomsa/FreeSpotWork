@@ -87,10 +87,10 @@ export class DynamicFormComponent implements OnInit {
   subjectItemListSig: InputSignal<SubjectItemLegacy[]> = input<SubjectItemLegacy[]>(SUBJECT_LIST);
   roomListSig = this._adminRoomService.roomListSigLegacy;
 
-  eventListSig: Signal<Event[]> = input<Event[]>(Object.values(Event).filter((event: Event) => event !== Event.COURSE));
+  eventListSigLegacy: Signal<Event[]> = input<Event[]>(Object.values(Event).filter((event: Event) => event !== Event.COURSE));
   searchForm!: FormGroup;
   searchActiveSig: WritableSignal<boolean> = signal(false);
-  specialEventListSig: Signal<BuildingLegacy[]> = this._adminEventService.eventListSig;
+  specialEventListSig: Signal<BuildingLegacy[]> = this._adminEventService.eventListSigLegacy;
   filteredSpecialEventListSig: Signal<BuildingLegacy[]> = computed(() =>
     this.specialEventListSig()
       .filter(

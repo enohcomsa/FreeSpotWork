@@ -11,20 +11,9 @@ import {
   viewChild,
   WritableSignal,
 } from '@angular/core';
-
 import { FacultyComponent } from '../faculty/faculty.component';
 import { MatExpansionModule } from '@angular/material/expansion';
-import {
-  BookedEvent,
-  BuildingLegacy,
-  FacultyLegacy,
-  FloorLegacy,
-  FreeSpotUser,
-  RoomLegacy,
-  SubjectItemLegacy,
-  TimetableActivityItemLegacy,
-  Year,
-} from '@free-spot/models';
+import { FreeSpotUser } from '@free-spot/models';
 import { AddItemCardComponent, DynamicChipListComponent } from '@free-spot/ui';
 import { AdminBuildingCardComponent } from '../admin-building-card/admin-building-card.component';
 import { AdminEventCardComponent } from '../admin-event-card/admin-event-card.component';
@@ -36,7 +25,7 @@ import { BuildingService } from '@free-spot-service/building';
 import { BuildingCardService } from '@free-spot-service/building-card';
 import { AdminFacultyService } from '@free-spot-service/faculty';
 import { UserService } from '@free-spot-service/user';
-import { Event, Role, WeekParity } from '@free-spot/enums';
+import { Role, } from '@free-spot/enums';
 import { ConfirmModalService } from '@free-spot-service/confirm-modal';
 import { FormErrorMessage } from '@free-spot/util';
 import { AdminEventService } from '@free-spot-service/event';
@@ -51,10 +40,12 @@ import { BuildingCardVM } from '@free-spot-presentation/building-card';
 import { Floor } from '@free-spot-domain/floor';
 import { AdminFloorService } from '@free-spot-service/floor';
 import { Faculty } from '@free-spot-domain/faculty';
+import { Room } from '@free-spot-domain/room';
+import { CreateSpecialEventCmd, SpecialEvent, UpdateSpecialEventCmd } from '@free-spot-domain/event';
+import { EventTypeDTO } from '@free-spot/api-client';
 
 @Component({
   selector: 'free-spot-admin',
-
   providers: [provideNativeDateAdapter()],
   imports: [
     FormsModule,
@@ -90,25 +81,19 @@ export class AdminComponent implements OnInit, OnDestroy {
 
   editBuilding = viewChild<ElementRef>('editBuilding');
   editEvent = viewChild<ElementRef>('editEvent');
-  facultyListSigLegacy: Signal<FacultyLegacy[]> = this._adminFacultyService.facultyListSigLegacy;
-  facultyListSig: Signal<Faculty[]> = this._adminFacultyService.facultyListSig;
-  buildingListSigLegacy: Signal<BuildingLegacy[]> = this._adminBuildingService.buildingListSigLegacy;
-  buildingListSig: Signal<Building[]> = this._adminBuildingService.buildingListSig;
-  readonly floorListSig: Signal<Floor[]> = this._adminFloorService.floorListSig;
-  eventListSig: Signal<BuildingLegacy[]> = this._adminEventService.eventListSig;
-  userListSig: Signal<FreeSpotUser[]> = this._userService.userListSig;
-  oldYearSig: WritableSignal<Year> = signal({} as Year);
-  oldbuildingSigLegacy: WritableSignal<BuildingLegacy> = signal({} as BuildingLegacy);
-  oldbuildingSig: WritableSignal<BuildingCardVM> = signal({} as BuildingCardVM);
-  oldEventSig: WritableSignal<BuildingLegacy> = signal({} as BuildingLegacy);
-  subscriptionList: Subscription[] = [];
 
+  facultyListSig: Signal<Faculty[]> = this._adminFacultyService.facultyListSig;
+  buildingListSig: Signal<Building[]> = this._adminBuildingService.buildingListSig;
+  eventListSig: Signal<SpecialEvent[]> = this._adminEventService.eventListSig;
+  readonly floorListSig: Signal<Floor[]> = this._adminFloorService.floorListSig;
+  buildingSig: WritableSignal<BuildingCardVM> = signal({} as BuildingCardVM);
+  specialEventSig: WritableSignal<SpecialEvent> = signal({} as SpecialEvent);
+  subscriptionList: Subscription[] = [];
+  //TO DO: fix update building card UI
   readonly buildingCardVMs: Signal<BuildingCardVM[]> = this._adminBuildingCardService.buildingCardListSig;
 
+  userListSig: Signal<FreeSpotUser[]> = this._userService.userListSig;
 
-  addingYear = false;
-  editingYear = false;
-  addYearFormControl = this._formBuilder.nonNullable.control('', [Validators.required, Validators.minLength(3)]);
   addingBuilding = false;
   editingBuilding = false;
   addBuildingFormGroup = this._formBuilder.nonNullable.group({
@@ -116,17 +101,16 @@ export class AdminComponent implements OnInit, OnDestroy {
     adress: ['', [Validators.required, Validators.minLength(3)]],
   });
 
-  addingEvent = false;
-
-  editingEvent = false;
   startHourList: number[] = [8, 10, 12, 14, 16, 18];
-  foundRoomListSig: WritableSignal<RoomLegacy[]> = signal([]);
+  foundRoomListSig: WritableSignal<Room[]> = signal([]);
+  addingEvent = false;
+  editingEvent = false;
   addEventFormGroup = this._formBuilder.nonNullable.group({
     name: ['', [Validators.required, Validators.minLength(3)]],
     date: [new Date(), [Validators.required]],
     startHour: [this.startHourList[0], [Validators.required]],
-    building: [this.buildingListSigLegacy()[0], [Validators.required]],
-    room: [{} as RoomLegacy, [Validators.required]],
+    building: [this.buildingListSig()[0], [Validators.required]],
+    room: [{} as Room, [Validators.required]],
     unavailable: [0, [Validators.required]],
   });
 
@@ -142,18 +126,17 @@ export class AdminComponent implements OnInit, OnDestroy {
     this._adminEventService.init();
     this._adminRoomService.init();
     this._bookingService.init();
+
     this.subscriptionList.push(
       this.addEventFormGroup.controls['building'].valueChanges
         .pipe(filter((building) => !!building))
-        .subscribe((building: BuildingLegacy) => {
-          this.foundRoomListSig.set(this._getBuildingRoomList(building));
+        .subscribe((building: Building) => {
+          this.foundRoomListSig.set(this._adminRoomService.selectRoomsByBuildingId(building.id)());
           if (!this.editingEvent) {
             this.addEventFormGroup.controls['room'].reset();
           }
         }),
     );
-
-
   }
 
   ngOnDestroy(): void {
@@ -161,6 +144,14 @@ export class AdminComponent implements OnInit, OnDestroy {
   }
 
   displayError = (control: AbstractControl | null) => this._formErrorMessage.displayFormErrorMessage(control);
+
+  getBuildingById(buildingId: string): Building {
+    return this._adminBuildingService.getSignalById(buildingId)();
+  }
+
+  getRoomById(roomId: string): Room {
+    return this._adminRoomService.getSignalById(roomId)();
+  }
 
   updateAdminList(updatedAdminList: FreeSpotUser[]): void {
     if (this.adminUserListSig().length < updatedAdminList.length) {
@@ -184,56 +175,6 @@ export class AdminComponent implements OnInit, OnDestroy {
     }
   }
 
-  onAddingYear(): void {
-    this.addYearFormControl.reset();
-    this.addingYear = true;
-    this.editingYear = false;
-  }
-
-  onAddYear(faculty: Faculty): void {
-    // const newYear: Year = {
-    //   name: this.addYearFormControl.value,
-    //   yearGroupList: [],
-    // };
-
-    // const updatedFaculty: FacultyLegacy = { ...faculty, yearList: faculty.yearList ? [...faculty.yearList, newYear] : [newYear] };
-    // // this._adminFacultyService.updateFaculty(faculty, updatedFaculty);
-    // this.addingYear = false;
-    // this.editingYear = false;
-  }
-
-  onEditingYear(yearToEdit: Year): void {
-    this.editingYear = true;
-    this.oldYearSig.set(yearToEdit);
-    this.addYearFormControl.setValue(yearToEdit.name);
-  }
-
-  onEditYear(faculty: Faculty): void {
-    // const newYear: Year = {
-    //   name: this.addYearFormControl.value,
-    //   yearGroupList: this.oldYearSig().yearGroupList ? [...this.oldYearSig().yearGroupList] : [],
-    // };
-    // const updatedFaculty: FacultyLegacy = {
-    //   ...faculty,
-    //   yearList: faculty.yearList?.map((year: Year) => (year === this.oldYearSig() ? newYear : year)),
-    // };
-
-    // this._adminFacultyService.updateFaculty(faculty, updatedFaculty);
-    // this.addYearFormControl.reset();
-    // this.addingYear = false;
-    // this.editingYear = false;
-  }
-
-  onFacultyChange(changedFaculty: Faculty): void {
-    // const oldFaculty: FacultyLegacy =
-    //   this.facultyListSigLegacy().find((faculty: FacultyLegacy) => faculty.name === changedFaculty.name) || ({} as FacultyLegacy);
-    // if (oldFaculty.name) {
-    //   this._adminFacultyService.updateFaculty(oldFaculty, changedFaculty);
-    // }
-    // this.addingYear = false;
-    // this.editingYear = false;
-  }
-
   onAddingBuilding(): void {
     this.addBuildingFormGroup.reset();
     this.addingBuilding = true;
@@ -245,7 +186,6 @@ export class AdminComponent implements OnInit, OnDestroy {
     const newBuilding: CreateBuildingCmd = {
       name: this.addBuildingFormGroup.controls['name'].value,
       address: this.addBuildingFormGroup.controls['adress'].value,
-      specialEvent: false
 
     }
     this._adminBuildingService.create(newBuilding);
@@ -256,17 +196,17 @@ export class AdminComponent implements OnInit, OnDestroy {
   onEditingBuildingVM(vm: BuildingCardVM): void {
     this.editingBuilding = true;
     this.addBuildingFormGroup.setValue({ name: vm.name, adress: vm.address });
-    this.oldbuildingSig.set(vm);
+    this.buildingSig.set(vm);
     this.editBuilding()?.nativeElement.scrollIntoView({ block: 'center', behavior: 'smooth' });
   }
 
   onEditBuilding(): void {
     const updatedBuilding: UpdateBuildingCmd = {
-      ...this.oldbuildingSig(),
+      ...this.buildingSig(),
       name: this.addBuildingFormGroup.controls['name'].value,
       address: this.addBuildingFormGroup.controls['adress'].value,
     };
-    this._adminBuildingService.update(this.oldbuildingSig().id, updatedBuilding);
+    this._adminBuildingService.update(this.buildingSig().id, updatedBuilding);
     this.addBuildingFormGroup.reset();
     this.addingBuilding = false;
     this.editingBuilding = false;
@@ -292,123 +232,72 @@ export class AdminComponent implements OnInit, OnDestroy {
   onAddEvent(): void {
     const eventDate: Date = this.addEventFormGroup.controls['date'].value;
     eventDate.setHours(this.addEventFormGroup.controls['startHour'].value, 0, 0, 0);
-    const newEvent: BuildingLegacy = {
-      name: this.addEventFormGroup.controls['name'].value,
-      adress: this.addEventFormGroup.controls['building'].value.adress,
-      floorList: [],
-      specialEvent: true,
-      building: this.addEventFormGroup.controls['building'].value.name,
-      date: eventDate,
-      roomName: this.addEventFormGroup.controls['room'].value.name,
-      freeSpots:
-        this.addEventFormGroup.controls['room'].value.totalSpotsNumber -
-        this.addEventFormGroup.controls['room'].value.unavailableSpots -
-        this.addEventFormGroup.controls['unavailable'].value,
-      reservedSpots: this.addEventFormGroup.controls['unavailable'].value,
-      busySpots: 0,
-      startHour: this.addEventFormGroup.controls['startHour'].value,
-    };
 
-    this._adminEventService.addEvent(newEvent);
+    const newSpecialEvent: CreateSpecialEventCmd = {
+      type: EventTypeDTO.SPECIAL,
+      name: this.addEventFormGroup.controls['name'].value,
+      date: eventDate.toISOString(),
+      startHour: this.addEventFormGroup.controls['startHour'].value,
+      buildingId: this.addEventFormGroup.controls['building'].value.id,
+      roomId: this.addEventFormGroup.controls['room'].value.id,
+      reservedSpots: this.addEventFormGroup.controls['unavailable'].value,
+    }
+
+    this._adminEventService.create(newSpecialEvent);
     this.editingEvent = false;
     this.addingEvent = false;
   }
 
-  onEditingEvent(eventToEdit: BuildingLegacy): void {
+  onEditingEvent(eventToEdit: SpecialEvent): void {
     this.editingEvent = true;
-    this.oldEventSig.set(eventToEdit);
     this.addEventFormGroup.setValue({
       name: eventToEdit.name,
-      date: new Date(eventToEdit.date as Date),
+      date: new Date(eventToEdit.date ? new Date(eventToEdit?.date) : new Date()),
       startHour: eventToEdit.startHour as number,
-      building: this._adminBuildingService.getBuildingByName(eventToEdit.building as string)(),
-      room: this._adminRoomService.getRoomByName(eventToEdit.roomName as string)() as RoomLegacy,
+      building: this._adminBuildingService.getSignalById(eventToEdit.buildingId)(),
+      room: this._adminRoomService.getSignalById(eventToEdit.roomId)(),
       unavailable: eventToEdit.reservedSpots as number,
     });
+
     this.addEventFormGroup.controls['room'].setValue(
-      this.foundRoomListSig().filter((room: RoomLegacy) => room.name === eventToEdit.roomName)[0] as RoomLegacy,
+      this.foundRoomListSig().filter((room: Room) => room.id === eventToEdit.roomId)[0],
     );
+    this.specialEventSig.set(eventToEdit);
     this.editEvent()?.nativeElement.scrollIntoView({ block: 'center', behavior: 'smooth' });
   }
 
   onEditEvent(): void {
     const eventDate: Date = this.addEventFormGroup.controls['date'].value;
     eventDate.setHours(this.addEventFormGroup.controls['startHour'].value, 0, 0, 0);
-    const updatedEvent: BuildingLegacy = {
+
+    const updatedSpecialEvent: UpdateSpecialEventCmd = {
+      type: EventTypeDTO.SPECIAL,
       name: this.addEventFormGroup.controls['name'].value,
-      adress: this.addEventFormGroup.controls['building'].value.adress,
-      floorList: [],
-      specialEvent: true,
-      building: this.addEventFormGroup.controls['building'].value.name,
-      date: eventDate,
-      roomName: this.addEventFormGroup.controls['room'].value.name,
-      freeSpots:
-        this.addEventFormGroup.controls['room'].value.totalSpotsNumber -
-        this.addEventFormGroup.controls['room'].value.unavailableSpots -
-        this.addEventFormGroup.controls['unavailable'].value -
-        (this.oldEventSig().busySpots as number),
-      reservedSpots: this.addEventFormGroup.controls['unavailable'].value,
-      busySpots: this.oldEventSig().busySpots,
+      date: eventDate.toISOString(),
       startHour: this.addEventFormGroup.controls['startHour'].value,
-    };
+      buildingId: this.addEventFormGroup.controls['building'].value.id,
+      roomId: this.addEventFormGroup.controls['room'].value.id,
+      reservedSpots: this.addEventFormGroup.controls['unavailable'].value,
+    }
 
-    const timetableActivityFound: TimetableActivityItemLegacy = {
-      startHour: updatedEvent.startHour as number,
-      endHour: (updatedEvent.startHour as number) + 2,
-      subjectItem: {} as SubjectItemLegacy,
-      roomName: updatedEvent.roomName as string,
-      activityType: Event.SPECIAL_EVENT,
-      weekParity: WeekParity.BOTH,
-      freeSpots: updatedEvent.freeSpots as number,
-      busySpots: updatedEvent.busySpots as number,
-      date: updatedEvent.date as Date,
-      name: updatedEvent.name,
-    };
-
-    const eventBooking: BookedEvent = this._bookingService.generateBooking(timetableActivityFound);
-
-    this.userListSig().forEach((user: FreeSpotUser) => {
-      const newUserEventList: FreeSpotUser = {
-        ...user,
-        eventList: user.eventList?.map((event: BookedEvent) => (event.name === eventBooking.name ? eventBooking : event)),
-      };
-      this._userService.updateFreeSpotUser(user, newUserEventList);
-    });
-
-    this._adminEventService.updateEvent(this.oldEventSig(), updatedEvent);
+    this._adminEventService.update(this.specialEventSig().id, updatedSpecialEvent);
+    this.addEventFormGroup.reset();
     this.editingEvent = false;
     this.addingEvent = false;
   }
 
-  onDeleteEvent(deletedEvent: BuildingLegacy): void {
+  onDeleteEvent(deletedSpecialEventId: string): void {
     this._confirmService
       .openConfirmDialog('Are you sure you want to delete this event?')
       .afterClosed()
       .subscribe((result: boolean) => {
         if (result) {
-          this.userListSig().forEach((user: FreeSpotUser) => {
-            const newUserEventList: FreeSpotUser = {
-              ...user,
-              eventList: user.eventList?.filter((event: BookedEvent) => event.name !== deletedEvent.name),
-            };
-            this._userService.updateFreeSpotUser(user, newUserEventList);
-          });
 
-          this._adminEventService.deleteEvent(deletedEvent);
+          this._adminEventService.remove(deletedSpecialEventId);
         }
       });
 
     this.editingEvent = false;
     this.addingEvent = false;
-  }
-
-  private _getBuildingRoomList(building: BuildingLegacy): RoomLegacy[] {
-    const roomList: RoomLegacy[] = [];
-    building.floorList?.forEach((floor: FloorLegacy) => {
-      floor.roomList?.forEach((room: RoomLegacy) => {
-        roomList.push(room);
-      });
-    });
-    return roomList;
   }
 }

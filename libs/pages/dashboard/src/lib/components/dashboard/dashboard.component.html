@@ -10,10 +10,10 @@
     }
   </div>
 
-  @if (eventListSig().length) {
+  @if (eventListSigLegacy().length) {
     <h1 class="py-4 text-3xl font-bold md:py-8">{{ 'BUILDIG_PAGE.EVENTS' | translate }}</h1>
     <div class="flex flex-col gap-8 pb-4 lg:grid lg:grid-cols-2">
-      @for (building of eventListSig(); track building.name) {
+      @for (building of eventListSigLegacy(); track building.name) {
         <free-spot-building-card [buildingSig]="building"></free-spot-building-card>
       } @empty {
         <h3>{{ 'BUILDIG_PAGE.NO_EVENTS_MESSAGE' | translate }}</h3>

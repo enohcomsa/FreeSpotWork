@@ -7,7 +7,6 @@ export function dtoToDomain(dto: BuildingResponseDTO): Building {
     id: dto.id,
     name: dto.name,
     address: dto.address,
-    specialEvent: dto.specialEvent,
   };
 }
 
@@ -15,7 +14,6 @@ export function toCreateDTO(cmd: CreateBuildingCmd): BuildingCreateDTO {
   return {
     name: cmd.name,
     address: cmd.address,
-    specialEvent: cmd.specialEvent,
   };
 }
 
@@ -23,6 +21,5 @@ export function toUpdateDTO(cmd: UpdateBuildingCmd): BuildingUpdateDTO {
   return {
     name: cmd.name,
     address: cmd.address,
-    specialEvent: cmd.specialEvent,
   };
 }

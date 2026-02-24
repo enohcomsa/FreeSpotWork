@@ -12,6 +12,5 @@
 export interface BuildingUpdateDTO { 
     name?: string;
     address?: string;
-    specialEvent?: boolean;
 }
 

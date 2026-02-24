@@ -9,7 +9,6 @@ export function toBuildingCardVM(building: BuildingsCardResponseDTO): BuildingCa
     name: building.name,
     address: building.address,
     floors: building.floors.map(toBuildingCardFloorVM),
-    specialEvent: building.specialEvent
   };
 }
 

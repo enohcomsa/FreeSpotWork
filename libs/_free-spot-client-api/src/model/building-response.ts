@@ -12,7 +12,6 @@
 export interface BuildingResponseDTO { 
     name: string;
     address: string;
-    specialEvent: boolean;
     id: string;
 }
 
