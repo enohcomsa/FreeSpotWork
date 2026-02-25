@@ -9,6 +9,7 @@ import { setupSwagger } from "./swagger";
 
 async function bootstrap() {
   const app = express();
+  app.set('trust proxy', 1);
 
   const allowedOrigins = ["http://localhost:4200"];
   app.use(
