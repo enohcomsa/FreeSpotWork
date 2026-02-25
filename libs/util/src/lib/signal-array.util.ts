@@ -1,6 +1,18 @@
 import { WritableSignal } from '@angular/core';
 
 export class SignalArrayUtil {
+  static upsertBy<T, K extends keyof T>(key: K, item: T, sig: WritableSignal<T[]>) {
+    sig.update(arr => {
+      const i = arr.findIndex(x => x[key] === item[key]);
+      return i >= 0 ? arr.map((x, idx) => (idx === i ? item : x)) : [...arr, item];
+    });
+  }
+
+  static removeBy<T, K extends keyof T>(key: K, value: T[K], sig: WritableSignal<T[]>) {
+    sig.update(arr => arr.filter(x => x[key] !== value));
+  }
+
+
   static addItem<T>(itemToAdd: T, signalToUpdate: WritableSignal<T[]>): void {
     signalToUpdate.set(signalToUpdate() ? [...signalToUpdate(), itemToAdd] : [itemToAdd]);
   }

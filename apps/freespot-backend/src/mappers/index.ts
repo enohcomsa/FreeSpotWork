@@ -1,0 +1,13 @@
+export * from "./floors.mapper";
+// export * from "./availability.mapper";
+export * from "./bookings.mapper";
+export * from "./buildings.mapper";
+export * from "./cohorts.mapper";
+export * from "./faculties.mapper";
+export * from "./program-years.mapper";
+export * from "./programs.mapper";
+export * from "./rooms.mapper";
+export * from "./subjects.mapper";
+export * from "./timetable-activities.mapper";
+export * from "./users.mapper";
+export * from "./events.mapper";

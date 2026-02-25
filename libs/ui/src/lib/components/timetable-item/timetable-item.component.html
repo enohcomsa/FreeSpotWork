@@ -1,54 +1,114 @@
 <mat-card appearance="outlined" class="w-full">
+
+  @if(timetableItemSigLegacy()!==undefined){
   <mat-card-header class="justify-center font-bold">
-    <mat-card-title>{{ 'TIMETABLE_ITEM.' + timetableItemSig().weekDay | translate }}</mat-card-title>
+    <mat-card-title>{{ 'TIMETABLE_ITEM.' + timetableItemSigLegacy()?.weekDay | translate }}</mat-card-title>
   </mat-card-header>
+
   <mat-card-content class="!p-0">
     <mat-list class="!pb-0">
       <mat-divider></mat-divider>
-      @for (day of dayItems; track day.startHour) {
-        <mat-divider></mat-divider>
-        <mat-list-item class="!px-2">
-          <div class="flex w-full">
-            @if (timetableItemSig().weekDay === weekDay.MONDAY) {
-              <div class="flex w-10 text-xs font-bold tracking-tighter">
-                <p class="w-[39px] self-center">{{ day.hourInterval }}</p>
-                <mat-divider class="h-12 justify-self-end" vertical="true"></mat-divider>
-              </div>
-            } @else {
-              <div class="flex w-10 text-xs font-bold tracking-tighter lg:hidden">
-                <p class="w-[39px] self-center">{{ day.hourInterval }}</p>
-                <mat-divider class="h-12 justify-self-end" vertical="true"></mat-divider>
-              </div>
-            }
+      @for (day of dayItemsLegacy; track day.startHour) {
+      <mat-divider></mat-divider>
 
-            @if (day.bothWeekActivity) {
-              <div class="flex w-full items-center justify-center gap-1 text-sm font-light tracking-tighter">
-                <p>{{ day.bothWeekActivity.subjectItem.shortName }}</p>
-                <p>{{ getEventInitial(day.bothWeekActivity.activityType) }}</p>
-                <p>{{ day.bothWeekActivity.roomName }}</p>
-              </div>
-            } @else {
-              <div class="flex w-full min-w-40 text-sm font-light tracking-tighter">
-                <div class="flex w-1/2 items-center justify-center gap-1">
-                  @if (day.oddWeekActivity) {
-                    <p>{{ day.oddWeekActivity.subjectItem.shortName }}</p>
-                    <p>{{ getEventInitial(day.oddWeekActivity.activityType) }}</p>
-                    <p>{{ day.oddWeekActivity.roomName }}</p>
-                  }
-                </div>
-                <mat-divider vertical class="h-12"></mat-divider>
-                <div class="flex w-1/2 items-center justify-center gap-1">
-                  @if (day.evenWeekActivity) {
-                    <p>{{ day.evenWeekActivity.subjectItem.shortName }}</p>
-                    <p>{{ getEventInitial(day.evenWeekActivity.activityType) }}</p>
-                    <p>{{ day.evenWeekActivity.roomName }}</p>
-                  }
-                </div>
-              </div>
-            }
+      <mat-list-item class="!px-2">
+        <div class="flex w-full">
+          @if (timetableItemSigLegacy()?.weekDay === weekDay.MONDAY) {
+          <div class="flex w-10 text-xs font-bold tracking-tighter">
+            <p class="w-[39px] self-center">{{ day.hourInterval }}</p>
+            <mat-divider class="h-12 justify-self-end" vertical="true"></mat-divider>
           </div>
-        </mat-list-item>
+          } @else {
+          <div class="flex w-10 text-xs font-bold tracking-tighter lg:hidden">
+            <p class="w-[39px] self-center">{{ day.hourInterval }}</p>
+            <mat-divider class="h-12 justify-self-end" vertical="true"></mat-divider>
+          </div>
+          }
+
+          @if (day.bothWeekActivity) {
+          <div class="flex w-full items-center justify-center gap-1 text-sm font-light tracking-tighter">
+            <p>{{ day.bothWeekActivity.subjectItem.shortName }}</p>
+            <p>{{ getEventInitial(day.bothWeekActivity.activityType) }}</p>
+            <p>{{ day.bothWeekActivity.roomName }}</p>
+          </div>
+          } @else {
+          <div class="flex w-full min-w-40 text-sm font-light tracking-tighter">
+            <div class="flex w-1/2 items-center justify-center gap-1">
+              @if (day.oddWeekActivity) {
+              <p>{{ day.oddWeekActivity.subjectItem.shortName }}</p>
+              <p>{{ getEventInitial(day.oddWeekActivity.activityType) }}</p>
+              <p>{{ day.oddWeekActivity.roomName }}</p>
+              }
+            </div>
+            <mat-divider vertical class="h-12"></mat-divider>
+            <div class="flex w-1/2 items-center justify-center gap-1">
+              @if (day.evenWeekActivity) {
+              <p>{{ day.evenWeekActivity.subjectItem.shortName }}</p>
+              <p>{{ getEventInitial(day.evenWeekActivity.activityType) }}</p>
+              <p>{{ day.evenWeekActivity.roomName }}</p>
+              }
+            </div>
+          </div>
+          }
+        </div>
+      </mat-list-item>
       }
     </mat-list>
   </mat-card-content>
+  }@else {
+  <mat-card-header class="justify-center font-bold">
+    <mat-card-title>{{ 'TIMETABLE_ITEM.' + day()| translate }}</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content class="!p-0">
+    <mat-list class="!pb-0">
+      <mat-divider></mat-divider>
+      @for (activity of dayItems(); track activity.startHour) {
+      <mat-divider></mat-divider>
+
+      <mat-list-item class="!px-2">
+        <div class="flex w-full">
+          @if (day() === weekDay.MONDAY) {
+          <div class="flex w-10 text-xs font-bold tracking-tighter">
+            <p class="w-[39px] self-center">{{ activity.hourInterval }}</p>
+            <mat-divider class="h-12 justify-self-end" vertical="true"></mat-divider>
+          </div>
+          } @else {
+          <div class="flex w-10 text-xs font-bold tracking-tighter lg:hidden">
+            <p class="w-[39px] self-center">{{ activity.hourInterval }}</p>
+            <mat-divider class="h-12 justify-self-end" vertical="true"></mat-divider>
+          </div>
+          }
+
+          @if (activity.bothWeekActivity) {
+          <div class="flex w-full items-center justify-center gap-1 text-sm font-light tracking-tighter">
+            <p>{{ activity.bothWeekActivity.subjectItemShortName }}</p>
+            <p>{{ getActivityTypeInitial(activity.bothWeekActivity.activityType) }}</p>
+            <p>{{ activity.bothWeekActivity.roomName }}</p>
+          </div>
+          } @else {
+          <div class="flex w-full min-w-40 text-sm font-light tracking-tighter">
+            <div class="flex w-1/2 items-center justify-center gap-1">
+              @if (activity.oddWeekActivity) {
+              <p>{{ activity.oddWeekActivity.subjectItemShortName }}</p>
+              <p>{{ getActivityTypeInitial(activity.oddWeekActivity.activityType) }}</p>
+              <p>{{ activity.oddWeekActivity.roomName }}</p>
+              }
+            </div>
+            <mat-divider vertical class="h-12"></mat-divider>
+            <div class="flex w-1/2 items-center justify-center gap-1">
+              @if (activity.evenWeekActivity) {
+              <p>{{ activity.evenWeekActivity.subjectItemShortName }}</p>
+              <p>{{ getActivityTypeInitial(activity.evenWeekActivity.activityType) }}</p>
+              <p>{{ activity.evenWeekActivity.roomName }}</p>
+              }
+            </div>
+          </div>
+          }
+        </div>
+      </mat-list-item>
+      }
+    </mat-list>
+  </mat-card-content>
+  }
 </mat-card>

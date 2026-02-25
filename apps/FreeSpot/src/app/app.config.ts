@@ -1,4 +1,4 @@
-import { ApplicationConfig, importProvidersFrom, provideExperimentalZonelessChangeDetection } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom, provideZonelessChangeDetection} from '@angular/core';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { appRoutes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
@@ -13,7 +13,7 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideExperimentalZonelessChangeDetection(),
+    provideZonelessChangeDetection(),
     provideRouter(appRoutes, withComponentInputBinding()),
     provideAnimationsAsync(),
     provideHttpClient(withInterceptors([loadingInterceptor, authInterceptor])),

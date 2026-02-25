@@ -1,11 +1,11 @@
 import { inject, Injectable } from '@angular/core';
-import { AdminBuildingService } from '@free-spot-service/building';
+import { BuildingService } from '@free-spot-service/building';
 import { AdminEventService } from '@free-spot-service/event';
 import { AdminFacultyService } from '@free-spot-service/faculty';
 import { AdminFloorService } from '@free-spot-service/floor';
 import { AdminRoomService } from '@free-spot-service/room';
 import { Event } from '@free-spot/enums';
-import { BookedEvent, Floor, Group, SemiGroup, TimetableActivityItem, TimeTableItem } from '@free-spot/models';
+import { BookedEvent, FloorLegacy, GroupLegacy, SemiGroup, TimetableActivityItemLegacy, TimeTableItemLecagy } from '@free-spot/models';
 
 @Injectable({
   providedIn: 'root',
@@ -13,19 +13,19 @@ import { BookedEvent, Floor, Group, SemiGroup, TimetableActivityItem, TimeTableI
 export class BookingService {
   private _adminRoomService: AdminRoomService = inject(AdminRoomService);
   private _adminFloorService: AdminFloorService = inject(AdminFloorService);
-  private _adminBuildingService: AdminBuildingService = inject(AdminBuildingService);
+  // private _adminBuildingService: BuildingService = inject(BuildingService);
   private _adminFacultyService: AdminFacultyService = inject(AdminFacultyService);
   private _adminEventService: AdminEventService = inject(AdminEventService);
 
   init(): void {
     this._adminRoomService.init();
     this._adminFloorService.init();
-    this._adminBuildingService.init();
+    // this._adminBuildingService.init();
     this._adminFacultyService.init();
     this._adminEventService.init();
   }
 
-  generateBooking(timetableActivityItem: TimetableActivityItem): BookedEvent {
+  generateBooking(timetableActivityItem: TimetableActivityItemLegacy): BookedEvent {
     if (timetableActivityItem.activityType === Event.SPECIAL_EVENT) {
       return {
         ...this._getLocation(timetableActivityItem.roomName),
@@ -50,13 +50,13 @@ export class BookingService {
     }
   }
 
-  generateUserBookedItems(group: Group, addingBooking: boolean, semiGroup?: SemiGroup): BookedEvent[] {
+  generateUserBookedItems(group: GroupLegacy, addingBooking: boolean, semiGroup?: SemiGroup): BookedEvent[] {
     const newUserBookingList: BookedEvent[] = [];
-    this._getUserTimetableItems(group, semiGroup).forEach((timeTableItem: TimeTableItem) => {
-      timeTableItem.activities.forEach((timetableActivity: TimetableActivityItem) => {
+    this._getUserTimetableItems(group, semiGroup).forEach((timeTableItem: TimeTableItemLecagy) => {
+      timeTableItem.activities.forEach((timetableActivity: TimetableActivityItemLegacy) => {
         newUserBookingList.push(this.generateBooking(timetableActivity));
         this._adminFacultyService.updateTimetableActivitySpots(timetableActivity, addingBooking);
-        this._adminBuildingService.updateTimetableActivitySpots(timetableActivity, addingBooking);
+        // this._adminBuildingService.updateTimetableActivitySpots(timetableActivity, addingBooking);
         this._adminFloorService.updateTimetableActivitySpots(timetableActivity, addingBooking);
         this._adminRoomService.updateTimetableActivitySpots(timetableActivity, addingBooking);
       });
@@ -66,11 +66,11 @@ export class BookingService {
   }
 
   generateUserBookedItemByActivity(
-    timetableActivity: TimetableActivityItem,
+    timetableActivity: TimetableActivityItemLegacy,
     addingBooking: boolean,
     updateFaculty?: boolean,
   ): BookedEvent {
-    this._adminBuildingService.updateTimetableActivitySpots(timetableActivity, addingBooking);
+    // this._adminBuildingService.updateTimetableActivitySpots(timetableActivity, addingBooking);
     this._adminFloorService.updateTimetableActivitySpots(timetableActivity, addingBooking);
     this._adminRoomService.updateTimetableActivitySpots(timetableActivity, addingBooking);
     if (updateFaculty !== undefined && updateFaculty !== null && updateFaculty) {
@@ -79,19 +79,19 @@ export class BookingService {
     return this.generateBooking(timetableActivity);
   }
 
-  generateSpecialEventBookedItemByActivity(timetableActivity: TimetableActivityItem, addingBooking: boolean): BookedEvent {
+  generateSpecialEventBookedItemByActivity(timetableActivity: TimetableActivityItemLegacy, addingBooking: boolean): BookedEvent {
     this._adminEventService.updateEventSpots(timetableActivity.name as string, addingBooking);
     return this.generateBooking(timetableActivity);
   }
 
-  private _getUserTimetableItems(group: Group, semiGroup?: SemiGroup): TimeTableItem[] {
-    const timetableItemList: TimeTableItem[] = [];
+  private _getUserTimetableItems(group: GroupLegacy, semiGroup?: SemiGroup): TimeTableItemLecagy[] {
+    const timetableItemList: TimeTableItemLecagy[] = [];
     if (semiGroup !== null && semiGroup !== undefined) {
-      semiGroup.timetable?.forEach((timetableItem: TimeTableItem) =>
+      semiGroup.timetable?.forEach((timetableItem: TimeTableItemLecagy) =>
         timetableItem.activities ? timetableItemList.push(timetableItem) : '',
       );
     } else {
-      group.timetable?.forEach((timetableItem: TimeTableItem) =>
+      group.timetable?.forEach((timetableItem: TimeTableItemLecagy) =>
         timetableItem.activities ? timetableItemList.push(timetableItem) : '',
       );
     }
@@ -99,7 +99,7 @@ export class BookingService {
   }
 
   private _getLocation(roomName: string): Pick<BookedEvent, 'buildingName' | 'floorName' | 'roomName'> {
-    const activityFloor: Floor = this._adminFloorService.getFloorByName(
+    const activityFloor: FloorLegacy = this._adminFloorService.getFloorByName(
       this._adminRoomService.getRoomByName(roomName)().floorName,
     )();
     const newLocation: Pick<BookedEvent, 'buildingName' | 'floorName' | 'roomName'> = {

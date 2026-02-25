@@ -1,6 +1,6 @@
-import { Group } from './group.model';
+import { GroupLegacy } from './group.model';
 
 export interface Year {
   name: string;
-  yearGroupList: Group[];
+  yearGroupList: GroupLegacy[];
 }

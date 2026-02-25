@@ -1,15 +1,15 @@
 import { ChangeDetectionStrategy, Component, computed, inject, OnInit, Signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { TimetableItemComponent } from '@free-spot/ui';
-import { FreeSpotUser, Group, SemiGroup, TimeTableItem } from '@free-spot/models';
+import { FreeSpotUser, GroupLegacy, SemiGroup, TimeTableItemLecagy } from '@free-spot/models';
 import { WeekDay } from '@free-spot/enums';
 import { UserService } from '@free-spot-service/user';
 import { AdminFacultyService } from '@free-spot-service/faculty';
 
 @Component({
   selector: 'free-spot-schedule',
-  standalone: true,
-  imports: [CommonModule, TimetableItemComponent],
+
+  imports: [TimetableItemComponent],
   templateUrl: './schedule.component.html',
   styleUrl: './schedule.component.sass',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,9 +28,9 @@ export class ScheduleComponent implements OnInit {
   ).email;
 
   currentUserSig: Signal<FreeSpotUser> = this._userService.getFreeSpotUserByEmail(this._currentUserEmail);
-  userTimetableItemsSig: Signal<TimeTableItem[]> = computed(() => this._getUserTimetableItemList());
+  userTimetableItemsSig: Signal<TimeTableItemLecagy[]> = computed(() => this._getUserTimetableItemList());
 
-  emptyTimetable: TimeTableItem[] = [
+  emptyTimetable: TimeTableItemLecagy[] = [
     { weekDay: WeekDay.MONDAY, activities: [], date: new Date() },
     { weekDay: WeekDay.TUESDAY, activities: [], date: new Date() },
     { weekDay: WeekDay.WEDNESDAY, activities: [], date: new Date() },
@@ -43,10 +43,10 @@ export class ScheduleComponent implements OnInit {
     this._adminFacultyService.init();
   }
 
-  private _getUserTimetableItemList(): TimeTableItem[] {
-    let userTimetableItemList: TimeTableItem[] = [];
+  private _getUserTimetableItemList(): TimeTableItemLecagy[] {
+    let userTimetableItemList: TimeTableItemLecagy[] = [];
     if (Object.keys(this.currentUserSig()).length) {
-      const userGroup: Group = this._adminFacultyService.getGroupByName(this.currentUserSig().group as string)();
+      const userGroup: GroupLegacy = this._adminFacultyService.getGroupByName(this.currentUserSig().group as string)();
       const userSemiGroup: SemiGroup = this._getUserSemigroup(this.currentUserSig().semiGroup as string, userGroup);
 
       if (Object.keys(userGroup).length) {
@@ -60,7 +60,7 @@ export class ScheduleComponent implements OnInit {
     return userTimetableItemList;
   }
 
-  private _getUserSemigroup(semiGroupName: string, userGroup: Group): SemiGroup {
+  private _getUserSemigroup(semiGroupName: string, userGroup: GroupLegacy): SemiGroup {
     return userGroup.semigroups?.find((semiGroup: SemiGroup) => semiGroup.name === semiGroupName) || ({} as SemiGroup);
   }
 }

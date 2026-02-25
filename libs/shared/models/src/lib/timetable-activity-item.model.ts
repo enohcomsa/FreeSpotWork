@@ -1,10 +1,14 @@
 import { Event, WeekParity } from '@free-spot/enums';
-import { SubjectItem } from './subject.model';
-
-export interface TimetableActivityItem {
+import { SubjectItemLegacy } from './subject.model';
+/**
+ * @deprecated Firebase-era nested model;
+ * used only for backward compatibility with legacy timetable format.
+ * Remove once all timetable data is migrated.
+ */
+export interface TimetableActivityItemLegacy {
   startHour: number;
   endHour: number;
-  subjectItem: SubjectItem;
+  subjectItem: SubjectItemLegacy;
   roomName: string;
   activityType: Event;
   weekParity: WeekParity;

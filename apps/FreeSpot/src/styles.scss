@@ -2,13 +2,11 @@
 @use './styles/free-spot-m3-theme.scss';
 @use './styles/toolbar-theme' as toolBar;
 @use './styles/card-theme' as card;
-@import 'ngx-toastr/toastr';
+@use 'ngx-toastr/toastr';
+@use "tailwindcss";
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@include mat.core();
+@include mat.elevation-classes();
+@include mat.app-background();
 /* You can add global styles to this file, and also import other style files */
 
 html {

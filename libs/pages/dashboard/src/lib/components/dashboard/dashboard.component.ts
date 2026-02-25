@@ -1,25 +1,24 @@
 import { ChangeDetectionStrategy, Component, computed, inject, OnInit, Signal, WritableSignal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { DynamicFormComponent } from '@free-spot/ui';
 import { BuildingCardComponent } from '../building-card/building-card.component';
-import { AdminBuildingService } from '@free-spot-service/building';
+import { BuildingService } from '@free-spot-service/building';
 import {
-  Building,
-  Faculty,
-  Floor,
+  BuildingLegacy,
+  FacultyLegacy,
+  FloorLegacy,
   FreeSpotDate,
   FreeSpotUser,
-  Group,
-  Room,
+  GroupLegacy,
+  RoomLegacy,
   SemiGroup,
-  TimetableActivityItem,
-  TimeTableItem,
+  TimetableActivityItemLegacy,
+  TimeTableItemLecagy,
   Year,
 } from '@free-spot/models';
 import { UserService } from '@free-spot-service/user';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { delay, filter, of, Subscription, switchMap, take } from 'rxjs';
-import { UserSetupDialogComponent } from '../user-setup-dialog/user-setup-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { AdminFacultyService } from '@free-spot-service/faculty';
 import { AppDateService } from '@free-spot-service/app-date';
@@ -31,8 +30,8 @@ import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'free-spot-dashboard',
-  standalone: true,
-  imports: [CommonModule, BuildingCardComponent, DynamicFormComponent, UserSetupDialogComponent, TranslateModule],
+
+  imports: [BuildingCardComponent, DynamicFormComponent, TranslateModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.sass',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -41,26 +40,26 @@ export class DashboardComponent implements OnInit {
   private _dialog: MatDialog = inject(MatDialog);
   private _adminRoomService: AdminRoomService = inject(AdminRoomService);
   private _adminFloorService: AdminFloorService = inject(AdminFloorService);
-  private _adminBuildingService: AdminBuildingService = inject(AdminBuildingService);
+  private _adminBuildingService: BuildingService = inject(BuildingService);
   private _adminFacultyService: AdminFacultyService = inject(AdminFacultyService);
   private _userService: UserService = inject(UserService);
   private _appDateService: AppDateService = inject(AppDateService);
   private _bookingService: BookingService = inject(BookingService);
   private _adminEventService: AdminEventService = inject(AdminEventService);
 
-  roomListSig: Signal<Room[]> = this._adminRoomService.roomListSig;
-  facultyListSig: Signal<Faculty[]> = this._adminFacultyService.facultyListSig;
+  roomListSig: Signal<RoomLegacy[]> = this._adminRoomService.roomListSigLegacy;
+  facultyListSig: Signal<FacultyLegacy[]> = this._adminFacultyService.facultyListSigLegacy;
   userListSig: Signal<FreeSpotUser[]> = this._userService.userListSig;
   dateChangedSig: WritableSignal<boolean> = this._appDateService.appDateChanged;
   appDateSig: Signal<FreeSpotDate> = this._appDateService.appDateSig;
-  buildingListSig: Signal<Building[]> = this._adminBuildingService.buildingListSig;
-  eventListSig: Signal<Building[]> = computed(() =>
+  buildingListSig: Signal<BuildingLegacy[]> = this._adminBuildingService.buildingListSigLegacy;
+  eventListSigLegacy: Signal<BuildingLegacy[]> = computed(() =>
     this._adminEventService
-      .eventListSig()
+      .eventListSigLegacy()
       .sort((event1, event2) => new Date(event1.date as Date).getTime() - new Date(event2.date as Date).getTime())
-      .filter((event: Building) => new Date().getTime() - new Date(event.date as Date).getTime() <= 0),
+      .filter((event: BuildingLegacy) => new Date().getTime() - new Date(event.date as Date).getTime() <= 0),
   );
-  currentUserGroupSig: Signal<Group> = computed(() =>
+  currentUserGroupSig: Signal<GroupLegacy> = computed(() =>
     this._adminFacultyService.getGroupByName(this.currentUserSig().group as string)(),
   );
 
@@ -70,29 +69,29 @@ export class DashboardComponent implements OnInit {
       take(1),
       delay(1200),
       switchMap(() => {
-        this.roomListSig().forEach((room: Room) => {
-          const updatedRoom: Room = {
+        this.roomListSig().forEach((room: RoomLegacy) => {
+          const updatedRoom: RoomLegacy = {
             ...room,
-            timetable: room.timetable.map((timetableItem: TimeTableItem) => this._updateTimetableItem(timetableItem)),
+            timetable: room.timetable.map((timetableItem: TimeTableItemLecagy) => this._updateTimetableItem(timetableItem)),
           };
 
           this._adminRoomService.updateRoom(room, updatedRoom);
           this._updateFloorAndBuilding(updatedRoom);
         });
-        this.facultyListSig().forEach((faculty: Faculty) => {
-          const updatedFaculty: Faculty = {
+        this.facultyListSig().forEach((faculty: FacultyLegacy) => {
+          const updatedFaculty: FacultyLegacy = {
             ...faculty,
             yearList: faculty.yearList?.map((year: Year) => {
               return {
                 ...year,
-                yearGroupList: year.yearGroupList?.map((group: Group) => {
+                yearGroupList: year.yearGroupList?.map((group: GroupLegacy) => {
                   return {
                     ...group,
-                    timetable: group.timetable.map((timetableItem: TimeTableItem) => this._updateTimetableItem(timetableItem)),
+                    timetable: group.timetable.map((timetableItem: TimeTableItemLecagy) => this._updateTimetableItem(timetableItem)),
                     semigroups: group.semigroups?.map((semiGroup: SemiGroup) => {
                       return {
                         ...semiGroup,
-                        timetable: semiGroup.timetable.map((timetableItem: TimeTableItem) =>
+                        timetable: semiGroup.timetable.map((timetableItem: TimeTableItemLecagy) =>
                           this._updateTimetableItem(timetableItem),
                         ),
                       };
@@ -138,9 +137,12 @@ export class DashboardComponent implements OnInit {
       filter((user: FreeSpotUser) => Object.keys(user).length !== 0),
       take(1),
     )
-    .subscribe((user: FreeSpotUser) => {
+    .subscribe(async (user: FreeSpotUser) => {
       if ((!user.group && !user.semiGroup) || !user.faculty || !user.currentYear) {
-        this._dialog.open(UserSetupDialogComponent, {
+        this._dialog.open(
+          await import('../user-setup-dialog/user-setup-dialog.component').then(
+            (m) => m.UserSetupDialogComponent
+          ), {
           delayFocusTrap: true,
           disableClose: true,
           panelClass: ['w-full', 'sm:w-3/5', 'md:w-1/2'],
@@ -160,30 +162,30 @@ export class DashboardComponent implements OnInit {
     this._adminEventService.init();
   }
 
-  private _updateFloorAndBuilding(updatedRoom: Room): void {
-    const oldFloor: Floor = this._adminFloorService.getFloorByName(updatedRoom.floorName)();
-    const updatedFloor: Floor = {
+  private _updateFloorAndBuilding(updatedRoom: RoomLegacy): void {
+    const oldFloor: FloorLegacy = this._adminFloorService.getFloorByName(updatedRoom.floorName)();
+    const updatedFloor: FloorLegacy = {
       ...oldFloor,
-      roomList: oldFloor.roomList.map((room: Room) => (room.name === updatedRoom.name ? updatedRoom : room)),
+      roomList: oldFloor.roomList.map((room: RoomLegacy) => (room.name === updatedRoom.name ? updatedRoom : room)),
     };
     this._adminFloorService.updateFloor(oldFloor, updatedFloor);
     this._updateBuilding(updatedFloor);
   }
 
-  private _updateBuilding(changedFloor: Floor): void {
-    const oldBuilding: Building = this._adminBuildingService.getBuildingByName(changedFloor.buildingName)();
-    const updatedBuilding: Building = {
+  private _updateBuilding(changedFloor: FloorLegacy): void {
+    const oldBuilding: BuildingLegacy = this._adminBuildingService.getBuildingByName(changedFloor.buildingName)();
+    const updatedBuilding: BuildingLegacy = {
       ...oldBuilding,
-      floorList: oldBuilding.floorList.map((floor: Floor) => (floor.name === changedFloor.name ? changedFloor : floor)),
+      floorList: oldBuilding.floorList.map((floor: FloorLegacy) => (floor.name === changedFloor.name ? changedFloor : floor)),
     };
     this._adminBuildingService.updateBuilding(oldBuilding, updatedBuilding);
   }
 
-  private _updateTimetableItem(oldTimetableItem: TimeTableItem): TimeTableItem {
+  private _updateTimetableItem(oldTimetableItem: TimeTableItemLecagy): TimeTableItemLecagy {
     return {
       ...oldTimetableItem,
       date: this._appDateService.getAppDateByWeekDay(oldTimetableItem.weekDay),
-      activities: oldTimetableItem.activities?.map((timetableActivity: TimetableActivityItem) => {
+      activities: oldTimetableItem.activities?.map((timetableActivity: TimetableActivityItemLegacy) => {
         return {
           ...timetableActivity,
           freeSpots: timetableActivity.freeSpots + timetableActivity.busySpots,
@@ -194,7 +196,7 @@ export class DashboardComponent implements OnInit {
     };
   }
 
-  private _getUserSemigroup(semiGroupName: string, userGroup: Group): SemiGroup {
+  private _getUserSemigroup(semiGroupName: string, userGroup: GroupLegacy): SemiGroup {
     return userGroup.semigroups?.find((semiGroup: SemiGroup) => semiGroup.name === semiGroupName) || ({} as SemiGroup);
   }
 }

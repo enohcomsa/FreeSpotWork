@@ -26,7 +26,6 @@ import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'free-spot-app-auth',
-  standalone: true,
   imports: [
     CommonModule,
     FormsModule,

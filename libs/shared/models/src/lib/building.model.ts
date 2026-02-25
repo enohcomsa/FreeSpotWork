@@ -1,9 +1,10 @@
-import { Floor } from './floor.model';
+import { FloorLegacy } from './floor.model';
 
-export interface Building {
+/** @deprecated Firebase-era nested model; remove after migration */
+export interface BuildingLegacy {
   name: string;
   adress: string;
-  floorList: Floor[];
+  floorList: FloorLegacy[];
   specialEvent: boolean;
   building?: string;
   date?: Date;

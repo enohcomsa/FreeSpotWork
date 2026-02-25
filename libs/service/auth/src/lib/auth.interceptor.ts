@@ -5,6 +5,11 @@ import { inject } from '@angular/core';
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService: AuthService = inject(AuthService);
 
+
+  if (req.url.startsWith('http://localhost:3333/api/v1')) {
+    return next(req);
+  }
+
   if (!authService.userSignal$()) {
     return next(req);
   }

@@ -21,7 +21,7 @@ import { AuthService } from '@free-spot-service/auth';
 
 @Component({
   selector: 'free-spot-navigation',
-  standalone: true,
+
   imports: [
     CommonModule,
     RouterModule,

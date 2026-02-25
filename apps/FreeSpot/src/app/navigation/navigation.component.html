@@ -45,19 +45,19 @@
       }
       <!-- <nav profile></nav> -->
       <div class="flex items-center space-x-4 hover:cursor-pointer">
-        <div
+        <button
           class="on-free-spot-toolbar hidden h-12 w-12 rounded-full text-lg font-semibold md:flex md:items-center md:justify-center"
           [matMenuTriggerFor]="profileMenu"
         >
           {{ getLoggedUserInitials()() | uppercase }}
-        </div>
-        <div class="hidden text-base font-semibold lg:flex lg:items-center" [matMenuTriggerFor]="profileMenu">
+        </button>
+        <button class="hidden text-base font-semibold lg:flex lg:items-center" [matMenuTriggerFor]="profileMenu">
           {{ getLoggedUserName()() }} <mat-icon inline="true">keyboard_arrow_down</mat-icon>
-        </div>
+        </button>
       </div>
     </div>
 
-    <button class="hamburger z-30 block focus:outline-none md:hidden" (click)="opened = !opened">
+    <button  aria-label="hamburger button" class="hamburger z-30 block md:hidden" (click)="opened = !opened">
       <span [ngClass]="{ open: opened }" class="on-free-spot-toolbar hamburger-top"></span>
       <span [ngClass]="{ open: opened }" class="on-free-spot-toolbar hamburger-middle"></span>
       <span [ngClass]="{ open: opened }" class="on-free-spot-toolbar hamburger-bottom"></span>
@@ -82,15 +82,15 @@
     <div class="flex w-full flex-col items-center gap-2">
       <div class="w-full space-y-2 pb-4">
         <div class="flex items-center justify-center space-x-4 hover:cursor-pointer">
-          <div
+          <button
             class="on-free-spot-toolbar flex h-12 w-12 items-center justify-center rounded-full text-xl font-semibold"
             [matMenuTriggerFor]="profileMenu"
           >
             {{ getLoggedUserInitials()() | uppercase }}
-          </div>
-          <div class="hidden items-center text-xl font-semibold sm:flex" [matMenuTriggerFor]="profileMenu">
+          </button>
+          <button class="hidden items-center text-xl font-semibold sm:flex" [matMenuTriggerFor]="profileMenu">
             {{ getLoggedUserName()() }} <mat-icon inline="true">keyboard_arrow_down</mat-icon>
-          </div>
+          </button>
         </div>
         <mat-divider></mat-divider>
       </div>

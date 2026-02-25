@@ -1,48 +1,39 @@
 <div class="container">
-  <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Floor: {{ floorNameSig() }}</h1>
+  <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Floor: {{ floorSig().name }}</h1>
   <h2 class="pb-4 pt-8 text-2xl font-bold md:pb-8 md:pt-12">Floor Rooms</h2>
   <div class="flex flex-col gap-8 pb-4 md:grid md:auto-rows-min md:grid-cols-2 xl:grid-cols-3">
-    @for (room of floorSig().roomList; track room.name) {
-      <free-spot-admin-room-card
-        [adminRoomSig]="room"
-        [addingRoomSig]="addingRoom"
-        (addingRoomSigChange)="addingRoom = $event"
-        (editRoom)="onEditingRoom($event)"
-        (deleteRoom)="onDeleteRoom($event)"
-      ></free-spot-admin-room-card>
+    @for (room of roomCardVMs(); track room.id) {
+    <free-spot-admin-room-card [adminRoomSig]="room" [addingRoomSig]="addingRoom"
+      (addingRoomSigChange)="addingRoom = $event" (editRoom)="onEditingRoom($event)"
+      (deleteRoom)="onDeleteRoom($event)"></free-spot-admin-room-card>
     }
-    <free-spot-add-item-card
-      class="h-24 w-full md:h-full md:min-h-32 md:place-self-start"
-      (click)="onAddingRoom()"
-    ></free-spot-add-item-card>
+    <free-spot-add-item-card class="h-24 w-full md:h-full md:min-h-32 md:place-self-start"
+      (click)="onAddingRoom()"></free-spot-add-item-card>
   </div>
   <div #editRoom class="h-auto min-h-24">
     @if (addingRoom) {
-      <form
-        [formGroup]="addRoomFormGroup"
-        class="flex flex-col py-4 sm:flex-row sm:items-center sm:gap-4"
-        (ngSubmit)="editingRoom ? onEditRoom() : onAddRoom()"
-      >
-        <mat-form-field>
-          <mat-label>New room</mat-label>
-          <mat-hint>Enter room name</mat-hint>
-          <input type="text" matInput formControlName="roomName" />
-          <mat-error>{{ displayError(addRoomFormGroup.controls['roomName']) }}</mat-error>
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Total spots</mat-label>
-          <input type="number" matInput formControlName="totalSpotsNumber" />
-          <mat-error>{{ displayError(addRoomFormGroup.controls['totalSpotsNumber']) }}</mat-error>
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Unavailable spots</mat-label>
-          <input type="number" matInput formControlName="unavailableSpots" />
-          <mat-error>{{ displayError(addRoomFormGroup.controls['unavailableSpots']) }}</mat-error>
-        </mat-form-field>
-        <button mat-flat-button type="submit" class="sm:mb-5" [disabled]="!addRoomFormGroup.valid">
-          {{ editingRoom ? 'Edit room' : 'Add room' }}
-        </button>
-      </form>
+    <form [formGroup]="addRoomFormGroup" class="flex flex-col py-4 sm:flex-row sm:items-center sm:gap-4"
+      (ngSubmit)="editingRoom ? onEditRoom() : onAddRoom()">
+      <mat-form-field>
+        <mat-label>New room</mat-label>
+        <mat-hint>Enter room name</mat-hint>
+        <input type="text" matInput formControlName="roomName" />
+        <mat-error>{{ displayError(addRoomFormGroup.controls['roomName']) }}</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Total spots</mat-label>
+        <input type="number" matInput formControlName="totalSpotsNumber" />
+        <mat-error>{{ displayError(addRoomFormGroup.controls['totalSpotsNumber']) }}</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Unavailable spots</mat-label>
+        <input type="number" matInput formControlName="unavailableSpots" />
+        <mat-error>{{ displayError(addRoomFormGroup.controls['unavailableSpots']) }}</mat-error>
+      </mat-form-field>
+      <button mat-flat-button type="submit" class="sm:mb-5" [disabled]="!addRoomFormGroup.valid">
+        {{ editingRoom ? 'Edit room' : 'Add room' }}
+      </button>
+    </form>
     }
   </div>
 </div>

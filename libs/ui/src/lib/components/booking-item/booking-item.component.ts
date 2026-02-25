@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, InputSigna
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
-import { BookedEvent, FreeSpotUser, TimetableActivityItem } from '@free-spot/models';
+import { BookedEvent, FreeSpotUser, TimetableActivityItemLegacy } from '@free-spot/models';
 import { Event } from '@free-spot/enums';
 import { BookingService } from '@free-spot-service/booking';
 import { UserService } from '@free-spot-service/user';
@@ -13,7 +13,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'free-spot-booking-item',
-  standalone: true,
+
   imports: [CommonModule, MatCardModule, MatButtonModule, MatDividerModule, TranslateModule],
   templateUrl: './booking-item.component.html',
   styleUrl: './booking-item.component.scss',
@@ -25,8 +25,8 @@ export class BookingItemComponent implements OnInit {
   private _confirmService: ConfirmModalService = inject(ConfirmModalService);
   private _toastrService: ToastrService = inject(ToastrService);
 
-  timetableActivitySig: InputSignal<TimetableActivityItem> = input.required<TimetableActivityItem>();
-  oldTimetableActivitySig: InputSignal<TimetableActivityItem> = input.required<TimetableActivityItem>();
+  timetableActivitySig: InputSignal<TimetableActivityItemLegacy> = input.required<TimetableActivityItemLegacy>();
+  oldTimetableActivitySig: InputSignal<TimetableActivityItemLegacy> = input.required<TimetableActivityItemLegacy>();
   bookingActive = output<boolean>();
   eventBookingSig: Signal<BookedEvent> = computed(() => this._bookingService.generateBooking(this.timetableActivitySig()));
 

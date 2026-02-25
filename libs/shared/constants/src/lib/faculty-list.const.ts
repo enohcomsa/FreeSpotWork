@@ -1,6 +1,6 @@
-import { Faculty } from '@free-spot/models';
+import { FacultyLegacy } from '@free-spot/models';
 
-export const FACULTY_LIST: Faculty[] = [
+export const FACULTY_LIST: FacultyLegacy[] = [
   {
     name: 'Facultatea de Arhitectură și Urbanism',
     shortName: 'Arhitectura',

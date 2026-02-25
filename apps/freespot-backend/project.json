@@ -1,0 +1,32 @@
+{
+  "name": "freespot-backend",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/freespot-backend/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "serve": {
+      "continuous": true,
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "dependsOn": ["build"],
+      "options": {
+        "buildTarget": "freespot-backend:build",
+        "runBuildTargetDependencies": false
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "freespot-backend:build:development"
+        },
+        "production": {
+          "buildTarget": "freespot-backend:build:production"
+        }
+      }
+    },
+    "test": {
+      "options": {
+        "passWithNoTests": true
+      }
+    }
+  }
+}

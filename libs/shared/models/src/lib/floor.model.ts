@@ -1,9 +1,9 @@
-import { Room } from './room.model';
-
-export interface Floor {
+import { RoomLegacy } from './room.model';
+/** @deprecated Firebase-era nested model; remove after migration */
+export interface FloorLegacy {
   name: string;
   buildingName: string;
-  roomList: Room[];
+  roomList: RoomLegacy[];
   totalSpotsNumber: number;
   unavailableSpots: number;
 }

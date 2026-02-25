@@ -1,176 +1,147 @@
 <div class="container">
   <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Admin List</h1>
-  <free-spot-dynamic-chip-list
-    [itemListSig]="adminUserListSig()"
-    (itemListSigChange)="updateAdminList($event)"
-    itemLabelSig="admin"
-    [optionListSig]="userListSig()"
-    [itemKeyDysplay]="'firstName'"
-    [itemKeyDysplay2]="'familyName'"
-  ></free-spot-dynamic-chip-list>
+  <free-spot-dynamic-chip-list [itemListSig]="adminUserListSig()" (itemListSigChange)="updateAdminList($event)"
+    itemLabelSig="admin" [optionListSig]="userListSig()" itemKeyDysplay="firstName" itemKeyDysplay2="familyName">
+  </free-spot-dynamic-chip-list>
 
   <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Faculties</h1>
   <mat-accordion>
-    @for (faculty of facultyListSig(); track $index) {
-      <mat-expansion-panel outline="true">
-        <mat-expansion-panel-header class="!h-fit !py-2">
-          <mat-panel-title> {{ faculty.name }} </mat-panel-title>
-        </mat-expansion-panel-header>
-        <free-spot-faculty
-          [facultySig]="faculty"
-          (facultySigChange)="onFacultyChange($event)"
-          (editYear)="onEditingYear($event)"
-        ></free-spot-faculty>
-        @if (addingYear || editingYear) {
-          <form
-            class="flex flex-col py-4 sm:flex-row sm:items-center sm:gap-4"
-            (ngSubmit)="editingYear ? onEditYear(faculty) : onAddYear(faculty)"
-          >
-            <mat-form-field>
-              <mat-label>New Year</mat-label>
-              <mat-hint>Enter faculty year name</mat-hint>
-              <input type="text" matInput [formControl]="addYearFormControl" />
-              <mat-error>{{ displayError(addYearFormControl) }}</mat-error>
-            </mat-form-field>
-            <button mat-flat-button type="submit" class="sm:mb-5" [disabled]="!addYearFormControl.valid">
-              {{ editingYear ? 'Edit Year' : 'Add Year' }}
-            </button>
-          </form>
-        } @else {
-          <free-spot-add-item-card class="block h-24 w-full md:h-28" (click)="onAddingYear()"></free-spot-add-item-card>
-        }
-      </mat-expansion-panel>
+    @for (faculty of facultyListSig(); track faculty.id) {
+    <mat-expansion-panel outline="true">
+
+      <mat-expansion-panel-header class="!h-fit !py-2">
+        <mat-panel-title> {{ faculty.name }} </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <free-spot-faculty [facultySig]="faculty"></free-spot-faculty>
+    </mat-expansion-panel>
     } @empty {
-      <h3>No faculty added yet.</h3>
+    <h3>No faculty added yet.</h3>
     }
   </mat-accordion>
 
   <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Buildings</h1>
   <div class="flex w-full flex-col gap-8 pb-4 md:grid md:grid-cols-2 md:place-items-stretch xl:grid-cols-3">
-    @for (building of buildingListSig(); track building.name) {
-      <free-spot-admin-building-card
-        [adminBuildingSig]="building"
-        [addingBuildingSig]="addingBuilding"
-        (addingBuildingSigChange)="addingBuilding = $event"
-        (editBuilding)="onEditingBuilding($event)"
-        (deleteBuilding)="onDeleteBuilding($event)"
-      ></free-spot-admin-building-card>
+    @for (buildingVm of buildingCardVMs(); track buildingVm.id) {
+    <free-spot-admin-building-card [adminBuildingSig]="buildingVm" [addingBuildingSig]="addingBuilding"
+      (addingBuildingSigChange)="addingBuilding = $event" (editBuilding)="onEditingBuildingVM($event)"
+      (deleteBuilding)="onDeleteBuildingVM($event)">
+    </free-spot-admin-building-card>
     } @empty {
-      <h3>No building added yet.</h3>
+    <h3>No building added yet.</h3>
     }
-    <free-spot-add-item-card
-      class="h-24 w-full md:h-full md:min-h-32 md:place-self-start"
-      (click)="onAddingBuilding()"
-    ></free-spot-add-item-card>
+    <free-spot-add-item-card class="h-24 w-full md:h-full md:min-h-32 md:place-self-start"
+      (click)="onAddingBuilding()"></free-spot-add-item-card>
   </div>
+
   <div #editBuilding class="h-auto min-h-24">
     @if (addingBuilding) {
-      <form
-        [formGroup]="addBuildingFormGroup"
-        class="flex flex-col gap-4 py-4 sm:flex-row sm:items-center"
-        (ngSubmit)="editingBuilding ? onEditBuilding() : onAddBuilding()"
-      >
-        <mat-form-field>
-          <mat-label>Building name</mat-label>
-          <mat-hint>Enter building name</mat-hint>
-          <input type="text" matInput formControlName="name" />
-          <mat-error>{{ displayError(addBuildingFormGroup.controls['name']) }}</mat-error>
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Building adress</mat-label>
-          <mat-hint>Enter building address</mat-hint>
-          <input type="text" matInput formControlName="adress" />
-          <mat-error>{{ displayError(addBuildingFormGroup.controls['adress']) }}</mat-error>
-        </mat-form-field>
-        <button mat-flat-button type="submit" class="sm:mb-5" [disabled]="!addBuildingFormGroup.valid">
-          {{ editingBuilding ? 'Edit building' : 'Add building' }}
-        </button>
-      </form>
+    <form [formGroup]="addBuildingFormGroup" class="flex flex-col gap-4 py-4 sm:flex-row sm:items-center"
+      (ngSubmit)="editingBuilding ? onEditBuilding() : onAddBuilding()">
+
+      <mat-form-field>
+        <mat-label>Building name</mat-label>
+        <mat-hint>Enter building name</mat-hint>
+        <input type="text" matInput formControlName="name" />
+        <mat-error>{{ displayError(addBuildingFormGroup.controls['name']) }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Building adress</mat-label>
+        <mat-hint>Enter building address</mat-hint>
+        <input type="text" matInput formControlName="adress" />
+        <mat-error>{{ displayError(addBuildingFormGroup.controls['adress']) }}</mat-error>
+      </mat-form-field>
+
+      <button mat-flat-button type="submit" class="sm:mb-5" [disabled]="!addBuildingFormGroup.valid">
+        {{ editingBuilding ? 'Edit building' : 'Add building' }}
+      </button>
+    </form>
     }
   </div>
 
   <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Events</h1>
   <div class="flex flex-col gap-8 pb-4 md:grid md:grid-cols-2 xl:grid-cols-3">
-    @for (event of eventListSig(); track event.name) {
-      <free-spot-admin-event-card
-        [adminEventSig]="event"
-        [addingEventSig]="addingEvent"
-        (addingEventSigChange)="addingEvent = $event"
-        (editEvent)="onEditingEvent($event)"
-        (deleteEvent)="onDeleteEvent($event)"
-      ></free-spot-admin-event-card>
+    @for (event of eventListSig(); track event.id) {
+    <free-spot-admin-event-card [adminEventSig]="event" [adminEventBuildingSig]="getBuildingById(event.buildingId)"
+      [adminEventRoomSig]="getRoomById(event.roomId)" [addingEventSig]="addingEvent"
+      (addingEventSigChange)="addingEvent = $event" (editEvent)="onEditingEvent($event)"
+      (deleteEvent)="onDeleteEvent($event.id)">
+    </free-spot-admin-event-card>
     } @empty {
-      <h3>No events added yet.</h3>
+    <h3>No events added yet.</h3>
     }
-    <free-spot-add-item-card
-      class="h-24 w-full md:h-full md:min-h-32 md:place-self-start"
-      (click)="onAddingEvent()"
-    ></free-spot-add-item-card>
+    <free-spot-add-item-card class="h-24 w-full md:h-full md:min-h-32 md:place-self-start"
+      (click)="onAddingEvent()"></free-spot-add-item-card>
   </div>
+
   <div #editEvent class="h-auto min-h-[34rem] sm:min-h-44">
     @if (addingEvent) {
-      <form
-        [formGroup]="addEventFormGroup"
-        class="flex flex-col gap-4 py-4 sm:items-center sm:justify-center"
-        (ngSubmit)="editingEvent ? onEditEvent() : onAddEvent()"
-      >
-        <div class="flex w-full flex-col gap-4 sm:flex-row sm:items-center">
-          <mat-form-field class="grow">
-            <mat-label>New event</mat-label>
-            <mat-hint>Enter event name</mat-hint>
-            <input type="text" matInput formControlName="name" />
-            <mat-error>{{ displayError(addEventFormGroup.controls['name']) }}</mat-error>
-          </mat-form-field>
-          <mat-form-field class="grow">
-            <mat-label>Event date</mat-label>
-            <mat-hint>MM/DD/YYYY</mat-hint>
-            <input matInput [matDatepicker]="picker" formControlName="date" />
-            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-            <mat-error>{{ displayError(addEventFormGroup.controls['date']) }}</mat-error>
-          </mat-form-field>
-          <mat-form-field class="grow">
-            <mat-label>Event start hour</mat-label>
-            <mat-select formControlName="startHour">
-              @for (startHour of startHourList; track startHour) {
-                <mat-option [value]="startHour">{{ startHour }}</mat-option>
-              }
-            </mat-select>
-            <mat-error>{{ displayError(addEventFormGroup.controls['startHour']) }}</mat-error>
-          </mat-form-field>
-        </div>
-        <div class="flex w-full flex-col gap-4 sm:flex-row sm:items-center">
-          <mat-form-field class="grow">
-            <mat-label>Event building </mat-label>
-            <mat-hint>Event location</mat-hint>
-            <mat-select formControlName="building">
-              @for (building of buildingListSig(); track building.name) {
-                <mat-option [value]="building">{{ building.name }}</mat-option>
-              }
-            </mat-select>
-            <mat-error>{{ displayError(addEventFormGroup.controls['building']) }}</mat-error>
-          </mat-form-field>
-          <mat-form-field class="grow">
-            <mat-label>Event room </mat-label>
+    <form [formGroup]="addEventFormGroup" class="flex flex-col gap-4 py-4 sm:items-center sm:justify-center"
+      (ngSubmit)="editingEvent ? onEditEvent() : onAddEvent()">
+      <div class="flex w-full flex-col gap-4 sm:flex-row sm:items-center">
 
-            <mat-select formControlName="room">
-              @for (room of foundRoomListSig(); track room.name) {
-                <mat-option [value]="room">{{ room.name }}</mat-option>
-              }
-            </mat-select>
+        <mat-form-field class="grow">
+          <mat-label>New event</mat-label>
+          <mat-hint>Enter event name</mat-hint>
+          <input type="text" matInput formControlName="name" />
+          <mat-error>{{ displayError(addEventFormGroup.controls['name']) }}</mat-error>
+        </mat-form-field>
 
-            <mat-error>{{ displayError(addEventFormGroup.controls['room']) }}</mat-error>
-          </mat-form-field>
-          <mat-form-field class="grow">
-            <mat-label>Event reserved spots</mat-label>
-            <input type="number" matInput formControlName="unavailable" />
-            <mat-error>{{ displayError(addEventFormGroup.controls['unavailable']) }}</mat-error>
-          </mat-form-field>
-        </div>
-        <button mat-flat-button type="submit" class="sm:mb-5 sm:w-1/3" [disabled]="!addEventFormGroup.valid">
-          {{ editingEvent ? 'Edit event' : 'Add event' }}
-        </button>
-      </form>
+        <mat-form-field class="grow">
+          <mat-label>Event date</mat-label>
+          <mat-hint>MM/DD/YYYY</mat-hint>
+          <input matInput [matDatepicker]="picker" formControlName="date" />
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-error>{{ displayError(addEventFormGroup.controls['date']) }}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="grow">
+          <mat-label>Event start hour</mat-label>
+          <mat-select formControlName="startHour">
+            @for (startHour of startHourList; track startHour) {
+            <mat-option [value]="startHour">{{ startHour }}</mat-option>
+            }
+          </mat-select>
+          <mat-error>{{ displayError(addEventFormGroup.controls['startHour']) }}</mat-error>
+        </mat-form-field>
+
+      </div>
+
+      <div class="flex w-full flex-col gap-4 sm:flex-row sm:items-center">
+        <mat-form-field class="grow">
+          <mat-label>Event building </mat-label>
+          <mat-hint>Event location</mat-hint>
+          <mat-select formControlName="building">
+            @for (building of buildingListSig(); track building.id) {
+            <mat-option [value]="building">{{ building.name }}</mat-option>
+            }
+          </mat-select>
+          <mat-error>{{ displayError(addEventFormGroup.controls['building']) }}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="grow">
+          <mat-label>Event room </mat-label>
+          <mat-select formControlName="room">
+            @for (room of foundRoomListSig(); track room.id) {
+            <mat-option [value]="room">{{ room.name }}</mat-option>
+            }
+          </mat-select>
+          <mat-error>{{ displayError(addEventFormGroup.controls['room']) }}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="grow">
+          <mat-label>Event reserved spots</mat-label>
+          <input type="number" matInput formControlName="unavailable" />
+          <mat-error>{{ displayError(addEventFormGroup.controls['unavailable']) }}</mat-error>
+        </mat-form-field>
+      </div>
+
+      <button mat-flat-button type="submit" class="sm:mb-5 sm:w-1/3" [disabled]="!addEventFormGroup.valid">
+        {{ editingEvent ? 'Edit event' : 'Add event' }}
+      </button>
+    </form>
     }
   </div>
 </div>

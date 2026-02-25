@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal, Signal, WritableSignal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MatChipsModule } from '@angular/material/chips';
 import { DynamicFormComponent } from '@free-spot/ui';
 import { BookedSpotComponent } from '../booked-spot/booked-spot.component';
@@ -13,8 +13,8 @@ import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'free-spot-my-bookings',
-  standalone: true,
-  imports: [CommonModule, MatChipsModule, DynamicFormComponent, BookedSpotComponent, TranslateModule],
+
+  imports: [MatChipsModule, DynamicFormComponent, BookedSpotComponent, TranslateModule],
   templateUrl: './my-bookings.component.html',
   styleUrl: './my-bookings.component.sass',
   changeDetection: ChangeDetectionStrategy.OnPush,

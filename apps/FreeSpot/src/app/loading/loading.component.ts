@@ -5,7 +5,7 @@ import { LoadingService } from './loading.service';
 
 @Component({
   selector: 'free-spot-loading',
-  standalone: true,
+
   imports: [CommonModule, MatProgressSpinnerModule],
   template: `
     @if (loadingService.loading$ | async) {

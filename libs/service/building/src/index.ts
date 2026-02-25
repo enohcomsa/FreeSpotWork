@@ -1,1 +1,1 @@
-export { AdminBuildingService } from './lib/admin-building.service';
+export { BuildingService  } from './lib/building.service';

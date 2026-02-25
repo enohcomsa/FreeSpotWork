@@ -1,77 +1,79 @@
-import { ChangeDetectionStrategy, Component, inject, input, OnInit, Signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, inject, input, OnInit, Signal } from '@angular/core';
 import { DynamicChipListComponent, TimetableItemComponent } from '@free-spot/ui';
 import { AdminRoomTimetableItemComponent } from '../admin-room-timetable-item/admin-room-timetable-item.component';
-import { Building, Floor, Room, SubjectItem, TimeTableItem } from '@free-spot/models';
 import { AdminRoomService } from '@free-spot-service/room';
-import { AdminBuildingService } from '@free-spot-service/building';
-import { AdminFloorService } from '@free-spot-service/floor';
-import { SUBJECT_LIST } from '@free-spot/constants';
+import { SubjectService } from '@free-spot-service/subject';
+import { UpdateRoomCmd } from '@free-spot-domain/room';
+import { SubjectItem } from '@free-spot-domain/subject';
+import { TimetableActivityCardVM } from '@free-spot-presentation/timetable-activity-card';
+import { WeekDay } from '@free-spot/enums';
+import { AdminTimetableActivityService } from '@free-spot-service/timetable-activity';
+import { TimetableActivity } from '@free-spot-domain/timetable-activity';
 
 @Component({
   selector: 'free-spot-admin-room-detail',
-  standalone: true,
-  imports: [CommonModule, DynamicChipListComponent, AdminRoomTimetableItemComponent, TimetableItemComponent],
+  imports: [DynamicChipListComponent, AdminRoomTimetableItemComponent, TimetableItemComponent],
   templateUrl: './admin-room-detail.component.html',
   styleUrl: './admin-room-detail.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminRoomDetailComponent implements OnInit {
   private _adminRoomService: AdminRoomService = inject(AdminRoomService);
-  private _adminFloorService: AdminFloorService = inject(AdminFloorService);
-  private _adminBuildingService: AdminBuildingService = inject(AdminBuildingService);
+  private _adminSubjectService: SubjectService = inject(SubjectService);
+  private _adminTimetableActivityService: AdminTimetableActivityService = inject(AdminTimetableActivityService);
 
-  roomNameSig = input.required<string>();
-  roomSig!: Signal<Room>;
-  floorNameSig = input.required<string>();
-  floorSig!: Signal<Floor>;
-  buildingNameSig = input.required<string>();
-  buildingSig!: Signal<Building>;
+  roomIdSig = input.required<string>();
+  readonly roomSig = computed(() => this._adminRoomService.getSignalById(this.roomIdSig())());
+  subjectListSig: Signal<SubjectItem[]> = this._adminSubjectService.subjectListSig;
+  readonly roomSubjectListSig = computed(() =>
+    this.subjectListSig().filter((subjectItem: SubjectItem) =>
+      this.roomSig().subjectList.some((subjectItemId) => subjectItemId === subjectItem.id)));
+  readonly roomTimetableActivitiesSig: Signal<TimetableActivity[]> = computed(() => this._adminTimetableActivityService.getTimetableActivityListSignalByRoomId(this.roomIdSig())());
+  readonly timetableActivityCardVMs: Signal<TimetableActivityCardVM[]> = computed(() => {
+    const room = this.roomSig();
+    const subjects = this.subjectListSig();
+    const subjectMap = new Map(subjects.map(s => [s.id, s]));
+    return this.roomTimetableActivitiesSig().map(activity => {
+      const subject = subjectMap.get(activity.subjectId);
+      return {
+        id: activity.id,
+        weekDay: activity.weekDay,
+        startHour: activity.startHour,
+        endHour: activity.endHour,
+        weekParity: activity.weekParity,
+        activityType: activity.activityType,
+        roomName: room.name,
+        subjectItemShortName: subject?.shortName ?? '',
+      } satisfies TimetableActivityCardVM;
+    });
+  });
 
-  subjectList: SubjectItem[] = SUBJECT_LIST;
+  readonly workWeek: WeekDay[] = [
+    WeekDay.MONDAY,
+    WeekDay.TUESDAY,
+    WeekDay.WEDNESDAY,
+    WeekDay.THURSDAY,
+    WeekDay.FRIDAY,
+  ];
+
+  readonly timetablePerDay = computed(() => {
+    const allTimetableActivities = this.timetableActivityCardVMs() ?? [];
+    return this.workWeek.map((day: WeekDay) => ({
+      day,
+      activities: allTimetableActivities.filter((timetableActivity) => timetableActivity.weekDay === day),
+    }));
+  });
 
   ngOnInit(): void {
     this._adminRoomService.init();
-    this._adminFloorService.init();
-    this._adminBuildingService.init();
-    this.roomSig = this._adminRoomService.getRoomByName(this.roomNameSig());
-    this.floorSig = this._adminFloorService.getFloorByName(this.floorNameSig());
-    this.buildingSig = this._adminBuildingService.getBuildingByName(this.buildingNameSig());
+    this._adminSubjectService.init();
+    this._adminTimetableActivityService.init();
   }
 
-  onSubjectListChange(changedSubjectList: SubjectItem[]): void {
-    const updatedRoom: Room = {
-      ...this.roomSig(),
-      subjectList: changedSubjectList,
-    };
-    this._adminRoomService.updateRoom(this.roomSig(), updatedRoom);
-    this._updateFloorAndBuilding(updatedRoom);
-  }
-
-  onTimetableItemChange(changedTimetableItem: TimeTableItem): void {
-    const updatedRoomTimetable = this.roomSig().timetable.map((timeTableItem: TimeTableItem) =>
-      timeTableItem.weekDay === changedTimetableItem.weekDay ? changedTimetableItem : timeTableItem,
-    );
-
-    const updatedRoom: Room = { ...this.roomSig(), timetable: updatedRoomTimetable };
-    this._adminRoomService.updateRoom(this.roomSig(), updatedRoom);
-    this._updateFloorAndBuilding(updatedRoom);
-  }
-
-  private _updateFloorAndBuilding(updatedRoom: Room): void {
-    const updatedFloor: Floor = {
-      ...this.floorSig(),
-      roomList: this.floorSig().roomList.map((room: Room) => (room.name === updatedRoom.name ? updatedRoom : room)),
-    };
-    this._adminFloorService.updateFloor(this.floorSig(), updatedFloor);
-    this._updateBuilding(updatedFloor);
-  }
-
-  private _updateBuilding(changedFloor: Floor): void {
-    const updatedBuilding: Building = {
-      ...this.buildingSig(),
-      floorList: this.buildingSig().floorList.map((floor: Floor) => (floor.name === changedFloor.name ? changedFloor : floor)),
-    };
-    this._adminBuildingService.updateBuilding(this.buildingSig(), updatedBuilding);
+  onSubjectListChange(subjectItemList: SubjectItem[]): void {
+    const updatedRoom: UpdateRoomCmd = {
+      subjectList: subjectItemList.map((subjectItem: SubjectItem) => subjectItem.id),
+    }
+    this._adminRoomService.update(this.roomIdSig(), updatedRoom);
   }
 }

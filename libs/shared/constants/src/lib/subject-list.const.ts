@@ -1,6 +1,6 @@
-import { SubjectItem } from '@free-spot/models';
+import { SubjectItemLegacy } from '@free-spot/models';
 
-export const SUBJECT_LIST: SubjectItem[] = [
+export const SUBJECT_LIST: SubjectItemLegacy[] = [
   {
     name: 'Sist. optoelectronice in telecomunicatii ',
     shortName: 'SOT',

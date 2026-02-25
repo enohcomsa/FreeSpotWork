@@ -8,7 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TimeTableItem } from '@free-spot/models';
+import { TimeTableItemLecagy } from '@free-spot/models';
 import { WeekDay } from '@free-spot/enums';
 import { AppDateService } from '@free-spot-service/app-date';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -17,7 +17,7 @@ import { FormErrorMessage } from '@free-spot/util';
 
 @Component({
   selector: 'free-spot-dynamic-chip-list',
-  standalone: true,
+
   imports: [
     CommonModule,
     FormsModule,
@@ -73,13 +73,13 @@ export class DynamicChipListComponent<T> implements OnInit {
   addItemFormControl = this._formBuilder.nonNullable.control({} as T, Validators.required);
   addingItem = false;
 
-  emptyTimetable: Signal<TimeTableItem[]> = computed(() => [
-    { weekDay: WeekDay.MONDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.MONDAY) },
-    { weekDay: WeekDay.TUESDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.TUESDAY) },
-    { weekDay: WeekDay.WEDNESDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.WEDNESDAY) },
-    { weekDay: WeekDay.THURSDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.THURSDAY) },
-    { weekDay: WeekDay.FRIDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.FRIDAY) },
-  ]);
+  // emptyTimetable: Signal<TimeTableItemLecagy[]> = computed(() => [
+  //   { weekDay: WeekDay.MONDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.MONDAY) },
+  //   { weekDay: WeekDay.TUESDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.TUESDAY) },
+  //   { weekDay: WeekDay.WEDNESDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.WEDNESDAY) },
+  //   { weekDay: WeekDay.THURSDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.THURSDAY) },
+  //   { weekDay: WeekDay.FRIDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.FRIDAY) },
+  // ]);
 
   ngOnInit(): void {
     this._appDateService.init();
@@ -95,16 +95,7 @@ export class DynamicChipListComponent<T> implements OnInit {
 
   onAddItem(): void {
     this.addingItem = false;
-    if (this.itemLabelSig() === 'group') {
-      this.itemListSig.set([
-        ...this.itemListSig(),
-        { name: this.addItemFormControl.value, timetable: this.emptyTimetable() } as T,
-      ]);
-      console.log(this.itemListSig());
-    } else {
-      this.itemListSig.set([...this.itemListSig(), this.addItemFormControl.value as T]);
-    }
-
+    this.itemListSig.set([...this.itemListSig(), this.addItemFormControl.value as T]);
     this.addItemFormControl.reset();
   }
 
@@ -136,8 +127,8 @@ export class DynamicChipListComponent<T> implements OnInit {
   }
 
   onDynamicNavigation(item: T): void {
-    if (this.itemDinamicRoute() !== '') {
-      this._router.navigate([this.itemDinamicRoute() + this.getDisplayName(item)], { relativeTo: this._activatedRoute });
+    if (this.itemDinamicRoute() !== '' && this._hasId(item)) {
+      this._router.navigate([this.itemDinamicRoute() + item.id], { relativeTo: this._activatedRoute });
     }
   }
 
@@ -161,5 +152,14 @@ export class DynamicChipListComponent<T> implements OnInit {
     }
 
     return canBeDeleted;
+  }
+
+  private _hasId(item: unknown): item is { id: string } {
+    return (
+      typeof item === 'object' &&
+      item !== null &&
+      'id' in item &&
+      typeof item.id === 'string'
+    );
   }
 }
