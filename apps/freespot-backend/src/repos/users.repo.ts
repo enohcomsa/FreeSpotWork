@@ -5,6 +5,12 @@ import { getCollection, isEmptySet, toObjectId } from "../utils/mongo";
 
 const USERS_COLLECTION = "users";
 
+// findByEmailOrUsername(identifier: string)
+
+// insert(userRecord)
+
+// (optional) findById(id)
+
 export async function listUsers(): Promise<UserResponseDto[]> {
   const collection = await getCollection<UserDbDoc>(USERS_COLLECTION);
   const docs = await collection.find({}).sort({ familyName: 1, firstName: 1 }).toArray();

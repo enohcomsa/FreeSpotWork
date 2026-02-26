@@ -6,9 +6,12 @@ import apiV1 from "./routes";
 import { errorHandler } from "./middlewares/error";
 import { connectToDatabase } from "./db";
 import { setupSwagger } from "./swagger";
+import cookieParser from "cookie-parser";
+
 
 async function bootstrap() {
   const app = express();
+  app.use(cookieParser());
   app.set('trust proxy', 1);
 
   app.use((_req, res, next) => {
@@ -35,13 +38,13 @@ async function bootstrap() {
     next();
   });
 
-  const allowedOrigins = ["http://localhost:4200"];
+  const allowedOrigins = ["http://localhost:4200", "https://free-spot.vercel.app"];
   app.use(
     cors({
-      origin: allowedOrigins, // or a function if you need logic
+      origin: allowedOrigins,
       methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
       allowedHeaders: ["Content-Type", "Authorization"],
-      credentials: false, // only if you actually use cookies/credentials
+      credentials: false, // switch to true after moving to http cookies
       maxAge: 600, // cache preflight for 10 minutes
     })
   );
