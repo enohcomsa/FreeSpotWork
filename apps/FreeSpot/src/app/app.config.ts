@@ -1,4 +1,4 @@
-import { ApplicationConfig, importProvidersFrom, provideZonelessChangeDetection} from '@angular/core';
+import { ApplicationConfig, importProvidersFrom, provideZonelessChangeDetection } from '@angular/core';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { appRoutes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
@@ -29,5 +29,7 @@ export const appConfig: ApplicationConfig = {
         defaultLanguage: Language.EN,
       }),
     ),
+    // { provide: 'APP_ENV', useValue: { ...environment } },
+    // { provide: 'APP_BASE_URL', useValue: environment.url.api_service },
   ],
 };

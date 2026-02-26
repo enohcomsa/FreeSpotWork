@@ -12,7 +12,7 @@ import { CustomHttpParameterCodec } from './encoder';
 import { Configuration } from './configuration';
 
 export class BaseService {
-    protected basePath = 'http://localhost:3333/api/v1';
+    protected basePath = 'https://freespotwork.onrender.com/api/v1';
     public defaultHeaders = new HttpHeaders();
     public configuration: Configuration;
     public encoder: HttpParameterCodec;

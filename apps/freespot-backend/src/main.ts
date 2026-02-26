@@ -11,6 +11,30 @@ async function bootstrap() {
   const app = express();
   app.set('trust proxy', 1);
 
+  app.use((_req, res, next) => {
+    if (_req.secure || _req.headers["x-forwarded-proto"] === "https") {
+      res.setHeader("Strict-Transport-Security", "max-age=15552000; includeSubDomains");
+    }
+    res.setHeader("X-Content-Type-Options", "nosniff");
+    res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+    res.setHeader(
+      "Content-Security-Policy",
+      [
+        "default-src 'none'",
+        "base-uri 'self'",
+        "frame-ancestors 'none'",
+        "form-action 'self'",
+        "object-src 'none'",
+        "img-src 'self' data:",
+        "style-src 'self'",              // swagger-ui often needs 'unsafe-inline'
+        "script-src 'self'",             // swagger-ui often needs 'unsafe-inline'
+        "connect-src 'self'",            // add your frontend origin if needed later
+      ].join("; ")
+    );
+
+    next();
+  });
+
   const allowedOrigins = ["http://localhost:4200"];
   app.use(
     cors({
@@ -39,8 +63,7 @@ async function bootstrap() {
     await connectToDatabase();
     const port = Number(process.env.PORT) || 3333;
     app.listen(port, () => {
-      console.log(`API at http://localhost:${port}/api/v1`);
-      console.log(`Docs at http://localhost:${port}/api-docs`);
+      console.log(`API running on port ${port}`);
     });
   } catch (err) {
     console.error("Failed to init DB", err);
