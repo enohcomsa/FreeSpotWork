@@ -32,7 +32,6 @@ export function setupSwagger(app: Express) {
   const doc = generator.generateDocument({
     openapi: "3.0.3",
     info: { title: "FreeSpot API", version: "1.0.0" },
-    servers: [{ url: "/api/v1" }],
     tags: [
       { name: "Bookings" },
       { name: "Program Years" },
@@ -52,6 +51,10 @@ export function setupSwagger(app: Express) {
     ],
   });
 
-  app.get("/openapi.json", (_req, res) => res.json(doc));
+  app.get("/openapi.json", (_req, res) => {
+    const proto = (_req.headers["x-forwarded-proto"] as string) || _req.protocol;
+    const host = _req.get("host");
+    res.json({ ...doc, servers: [{ url: `${proto}://${host}/api/v1` }] });
+  });
   app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(doc, { explorer: true }));
 }

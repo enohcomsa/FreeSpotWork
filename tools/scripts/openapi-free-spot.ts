@@ -1,7 +1,20 @@
 import { execSync } from "child_process";
 import * as path from "path";
 
-const OPENAPI_URL = "http://localhost:3333/openapi.json";
+const DEPLOYED = "https://freespotwork.onrender.com/openapi.json";
+const LOCAL = "http://localhost:3333/openapi.json";
+
+function pickOpenApiUrl(): string {
+  try {
+    execSync(`curl -fsS "${DEPLOYED}"`, { stdio: "ignore" });
+    return DEPLOYED;
+  } catch {
+    return LOCAL;
+  }
+}
+
+const OPENAPI_URL = pickOpenApiUrl();
+
 const ROOT = process.env.INIT_CWD || process.cwd();
 const OUT_LIB = path.join(ROOT, "libs", "_free-spot-client-api");
 const OUT_DIR = path.join(OUT_LIB, "src");
