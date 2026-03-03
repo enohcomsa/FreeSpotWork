@@ -3,7 +3,9 @@ import * as repo from "../repos/users.repo";
 import { NotFoundError } from "./errors";
 import { mapMongoError } from "./mongo";
 
-export async function getUsers(): Promise<UserResponseDto[]> { return repo.listUsers(); }
+export async function getUsers(): Promise<UserResponseDto[]> {
+  return repo.listUsers();
+}
 
 export async function getUser(id: string): Promise<UserResponseDto> {
   const res = await repo.getUserById(id);
@@ -11,8 +13,15 @@ export async function getUser(id: string): Promise<UserResponseDto> {
   return res;
 }
 
-export async function createUser(input: UserCreateRequest): Promise<UserResponseDto> {
-  try { return await repo.createUser(input); } catch (e) { mapMongoError(e); }
+export async function createUser(
+  input: UserCreateRequest,
+  passwordHash: string
+): Promise<UserResponseDto> {
+  try {
+    return await repo.createUser(input, passwordHash);
+  } catch (e) {
+    mapMongoError(e);
+  }
 }
 
 export async function updateUser(id: string, patch: UserUpdateRequest): Promise<UserResponseDto> {
@@ -20,7 +29,9 @@ export async function updateUser(id: string, patch: UserUpdateRequest): Promise<
     const res = await repo.updateUserById(id, patch);
     if (!res) throw new NotFoundError("User not found");
     return res;
-  } catch (e) { mapMongoError(e); }
+  } catch (e) {
+    mapMongoError(e);
+  }
 }
 
 export async function deleteUser(id: string): Promise<boolean> {
@@ -28,5 +39,7 @@ export async function deleteUser(id: string): Promise<boolean> {
     const ok = await repo.deleteUserById(id);
     if (!ok) throw new NotFoundError("User not found");
     return ok;
-  } catch (e) { mapMongoError(e); }
+  } catch (e) {
+    mapMongoError(e);
+  }
 }

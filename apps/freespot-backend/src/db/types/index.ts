@@ -11,3 +11,4 @@ export * from "./subjects.db";
 export * from "./timetable-activities.db";
 export * from "./users.db";
 export * from "./events.db";
+export * from "./refresh-tokens.db";

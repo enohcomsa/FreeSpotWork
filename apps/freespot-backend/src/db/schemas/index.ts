@@ -10,3 +10,4 @@ export { cohortsSpec } from "./cohorts.schema";
 export { timetableActivitiesSpec } from "./timetable-activities.schema";
 export { bookingsSpec } from "./bookings.schema";
 export { eventsSpec } from "./events.schema";
+export { refreshTokensSpec } from './refresh-tokens.schema'
