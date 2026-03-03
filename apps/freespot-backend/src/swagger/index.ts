@@ -7,11 +7,13 @@ import {
   registerEvents,
   registerFaculties, registerFloors, registerPrograms, registerProgramYears, registerRooms, registerSubjects, registerTimetableActivities, registerTimetableActivityCards, registerUsers
 } from "./registrars";
+import { registerAuth } from "./registrars/auth.openapi";
 
 
 export function setupSwagger(app: Express) {
   const registry = new OpenAPIRegistry();
 
+  registerAuth(registry);
   registerBookings(registry);
   registerProgramYears(registry);
   registerPrograms(registry);
@@ -33,6 +35,7 @@ export function setupSwagger(app: Express) {
     openapi: "3.0.3",
     info: { title: "FreeSpot API", version: "1.0.0" },
     tags: [
+      { name: "Auth" },
       { name: "Bookings" },
       { name: "Program Years" },
       { name: "Programs" },

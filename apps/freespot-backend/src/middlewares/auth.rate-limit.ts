@@ -1,11 +1,11 @@
-import rateLimit from "express-rate-limit";
+import rateLimit, { ipKeyGenerator } from "express-rate-limit";
 import type { Request } from "express";
 
-const json429 = { error: "Too many requests, try again later." };
-
 function readIdentifier(req: Request): string {
-  const body = req.body as { identifier?: unknown } | undefined;
-  return typeof body?.identifier === "string" ? body.identifier.trim().toLowerCase() : "unknown";
+  const body = req.body as { identifier?: unknown };
+  return typeof body?.identifier === "string"
+    ? body.identifier.trim().toLowerCase()
+    : "unknown";
 }
 
 export const rateLimitLogin = rateLimit({
@@ -13,21 +13,22 @@ export const rateLimitLogin = rateLimit({
   limit: 10,
   standardHeaders: true,
   legacyHeaders: false,
-  keyGenerator: (req) => `${readIdentifier(req)}|${req.ip}`,
+  keyGenerator: (req) =>
+    `${readIdentifier(req)}|${ipKeyGenerator(req.ip)}`,
 });
 
 export const rateLimitSignup = rateLimit({
   windowMs: 60_000,
-  max: 5,
+  limit: 5,
   standardHeaders: true,
   legacyHeaders: false,
-  message: json429,
+  keyGenerator: (req) => ipKeyGenerator(req.ip),
 });
 
 export const rateLimitRefresh = rateLimit({
   windowMs: 60_000,
-  max: 30,
+  limit: 30,
   standardHeaders: true,
   legacyHeaders: false,
-  message: json429,
+  keyGenerator: (req) => ipKeyGenerator(req.ip),
 });
