@@ -1,5 +1,6 @@
 import "../swagger/zod-openapi";
 import { Express } from "express";
+import type { Request } from "express";
 import swaggerUi from "swagger-ui-express";
 import { OpenAPIRegistry, OpenApiGeneratorV3 } from "@asteasolutions/zod-to-openapi";
 import {
@@ -54,10 +55,20 @@ export function setupSwagger(app: Express) {
     ],
   });
 
-  app.get("/openapi.json", (_req, res) => {
-    const proto = (_req.headers["x-forwarded-proto"] as string) || _req.protocol;
-    const host = _req.get("host");
-    res.json({ ...doc, servers: [{ url: `${proto}://${host}/api/v1` }] });
+  const makeDoc = (req: Request) => {
+    const proto = (req.headers["x-forwarded-proto"] as string) || req.protocol;
+    const host = req.get("host");
+    return { ...doc, servers: [{ url: `${proto}://${host}/api/v1` }] };
+  };
+
+  app.get("/openapi.json", (req, res) => {
+    res.json(makeDoc(req));
   });
-  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(doc, { explorer: true }));
+
+  app.use("/api-docs", swaggerUi.serve, (req, res, next) =>
+    swaggerUi.setup(makeDoc(req), {
+      explorer: true,
+      swaggerOptions: { withCredentials: true },
+    })(req, res, next)
+  );
 }
