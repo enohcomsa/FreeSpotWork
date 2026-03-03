@@ -3,7 +3,7 @@ import type { Request, Response } from "express";
 import crypto from "crypto";
 import { XSRF_COOKIE, xsrfCookieOpts } from "./cookies";
 
-export const XSRF_HEADER = "x-xsrf-token";
+export const XSRF_HEADER = "X-XSRF-TOKEN";
 
 const ALLOWED_ORIGINS = new Set([
   "http://localhost:4200",
