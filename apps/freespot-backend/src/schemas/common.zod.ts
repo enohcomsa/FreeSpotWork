@@ -36,3 +36,12 @@ export type WeekParityT = z.infer<typeof WeekParity>;
 export type UserRoleT = z.infer<typeof UserRole>;
 export type PreferredLanguageT = z.infer<typeof PreferredLanguage>;
 export type PreferredThemeT = z.infer<typeof PreferredTheme>;
+export type UserAuthLocalT = {
+ hash: string; // argon2 PHC string
+};
+export type UserAuthT = {
+  local?: UserAuthLocalT;
+};
+export type UserSecurityT = {
+  tokenVersion: number;
+};

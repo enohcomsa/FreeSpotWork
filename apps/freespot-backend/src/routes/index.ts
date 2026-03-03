@@ -14,9 +14,13 @@ import timetableActivities from "./timetable-activities.routes";
 import timetableActivitiesCards from "./timetable-activities.card.routes";
 import availability from "./availability.routes";
 import eventsRoutes from "./events.routes";
-import auth from "./auth.routes";//maybe update later
+import auth from "./auth.routes";
+import { requireAuth } from "../middlewares/auth.guard";
 
 const api = Router();
+api.use("/auth", auth);
+
+api.use(requireAuth);
 
 api.use("/buildings", buildings);
 api.use("/buildings-cards", buildingsCards);
@@ -33,6 +37,6 @@ api.use("/timetable-activities", timetableActivities);
 api.use("/timetable-activities-cards", timetableActivitiesCards);
 api.use("/availability", availability);
 api.use("/events", eventsRoutes);
-api.use("/auth", auth);//maybe update later
+
 
 export default api;

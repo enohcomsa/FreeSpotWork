@@ -1,18 +1,15 @@
 import { Router } from "express";
 import { validate } from "../middlewares/validate";
-import { AvailabilityQuery } from "../schemas/availability.zod";
-// import * as ctrl from "../controllers/availability.controller";
+import { SignupSchema, LoginSchema, RefreshSchema } from "../schemas/auth.zod";
+import * as ctrl from "../controllers/auth.controller";
+import { rateLimitLogin, rateLimitRefresh, rateLimitSignup } from "../middlewares/auth.rate-limit";
 
 const r = Router();
 
-// r.get("/", validate({ query: AvailabilityQuery }), ctrl.list);
+r.post("/signup", rateLimitSignup, validate({ body: SignupSchema }), ctrl.signup);
+r.post("/login", rateLimitLogin, validate({ body: LoginSchema }), ctrl.login);
+r.post("/refresh", rateLimitRefresh, validate({ body: RefreshSchema }), ctrl.refresh);
+r.post("/logout", ctrl.logout);
+r.get("/me", ctrl.me);
 
-
-// POST /auth/signup
-
-// POST /auth/login
-
-// POST /auth/refresh
-
-// POST /auth/logout
-export default r;//maybe update later
+export default r;

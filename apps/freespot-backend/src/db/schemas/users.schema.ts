@@ -7,12 +7,12 @@ export const usersSpec: CollectionSpec = {
     required: [
       "_id",
       "email",
-      "firstName",
-      "familyName",
+      "emailVerified",
       "role",
-      "facultyId",
-      "programYearId",
-      "groupCohortId",
+      "auth",
+      "security",
+      "createdAt",
+      "updatedAt",
     ],
     properties: {
       _id: { bsonType: "objectId" },
@@ -30,8 +30,13 @@ export const usersSpec: CollectionSpec = {
         ]
       },
 
-      firstName: { bsonType: "string", minLength: 1 },
-      familyName: { bsonType: "string", minLength: 1 },
+      firstName: {
+        oneOf: [{ bsonType: "string", minLength: 1 }, { bsonType: "null" }]
+      },
+      familyName: {
+        oneOf: [{ bsonType: "string", minLength: 1 }, { bsonType: "null" }]
+      },
+
 
       role: { enum: ["ADMIN", "MEMBER"] },
 
@@ -42,9 +47,15 @@ export const usersSpec: CollectionSpec = {
         oneOf: [{ enum: ["DARK", "LIGHT"] }, { bsonType: "null" }]
       },
 
-      facultyId: { bsonType: "objectId" },
-      programYearId: { bsonType: "objectId" },
-      groupCohortId: { bsonType: "objectId" },
+      facultyId: {
+        oneOf: [{ bsonType: "objectId" }, { bsonType: "null" }]
+      },
+      programYearId: {
+        oneOf: [{ bsonType: "objectId" }, { bsonType: "null" }]
+      },
+      groupCohortId: {
+        oneOf: [{ bsonType: "objectId" }, { bsonType: "null" }]
+      },
       semigroupCohortId: {
         oneOf: [{ bsonType: "objectId" }, { bsonType: "null" }]
       },

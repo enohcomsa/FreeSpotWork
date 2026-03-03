@@ -1,23 +1,28 @@
-// import { BuildingCardDto, BuildingCardIdParamT } from "../schemas/buildings.card.zod";
-// import * as svc from "../services/buildings.card.service";
-// import { withParams, withQuery } from "../utils/async-handler";
+import type { AuthOkResponseT, LoginRequestT, SignupRequestT } from "../schemas/auth.zod";
+import * as svc from "../services/auth.service";
+import { withBody, withParams } from "../utils/async-handler";
 
-// export const list = withQuery<unknown, BuildingCardDto[]>()(async (_req, res) => {
-//   const data = await svc.listBuildingCards();
-//   res.json(data);
-// });
+export const signup = withBody<SignupRequestT, AuthOkResponseT>()(async (req, res) => {
+  const data = await svc.signup(req, res, req.body);
+  res.json(data);
+});
 
-// export const getById = withParams<BuildingCardIdParamT, BuildingCardDto>()(async (req, res) => {
-//   const data = await svc.getBuildingCard(req.params.id);
-//   res.json(data);
-// });   TO DO:Implement\
+export const login = withBody<LoginRequestT, AuthOkResponseT>()(async (req, res) => {
+  const data = await svc.login(req, res, req.body);
+  res.json(data);
+});
 
+export const refresh = withBody<unknown, { ok: true }>()(async (req, res) => {
+  const data = await svc.refresh(req, res);
+  res.json(data);
+});
 
+export const logout = withBody<unknown, { ok: true }>()(async (req, res) => {
+  const data = await svc.logout(req, res);
+  res.json(data);
+});
 
-// signup(req,res)
-
-// login(req,res)
-
-// refresh(req,res)
-
-// logout(req,res)
+export const me = withParams<Record<string, string>, AuthOkResponseT>()(async (req, res) => {
+  const data = await svc.me(req);
+  res.json(data);
+});

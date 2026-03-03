@@ -41,14 +41,20 @@ async function bootstrap() {
   const allowedOrigins = ["http://localhost:4200", "https://free-spot.vercel.app"];
   app.use(
     cors({
-      origin: allowedOrigins,
+      origin: (origin, callback) => {
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.includes(origin)) {
+          return callback(null, true);
+        }
+        return callback(new Error("Not allowed by CORS"));
+      },
       methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-      allowedHeaders: ["Content-Type", "Authorization"],
-      credentials: false, // switch to true after moving to http cookies
-      maxAge: 600, // cache preflight for 10 minutes
+      allowedHeaders: ["Content-Type", "Authorization", "X-XSRF-TOKEN"],
+      credentials: true,
+      maxAge: 600,
     })
   );
-  app.options("*", cors());
+  app.options("*", cors({ origin: allowedOrigins, credentials: true }));
   app.use(express.json({ type: ['application/json', 'application/merge-patch+json'] }));
   app.use("/assets", express.static(path.join(__dirname, "assets")));
 

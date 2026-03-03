@@ -7,11 +7,14 @@ extendZodWithOpenApi(z);
 
 export const UserBase = strictObj({
   email: z.string().email().min(3),
+  username: z.string().trim().min(3).max(50).nullable().optional(),
   firstName: z.string().trim().min(1),
   familyName: z.string().trim().min(1),
   role: UserRole,
+
   preferredLanguage: PreferredLanguage.nullable().optional(),
   preferredTheme: PreferredTheme.nullable().optional(),
+
   facultyId: ObjectIdStr,
   programYearId: ObjectIdStr,
   groupCohortId: ObjectIdStr,
