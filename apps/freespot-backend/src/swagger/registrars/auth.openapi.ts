@@ -7,6 +7,7 @@ export function registerAuth(registry: OpenAPIRegistry) {
     path: "/auth/signup",
     operationId: "authSignup",
     tags: ["Auth"],
+    security: [],
     request: {
       body: {
         content: {
@@ -29,6 +30,7 @@ export function registerAuth(registry: OpenAPIRegistry) {
     path: "/auth/login",
     operationId: "authLogin",
     tags: ["Auth"],
+    security: [],
     request: {
       body: {
         content: {
@@ -51,6 +53,7 @@ export function registerAuth(registry: OpenAPIRegistry) {
     path: "/auth/refresh",
     operationId: "authRefresh",
     tags: ["Auth"],
+    security: [{ accessCookie: [], xsrfHeader: [] }],
     request: {
       body: {
         content: {
@@ -60,6 +63,7 @@ export function registerAuth(registry: OpenAPIRegistry) {
     },
     responses: {
       200: { description: "OK" },
+      401: { description: "Unauthenticated" },
     },
   });
 
@@ -68,6 +72,7 @@ export function registerAuth(registry: OpenAPIRegistry) {
     path: "/auth/me",
     operationId: "authMe",
     tags: ["Auth"],
+    security: [{ accessCookie: [] }],
     responses: {
       200: {
         description: "Current authenticated user",

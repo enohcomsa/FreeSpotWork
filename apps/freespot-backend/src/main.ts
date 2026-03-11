@@ -38,7 +38,7 @@ async function bootstrap() {
     next();
   });
 
-  const allowedOrigins = ["http://localhost:4200", "https://free-spot.vercel.app"];
+  const allowedOrigins = ["http://localhost:4200", "https://free-spot.vercel.app", "https://freespotwork.onrender.com"];
   app.use(
     cors({
       origin: (origin, callback) => {
