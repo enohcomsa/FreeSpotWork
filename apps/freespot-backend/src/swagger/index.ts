@@ -4,12 +4,23 @@ import type { Request } from "express";
 import swaggerUi from "swagger-ui-express";
 import { OpenAPIRegistry, OpenApiGeneratorV3 } from "@asteasolutions/zod-to-openapi";
 import {
-  registerAvailability, registerBookings, registerBuildings, registerBuildingsCards, registerCohorts,
+  registerAvailability,
+  registerBookings,
+  registerBuildings,
+  registerBuildingsCards,
+  registerCohorts,
   registerEvents,
-  registerFaculties, registerFloors, registerPrograms, registerProgramYears, registerRooms, registerSubjects, registerTimetableActivities, registerTimetableActivityCards, registerUsers
+  registerFaculties,
+  registerFloors,
+  registerPrograms,
+  registerProgramYears,
+  registerRooms,
+  registerSubjects,
+  registerTimetableActivities,
+  registerTimetableActivityCards,
+  registerUsers,
 } from "./registrars";
 import { registerAuth } from "./registrars/auth.openapi";
-
 
 export function setupSwagger(app: Express) {
   const registry = new OpenAPIRegistry();
@@ -32,6 +43,7 @@ export function setupSwagger(app: Express) {
   registerEvents(registry);
 
   const generator = new OpenApiGeneratorV3(registry.definitions);
+
   const doc = generator.generateDocument({
     openapi: "3.0.3",
     info: { title: "FreeSpot API", version: "1.0.0" },
@@ -51,24 +63,47 @@ export function setupSwagger(app: Express) {
       { name: "Floors" },
       { name: "Faculties" },
       { name: "Cohorts" },
-      { name: "Events" }
+      { name: "Events" },
     ],
   });
+
+  doc.components = doc.components ?? {};
+  doc.components.securitySchemes = {
+    ...(doc.components.securitySchemes ?? {}),
+    accessCookie: {
+      type: "apiKey",
+      in: "cookie",
+      name: "access_token",
+    },
+    xsrfHeader: {
+      type: "apiKey",
+      in: "header",
+      name: "x-xsrf-token",
+    },
+  };
+
+  doc.security = [{ accessCookie: [] }];
 
   const makeDoc = (req: Request) => {
     const proto = (req.headers["x-forwarded-proto"] as string) || req.protocol;
     const host = req.get("host");
-    return { ...doc, servers: [{ url: `${proto}://${host}/api/v1` }] };
+    return {
+      ...doc,
+      servers: [{ url: `${proto}://${host}/api/v1` }],
+    };
   };
 
   app.get("/openapi.json", (req, res) => {
     res.json(makeDoc(req));
   });
 
-  app.use("/api-docs", swaggerUi.serve, (req, res, next) =>
-    swaggerUi.setup(makeDoc(req), {
-      explorer: true,
-      swaggerOptions: { withCredentials: true },
-    })(req, res, next)
+  app.use(
+    "/api-docs",
+    swaggerUi.serve,
+    (req, res, next) =>
+      swaggerUi.setup(makeDoc(req), {
+        explorer: true,
+        swaggerOptions: { withCredentials: true },
+      })(req, res, next)
   );
 }

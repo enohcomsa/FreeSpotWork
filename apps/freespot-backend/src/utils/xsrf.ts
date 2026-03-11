@@ -8,6 +8,7 @@ export const XSRF_HEADER = "X-XSRF-TOKEN";
 const ALLOWED_ORIGINS = new Set([
   "http://localhost:4200",
   "https://free-spot.vercel.app",
+  "https://freespotwork.onrender.com"
 ]);
 
 function forbidden(code: string, message: string) {
