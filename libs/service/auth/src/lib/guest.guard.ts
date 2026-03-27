@@ -1,23 +1,23 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router, UrlTree } from '@angular/router';
+import { map, Observable } from 'rxjs';
 import { AuthService } from './auth.service';
-import { map, Observable} from 'rxjs';
 
-export const authGuard: CanActivateFn = (): boolean | UrlTree | Observable<boolean | UrlTree> => {
+export const guestGuard: CanActivateFn = (): boolean | UrlTree | Observable<boolean | UrlTree> => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
   if (authService.isAuthenticated()) {
-    return true;
+    return router.createUrlTree(['/dashboard']);
   }
 
   if (authService.initializedSignal$()) {
-    return router.createUrlTree(['/auth']);
+    return true;
   }
 
   return authService.loadMe().pipe(
     map(() => {
-      return authService.isAuthenticated() ? true : router.createUrlTree(['/auth']);
+      return authService.isAuthenticated() ? router.createUrlTree(['/dashboard']) : true;
     }),
   );
 };

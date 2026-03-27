@@ -40,8 +40,8 @@ import { AuthService } from '@free-spot-service/auth';
 })
 export class NavigationComponent implements OnInit {
   private _authService: AuthService = inject(AuthService);
-  private _appDateService: AppDateService = inject(AppDateService);
-  private _userService: UserService = inject(UserService);
+  // private _appDateService: AppDateService = inject(AppDateService);
+  // private _userService: UserService = inject(UserService);
   private _languageService: LanguageService = inject(LanguageService);
   private _themeService: ThemeService = inject(ThemeService);
   private _destroyRef = inject(DestroyRef);
@@ -59,47 +59,49 @@ export class NavigationComponent implements OnInit {
     }
   ).email;
 
-  currentUserSig: Signal<FreeSpotUser> = this._userService.getFreeSpotUserByEmail(this._currentUserEmail);
-  currentUserSubscription: Subscription = toObservable(this.currentUserSig)
-    .pipe(
-      takeUntilDestroyed(this._destroyRef),
-      filter((user: FreeSpotUser) => Object.keys(user).length !== 0),
-      take(1),
-    )
-    .subscribe((user: FreeSpotUser) => {
-      this._languageService.setLang(user.preferdLanguage || Language.EN);
-      this._themeService.setTheme(user.preferedTheme || Theme.DARK);
-    });
+  // currentUserSig: Signal<FreeSpotUser> = this._userService.getFreeSpotUserByEmail(this._currentUserEmail);
+  // currentUserSubscription: Subscription = toObservable(this.currentUserSig)
+  //   .pipe(
+  //     takeUntilDestroyed(this._destroyRef),
+  //     filter((user: FreeSpotUser) => Object.keys(user).length !== 0),
+  //     take(1),
+  //   )
+  //   .subscribe((user: FreeSpotUser) => {
+  //     this._languageService.setLang(user.preferdLanguage || Language.EN);
+  //     this._themeService.setTheme(user.preferedTheme || Theme.DARK);
+  //   });
 
   ngOnInit(): void {
-    this._appDateService.init();
+    // this._appDateService.init();
+    console.log();
+
   }
 
   onLangChange(lang: Language, oldUser: FreeSpotUser): void {
     this._languageService.setLang(lang);
     const updatedUser: FreeSpotUser = { ...oldUser, preferdLanguage: lang };
-    this._userService.updateFreeSpotUser(oldUser, updatedUser);
+    // this._userService.updateFreeSpotUser(oldUser, updatedUser);
     localStorage.setItem('lang', JSON.stringify(lang));
   }
 
   onThemeChange(theme: Theme, oldUser: FreeSpotUser): void {
     this._themeService.setTheme(theme);
     const updatedUser: FreeSpotUser = { ...oldUser, preferedTheme: theme };
-    this._userService.updateFreeSpotUser(oldUser, updatedUser);
+    // this._userService.updateFreeSpotUser(oldUser, updatedUser);
     localStorage.setItem('theme', JSON.stringify(theme));
   }
 
   logout(): void {
-    this._authService.logOut();
+    this._authService.logout();
   }
 
-  getLoggedUserName(): Signal<string> {
-    return computed(() => this.currentUserSig().firstName + '  ' + this.currentUserSig().familyName);
-  }
+  // getLoggedUserName(): Signal<string> {
+  //   return computed(() => this.currentUserSig().firstName + '  ' + this.currentUserSig().familyName);
+  // }
 
-  getLoggedUserInitials(): Signal<string> {
-    return computed(() => this.currentUserSig().firstName?.charAt(0) + this.currentUserSig().familyName?.charAt(0) || '');
-  }
+  // getLoggedUserInitials(): Signal<string> {
+  //   return computed(() => this.currentUserSig().firstName?.charAt(0) + this.currentUserSig().familyName?.charAt(0) || '');
+  // }
 }
 
 export default NavigationComponent;

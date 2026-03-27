@@ -67,6 +67,8 @@ export class ProgramYearsHttpService extends BaseService {
 
         let localVarHeaders = this.defaultHeaders;
 
+        // authentication (accessCookie) required
+
         const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
             'application/json'
         ]);
@@ -121,6 +123,8 @@ export class ProgramYearsHttpService extends BaseService {
 
         let localVarHeaders = this.defaultHeaders;
 
+        // authentication (accessCookie) required
+
         const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
         ]);
         if (localVarHttpHeaderAcceptSelected !== undefined) {
@@ -173,6 +177,8 @@ export class ProgramYearsHttpService extends BaseService {
         }
 
         let localVarHeaders = this.defaultHeaders;
+
+        // authentication (accessCookie) required
 
         const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
             'application/json'
@@ -228,6 +234,8 @@ export class ProgramYearsHttpService extends BaseService {
         const programYearUpdateDTO = requestParameters?.programYearUpdateDTO;
 
         let localVarHeaders = this.defaultHeaders;
+
+        // authentication (accessCookie) required
 
         const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
             'application/json'
@@ -289,6 +297,8 @@ export class ProgramYearsHttpService extends BaseService {
         const programYearCreateDTO = requestParameters?.programYearCreateDTO;
 
         let localVarHeaders = this.defaultHeaders;
+
+        // authentication (accessCookie) required
 
         const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
             'application/json'

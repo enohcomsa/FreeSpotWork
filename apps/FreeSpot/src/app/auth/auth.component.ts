@@ -13,9 +13,8 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
-import { AuthResponse, AuthService } from '@free-spot-service/auth';
+import { AuthService } from '@free-spot-service/auth';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { FormErrorMessage } from '@free-spot/util';
@@ -56,74 +55,113 @@ export class AuthComponent {
   THEME = Theme;
 
   authForm: FormGroup = this._formBuilder.group({
+    identifier: ['', [Validators.required, Validators.minLength(3)]],
+    email: ['', [Validators.email]],
+    username: [''],
     firstName: [''],
     familyName: [''],
-    email: ['', [Validators.required, Validators.minLength(6), Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(6)]],
+    password: ['', [Validators.required, Validators.minLength(8)]],
   });
 
   displayError = (control: AbstractControl | null) => this._formErrorMessage.displayFormErrorMessage(control);
+
+  constructor() {
+    this.authForm.controls['email'].disable();
+    this.authForm.controls['username'].disable();
+    this.authForm.controls['firstName'].disable();
+    this.authForm.controls['familyName'].disable();
+  }
 
   onSwitchMode(): void {
     this.isLoginMode = !this.isLoginMode;
 
     if (this.isLoginMode) {
+      this.authForm.controls['identifier'].enable();
+
+      this.authForm.controls['email'].disable();
+      this.authForm.controls['username'].disable();
       this.authForm.controls['firstName'].disable();
       this.authForm.controls['familyName'].disable();
+
+      this.authForm.controls['identifier'].setValidators([Validators.required, Validators.minLength(3)]);
+      this.authForm.controls['email'].clearValidators();
+      this.authForm.controls['username'].clearValidators();
+      this.authForm.controls['firstName'].clearValidators();
+      this.authForm.controls['familyName'].clearValidators();
     } else {
+      this.authForm.controls['identifier'].disable();
+
+      this.authForm.controls['email'].enable();
+      this.authForm.controls['username'].enable();
       this.authForm.controls['firstName'].enable();
       this.authForm.controls['familyName'].enable();
-      this.authForm.controls['firstName'].setValidators([Validators.required, Validators.minLength(3)]);
-      this.authForm.controls['familyName'].setValidators([Validators.required, Validators.minLength(3)]);
+
+      this.authForm.controls['email'].setValidators([Validators.required, Validators.email]);
+      this.authForm.controls['username'].setValidators([Validators.required, Validators.minLength(3)]);
+      this.authForm.controls['firstName'].setValidators([Validators.required, Validators.minLength(2)]);
+      this.authForm.controls['familyName'].setValidators([Validators.required, Validators.minLength(2)]);
     }
+
+    this.authForm.controls['identifier'].updateValueAndValidity();
+    this.authForm.controls['email'].updateValueAndValidity();
+    this.authForm.controls['username'].updateValueAndValidity();
+    this.authForm.controls['firstName'].updateValueAndValidity();
+    this.authForm.controls['familyName'].updateValueAndValidity();
+    this.authForm.controls['password'].updateValueAndValidity();
 
     this.authForm.reset();
   }
 
   onSubmit(formDirective: FormGroupDirective): void {
-    let authObs: Observable<AuthResponse>;
     if (this.isLoginMode) {
-      authObs = this._authService.logIn({
-        email: this.authForm.controls['email'].value,
-        password: this.authForm.controls['password'].value,
-      });
+      this._authService
+        .login({
+          identifier: this.authForm.controls['identifier'].value,
+          password: this.authForm.controls['password'].value,
+        })
+        .subscribe({
+          next: () => {
+            this._router.navigate(['/dashboard']);
+          },
+          error: (error) => this._handleError(error),
+        });
     } else {
-      authObs = this._authService.signUp({
-        email: this.authForm.controls['email'].value,
-        password: this.authForm.controls['password'].value,
-        familyName: this.authForm.controls['familyName'].value,
-        firstName: this.authForm.controls['firstName'].value,
-      });
+      this._authService
+        .signup({
+          email: this.authForm.controls['email'].value,
+          username: this.authForm.controls['username'].value,
+          password: this.authForm.controls['password'].value,
+        })
+        .subscribe({
+          next: () => {
+            this._router.navigate(['/dashboard']);
+          },
+          error: (error) => this._handleError(error),
+        });
     }
-
-    authObs.subscribe({
-      next: () => {
-        this._router.navigate(['/dashboard']);
-      },
-      error: (error) => this._handleError(error),
-    });
 
     this.authForm.reset();
     formDirective.resetForm();
   }
 
   private _handleError(error: HttpErrorResponse): void {
-    console.log(error);
+    let errorMessage = 'Unknown error';
 
-    if (error instanceof HttpErrorResponse) {
-      let errorMessage = 'UNKNOW_ERROR';
-      if (error.error?.error) {
-        errorMessage = error.error.error.message;
-      }
-
-      this._toastrService.error(errorMessage, '', {
-        closeButton: true,
-        progressBar: true,
-        timeOut: 5000,
-        onActivateTick: true,
-        positionClass: 'toast-bottom-center',
-      });
+    if (Array.isArray(error.error?.issues) && error.error.issues.length > 0) {
+      errorMessage = error.error.issues.map((issue: { message: string }) => issue.message).join('\n');
+    } else if (typeof error.error?.error === 'string') {
+      errorMessage = error.error.error;
+    } else if (typeof error.error?.message === 'string') {
+      errorMessage = error.error.message;
     }
+
+    this._toastrService.error(errorMessage, '', {
+      closeButton: true,
+      progressBar: true,
+      timeOut: 5000,
+      onActivateTick: true,
+      positionClass: 'toast-bottom-center',
+    });
   }
 }
 

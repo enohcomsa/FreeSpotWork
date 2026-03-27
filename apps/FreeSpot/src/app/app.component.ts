@@ -27,7 +27,7 @@ export class AppComponent implements OnInit {
   private _theme$ = toObservable(this._themeService.themeSig);
 
   ngOnInit(): void {
-    this._authService.autoLogIn();
+    this._authService.loadMe().subscribe();
     this._lang$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((lang: Language) => {
       this._translateService.use(lang);
     });

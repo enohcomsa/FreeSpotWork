@@ -4,6 +4,7 @@ README.md
 api.base.service.ts
 api.module.ts
 api/api.ts
+api/auth.service.ts
 api/availability.service.ts
 api/bookings.service.ts
 api/buildings-cards.service.ts
@@ -24,6 +25,7 @@ encoder.ts
 git_push.sh
 index.ts
 model/activity-type.ts
+model/auth-ok-response.ts
 model/availability-query.ts
 model/availability-response.ts
 model/availability-slot.ts
@@ -63,6 +65,7 @@ model/floor-create.ts
 model/floor-id-param.ts
 model/floor-response.ts
 model/floor-update.ts
+model/login-request.ts
 model/models.ts
 model/preferred-language.ts
 model/preferred-theme.ts
@@ -81,6 +84,7 @@ model/room-create.ts
 model/room-id-param.ts
 model/room-response.ts
 model/room-update.ts
+model/signup-request.ts
 model/source-type.ts
 model/source.ts
 model/subject-base.ts
@@ -96,8 +100,8 @@ model/timetable-activity-id-param.ts
 model/timetable-activity-response.ts
 model/timetable-activity-update.ts
 model/user-base.ts
-model/user-create.ts
 model/user-id-param.ts
+model/user-public.ts
 model/user-response.ts
 model/user-role.ts
 model/user-update.ts

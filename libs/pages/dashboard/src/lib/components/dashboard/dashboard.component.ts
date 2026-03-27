@@ -21,7 +21,7 @@ import { toObservable } from '@angular/core/rxjs-interop';
 import { delay, filter, of, Subscription, switchMap, take } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { AdminFacultyService } from '@free-spot-service/faculty';
-import { AppDateService } from '@free-spot-service/app-date';
+// import { AppDateService } from '@free-spot-service/app-date';
 import { AdminFloorService } from '@free-spot-service/floor';
 import { AdminRoomService } from '@free-spot-service/room';
 import { BookingService } from '@free-spot-service/booking';
@@ -43,85 +43,85 @@ export class DashboardComponent implements OnInit {
   private _adminBuildingService: BuildingService = inject(BuildingService);
   private _adminFacultyService: AdminFacultyService = inject(AdminFacultyService);
   private _userService: UserService = inject(UserService);
-  private _appDateService: AppDateService = inject(AppDateService);
+  // private _appDateService: AppDateService = inject(AppDateService);
   private _bookingService: BookingService = inject(BookingService);
   private _adminEventService: AdminEventService = inject(AdminEventService);
 
-  roomListSig: Signal<RoomLegacy[]> = this._adminRoomService.roomListSigLegacy;
-  facultyListSig: Signal<FacultyLegacy[]> = this._adminFacultyService.facultyListSigLegacy;
+  // roomListSig: Signal<RoomLegacy[]> = this._adminRoomService.roomListSigLegacy;
+  // facultyListSig: Signal<FacultyLegacy[]> = this._adminFacultyService.facultyListSigLegacy;
   userListSig: Signal<FreeSpotUser[]> = this._userService.userListSig;
-  dateChangedSig: WritableSignal<boolean> = this._appDateService.appDateChanged;
-  appDateSig: Signal<FreeSpotDate> = this._appDateService.appDateSig;
-  buildingListSig: Signal<BuildingLegacy[]> = this._adminBuildingService.buildingListSigLegacy;
-  eventListSigLegacy: Signal<BuildingLegacy[]> = computed(() =>
-    this._adminEventService
-      .eventListSigLegacy()
-      .sort((event1, event2) => new Date(event1.date as Date).getTime() - new Date(event2.date as Date).getTime())
-      .filter((event: BuildingLegacy) => new Date().getTime() - new Date(event.date as Date).getTime() <= 0),
-  );
+  // dateChangedSig: WritableSignal<boolean> = this._appDateService.appDateChanged;
+  // appDateSig: Signal<FreeSpotDate> = this._appDateService.appDateSig;
+  // buildingListSig: Signal<BuildingLegacy[]> = this._adminBuildingService.buildingListSigLegacy;
+  // eventListSigLegacy: Signal<BuildingLegacy[]> = computed(() =>
+  //   this._adminEventService
+  //     .eventListSigLegacy()
+  //     .sort((event1, event2) => new Date(event1.date as Date).getTime() - new Date(event2.date as Date).getTime())
+  //     .filter((event: BuildingLegacy) => new Date().getTime() - new Date(event.date as Date).getTime() <= 0),
+  // );
   currentUserGroupSig: Signal<GroupLegacy> = computed(() =>
     this._adminFacultyService.getGroupByName(this.currentUserSig().group as string)(),
   );
 
-  appDateChangeSubscription: Subscription = toObservable(this.dateChangedSig)
-    .pipe(
-      filter((dateChanged) => !!dateChanged),
-      take(1),
-      delay(1200),
-      switchMap(() => {
-        this.roomListSig().forEach((room: RoomLegacy) => {
-          const updatedRoom: RoomLegacy = {
-            ...room,
-            timetable: room.timetable.map((timetableItem: TimeTableItemLecagy) => this._updateTimetableItem(timetableItem)),
-          };
+  // appDateChangeSubscription: Subscription = toObservable(this.dateChangedSig)
+  //   .pipe(
+  //     filter((dateChanged) => !!dateChanged),
+  //     take(1),
+  //     delay(1200),
+  //     switchMap(() => {
+  //       this.roomListSig().forEach((room: RoomLegacy) => {
+  //         const updatedRoom: RoomLegacy = {
+  //           ...room,
+  //           timetable: room.timetable.map((timetableItem: TimeTableItemLecagy) => this._updateTimetableItem(timetableItem)),
+  //         };
 
-          this._adminRoomService.updateRoom(room, updatedRoom);
-          this._updateFloorAndBuilding(updatedRoom);
-        });
-        this.facultyListSig().forEach((faculty: FacultyLegacy) => {
-          const updatedFaculty: FacultyLegacy = {
-            ...faculty,
-            yearList: faculty.yearList?.map((year: Year) => {
-              return {
-                ...year,
-                yearGroupList: year.yearGroupList?.map((group: GroupLegacy) => {
-                  return {
-                    ...group,
-                    timetable: group.timetable.map((timetableItem: TimeTableItemLecagy) => this._updateTimetableItem(timetableItem)),
-                    semigroups: group.semigroups?.map((semiGroup: SemiGroup) => {
-                      return {
-                        ...semiGroup,
-                        timetable: semiGroup.timetable.map((timetableItem: TimeTableItemLecagy) =>
-                          this._updateTimetableItem(timetableItem),
-                        ),
-                      };
-                    }),
-                  };
-                }),
-              };
-            }),
-          };
+  //         this._adminRoomService.updateRoom(room, updatedRoom);
+  //         this._updateFloorAndBuilding(updatedRoom);
+  //       });
+  //       this.facultyListSig().forEach((faculty: FacultyLegacy) => {
+  //         const updatedFaculty: FacultyLegacy = {
+  //           ...faculty,
+  //           yearList: faculty.yearList?.map((year: Year) => {
+  //             return {
+  //               ...year,
+  //               yearGroupList: year.yearGroupList?.map((group: GroupLegacy) => {
+  //                 return {
+  //                   ...group,
+  //                   timetable: group.timetable.map((timetableItem: TimeTableItemLecagy) => this._updateTimetableItem(timetableItem)),
+  //                   semigroups: group.semigroups?.map((semiGroup: SemiGroup) => {
+  //                     return {
+  //                       ...semiGroup,
+  //                       timetable: semiGroup.timetable.map((timetableItem: TimeTableItemLecagy) =>
+  //                         this._updateTimetableItem(timetableItem),
+  //                       ),
+  //                     };
+  //                   }),
+  //                 };
+  //               }),
+  //             };
+  //           }),
+  //         };
 
-          this._adminFacultyService.updateFaculty(faculty, updatedFaculty);
-        });
+  //         this._adminFacultyService.updateFaculty(faculty, updatedFaculty);
+  //       });
 
-        return of(true).pipe(delay(1200));
-      }),
-    )
-    .subscribe(() => {
-      this.userListSig().forEach((user: FreeSpotUser) => {
-        const updatedUser: FreeSpotUser = {
-          ...user,
-          bookingList: this._bookingService.generateUserBookedItems(
-            this._adminFacultyService.getGroupByName(user.group as string)(),
-            true,
-            this._getUserSemigroup(user.semiGroup as string, this._adminFacultyService.getGroupByName(user.group as string)()),
-          ),
-        };
+  //       return of(true).pipe(delay(1200));
+  //     }),
+  //   )
+  //   .subscribe(() => {
+  //     this.userListSig().forEach((user: FreeSpotUser) => {
+  //       const updatedUser: FreeSpotUser = {
+  //         ...user,
+  //         bookingList: this._bookingService.generateUserBookedItems(
+  //           this._adminFacultyService.getGroupByName(user.group as string)(),
+  //           true,
+  //           this._getUserSemigroup(user.semiGroup as string, this._adminFacultyService.getGroupByName(user.group as string)()),
+  //         ),
+  //       };
 
-        this._userService.updateFreeSpotUser(user, updatedUser);
-      });
-    });
+  //       this._userService.updateFreeSpotUser(user, updatedUser);
+  //     });
+  //   });
 
   currentUserEmail = (
     JSON.parse(localStorage.getItem('user') as string) as {
@@ -152,14 +152,16 @@ export class DashboardComponent implements OnInit {
     });
 
   ngOnInit(): void {
-    this._userService.init();
-    this._adminRoomService.init();
-    this._adminFloorService.init();
-    this._adminBuildingService.init();
-    this._adminFacultyService.init();
-    this._appDateService.init();
-    this._bookingService.init();
-    this._adminEventService.init();
+    console.log();
+
+    // this._userService.init();
+    // this._adminRoomService.init();
+    // this._adminFloorService.init();
+    // this._adminBuildingService.init();
+    // this._adminFacultyService.init();
+    // this._appDateService.init();
+    // this._bookingService.init();
+    // this._adminEventService.init();
   }
 
   private _updateFloorAndBuilding(updatedRoom: RoomLegacy): void {
@@ -181,20 +183,20 @@ export class DashboardComponent implements OnInit {
     this._adminBuildingService.updateBuilding(oldBuilding, updatedBuilding);
   }
 
-  private _updateTimetableItem(oldTimetableItem: TimeTableItemLecagy): TimeTableItemLecagy {
-    return {
-      ...oldTimetableItem,
-      date: this._appDateService.getAppDateByWeekDay(oldTimetableItem.weekDay),
-      activities: oldTimetableItem.activities?.map((timetableActivity: TimetableActivityItemLegacy) => {
-        return {
-          ...timetableActivity,
-          freeSpots: timetableActivity.freeSpots + timetableActivity.busySpots,
-          busySpots: 0,
-          date: this._appDateService.getAppDateByWeekDay(oldTimetableItem.weekDay),
-        };
-      }),
-    };
-  }
+  // private _updateTimetableItem(oldTimetableItem: TimeTableItemLecagy): TimeTableItemLecagy {
+  //   return {
+  //     ...oldTimetableItem,
+  //     date: this._appDateService.getAppDateByWeekDay(oldTimetableItem.weekDay),
+  //     activities: oldTimetableItem.activities?.map((timetableActivity: TimetableActivityItemLegacy) => {
+  //       return {
+  //         ...timetableActivity,
+  //         freeSpots: timetableActivity.freeSpots + timetableActivity.busySpots,
+  //         busySpots: 0,
+  //         date: this._appDateService.getAppDateByWeekDay(oldTimetableItem.weekDay),
+  //       };
+  //     }),
+  //   };
+  // }
 
   private _getUserSemigroup(semiGroupName: string, userGroup: GroupLegacy): SemiGroup {
     return userGroup.semigroups?.find((semiGroup: SemiGroup) => semiGroup.name === semiGroupName) || ({} as SemiGroup);
