@@ -1,18 +1,22 @@
 import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
-import { AvailabilityQuery, AvailabilityResponse } from "../../schemas/availability.zod";
+import { RescheduleOptionsQuery, RescheduleOptionsResponse } from "../../schemas/availability.zod";
 
 export function registerAvailability(registry: OpenAPIRegistry) {
-  registry.register("AvailabilityQuery", AvailabilityQuery);
-  registry.register("AvailabilityResponse", AvailabilityResponse);
+  registry.register("RescheduleOptionsQuery", RescheduleOptionsQuery);
+  registry.register("RescheduleOptionsResponse", RescheduleOptionsResponse);
 
   registry.registerPath({
     method: "get",
-    path: "/availability",
-    operationId: "availabilityGet",
+    path: "/availability/reschedule-options",
+    operationId: "availabilityRescheduleOptionsGet",
     tags: ["Availability"],
-    request: { query: AvailabilityQuery },
+    request: { query: RescheduleOptionsQuery },
     responses: {
-      200: { description: "OK", content: { "application/json": { schema: AvailabilityResponse } } }
+      200: {
+        description: "OK",
+        content: { "application/json": { schema: RescheduleOptionsResponse } }
+      },
+      404: { description: "Booking not found" }
     }
   });
 }

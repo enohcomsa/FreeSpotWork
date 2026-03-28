@@ -1,10 +1,10 @@
-import type { AvailabilityQueryInput, AvailabilityResponseDto } from "../schemas/availability.zod";
-import { findAvailability } from "../services/availability.service";
+import type { RescheduleOptionsQueryInput, RescheduleOptionsResponseDto } from "../schemas/availability.zod";
+import { getRescheduleOptions } from "../services/availability.service";
 import { asyncHandler } from "../utils/async-handler";
 import type { ParsedQs } from "qs";
 
-export const list = asyncHandler<Record<string, string>, AvailabilityResponseDto, object, ParsedQs>(async (req, res) => {
-  const q = req.query as unknown as AvailabilityQueryInput;
-  const data = await findAvailability(q);
+export const listRescheduleOptions = asyncHandler<Record<string, string>, RescheduleOptionsResponseDto, object, ParsedQs>(async (req, res) => {
+  const q = req.query as unknown as RescheduleOptionsQueryInput;
+  const data = await getRescheduleOptions(q);
   res.json(data);
 });

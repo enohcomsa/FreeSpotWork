@@ -18,11 +18,22 @@ export async function getBookingById(id: string): Promise<BookingResponseDto | n
   return doc ? bookingToDto(doc) : null;
 }
 
+export async function getBookingDocById(id: string): Promise<BookingDbDoc | null> {
+  const collection = await getCollection<BookingDbDoc>(BOOKINGS_COLLECTION);
+  return collection.findOne({ _id: toObjectId(id) });
+}
+
 export async function createBooking(input: BookingCreateRequest): Promise<BookingResponseDto> {
   const collection = await getCollection<BookingDbRecord>(BOOKINGS_COLLECTION);
   const record = bookingToDbRecord(input);
   const result = await collection.insertOne(record);
   return bookingToDto({ _id: result.insertedId, ...record });
+}
+
+export async function createBookingFromRecord(record: BookingDbRecord): Promise<BookingDbDoc> {
+  const collection = await getCollection<BookingDbRecord>(BOOKINGS_COLLECTION);
+  const result = await collection.insertOne(record);
+  return { _id: result.insertedId, ...record };
 }
 
 export async function updateBookingById(id: string, patch: BookingUpdateRequest): Promise<BookingResponseDto | null> {
@@ -43,6 +54,18 @@ export async function updateBookingById(id: string, patch: BookingUpdateRequest)
   return updated ? bookingToDto(updated) : null;
 }
 
+export async function updateBookingDocById(id: string, set: Partial<BookingDbRecord>): Promise<BookingDbDoc | null> {
+  const collection = await getCollection<BookingDbDoc>(BOOKINGS_COLLECTION);
+
+  const updated = await collection.findOneAndUpdate(
+    { _id: toObjectId(id) },
+    { $set: { ...set, updatedAt: new Date() } },
+    { returnDocument: "after" }
+  );
+
+  return updated ?? null;
+}
+
 export async function deleteBookingById(id: string): Promise<boolean> {
   const collection = await getCollection<BookingDbDoc>(BOOKINGS_COLLECTION);
   const { deletedCount } = await collection.deleteOne({ _id: toObjectId(id) });
@@ -58,6 +81,11 @@ export async function deleteFutureNormalBookingsForUser(userId: string): Promise
   });
 
   return deletedCount ?? 0;
+}
+
+export async function getTimetableActivityDocById(id: string): Promise<TimetableActivityDbDoc | null> {
+  const collection = await getCollection<TimetableActivityDbDoc>(TIMETABLE_ACTIVITIES_COLLECTION);
+  return collection.findOne({ _id: toObjectId(id) });
 }
 
 export async function reserveSpotForActivity(activityId: string): Promise<"CONFIRMED" | "WAITLISTED"> {
@@ -91,4 +119,30 @@ export async function reserveSpotForActivity(activityId: string): Promise<"CONFI
   );
 
   return "WAITLISTED";
+}
+
+export async function releaseSpotForActivity(activityId: string, bookingStatus: "CONFIRMED" | "WAITLISTED"): Promise<void> {
+  const collection = await getCollection<TimetableActivityDbDoc>(TIMETABLE_ACTIVITIES_COLLECTION);
+
+  if (bookingStatus === "CONFIRMED") {
+    await collection.updateOne(
+      { _id: toObjectId(activityId) },
+      {
+        $inc: {
+          freeSpots: 1,
+          busySpots: -1,
+        },
+      }
+    );
+    return;
+  }
+
+  await collection.updateOne(
+    { _id: toObjectId(activityId) },
+    {
+      $inc: {
+        reservedSpots: -1,
+      },
+    }
+  );
 }
