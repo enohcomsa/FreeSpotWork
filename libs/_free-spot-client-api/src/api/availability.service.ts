@@ -17,7 +17,7 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
-import { AvailabilityResponseDTO } from '../model/availability-response';
+import { RescheduleOptionsResponseDTO } from '../model/reschedule-options-response';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -25,15 +25,8 @@ import { Configuration }                                     from '../configurat
 import { BaseService } from '../api.base.service';
 
 
-export interface AvailabilityGetRequestParams {
-    date: string;
-    roomId?: string;
-    cohortId?: string;
-    subjectId?: string;
-    startHour?: number;
-    endHour?: number;
-    minFreeSpots?: number;
-    limit?: number;
+export interface AvailabilityRescheduleOptionsGetRequestParams {
+    bookingId: string;
 }
 
 
@@ -51,39 +44,18 @@ export class AvailabilityHttpService extends BaseService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public availabilityGet(requestParameters: AvailabilityGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<AvailabilityResponseDTO>;
-    public availabilityGet(requestParameters: AvailabilityGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<AvailabilityResponseDTO>>;
-    public availabilityGet(requestParameters: AvailabilityGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<AvailabilityResponseDTO>>;
-    public availabilityGet(requestParameters: AvailabilityGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
-        const date = requestParameters?.date;
-        if (date === null || date === undefined) {
-            throw new Error('Required parameter date was null or undefined when calling availabilityGet.');
+    public availabilityRescheduleOptionsGet(requestParameters: AvailabilityRescheduleOptionsGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<RescheduleOptionsResponseDTO>;
+    public availabilityRescheduleOptionsGet(requestParameters: AvailabilityRescheduleOptionsGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<RescheduleOptionsResponseDTO>>;
+    public availabilityRescheduleOptionsGet(requestParameters: AvailabilityRescheduleOptionsGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<RescheduleOptionsResponseDTO>>;
+    public availabilityRescheduleOptionsGet(requestParameters: AvailabilityRescheduleOptionsGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const bookingId = requestParameters?.bookingId;
+        if (bookingId === null || bookingId === undefined) {
+            throw new Error('Required parameter bookingId was null or undefined when calling availabilityRescheduleOptionsGet.');
         }
-        const roomId = requestParameters?.roomId;
-        const cohortId = requestParameters?.cohortId;
-        const subjectId = requestParameters?.subjectId;
-        const startHour = requestParameters?.startHour;
-        const endHour = requestParameters?.endHour;
-        const minFreeSpots = requestParameters?.minFreeSpots;
-        const limit = requestParameters?.limit;
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
         localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>date, 'date');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>roomId, 'roomId');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>cohortId, 'cohortId');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>subjectId, 'subjectId');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>startHour, 'startHour');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>endHour, 'endHour');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>minFreeSpots, 'minFreeSpots');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>limit, 'limit');
+          <any>bookingId, 'bookingId');
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -112,9 +84,9 @@ export class AvailabilityHttpService extends BaseService {
             }
         }
 
-        let localVarPath = `/availability`;
+        let localVarPath = `/availability/reschedule-options`;
         const { basePath, withCredentials } = this.configuration;
-        return this.httpClient.request<AvailabilityResponseDTO>('get', `${basePath}${localVarPath}`,
+        return this.httpClient.request<RescheduleOptionsResponseDTO>('get', `${basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,

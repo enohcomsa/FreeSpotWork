@@ -7,11 +7,9 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { AvailabilitySlotDTO } from './availability-slot';
 
 
-export interface AvailabilityResponseDTO { 
-    items: Array<AvailabilitySlotDTO>;
-    total: number;
+export interface RescheduleOptionsQueryDTO { 
+    bookingId: string;
 }
 

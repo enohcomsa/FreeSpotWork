@@ -27,9 +27,6 @@ index.ts
 model/activity-type.ts
 model/auth-ok-response.ts
 model/auth-user.ts
-model/availability-query.ts
-model/availability-response.ts
-model/availability-slot.ts
 model/booking-base.ts
 model/booking-create.ts
 model/booking-id-param.ts
@@ -82,6 +79,10 @@ model/program-year-create.ts
 model/program-year-id-param.ts
 model/program-year-response.ts
 model/program-year-update.ts
+model/reschedule-option.ts
+model/reschedule-options-query.ts
+model/reschedule-options-response-current-booking.ts
+model/reschedule-options-response.ts
 model/room-base.ts
 model/room-create.ts
 model/room-id-param.ts
