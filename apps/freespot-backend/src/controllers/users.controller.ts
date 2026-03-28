@@ -1,6 +1,6 @@
-import type { UserIdParamT, UserUpdateRequest, UserResponseDto } from "../schemas/users.zod";
+import type { UserIdParamT, UserMeProfileUpdateRequest, UserUpdateRequest, UserResponseDto } from "../schemas/users.zod";
 import * as svc from "../services/users.service";
-import { withParams, withParamsAndBody, withQuery } from "../utils/async-handler";
+import { withBody, withParams, withParamsAndBody, withQuery } from "../utils/async-handler";
 
 export const list = withQuery<unknown, UserResponseDto[]>()(async (_req, res) => {
   const data = await svc.getUsers();
@@ -9,6 +9,11 @@ export const list = withQuery<unknown, UserResponseDto[]>()(async (_req, res) =>
 
 export const getById = withParams<UserIdParamT, UserResponseDto>()(async (req, res) => {
   const data = await svc.getUser(req.params.id);
+  res.json(data);
+});
+
+export const patchMyProfile = withBody<UserMeProfileUpdateRequest, UserResponseDto>()(async (req, res) => {
+  const data = await svc.updateMyProfile(req, req.body);
   res.json(data);
 });
 

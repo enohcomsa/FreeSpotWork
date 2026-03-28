@@ -1,7 +1,20 @@
-import type { UserCreateRequest, UserUpdateRequest, UserResponseDto } from "../schemas/users.zod";
+import type { Request } from "express";
+import type { UserCreateRequest, UserMeProfileUpdateRequest, UserUpdateRequest, UserResponseDto } from "../schemas/users.zod";
 import * as repo from "../repos/users.repo";
+import * as facultiesRepo from "../repos/faculties.repo";
+import * as programsRepo from "../repos/programs.repo";
+import * as programYearsRepo from "../repos/program-years.repo";
+import * as cohortsRepo from "../repos/cohorts.repo";
 import { NotFoundError } from "./errors";
 import { mapMongoError } from "./mongo";
+
+class BadRequestError extends Error {
+  status = 400;
+  code = "BAD_REQUEST";
+  constructor(message: string) {
+    super(message);
+  }
+}
 
 export async function getUsers(): Promise<UserResponseDto[]> {
   return repo.listUsers();
@@ -19,6 +32,85 @@ export async function createUser(
 ): Promise<UserResponseDto> {
   try {
     return await repo.createUser(input, passwordHash);
+  } catch (e) {
+    mapMongoError(e);
+  }
+}
+
+async function validateProfileHierarchy(input: UserMeProfileUpdateRequest): Promise<void> {
+  const faculty = await facultiesRepo.getFacultyById(input.facultyId);
+  if (!faculty) throw new BadRequestError("Invalid facultyId");
+
+  const program = await programsRepo.getProgramById(input.programId);
+  if (!program) throw new BadRequestError("Invalid programId");
+
+  const programYear = await programYearsRepo.getProgramYearById(input.programYearId);
+  if (!programYear) throw new BadRequestError("Invalid programYearId");
+
+  const group = await cohortsRepo.getCohortById(input.groupCohortId);
+  if (!group) throw new BadRequestError("Invalid groupCohortId");
+
+  if (group.type !== "GROUP") {
+    throw new BadRequestError("groupCohortId must reference a GROUP cohort");
+  }
+
+  if (String(program.facultyId) !== String(input.facultyId)) {
+    throw new BadRequestError("Program does not belong to faculty");
+  }
+
+  if (String(programYear.programId) !== String(input.programId)) {
+    throw new BadRequestError("Program year does not belong to program");
+  }
+
+  if (String(group.programYearId) !== String(input.programYearId)) {
+    throw new BadRequestError("Group does not belong to program year");
+  }
+
+  if (input.semigroupCohortId) {
+    const semigroup = await cohortsRepo.getCohortById(input.semigroupCohortId);
+    if (!semigroup) throw new BadRequestError("Invalid semigroupCohortId");
+
+    if (semigroup.type !== "SEMIGROUP") {
+      throw new BadRequestError("semigroupCohortId must reference a SEMIGROUP cohort");
+    }
+
+    if (String(semigroup.programYearId) !== String(input.programYearId)) {
+      throw new BadRequestError("Semigroup does not belong to program year");
+    }
+
+    if (String(semigroup.parentGroupId) !== String(input.groupCohortId)) {
+      throw new BadRequestError("Semigroup does not belong to group");
+    }
+  }
+}
+
+export async function updateMyProfile(
+  req: Request,
+  input: UserMeProfileUpdateRequest
+): Promise<UserResponseDto> {
+  const claims = req.user;
+  if (!claims) throw new BadRequestError("Unauthenticated");
+
+  await validateProfileHierarchy(input);
+
+  try {
+    const res = await repo.updateUserById(claims.sub, {
+      firstName: input.firstName,
+      familyName: input.familyName,
+      facultyId: input.facultyId,
+      programId: input.programId,
+      programYearId: input.programYearId,
+      groupCohortId: input.groupCohortId,
+      semigroupCohortId: input.semigroupCohortId ?? null,
+    });
+
+    if (!res) throw new NotFoundError("User not found");
+
+    // TODO next step:
+    // delete future normal bookings
+    // recreate bookings from timetable
+
+    return res;
   } catch (e) {
     mapMongoError(e);
   }
