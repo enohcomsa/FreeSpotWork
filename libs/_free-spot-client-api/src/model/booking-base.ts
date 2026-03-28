@@ -11,16 +11,16 @@ import { BookingStatusDTO } from './booking-status';
 import { ActivityTypeDTO } from './activity-type';
 
 
-export interface BookingUpdateDTO { 
-    activityId?: string;
-    userId?: string;
+export interface BookingBaseDTO { 
+    activityId: string;
+    userId: string;
     facultyId?: string | null;
     programId?: string | null;
     programYearId?: string | null;
     groupCohortId?: string | null;
     semigroupCohortId?: string | null;
     subjectId?: string | null;
-    activityType?: ActivityTypeDTO;
+    activityType: ActivityTypeDTO;
     status?: BookingStatusDTO;
     originalActivityId?: string | null;
     isRescheduled?: boolean | null;

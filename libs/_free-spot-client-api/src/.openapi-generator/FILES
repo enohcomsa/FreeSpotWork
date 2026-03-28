@@ -30,6 +30,7 @@ model/auth-user.ts
 model/availability-query.ts
 model/availability-response.ts
 model/availability-slot.ts
+model/booking-base.ts
 model/booking-create.ts
 model/booking-id-param.ts
 model/booking-response.ts
@@ -87,8 +88,6 @@ model/room-id-param.ts
 model/room-response.ts
 model/room-update.ts
 model/signup-request.ts
-model/source-type.ts
-model/source.ts
 model/subject-base.ts
 model/subject-create.ts
 model/subject-id-param.ts

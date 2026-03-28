@@ -2,6 +2,7 @@ import { TimetableActivityDbDoc, TimetableActivityDbRecord } from "../db/types";
 import { timetableActivityPatchToDbSet, timetableActivityToDbRecord, timetableActivityToDto } from "../mappers";
 import { TimetableActivityCreateRequest, TimetableActivityResponseDto, TimetableActivityUpdateRequest } from "../schemas/timetable-activities.zod";
 import { getCollection, isEmptySet, toObjectId } from "../utils/mongo";
+import { todayIsoDateUtc } from "../utils/dates";
 
 const TIMETABLE_ACTIVITIES_COLLECTION = "timetable_activities";
 
@@ -27,11 +28,18 @@ export async function createTimetableActivity(input: TimetableActivityCreateRequ
 export async function updateTimetableActivityById(id: string, patch: TimetableActivityUpdateRequest): Promise<TimetableActivityResponseDto | null> {
   const collection = await getCollection<TimetableActivityDbDoc>(TIMETABLE_ACTIVITIES_COLLECTION);
   const updateSet = timetableActivityPatchToDbSet(patch);
+
   if (isEmptySet(updateSet)) {
     const current = await collection.findOne({ _id: toObjectId(id) });
     return current ? timetableActivityToDto(current) : null;
   }
-  const updated = await collection.findOneAndUpdate({ _id: toObjectId(id) }, { $set: updateSet }, { returnDocument: "after" });
+
+  const updated = await collection.findOneAndUpdate(
+    { _id: toObjectId(id) },
+    { $set: updateSet },
+    { returnDocument: "after" }
+  );
+
   return updated ? timetableActivityToDto(updated) : null;
 }
 
@@ -39,4 +47,16 @@ export async function deleteTimetableActivityById(id: string): Promise<boolean> 
   const collection = await getCollection<TimetableActivityDbDoc>(TIMETABLE_ACTIVITIES_COLLECTION);
   const { deletedCount } = await collection.deleteOne({ _id: toObjectId(id) });
   return deletedCount === 1;
+}
+
+export async function findFutureActivitiesForCohorts(cohortIds: string[]): Promise<TimetableActivityDbDoc[]> {
+  if (cohortIds.length === 0) return [];
+
+  const collection = await getCollection<TimetableActivityDbDoc>(TIMETABLE_ACTIVITIES_COLLECTION);
+
+  return collection.find({
+    date: { $gte: todayIsoDateUtc() },
+    activityType: { $ne: "SPECIAL_EVENT" },
+    cohortIds: { $in: cohortIds.map(toObjectId) },
+  }).sort({ date: 1, startHour: 1 }).toArray();
 }

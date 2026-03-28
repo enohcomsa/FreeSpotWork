@@ -1,9 +1,10 @@
 import { BookingCreateRequest, BookingUpdateRequest, BookingResponseDto } from "../schemas/bookings.zod";
 import { getCollection, isEmptySet, toObjectId } from "../utils/mongo";
-import { BookingDbDoc, BookingDbRecord } from "../db/types";
+import { BookingDbDoc, BookingDbRecord, TimetableActivityDbDoc } from "../db/types";
 import { bookingToDbRecord, bookingToDto, bookingPatchToDbSet } from "../mappers";
 
 const BOOKINGS_COLLECTION = "bookings";
+const TIMETABLE_ACTIVITIES_COLLECTION = "timetable_activities";
 
 export async function listBookings(): Promise<BookingResponseDto[]> {
   const collection = await getCollection<BookingDbDoc>(BOOKINGS_COLLECTION);
@@ -57,4 +58,37 @@ export async function deleteFutureNormalBookingsForUser(userId: string): Promise
   });
 
   return deletedCount ?? 0;
+}
+
+export async function reserveSpotForActivity(activityId: string): Promise<"CONFIRMED" | "WAITLISTED"> {
+  const collection = await getCollection<TimetableActivityDbDoc>(TIMETABLE_ACTIVITIES_COLLECTION);
+
+  const confirmed = await collection.findOneAndUpdate(
+    {
+      _id: toObjectId(activityId),
+      freeSpots: { $gt: 0 },
+    },
+    {
+      $inc: {
+        freeSpots: -1,
+        busySpots: 1,
+      },
+    },
+    { returnDocument: "after" }
+  );
+
+  if (confirmed) {
+    return "CONFIRMED";
+  }
+
+  await collection.updateOne(
+    { _id: toObjectId(activityId) },
+    {
+      $inc: {
+        reservedSpots: 1,
+      },
+    }
+  );
+
+  return "WAITLISTED";
 }
