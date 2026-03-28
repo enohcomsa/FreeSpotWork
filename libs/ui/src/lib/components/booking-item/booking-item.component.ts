@@ -2,14 +2,16 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, InputSigna
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
-import { BookedEvent, FreeSpotUser, TimetableActivityItemLegacy } from '@free-spot/models';
-import { Event } from '@free-spot/enums';
+import { BookedEvent, FreeSpotUser } from '@free-spot/models';
+import { ActivityType } from '@free-spot/enums';
 import { BookingService } from '@free-spot-service/booking';
 import { UserService } from '@free-spot-service/user';
 import { ConfirmModalService } from '@free-spot-service/confirm-modal';
 import { MatDividerModule } from '@angular/material/divider';
 import { ToastrService } from 'ngx-toastr';
 import { TranslateModule } from '@ngx-translate/core';
+import { TimetableActivity } from '@free-spot-domain/timetable-activity';
+
 
 @Component({
   selector: 'free-spot-booking-item',
@@ -25,8 +27,8 @@ export class BookingItemComponent implements OnInit {
   private _confirmService: ConfirmModalService = inject(ConfirmModalService);
   private _toastrService: ToastrService = inject(ToastrService);
 
-  timetableActivitySig: InputSignal<TimetableActivityItemLegacy> = input.required<TimetableActivityItemLegacy>();
-  oldTimetableActivitySig: InputSignal<TimetableActivityItemLegacy> = input.required<TimetableActivityItemLegacy>();
+  timetableActivitySig: InputSignal<TimetableActivity> = input.required<TimetableActivity>();//TODO: correct the logic
+  oldTimetableActivitySig: InputSignal<TimetableActivity> = input.required<TimetableActivity>();//TODO: correct the logic
   bookingActive = output<boolean>();
   eventBookingSig: Signal<BookedEvent> = computed(() => this._bookingService.generateBooking(this.timetableActivitySig()));
 
@@ -41,7 +43,7 @@ export class BookingItemComponent implements OnInit {
 
   currentUserSig: Signal<FreeSpotUser> = this._userService.getFreeSpotUserByEmail(this._currentUserEmail);
 
-  EVENT = Event;
+  ACTIVITY_TYPE = ActivityType;
 
   ngOnInit(): void {
     this._bookingService.init();
@@ -49,8 +51,8 @@ export class BookingItemComponent implements OnInit {
   }
 
   bookSpot(): void {
-    if (this.eventBookingSig().activityType === Event.SPECIAL_EVENT) {
-      this._bookingService.generateSpecialEventBookedItemByActivity(this.timetableActivitySig(), true);
+    if (this.eventBookingSig().activityType === ActivityType.SPECIAL_EVENT) {
+      // this._bookingService.generateSpecialEventBookedItemByActivity(this.timetableActivitySig(), true);
 
       const newUserBookingList: FreeSpotUser = {
         ...this.currentUserSig(),
@@ -76,13 +78,13 @@ export class BookingItemComponent implements OnInit {
         .afterClosed()
         .subscribe((result: boolean) => {
           if (result) {
-            this._bookingService.generateUserBookedItemByActivity(this.oldTimetableActivitySig(), false, true);
-            this._bookingService.generateUserBookedItemByActivity(this.timetableActivitySig(), true, true);
+            // this._bookingService.generateUserBookedItemByActivity(this.oldTimetableActivitySig(), false, true);
+            // this._bookingService.generateUserBookedItemByActivity(this.timetableActivitySig(), true, true);
 
             const oldBookedEvent: BookedEvent =
               this.currentUserSig().bookingList.find(
                 (bookedEvent: BookedEvent) =>
-                  bookedEvent.subjectItem.name === this.oldTimetableActivitySig().subjectItem.name &&
+                  bookedEvent.subjectItem.name === this.oldTimetableActivitySig().subjectId &&//todo Update logic
                   bookedEvent.activityType === this.oldTimetableActivitySig().activityType,
               ) || ({} as BookedEvent);
 

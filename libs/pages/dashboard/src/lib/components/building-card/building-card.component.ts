@@ -6,8 +6,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { BuildingLegacy } from '@free-spot/models';
 import { TranslateModule } from '@ngx-translate/core';
+import { BuildingCardVM } from '@free-spot-presentation/building-card';
 
 @Component({
   selector: 'free-spot-building-card',
@@ -30,7 +30,7 @@ export class BuildingCardComponent {
   private _router: Router = inject(Router);
   private _activatedRoute = inject(ActivatedRoute);
 
-  buildingSig = input.required<BuildingLegacy>();
+  buildingVmSig = input.required<BuildingCardVM>();
 
   onFloorClick(florName: string): void {
     this._router.navigate(['floor/' + florName], { relativeTo: this._activatedRoute });

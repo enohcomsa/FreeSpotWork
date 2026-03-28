@@ -50,6 +50,9 @@ export const usersSpec: CollectionSpec = {
       facultyId: {
         oneOf: [{ bsonType: "objectId" }, { bsonType: "null" }]
       },
+      programId: {
+        oneOf: [{ bsonType: "objectId" }, { bsonType: "null" }]
+      },
       programYearId: {
         oneOf: [{ bsonType: "objectId" }, { bsonType: "null" }]
       },
@@ -98,6 +101,7 @@ export const usersSpec: CollectionSpec = {
       unique: true,
       partialFilterExpression: { username: { $type: "string" } }
     },
+    { key: { programId: 1 }, name: "by_programId" },
     { key: { groupCohortId: 1 }, name: "by_groupCohortId" },
     { key: { semigroupCohortId: 1 }, name: "by_semigroupCohortId" }
   ]

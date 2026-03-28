@@ -14,19 +14,25 @@
           alt="Free Spot logo"
         />
       </div>
+
       <div class="@container flex max-w-[464px] flex-col items-start p-4">
         <h1 class="@3xs:px-4 @3xs:text-3xl pb-2 pt-8 text-2xl">
           {{ (isLoginMode ? 'LOGIN.WELCOME' : 'LOGIN.CREATE_ACCOUNT') | translate }}
         </h1>
+
         @if (isLoginMode) {
           <h2 class="@3xs:px-4 text-pretty pb-12 text-sm">
             {{ 'LOGIN.NO_ACCOUNT' | translate }}
-            <span (click)="onSwitchMode()" class="login-switch cursor-pointer underline">{{ 'LOGIN.SIGNUP' | translate }}</span>
+            <span (click)="onSwitchMode()" class="login-switch cursor-pointer underline">
+              {{ 'LOGIN.SIGNUP' | translate }}
+            </span>
           </h2>
         } @else {
           <h2 class="@3xs:px-4 text-pretty pb-8 text-sm">
             {{ 'LOGIN.ALREADY_ACCOUNT' | translate }}
-            <span (click)="onSwitchMode()" class="login-switch cursor-pointer underline"> {{ 'LOGIN.LOGIN' | translate }}</span>
+            <span (click)="onSwitchMode()" class="login-switch cursor-pointer underline">
+              {{ 'LOGIN.LOGIN' | translate }}
+            </span>
           </h2>
         }
 
@@ -36,9 +42,27 @@
           #authFormDirective="ngForm"
           class="@3xs:px-4 flex w-full flex-col gap-4 pb-8"
         >
-          @if (!isLoginMode) {
+          @if (isLoginMode) {
             <mat-form-field>
-              <mat-label> {{ 'LOGIN.FIRST_NAME' | translate }}</mat-label>
+              <mat-label>Username or email</mat-label>
+              <input matInput formControlName="identifier" />
+              <mat-error>{{ displayError(authForm.controls['identifier']) }}</mat-error>
+            </mat-form-field>
+          } @else {
+            <mat-form-field>
+              <mat-label>{{ 'LOGIN.EMAIL' | translate }}</mat-label>
+              <input matInput formControlName="email" />
+              <mat-error>{{ displayError(authForm.controls['email']) }}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-label>Username</mat-label>
+              <input matInput formControlName="username" />
+              <mat-error>{{ displayError(authForm.controls['username']) }}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-label>{{ 'LOGIN.FIRST_NAME' | translate }}</mat-label>
               <input matInput formControlName="firstName" />
               <mat-error>{{ displayError(authForm.controls['firstName']) }}</mat-error>
             </mat-form-field>
@@ -49,19 +73,14 @@
               <mat-error>{{ displayError(authForm.controls['familyName']) }}</mat-error>
             </mat-form-field>
           }
-          <mat-form-field>
-            <mat-label>{{ 'LOGIN.EMAIL' | translate }}</mat-label>
-            <input matInput formControlName="email" />
-            <mat-error>{{ displayError(authForm.controls['email']) }}</mat-error>
-          </mat-form-field>
 
           <mat-form-field>
             <mat-label>{{ 'LOGIN.PASSWORD' | translate }}</mat-label>
             <mat-hint>{{ 'LOGIN.PASSWORD_HINT' | translate }}</mat-hint>
             <input [type]="hide ? 'password' : 'text'" matInput formControlName="password" />
-            <mat-icon class="primary-icon cursor-pointer" matSuffix (click)="hide = !hide">{{
-              hide ? 'visibility_off' : 'visibility'
-            }}</mat-icon>
+            <mat-icon class="primary-icon cursor-pointer" matSuffix (click)="hide = !hide">
+              {{ hide ? 'visibility_off' : 'visibility' }}
+            </mat-icon>
             <mat-error>{{ displayError(authForm.controls['password']) }}</mat-error>
           </mat-form-field>
 
@@ -69,18 +88,19 @@
             @if (isLoginMode) {
               <h2 class="text-pretty text-sm">
                 {{ 'LOGIN.NO_ACCOUNT' | translate }}
-                <span (click)="onSwitchMode()" class="login-switch cursor-pointer underline">{{
-                  'LOGIN.SIGNUP' | translate
-                }}</span>
+                <span (click)="onSwitchMode()" class="login-switch cursor-pointer underline">
+                  {{ 'LOGIN.SIGNUP' | translate }}
+                </span>
               </h2>
             } @else {
               <h2 class="text-pretty text-sm">
                 {{ 'LOGIN.ALREADY_ACCOUNT' | translate }}
-                <span (click)="onSwitchMode()" class="login-switch cursor-pointer underline">{{
-                  'LOGIN.LOGIN' | translate
-                }}</span>
+                <span (click)="onSwitchMode()" class="login-switch cursor-pointer underline">
+                  {{ 'LOGIN.LOGIN' | translate }}
+                </span>
               </h2>
             }
+
             <button mat-flat-button type="submit" [disabled]="!authForm.valid" class="@3xs:w-fit w-full text-nowrap">
               {{ (isLoginMode ? 'LOGIN.LOGIN' : 'LOGIN.CREATE_ACCOUNT') | translate }}
             </button>

@@ -1,102 +1,92 @@
-import { HttpClient } from '@angular/common/http';
-import { inject, Injectable, signal, WritableSignal } from '@angular/core';
-import { Observable, tap } from 'rxjs';
-import { Router } from '@angular/router';
+import { computed, inject, Injectable, signal } from '@angular/core';
+import { catchError, finalize, Observable, of, tap } from 'rxjs';
+import { AuthHttpService } from '@free-spot/api-client';
+import { AuthOkResponseDTO } from '@free-spot/api-client';
+import { LoginRequestDTO } from '@free-spot/api-client';
+import { SignupRequestDTO } from '@free-spot/api-client';
 import { AuthUser } from './models/auth-user.model';
-import { AuthResponse, UserData } from './models/auth.model';
-import { HttpUserService } from '@http-free-spot/user';
-import { FreeSpotUser } from '@free-spot/models';
-import { Role } from '@free-spot/enums';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private _http: HttpClient = inject(HttpClient);
-  private _router: Router = inject(Router);
-  private _httpUserService: HttpUserService = inject(HttpUserService);
+  private _authHttp = inject(AuthHttpService);
 
-  userSignal$: WritableSignal<AuthUser | null> = signal(null);
+  private _router = inject(Router);
+  private _user = signal<AuthUser | null>(null);
+  private _initialized = signal(false);
+  private _loadingMe = signal(false);
 
-  signUp(user: UserData): Observable<AuthResponse> {
-    return this._http
-      .post<AuthResponse>(
-        'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyA977pOtBh69mOV1wna0adyXcszT7uffYs',
-        {
-          email: user.email,
-          password: user.password,
-          returnSecureToken: true,
-        },
-      )
-      .pipe(
-        tap((res: AuthResponse) => {
-          this._handleAuth(res.email, res.localId, res.idToken, +res.expiresIn);
-          this._addUser(res.email, user.firstName || '', user.familyName || '');
-        }),
-      );
-  }
+  userSignal$ = this._user.asReadonly();
+  initializedSignal$ = this._initialized.asReadonly();
+  loadingMeSignal$ = this._loadingMe.asReadonly();
 
-  logIn(user: UserData): Observable<AuthResponse> {
-    return this._http
-      .post<AuthResponse>(
-        'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyA977pOtBh69mOV1wna0adyXcszT7uffYs',
-        {
-          email: user.email,
-          password: user.password,
-          returnSecureToken: true,
-        },
-      )
-      .pipe(
-        tap((res: AuthResponse) => {
-          this._handleAuth(res.email, res.localId, res.idToken, +res.expiresIn);
-        }),
-      );
-  }
+  isAuthenticated = computed(() => !!this._user());
+  isAdmin = computed(() => this._user()?.role === 'ADMIN');
 
-  autoLogIn(): void {
-    const user: { email: string; id: string; _token: string; _tokenExpirationDate: Date } = JSON.parse(
-      localStorage.getItem('user') as string,
+  login(payload: LoginRequestDTO): Observable<AuthOkResponseDTO> {
+    return this._authHttp.authLogin({ loginRequestDTO: payload }).pipe(
+      tap((response) => {
+        this._setUserFromResponse(response);
+      }),
     );
-    if (!user) {
-      return;
-    }
-    const loadedUser: AuthUser = new AuthUser(user.email, user.id, user._token, new Date(user._tokenExpirationDate));
-    if (loadedUser.token) {
-      this.userSignal$.set(loadedUser);
-    }
   }
 
-  logOut(): void {
-    this.userSignal$.set(null);
-    localStorage.removeItem('user');
+  signup(payload: SignupRequestDTO): Observable<AuthOkResponseDTO> {
+    return this._authHttp.authSignup({ signupRequestDTO: payload }).pipe(
+      tap((response) => {
+        this._setUserFromResponse(response);
+      }),
+    );
+  }
+
+  logout(): void {
+    this.clearSession();
     this._router.navigate(['/auth']);
   }
 
-  private _handleAuth(email: string, localId: string, idToken: string, expiresIn: number) {
-    const exirationDate: Date = new Date(new Date().getTime() + expiresIn * 1000);
-    const user: AuthUser = new AuthUser(email, localId, idToken, exirationDate);
-    this.userSignal$.set(user);
+  loadMe(): Observable<AuthOkResponseDTO | null> {
+    if (this._loadingMe()) {
+      return of(null);
+    }
 
-    localStorage.setItem('user', JSON.stringify(user));
+    this._loadingMe.set(true);
+
+    return this._authHttp.authMe().pipe(
+      tap((response) => {
+        this._setUserFromResponse(response);
+      }),
+      catchError(() => {
+        this.clearSession();
+        return of(null);
+      }),
+      finalize(() => {
+        this._loadingMe.set(false);
+      }),
+    );
   }
 
-  private _addUser(email: string, firstName: string, familtyName: string): void {
-    this._http
-      .get<FreeSpotUser[]>('https://freespot-6e3c4-default-rtdb.europe-west1.firebasedatabase.app/userList/.json')
-      .pipe(
-        tap((userList: FreeSpotUser[] | undefined) => {
-          const allUsers: FreeSpotUser[] = userList || [];
-          const newUser: FreeSpotUser = {
-            role: Role.MEMBER,
-            familyName: familtyName,
-            firstName: firstName,
-            email: email,
-            bookingList: [],
-          };
-          allUsers.push(newUser);
-          this._httpUserService.storeUserList(allUsers);
-        }),
-      )
-      .subscribe();
+  clearSession(): void {
+    this._user.set(null);
+    this._initialized.set(true);
+  }
+
+
+
+  private _setUserFromResponse(response: AuthOkResponseDTO): void {
+    console.log(response);
+
+    if (!response.user?.id || !response.user.email || !response.user.role) {
+      this.clearSession();
+      return;
+    }
+
+    this._user.set({
+      id: response.user.id,
+      email: response.user.email,
+      role: response.user.role,
+    });
+    this._initialized.set(true);
   }
 }

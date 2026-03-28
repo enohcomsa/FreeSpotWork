@@ -14,7 +14,7 @@ import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModu
 import { AdminRoomService } from '@free-spot-service/room';
 import { FreeSpotUser } from '@free-spot/models';
 import { debounceTime } from 'rxjs';
-import { Event, WeekDay } from '@free-spot/enums';
+import { ActivityType, WeekDay } from '@free-spot/enums';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
@@ -67,7 +67,7 @@ export class AdminSemisemiGroupTimetableComponent implements OnInit {
 
   protected semiGroupTimetableActivityListSig: Signal<TimetableActivity[]> = computed(() => this._adminTimetableActivityService.selectTimetableActivityListSignalByCohortId(this.semiGroupIdSig())());
   startHourList: number[] = [8, 10, 12, 14, 16, 18];
-  eventList: Event[] = Object.values(Event).filter((event: Event) => event !== Event.SPECIAL_EVENT);
+  eventList: ActivityType[] = Object.values(ActivityType).filter((event: ActivityType) => event !== ActivityType.SPECIAL_EVENT);
   weekDayList: WeekDay[] = Object.values(WeekDay);
   addTimetableActivityFormSemiGroup!: FormGroup;
   addingTimetableActivity = false;

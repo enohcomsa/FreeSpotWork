@@ -59,6 +59,8 @@ export class TimetableActivityCardsHttpService extends BaseService {
 
         let localVarHeaders = this.defaultHeaders;
 
+        // authentication (accessCookie) required
+
         const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
             'application/json'
         ]);
@@ -107,6 +109,8 @@ export class TimetableActivityCardsHttpService extends BaseService {
     public timetableActivityCardsGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
+
+        // authentication (accessCookie) required
 
         const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
             'application/json'
@@ -161,6 +165,8 @@ export class TimetableActivityCardsHttpService extends BaseService {
         }
 
         let localVarHeaders = this.defaultHeaders;
+
+        // authentication (accessCookie) required
 
         const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
             'application/json'

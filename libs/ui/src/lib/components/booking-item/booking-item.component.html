@@ -1,7 +1,7 @@
 <mat-card appearance="outlined" class="@container">
   <mat-card-content class="@lg:flex-row @lg:justify-between @lg:items-baseline !flex flex-col justify-center">
     <p class="@3xs:items-center @3xs:flex-row flex grow flex-col items-start justify-between text-lg font-bold tracking-tight">
-      @if (eventBookingSig().activityType === EVENT.SPECIAL_EVENT) {
+      @if (eventBookingSig().activityType === ACTIVITY_TYPE.SPECIAL_EVENT) {
         {{ eventBookingSig().name }}
       } @else {
         {{ eventBookingSig().subjectItem.shortName }}

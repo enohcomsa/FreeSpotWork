@@ -15,9 +15,10 @@ export const UserBase = strictObj({
   preferredLanguage: PreferredLanguage.nullable().optional(),
   preferredTheme: PreferredTheme.nullable().optional(),
 
-  facultyId: ObjectIdStr,
-  programYearId: ObjectIdStr,
-  groupCohortId: ObjectIdStr,
+  facultyId: ObjectIdStr.nullable(),
+  programId: ObjectIdStr.nullable(),
+  programYearId: ObjectIdStr.nullable(),
+  groupCohortId: ObjectIdStr.nullable(),
   semigroupCohortId: ObjectIdStr.nullable().optional(),
 }).openapi("UserBase");
 

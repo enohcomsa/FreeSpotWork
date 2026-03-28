@@ -1,5 +1,5 @@
 import type { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
-import { SignupSchema, LoginSchema, RefreshSchema, AuthOkResponse } from "../../schemas/auth.zod";
+import { SignupSchema, LoginSchema, RefreshSchema, AuthOkResponse, MeResponse } from "../../schemas/auth.zod";
 
 export function registerAuth(registry: OpenAPIRegistry) {
   registry.registerPath({
@@ -68,6 +68,25 @@ export function registerAuth(registry: OpenAPIRegistry) {
   });
 
   registry.registerPath({
+    method: "post",
+    path: "/auth/logout",
+    operationId: "authLogout",
+    tags: ["Auth"],
+    security: [{ accessCookie: [], xsrfHeader: [] }],
+    request: {
+      body: {
+        content: {
+          "application/json": { schema: RefreshSchema },
+        },
+      },
+    },
+    responses: {
+      200: { description: "OK" },
+      401: { description: "Unauthenticated" },
+    },
+  });
+
+  registry.registerPath({
     method: "get",
     path: "/auth/me",
     operationId: "authMe",
@@ -77,7 +96,7 @@ export function registerAuth(registry: OpenAPIRegistry) {
       200: {
         description: "Current authenticated user",
         content: {
-          "application/json": { schema: AuthOkResponse },
+          "application/json": { schema: MeResponse },
         },
       },
       401: { description: "Unauthenticated" },

@@ -1,22 +1,22 @@
-import { inject, Injectable, signal, WritableSignal } from '@angular/core';
+import { Injectable, signal, WritableSignal } from '@angular/core';
 import { WeekDay } from '@free-spot/enums';
 import { FreeSpotDate } from '@free-spot/models';
-import { HttpAppDateService } from '@http-free-spot/app-date';
-import { take } from 'rxjs';
+import { of, take } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AppDateService {
-  private _httpAppDateService: HttpAppDateService = inject(HttpAppDateService);
   private _appDateSig: WritableSignal<FreeSpotDate> = signal({} as FreeSpotDate);
   appDateSig = this._appDateSig.asReadonly();
   appDateChanged: WritableSignal<boolean> = signal(false);
 
   init(): void {
     if (!Object.keys(this._appDateSig()).length) {
-      this._httpAppDateService
-        .getAppDate()
+      of({
+        date: new Date(),//TODO: impelent real date
+        weekCount: 10,
+      })
         .pipe(take(1))
         .subscribe((appDate: FreeSpotDate) => {
           const storedAppDate: Date = new Date(appDate.date);
@@ -33,7 +33,7 @@ export class AppDateService {
             );
             newAppDate.weekCount = newAppDate.weekCount + weekDiff;
             this._appDateSig.set(newAppDate);
-            this._httpAppDateService.storeAppDate(newAppDate);
+            // this._httpAppDateService.storeAppDate(newAppDate);
             this.appDateChanged.set(true);
           } else {
             this._appDateSig.set({ ...appDate, date: new Date(appDate.date) });

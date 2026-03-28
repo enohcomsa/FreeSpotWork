@@ -14,8 +14,8 @@
     <mat-form-field>
       <mat-label>Year</mat-label>
       <mat-select formControlName="currentYear">
-        @for (year of foundYearListSig(); track year.name) {
-          <mat-option [value]="year">{{ year.name }}</mat-option>
+        @for (year of foundYearListSig(); track year.id) {
+          <mat-option [value]="year">{{ year.label }}</mat-option>
         }
       </mat-select>
       <mat-error>{{ displayError(setupForm.controls['currentYear']) }}</mat-error>

@@ -1,9 +1,9 @@
-import { Event, WeekParity } from '@free-spot/enums';
-import { SubjectItemLegacy } from './subject.model';
+import { ActivityType, WeekParity } from '@free-spot/enums';
+import { SubjectItem } from '@free-spot-domain/subject';
 
 export interface BookedEvent {
-  activityType: Event;
-  subjectItem: SubjectItemLegacy;
+  activityType: ActivityType;
+  subjectItem: SubjectItem;
   date: Date;
   startHour: number;
   endHour: number;

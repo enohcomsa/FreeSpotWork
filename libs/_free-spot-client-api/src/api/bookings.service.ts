@@ -72,6 +72,8 @@ export class BookingsHttpService extends BaseService {
 
         let localVarHeaders = this.defaultHeaders;
 
+        // authentication (accessCookie) required
+
         const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
         ]);
         if (localVarHttpHeaderAcceptSelected !== undefined) {
@@ -124,6 +126,8 @@ export class BookingsHttpService extends BaseService {
         }
 
         let localVarHeaders = this.defaultHeaders;
+
+        // authentication (accessCookie) required
 
         const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
             'application/json'
@@ -179,6 +183,8 @@ export class BookingsHttpService extends BaseService {
         const bookingUpdateDTO = requestParameters?.bookingUpdateDTO;
 
         let localVarHeaders = this.defaultHeaders;
+
+        // authentication (accessCookie) required
 
         const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
             'application/json'
@@ -240,6 +246,8 @@ export class BookingsHttpService extends BaseService {
         const bookingCreateDTO = requestParameters?.bookingCreateDTO;
 
         let localVarHeaders = this.defaultHeaders;
+
+        // authentication (accessCookie) required
 
         const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
             'application/json'

@@ -13,6 +13,7 @@ import { PreferredLanguageDTO } from './preferred-language';
 
 
 export interface UserUpdateDTO { 
+    username?: string | null;
     firstName?: string;
     familyName?: string;
     role?: UserRoleDTO;

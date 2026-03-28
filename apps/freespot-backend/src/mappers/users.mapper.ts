@@ -1,8 +1,24 @@
 import type { UserBaseT, UserUpdateRequest, UserResponseDto } from "../schemas/users.zod";
 import type { UserDbDoc, UserDbRecord } from "../db/types/users.db";
 import { stripUndefined, toObjectId } from "../utils/mongo";
-import { SignupRequestT } from "../schemas/auth.zod";
+import { SignupRequestT, AuthUserT } from "../schemas/auth.zod";
 
+export function userToAuthMeDto(doc: UserDbDoc): AuthUserT {
+  return {
+    id: doc._id.toHexString(),
+    email: doc.email,
+    role: doc.role,
+    firstName: doc.firstName ?? null,
+    familyName: doc.familyName ?? null,
+    preferredLanguage: doc.preferredLanguage ?? null,
+    preferredTheme: doc.preferredTheme ?? null,
+    facultyId: doc.facultyId == null ? null : doc.facultyId.toHexString(),
+    programId: doc.programId == null ? null : doc.programId.toHexString(),
+    programYearId: doc.programYearId == null ? null : doc.programYearId.toHexString(),
+    groupCohortId: doc.groupCohortId == null ? null : doc.groupCohortId.toHexString(),
+    semigroupCohortId: doc.semigroupCohortId == null ? null : doc.semigroupCohortId.toHexString(),
+  };
+}
 
 export function signupToDbRecord(input: SignupRequestT, passwordHash: string): UserDbRecord {
   const now = new Date();
@@ -20,6 +36,7 @@ export function signupToDbRecord(input: SignupRequestT, passwordHash: string): U
     preferredTheme: null,
 
     facultyId: null,
+    programId: null,
     programYearId: null,
     groupCohortId: null,
     semigroupCohortId: null,
@@ -48,6 +65,7 @@ export function userToDbRecord(input: UserBaseT): UserDbRecord {
     preferredTheme: input.preferredTheme ?? null,
 
     facultyId: toObjectId(input.facultyId),
+    programId: toObjectId(input.programId),
     programYearId: toObjectId(input.programYearId),
     groupCohortId: toObjectId(input.groupCohortId),
     semigroupCohortId: input.semigroupCohortId === null ? null : toObjectId(input.semigroupCohortId),
@@ -74,6 +92,7 @@ export function userToDto(doc: UserDbDoc): UserResponseDto {
     preferredTheme: doc.preferredTheme ?? null,
 
     facultyId: doc.facultyId == null ? null : doc.facultyId.toHexString(),
+    programId: doc.programId == null ? null : doc.programId.toHexString(),
     programYearId: doc.programYearId == null ? null : doc.programYearId.toHexString(),
     groupCohortId: doc.groupCohortId == null ? null : doc.groupCohortId.toHexString(),
     semigroupCohortId: doc.semigroupCohortId == null ? null : doc.semigroupCohortId.toHexString(),
@@ -91,9 +110,18 @@ export function userPatchToDbSet(patch: UserUpdateRequest): Partial<UserDbRecord
   if (cleaned.preferredLanguage !== undefined) set.preferredLanguage = cleaned.preferredLanguage ?? null;
   if (cleaned.preferredTheme !== undefined) set.preferredTheme = cleaned.preferredTheme ?? null;
 
-  if (cleaned.facultyId !== undefined) set.facultyId = toObjectId(cleaned.facultyId);
-  if (cleaned.programYearId !== undefined) set.programYearId = toObjectId(cleaned.programYearId);
-  if (cleaned.groupCohortId !== undefined) set.groupCohortId = toObjectId(cleaned.groupCohortId);
+  if (cleaned.facultyId !== undefined) {
+    set.facultyId = cleaned.facultyId === null ? null : toObjectId(cleaned.facultyId);
+  }
+  if (cleaned.programId !== undefined) { set.programId = cleaned.programId === null ? null : toObjectId(cleaned.programId); }
+
+  if (cleaned.programYearId !== undefined) {
+    set.programYearId = cleaned.programYearId === null ? null : toObjectId(cleaned.programYearId);
+  }
+
+  if (cleaned.groupCohortId !== undefined) {
+    set.groupCohortId = cleaned.groupCohortId === null ? null : toObjectId(cleaned.groupCohortId);
+  }
 
   if (cleaned.semigroupCohortId !== undefined) {
     set.semigroupCohortId = cleaned.semigroupCohortId === null ? null : toObjectId(cleaned.semigroupCohortId);

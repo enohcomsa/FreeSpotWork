@@ -90,6 +90,28 @@ constructor({ accessToken, apiKeys, basePath, credentials, encodeParam, encoder,
         }
         this.encodeParam = encodeParam ?? (param => this.defaultEncodeParam(param));
         this.credentials = credentials ?? {};
+
+        // init default accessCookie credential
+        if (!this.credentials['accessCookie']) {
+            this.credentials['accessCookie'] = () => {
+                if (this.apiKeys === null || this.apiKeys === undefined) {
+                    return undefined;
+                } else {
+                    return this.apiKeys['accessCookie'] || this.apiKeys['access_token'];
+                }
+            };
+        }
+
+        // init default xsrfHeader credential
+        if (!this.credentials['xsrfHeader']) {
+            this.credentials['xsrfHeader'] = () => {
+                if (this.apiKeys === null || this.apiKeys === undefined) {
+                    return undefined;
+                } else {
+                    return this.apiKeys['xsrfHeader'] || this.apiKeys['x-xsrf-token'];
+                }
+            };
+        }
     }
 
     /**

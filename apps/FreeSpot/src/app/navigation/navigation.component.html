@@ -33,7 +33,7 @@
       >
         {{ 'NAV.MY_BOOKINGS' | translate }}
       </a>
-      @if (currentUserSig().role === Role.ADMIN) {
+      <!-- @if (currentUserSig().role === Role.ADMIN) { -->
         <a
           mat-flat-button
           class="mr-4 !hidden !text-sm !tracking-tight md:!flex lg:!text-base"
@@ -42,9 +42,9 @@
         >
           {{ 'NAV.ADMIN' | translate }}
         </a>
-      }
+      <!-- } -->
       <!-- <nav profile></nav> -->
-      <div class="flex items-center space-x-4 hover:cursor-pointer">
+      <!-- <div class="flex items-center space-x-4 hover:cursor-pointer">
         <button
           class="on-free-spot-toolbar hidden h-12 w-12 rounded-full text-lg font-semibold md:flex md:items-center md:justify-center"
           [matMenuTriggerFor]="profileMenu"
@@ -54,7 +54,7 @@
         <button class="hidden text-base font-semibold lg:flex lg:items-center" [matMenuTriggerFor]="profileMenu">
           {{ getLoggedUserName()() }} <mat-icon inline="true">keyboard_arrow_down</mat-icon>
         </button>
-      </div>
+      </div> -->
     </div>
 
     <button  aria-label="hamburger button" class="hamburger z-30 block md:hidden" (click)="opened = !opened">
@@ -81,7 +81,7 @@
     </div>
     <div class="flex w-full flex-col items-center gap-2">
       <div class="w-full space-y-2 pb-4">
-        <div class="flex items-center justify-center space-x-4 hover:cursor-pointer">
+        <!-- <div class="flex items-center justify-center space-x-4 hover:cursor-pointer">
           <button
             class="on-free-spot-toolbar flex h-12 w-12 items-center justify-center rounded-full text-xl font-semibold"
             [matMenuTriggerFor]="profileMenu"
@@ -91,7 +91,7 @@
           <button class="hidden items-center text-xl font-semibold sm:flex" [matMenuTriggerFor]="profileMenu">
             {{ getLoggedUserName()() }} <mat-icon inline="true">keyboard_arrow_down</mat-icon>
           </button>
-        </div>
+        </div> -->
         <mat-divider></mat-divider>
       </div>
       <a
@@ -120,7 +120,7 @@
         (click)="opened = false"
         ><span class="py-4 text-xl tracking-wide"> {{ 'NAV.MY_BOOKINGS' | translate }}</span>
       </a>
-      @if (currentUserSig().role === Role.ADMIN) {
+      <!-- @if (currentUserSig().role === Role.ADMIN) { -->
         <div class="w-full space-y-2">
           <mat-divider></mat-divider>
           <a
@@ -133,8 +133,9 @@
             <span class="text-xl tracking-wide"> {{ 'NAV.ADMIN' | translate }}</span>
           </a>
         </div>
-      }
+      <!-- } -->
     </div>
+
   </nav>
 </mat-toolbar>
 
@@ -146,7 +147,7 @@
 <mat-menu #profileMenu="matMenu" xPosition="after">
   <button mat-menu-item>
     <mat-icon>language</mat-icon>
-    <span class="flex justify-around text-base">
+    <!-- <span class="flex justify-around text-base">
       <span
         [ngClass]="{ 'lang-color': currentUserSig().preferdLanguage === LANG.EN }"
         (click)="onLangChange(LANG.EN, currentUserSig())"
@@ -159,9 +160,9 @@
       >
         RO
       </span>
-    </span>
+    </span> -->
   </button>
-  <button class="theme-menu-button h-12 w-full px-3">
+  <!-- <button class="theme-menu-button h-12 w-full px-3">
     <div class="flex w-full items-center justify-between">
       <mat-icon
         [ngClass]="{ 'primary-icon !important': currentUserSig().preferedTheme === THEME.LIGHT }"
@@ -176,7 +177,7 @@
         >dark_mode</mat-icon
       >
     </div>
-  </button>
+  </button> -->
   <button mat-menu-item (click)="logout()">
     <mat-icon>logout</mat-icon>
     <span class="mx-2">Logout </span>

@@ -1,3 +1,5 @@
+export * from './auth.service';
+import { AuthHttpService } from './auth.service';
 export * from './availability.service';
 import { AvailabilityHttpService } from './availability.service';
 export * from './bookings.service';
@@ -28,4 +30,4 @@ export * from './timetable-activity-cards.service';
 import { TimetableActivityCardsHttpService } from './timetable-activity-cards.service';
 export * from './users.service';
 import { UsersHttpService } from './users.service';
-export const APIS = [AvailabilityHttpService, BookingsHttpService, BuildingsHttpService, BuildingsCardsHttpService, CohortsHttpService, EventsHttpService, FacultiesHttpService, FloorsHttpService, ProgramYearsHttpService, ProgramsHttpService, RoomsHttpService, SubjectsHttpService, TimetableActivitiesHttpService, TimetableActivityCardsHttpService, UsersHttpService];
+export const APIS = [AuthHttpService, AvailabilityHttpService, BookingsHttpService, BuildingsHttpService, BuildingsCardsHttpService, CohortsHttpService, EventsHttpService, FacultiesHttpService, FloorsHttpService, ProgramYearsHttpService, ProgramsHttpService, RoomsHttpService, SubjectsHttpService, TimetableActivitiesHttpService, TimetableActivityCardsHttpService, UsersHttpService];

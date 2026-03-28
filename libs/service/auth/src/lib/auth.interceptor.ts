@@ -15,7 +15,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   }
 
   const tokenReq = req.clone({
-    params: new HttpParams().set('auth', authService.userSignal$()?.token as string),
+    // params: new HttpParams().set('auth', authService.userSignal$()?.token as string),
   });
   return next(tokenReq);
 };

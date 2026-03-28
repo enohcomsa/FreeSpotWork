@@ -1,127 +1,48 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit, Signal, WritableSignal } from '@angular/core';
-
+import { ChangeDetectionStrategy, Component, inject, OnInit, Signal } from '@angular/core';
 import { DynamicFormComponent } from '@free-spot/ui';
 import { BuildingCardComponent } from '../building-card/building-card.component';
 import { BuildingService } from '@free-spot-service/building';
-import {
-  BuildingLegacy,
-  FacultyLegacy,
-  FloorLegacy,
-  FreeSpotDate,
-  FreeSpotUser,
-  GroupLegacy,
-  RoomLegacy,
-  SemiGroup,
-  TimetableActivityItemLegacy,
-  TimeTableItemLecagy,
-  Year,
-} from '@free-spot/models';
+import { FreeSpotDate, FreeSpotUser } from '@free-spot/models';
 import { UserService } from '@free-spot-service/user';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { delay, filter, of, Subscription, switchMap, take } from 'rxjs';
+import { filter, Subscription, take } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { AdminFacultyService } from '@free-spot-service/faculty';
 import { AppDateService } from '@free-spot-service/app-date';
-import { AdminFloorService } from '@free-spot-service/floor';
 import { AdminRoomService } from '@free-spot-service/room';
-import { BookingService } from '@free-spot-service/booking';
 import { AdminEventService } from '@free-spot-service/event';
 import { TranslateModule } from '@ngx-translate/core';
+import { BuildingCardVM } from '@free-spot-presentation/building-card';
+import { BuildingCardService } from '@free-spot-service/building-card';
+import { SpecialEvent } from '@free-spot-domain/event';
+import { EventCardComponent } from '../event-card/event-card.component';
+
 
 @Component({
   selector: 'free-spot-dashboard',
 
-  imports: [BuildingCardComponent, DynamicFormComponent, TranslateModule],
+  imports: [BuildingCardComponent, EventCardComponent, DynamicFormComponent, TranslateModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.sass',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardComponent implements OnInit {
   private _dialog: MatDialog = inject(MatDialog);
+  private _adminBuildingCardService: BuildingCardService = inject(BuildingCardService);
+  private _adminEventService: AdminEventService = inject(AdminEventService);
   private _adminRoomService: AdminRoomService = inject(AdminRoomService);
-  private _adminFloorService: AdminFloorService = inject(AdminFloorService);
   private _adminBuildingService: BuildingService = inject(BuildingService);
-  private _adminFacultyService: AdminFacultyService = inject(AdminFacultyService);
+
   private _userService: UserService = inject(UserService);
   private _appDateService: AppDateService = inject(AppDateService);
-  private _bookingService: BookingService = inject(BookingService);
-  private _adminEventService: AdminEventService = inject(AdminEventService);
 
-  roomListSig: Signal<RoomLegacy[]> = this._adminRoomService.roomListSigLegacy;
-  facultyListSig: Signal<FacultyLegacy[]> = this._adminFacultyService.facultyListSigLegacy;
+
+  readonly buildingCardVMs: Signal<BuildingCardVM[]> = this._adminBuildingCardService.buildingCardListSig;
+  eventListSig: Signal<SpecialEvent[]> = this._adminEventService.eventListSig;
+
   userListSig: Signal<FreeSpotUser[]> = this._userService.userListSig;
-  dateChangedSig: WritableSignal<boolean> = this._appDateService.appDateChanged;
+
   appDateSig: Signal<FreeSpotDate> = this._appDateService.appDateSig;
-  buildingListSig: Signal<BuildingLegacy[]> = this._adminBuildingService.buildingListSigLegacy;
-  eventListSigLegacy: Signal<BuildingLegacy[]> = computed(() =>
-    this._adminEventService
-      .eventListSigLegacy()
-      .sort((event1, event2) => new Date(event1.date as Date).getTime() - new Date(event2.date as Date).getTime())
-      .filter((event: BuildingLegacy) => new Date().getTime() - new Date(event.date as Date).getTime() <= 0),
-  );
-  currentUserGroupSig: Signal<GroupLegacy> = computed(() =>
-    this._adminFacultyService.getGroupByName(this.currentUserSig().group as string)(),
-  );
 
-  appDateChangeSubscription: Subscription = toObservable(this.dateChangedSig)
-    .pipe(
-      filter((dateChanged) => !!dateChanged),
-      take(1),
-      delay(1200),
-      switchMap(() => {
-        this.roomListSig().forEach((room: RoomLegacy) => {
-          const updatedRoom: RoomLegacy = {
-            ...room,
-            timetable: room.timetable.map((timetableItem: TimeTableItemLecagy) => this._updateTimetableItem(timetableItem)),
-          };
-
-          this._adminRoomService.updateRoom(room, updatedRoom);
-          this._updateFloorAndBuilding(updatedRoom);
-        });
-        this.facultyListSig().forEach((faculty: FacultyLegacy) => {
-          const updatedFaculty: FacultyLegacy = {
-            ...faculty,
-            yearList: faculty.yearList?.map((year: Year) => {
-              return {
-                ...year,
-                yearGroupList: year.yearGroupList?.map((group: GroupLegacy) => {
-                  return {
-                    ...group,
-                    timetable: group.timetable.map((timetableItem: TimeTableItemLecagy) => this._updateTimetableItem(timetableItem)),
-                    semigroups: group.semigroups?.map((semiGroup: SemiGroup) => {
-                      return {
-                        ...semiGroup,
-                        timetable: semiGroup.timetable.map((timetableItem: TimeTableItemLecagy) =>
-                          this._updateTimetableItem(timetableItem),
-                        ),
-                      };
-                    }),
-                  };
-                }),
-              };
-            }),
-          };
-
-          this._adminFacultyService.updateFaculty(faculty, updatedFaculty);
-        });
-
-        return of(true).pipe(delay(1200));
-      }),
-    )
-    .subscribe(() => {
-      this.userListSig().forEach((user: FreeSpotUser) => {
-        const updatedUser: FreeSpotUser = {
-          ...user,
-          bookingList: this._bookingService.generateUserBookedItems(
-            this._adminFacultyService.getGroupByName(user.group as string)(),
-            true,
-            this._getUserSemigroup(user.semiGroup as string, this._adminFacultyService.getGroupByName(user.group as string)()),
-          ),
-        };
-
-        this._userService.updateFreeSpotUser(user, updatedUser);
-      });
-    });
 
   currentUserEmail = (
     JSON.parse(localStorage.getItem('user') as string) as {
@@ -152,51 +73,11 @@ export class DashboardComponent implements OnInit {
     });
 
   ngOnInit(): void {
-    this._userService.init();
-    this._adminRoomService.init();
-    this._adminFloorService.init();
-    this._adminBuildingService.init();
-    this._adminFacultyService.init();
-    this._appDateService.init();
-    this._bookingService.init();
     this._adminEventService.init();
-  }
+    this._adminRoomService.init();
+    this._adminBuildingCardService.init();
+    this._adminBuildingService.init();
 
-  private _updateFloorAndBuilding(updatedRoom: RoomLegacy): void {
-    const oldFloor: FloorLegacy = this._adminFloorService.getFloorByName(updatedRoom.floorName)();
-    const updatedFloor: FloorLegacy = {
-      ...oldFloor,
-      roomList: oldFloor.roomList.map((room: RoomLegacy) => (room.name === updatedRoom.name ? updatedRoom : room)),
-    };
-    this._adminFloorService.updateFloor(oldFloor, updatedFloor);
-    this._updateBuilding(updatedFloor);
-  }
-
-  private _updateBuilding(changedFloor: FloorLegacy): void {
-    const oldBuilding: BuildingLegacy = this._adminBuildingService.getBuildingByName(changedFloor.buildingName)();
-    const updatedBuilding: BuildingLegacy = {
-      ...oldBuilding,
-      floorList: oldBuilding.floorList.map((floor: FloorLegacy) => (floor.name === changedFloor.name ? changedFloor : floor)),
-    };
-    this._adminBuildingService.updateBuilding(oldBuilding, updatedBuilding);
-  }
-
-  private _updateTimetableItem(oldTimetableItem: TimeTableItemLecagy): TimeTableItemLecagy {
-    return {
-      ...oldTimetableItem,
-      date: this._appDateService.getAppDateByWeekDay(oldTimetableItem.weekDay),
-      activities: oldTimetableItem.activities?.map((timetableActivity: TimetableActivityItemLegacy) => {
-        return {
-          ...timetableActivity,
-          freeSpots: timetableActivity.freeSpots + timetableActivity.busySpots,
-          busySpots: 0,
-          date: this._appDateService.getAppDateByWeekDay(oldTimetableItem.weekDay),
-        };
-      }),
-    };
-  }
-
-  private _getUserSemigroup(semiGroupName: string, userGroup: GroupLegacy): SemiGroup {
-    return userGroup.semigroups?.find((semiGroup: SemiGroup) => semiGroup.name === semiGroupName) || ({} as SemiGroup);
+    // this._userService.init();
   }
 }
