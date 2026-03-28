@@ -19,6 +19,8 @@ import { Observable }                                        from 'rxjs';
 // @ts-ignore
 import { BookingCreateDTO } from '../model/booking-create';
 // @ts-ignore
+import { BookingRescheduleDTO } from '../model/booking-reschedule';
+// @ts-ignore
 import { BookingResponseDTO } from '../model/booking-response';
 // @ts-ignore
 import { BookingUpdateDTO } from '../model/booking-update';
@@ -28,6 +30,15 @@ import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables'
 import { Configuration }                                     from '../configuration';
 import { BaseService } from '../api.base.service';
 
+
+export interface BookingsAdminUserIdGetRequestParams {
+    userId: string;
+}
+
+export interface BookingsIdAdminPatchRequestParams {
+    id: string;
+    bookingUpdateDTO?: BookingUpdateDTO;
+}
 
 export interface BookingsIdDeleteRequestParams {
     id: string;
@@ -39,7 +50,7 @@ export interface BookingsIdGetRequestParams {
 
 export interface BookingsIdPatchRequestParams {
     id: string;
-    bookingUpdateDTO?: BookingUpdateDTO;
+    bookingRescheduleDTO?: BookingRescheduleDTO;
 }
 
 export interface BookingsPostRequestParams {
@@ -54,6 +65,180 @@ export class BookingsHttpService extends BaseService {
 
     constructor(protected httpClient: HttpClient, @Optional() @Inject(BASE_PATH) basePath: string|string[], @Optional() configuration?: Configuration) {
         super(basePath, configuration);
+    }
+
+    /**
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public bookingsAdminUserIdGet(requestParameters: BookingsAdminUserIdGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<BookingResponseDTO>>;
+    public bookingsAdminUserIdGet(requestParameters: BookingsAdminUserIdGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<BookingResponseDTO>>>;
+    public bookingsAdminUserIdGet(requestParameters: BookingsAdminUserIdGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<BookingResponseDTO>>>;
+    public bookingsAdminUserIdGet(requestParameters: BookingsAdminUserIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const userId = requestParameters?.userId;
+        if (userId === null || userId === undefined) {
+            throw new Error('Required parameter userId was null or undefined when calling bookingsAdminUserIdGet.');
+        }
+
+        let localVarHeaders = this.defaultHeaders;
+
+        // authentication (accessCookie) required
+
+        const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
+            'application/json'
+        ]);
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        const localVarHttpContext: HttpContext = options?.context ?? new HttpContext();
+
+        const localVarTransferCache: boolean = options?.transferCache ?? true;
+
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/bookings/admin/user/${this.configuration.encodeParam({name: "userId", value: userId, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        const { basePath, withCredentials } = this.configuration;
+        return this.httpClient.request<Array<BookingResponseDTO>>('get', `${basePath}${localVarPath}`,
+            {
+                context: localVarHttpContext,
+                responseType: <any>responseType_,
+                ...(withCredentials ? { withCredentials } : {}),
+                headers: localVarHeaders,
+                observe: observe,
+                transferCache: localVarTransferCache,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public bookingsGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<BookingResponseDTO>>;
+    public bookingsGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<BookingResponseDTO>>>;
+    public bookingsGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<BookingResponseDTO>>>;
+    public bookingsGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+
+        let localVarHeaders = this.defaultHeaders;
+
+        // authentication (accessCookie) required
+
+        const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
+            'application/json'
+        ]);
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        const localVarHttpContext: HttpContext = options?.context ?? new HttpContext();
+
+        const localVarTransferCache: boolean = options?.transferCache ?? true;
+
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/bookings`;
+        const { basePath, withCredentials } = this.configuration;
+        return this.httpClient.request<Array<BookingResponseDTO>>('get', `${basePath}${localVarPath}`,
+            {
+                context: localVarHttpContext,
+                responseType: <any>responseType_,
+                ...(withCredentials ? { withCredentials } : {}),
+                headers: localVarHeaders,
+                observe: observe,
+                transferCache: localVarTransferCache,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public bookingsIdAdminPatch(requestParameters: BookingsIdAdminPatchRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<BookingResponseDTO>;
+    public bookingsIdAdminPatch(requestParameters: BookingsIdAdminPatchRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<BookingResponseDTO>>;
+    public bookingsIdAdminPatch(requestParameters: BookingsIdAdminPatchRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<BookingResponseDTO>>;
+    public bookingsIdAdminPatch(requestParameters: BookingsIdAdminPatchRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const id = requestParameters?.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling bookingsIdAdminPatch.');
+        }
+        const bookingUpdateDTO = requestParameters?.bookingUpdateDTO;
+
+        let localVarHeaders = this.defaultHeaders;
+
+        // authentication (accessCookie) required
+
+        const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
+            'application/json'
+        ]);
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        const localVarHttpContext: HttpContext = options?.context ?? new HttpContext();
+
+        const localVarTransferCache: boolean = options?.transferCache ?? true;
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/merge-patch+json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/bookings/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}/admin`;
+        const { basePath, withCredentials } = this.configuration;
+        return this.httpClient.request<BookingResponseDTO>('patch', `${basePath}${localVarPath}`,
+            {
+                context: localVarHttpContext,
+                body: bookingUpdateDTO,
+                responseType: <any>responseType_,
+                ...(withCredentials ? { withCredentials } : {}),
+                headers: localVarHeaders,
+                observe: observe,
+                transferCache: localVarTransferCache,
+                reportProgress: reportProgress
+            }
+        );
     }
 
     /**
@@ -180,7 +365,7 @@ export class BookingsHttpService extends BaseService {
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling bookingsIdPatch.');
         }
-        const bookingUpdateDTO = requestParameters?.bookingUpdateDTO;
+        const bookingRescheduleDTO = requestParameters?.bookingRescheduleDTO;
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -223,7 +408,7 @@ export class BookingsHttpService extends BaseService {
         return this.httpClient.request<BookingResponseDTO>('patch', `${basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
-                body: bookingUpdateDTO,
+                body: bookingRescheduleDTO,
                 responseType: <any>responseType_,
                 ...(withCredentials ? { withCredentials } : {}),
                 headers: localVarHeaders,

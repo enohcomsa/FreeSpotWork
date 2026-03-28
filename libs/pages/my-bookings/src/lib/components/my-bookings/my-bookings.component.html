@@ -4,37 +4,44 @@
   <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">{{ 'BOOKINGS_PAGE.MY_BOOKINGS' | translate }}</h1>
 
   <mat-chip-listbox class="mb-4">
-    <mat-chip-option selected (click)="filterActiveBookedItems(ACTICITY_TYPE.LABORATORY, true)">{{
-      'BOOKINGS_PAGE.ALL' | translate
-    }}</mat-chip-option>
+    <mat-chip-option selected (click)="filterActiveBookedItems(ACTICITY_TYPE.LABORATORY, true)">
+      {{ 'BOOKINGS_PAGE.ALL' | translate }}
+    </mat-chip-option>
     <mat-chip-option (click)="filterActiveBookedItems(ACTICITY_TYPE.LABORATORY, false)">
-      {{ 'BOOKINGS_PAGE.LABORATORY' | translate }}</mat-chip-option
-    >
+      {{ 'BOOKINGS_PAGE.LABORATORY' | translate }}
+    </mat-chip-option>
     <mat-chip-option (click)="filterActiveBookedItems(ACTICITY_TYPE.COURSE, false)">
-      {{ 'BOOKINGS_PAGE.COURSE' | translate }}</mat-chip-option
-    >
+      {{ 'BOOKINGS_PAGE.COURSE' | translate }}
+    </mat-chip-option>
     <mat-chip-option (click)="filterActiveBookedItems(ACTICITY_TYPE.PROJECT, false)">
-      {{ 'BOOKINGS_PAGE.PROJECT' | translate }}</mat-chip-option
-    >
+      {{ 'BOOKINGS_PAGE.PROJECT' | translate }}
+    </mat-chip-option>
     <mat-chip-option (click)="filterActiveBookedItems(ACTICITY_TYPE.SEMINAR, false)">
-      {{ 'BOOKINGS_PAGE.SEMINARY' | translate }}</mat-chip-option
-    >
+      {{ 'BOOKINGS_PAGE.SEMINARY' | translate }}
+    </mat-chip-option>
   </mat-chip-listbox>
 
   <div class="grid grid-cols-1 gap-8 pb-4 md:grid-cols-2 xl:grid-cols-3">
-    @for (bookedEvent of filteredBookedItemsSig(); track bookedEvent) {
-      <free-spot-booked-spot [eventSig]="bookedEvent"> </free-spot-booked-spot>
+    @for (booking of filteredBookedItemsSig(); track booking.id) {
+      <free-spot-booked-spot
+        [bookingSig]="booking"
+        [selectedSig]="selectedBookingIdSig() === booking.id"
+        (bookingSelected)="selectBooking($event)"
+      ></free-spot-booked-spot>
     } @empty {
       <h3>{{ 'BOOKINGS_PAGE.NO_BOOKINGS_MSG' | translate }}</h3>
     }
   </div>
 
-  @if (activeSpecialEventBookedItemListSig().length) {
+  @if (specialEventBookingListSig().length) {
     <h1 class="py-4 text-3xl font-bold md:py-8">{{ 'BOOKINGS_PAGE.MY_EVENTS' | translate }}</h1>
 
     <div class="grid grid-cols-1 gap-8 pb-4 md:grid-cols-2 xl:grid-cols-3">
-      @for (bookedEvent of activeSpecialEventBookedItemListSig(); track bookedEvent.name) {
-        <free-spot-booked-spot [eventSig]="bookedEvent" (deleteEvent)="deleteSpecialEvent($event)"> </free-spot-booked-spot>
+      @for (booking of specialEventBookingListSig(); track booking.id) {
+        <free-spot-booked-spot
+          [bookingSig]="booking"
+          (deleteBooking)="deleteSpecialEvent($event)"
+        ></free-spot-booked-spot>
       } @empty {
         <h3>{{ 'BOOKINGS_PAGE.NO_BOOKINGS_MSG' | translate }}</h3>
       }

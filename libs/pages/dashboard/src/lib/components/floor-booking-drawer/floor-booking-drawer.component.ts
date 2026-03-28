@@ -5,11 +5,9 @@ import { DynamicFormComponent } from '@free-spot/ui';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
-import { ActivityType } from '@free-spot/enums';
 
 @Component({
   selector: 'free-spot-floor-booking-drawer',
-
   imports: [CommonModule, MatSidenavModule, DynamicFormComponent, MatButtonModule, MatIconModule, TranslateModule],
   templateUrl: './floor-booking-drawer.component.html',
   styleUrl: './floor-booking-drawer.component.scss',
@@ -18,5 +16,4 @@ import { ActivityType } from '@free-spot/enums';
 export class FloorBookingDrawerComponent {
   toggleStateSig = model.required<boolean>();
   roomNameSig = input.required<string>();
-  ACTIVITY_TYPE = ActivityType;
 }
