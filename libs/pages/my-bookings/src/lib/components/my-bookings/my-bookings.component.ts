@@ -6,7 +6,7 @@ import { BookedSpotComponent } from '../booked-spot/booked-spot.component';
 import { UserService } from '@free-spot-service/user';
 import { BookedEvent, FreeSpotDate, FreeSpotUser } from '@free-spot/models';
 import { AppDateService } from '@free-spot-service/app-date';
-import { Event, WeekParity } from '@free-spot/enums';
+import { ActivityType, WeekParity } from '@free-spot/enums';
 import { ConfirmModalService } from '@free-spot-service/confirm-modal';
 import { AdminEventService } from '@free-spot-service/event';
 import { TranslateModule } from '@ngx-translate/core';
@@ -25,6 +25,8 @@ export class MyBookingsComponent implements OnInit {
   private _adminEventService: AdminEventService = inject(AdminEventService);
   private _confirmService: ConfirmModalService = inject(ConfirmModalService);
 
+
+  ACTICITY_TYPE=ActivityType;
   private _currentUserEmail = (
     JSON.parse(localStorage.getItem('user') as string) as {
       email: string;
@@ -59,30 +61,30 @@ export class MyBookingsComponent implements OnInit {
   });
 
   activeSpecialEventBookedItemListSig: Signal<BookedEvent[]> = computed(() => {
-    let bookedEventList: BookedEvent[] = this.currentUserSig().eventList || [];
-    (bookedEventList = bookedEventList?.filter(
-      (bookedEvent: BookedEvent) => new Date().getTime() - new Date(bookedEvent.date as Date).getTime() <= 0,
-    )),
-      (bookedEventList = bookedEventList?.sort((event1, event2) => this._sortEventsByDate(event1, event2)));
+    const bookedEventList: BookedEvent[] = this.currentUserSig().eventList || [];
+    // (bookedEventList = bookedEventList?.filter(
+    //   (bookedEvent: BookedEvent) => new Date().getTime() - new Date(bookedEvent.date as Date).getTime() <= 0,
+    // )),
+    //   (bookedEventList = bookedEventList?.sort((event1, event2) => this._sortEventsByDate(event1, event2)));
     return bookedEventList;
   });
 
-  private _eventFilter: WritableSignal<Event | null> = signal(null);
+  private _eventFilter: WritableSignal<ActivityType | null> = signal(null);
 
   filteredBookedItemsSig: Signal<BookedEvent[]> = computed(() => {
-    let bookedEventList: BookedEvent[] = this._activeBookedItemsSig();
+    const bookedEventList: BookedEvent[] = this._activeBookedItemsSig();
 
-    if (this._eventFilter() !== null) {
-      bookedEventList = bookedEventList = bookedEventList?.filter(
-        (bookedEvent: BookedEvent) => bookedEvent.activityType === this._eventFilter(),
-      );
-    }
+    // if (this._eventFilter() !== null) {
+    //   bookedEventList = bookedEventList = bookedEventList?.filter(
+    //     (bookedEvent: BookedEvent) => bookedEvent.activityType === this._eventFilter(),
+    //   );
+    // }
 
     return bookedEventList;
   });
-  EVENT = Event;
 
-  filterActiveBookedItems(event: Event, all: boolean): void {
+
+  filterActiveBookedItems(event: ActivityType, all: boolean): void {
     if (all) {
       this._eventFilter.set(null);
     } else {
@@ -107,7 +109,7 @@ export class MyBookingsComponent implements OnInit {
             eventList: this.currentUserSig().eventList?.filter((event: BookedEvent) => event.name !== deletedSpecialEvent.name),
           };
 
-          this._adminEventService.updateEventSpots(deletedSpecialEvent.name as string, false);
+          // this._adminEventService.updateEventSpots(deletedSpecialEvent.name as string, false);
           this._userService.updateFreeSpotUser(this.currentUserSig(), updatedUser);
         }
       });

@@ -4,19 +4,19 @@
   <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">{{ 'BOOKINGS_PAGE.MY_BOOKINGS' | translate }}</h1>
 
   <mat-chip-listbox class="mb-4">
-    <mat-chip-option selected (click)="filterActiveBookedItems(EVENT.LABORATORY, true)">{{
+    <mat-chip-option selected (click)="filterActiveBookedItems(ACTICITY_TYPE.LABORATORY, true)">{{
       'BOOKINGS_PAGE.ALL' | translate
     }}</mat-chip-option>
-    <mat-chip-option (click)="filterActiveBookedItems(EVENT.LABORATORY, false)">
+    <mat-chip-option (click)="filterActiveBookedItems(ACTICITY_TYPE.LABORATORY, false)">
       {{ 'BOOKINGS_PAGE.LABORATORY' | translate }}</mat-chip-option
     >
-    <mat-chip-option (click)="filterActiveBookedItems(EVENT.COURSE, false)">
+    <mat-chip-option (click)="filterActiveBookedItems(ACTICITY_TYPE.COURSE, false)">
       {{ 'BOOKINGS_PAGE.COURSE' | translate }}</mat-chip-option
     >
-    <mat-chip-option (click)="filterActiveBookedItems(EVENT.PROJECT, false)">
+    <mat-chip-option (click)="filterActiveBookedItems(ACTICITY_TYPE.PROJECT, false)">
       {{ 'BOOKINGS_PAGE.PROJECT' | translate }}</mat-chip-option
     >
-    <mat-chip-option (click)="filterActiveBookedItems(EVENT.SEMINAR, false)">
+    <mat-chip-option (click)="filterActiveBookedItems(ACTICITY_TYPE.SEMINAR, false)">
       {{ 'BOOKINGS_PAGE.SEMINARY' | translate }}</mat-chip-option
     >
   </mat-chip-listbox>

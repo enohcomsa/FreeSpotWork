@@ -1,0 +1,43 @@
+<mat-card>
+  <mat-card-header class="!block">
+    <mat-card-title class="!flex items-center justify-between">
+      <p>{{ specialEventSig().name }}</p>
+      <p class="text-sm tracking-tight">{{ specialEventSig().date | date: 'MMM dd, yyyy HH:mm' }}</p>
+    </mat-card-title>
+
+    <mat-card-subtitle class="!flex flex-col !text-xs sm:flex-row sm:items-end sm:!text-sm">
+      <div class="flex items-end gap-1 !text-sm">
+        <mat-icon class="-ml-2 -mr-1 scale-50">location_on</mat-icon>
+        <p>{{ specialEventBuildingSig().name }}<span class="hidden sm:mx-1 sm:inline">|</span></p>
+      </div>
+      <p>{{ specialEventBuildingSig().address }}</p>
+    </mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <mat-list class="!pb-0">
+      <mat-list-item class="!p-0">
+        <div class="flex justify-between text-xs tracking-tighter">
+          <p class="min-w-24">{{ 'BUILDING_CARD.ROOM' | translate }}</p>
+          <div class="flex gap-4 [&>p]:w-14 [&>p]:text-center">
+            <p>{{ 'BUILDING_CARD.FREE_DESK' | translate }}</p>
+            <p>{{ 'BUILDING_CARD.BOOKED' | translate }}</p>
+            <p>{{ 'BUILDING_CARD.RESERVED' | translate }}</p>
+          </div>
+        </div>
+      </mat-list-item>
+      <mat-divider></mat-divider>
+
+      <mat-list-item class="!cursor-pointer !p-0">
+        <div class="flex justify-between text-sm tracking-tighter">
+          <p class="min-w-24 truncate">{{ specialEventRoomSig().name }}</p>
+          <div class="flex gap-4 [&>p]:w-14 [&>p]:text-center">
+            <p class="total-spots">{{ specialEventFreeSpots() }}</p>
+            <p class="busy-spots">{{ specialEventRoomSig().totalSpotsNumber }}</p>
+            <p class="unavabile-spots">{{ specialEventSig().reservedSpots }}</p>
+          </div>
+        </div>
+      </mat-list-item>
+    </mat-list>
+  </mat-card-content>
+</mat-card>

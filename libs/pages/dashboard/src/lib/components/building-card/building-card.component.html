@@ -1,13 +1,11 @@
 <mat-card>
-  @if (buildingSig().specialEvent) {
-    <ng-container [ngTemplateOutlet]="specialEvent"></ng-container>
-  } @else {
     <mat-card-header>
-      <mat-card-title>{{ buildingSig().name }}</mat-card-title>
+      <mat-card-title>{{ buildingVmSig().name }}</mat-card-title>
       <mat-card-subtitle class="!flex items-end !text-sm">
-        <mat-icon class="-ml-2 -mr-1 scale-50">location_on</mat-icon> {{ buildingSig().adress }}
+        <mat-icon class="-ml-2 -mr-1 scale-50">location_on</mat-icon> {{ buildingVmSig().address }}
       </mat-card-subtitle>
     </mat-card-header>
+
     <mat-card-content>
       <mat-list class="!pb-0">
         <mat-list-item class="!p-0">
@@ -21,7 +19,7 @@
         </mat-list-item>
         <mat-divider></mat-divider>
 
-        @for (floor of buildingSig().floorList; track floor.name; let last = $last) {
+        @for (floor of buildingVmSig().floors; track floor.name; let last = $last) {
           <mat-list-item
             class="!cursor-pointer !p-0"
             (click)="onFloorClick(floor.name)"
@@ -33,8 +31,8 @@
             <div class="flex justify-between text-sm tracking-tighter">
               <p class="card-link min-w-24 truncate">{{ floor.name }}</p>
               <div class="flex gap-4 [&>p]:w-14 [&>p]:text-center">
-                <p class="total-spots">{{ floor.totalSpotsNumber }}</p>
-                <p class="unavabile-spots">{{ floor.unavailableSpots }}</p>
+                <p class="total-spots">{{ floor.total }}</p>
+                <p class="unavabile-spots">{{ floor.unavailable }}</p>
               </div>
             </div>
           </mat-list-item>
@@ -48,48 +46,4 @@
         }
       </mat-list>
     </mat-card-content>
-  }
 </mat-card>
-
-<ng-template #specialEvent>
-  <mat-card-header class="!block">
-    <mat-card-title class="!flex items-center justify-between">
-      <p>{{ buildingSig().name }}</p>
-      <p class="text-sm tracking-tight">{{ buildingSig().date | date: 'MMM dd, yyyy HH:mm' }}</p>
-    </mat-card-title>
-    <mat-card-subtitle class="!flex flex-col !text-xs sm:flex-row sm:items-end sm:!text-sm">
-      <div class="flex items-end gap-1 !text-sm">
-        <mat-icon class="-ml-2 -mr-1 scale-50">location_on</mat-icon>
-        <p>{{ buildingSig().building }}<span class="hidden sm:mx-1 sm:inline">|</span></p>
-      </div>
-      <p>{{ buildingSig().adress }}</p>
-    </mat-card-subtitle>
-  </mat-card-header>
-
-  <mat-card-content>
-    <mat-list class="!pb-0">
-      <mat-list-item class="!p-0">
-        <div class="flex justify-between text-xs tracking-tighter">
-          <p class="min-w-24">{{ 'BUILDING_CARD.ROOM' | translate }}</p>
-          <div class="flex gap-4 [&>p]:w-14 [&>p]:text-center">
-            <p>{{ 'BUILDING_CARD.FREE_DESK' | translate }}</p>
-            <p>{{ 'BUILDING_CARD.BOOKED' | translate }}</p>
-            <p>{{ 'BUILDING_CARD.RESERVED' | translate }}</p>
-          </div>
-        </div>
-      </mat-list-item>
-      <mat-divider></mat-divider>
-
-      <mat-list-item class="!cursor-pointer !p-0">
-        <div class="flex justify-between text-sm tracking-tighter">
-          <p class="min-w-24 truncate">{{ buildingSig().roomName }}</p>
-          <div class="flex gap-4 [&>p]:w-14 [&>p]:text-center">
-            <p class="total-spots">{{ buildingSig().freeSpots }}</p>
-            <p class="busy-spots">{{ buildingSig().busySpots }}</p>
-            <p class="unavabile-spots">{{ buildingSig().reservedSpots }}</p>
-          </div>
-        </div>
-      </mat-list-item>
-    </mat-list>
-  </mat-card-content>
-</ng-template>

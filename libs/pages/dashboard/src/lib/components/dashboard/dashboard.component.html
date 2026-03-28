@@ -1,23 +1,23 @@
 <div class="container">
-  <!-- <free-spot-dynamic-form></free-spot-dynamic-form> -->
+  <free-spot-dynamic-form></free-spot-dynamic-form>
 
   <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">{{ 'BUILDIG_PAGE.BUILDINGS' | translate }}</h1>
-  <!-- <div class="flex flex-col gap-8 pb-4 lg:grid lg:grid-cols-2">
-    @for (building of buildingListSig(); track building.name) {
-      <free-spot-building-card [buildingSig]="building"></free-spot-building-card>
+  <div class="flex flex-col gap-8 pb-4 lg:grid lg:grid-cols-2">
+    @for (buildingVm of buildingCardVMs(); track buildingVm.id) {
+      <free-spot-building-card [buildingVmSig]="buildingVm"></free-spot-building-card>
     } @empty {
       <h3>{{ 'BUILDIG_PAGE.NO_BUILDINGS_MESSAGE' | translate }}</h3>
     }
-  </div> -->
+  </div>
 
-  <!-- @if (eventListSigLegacy().length) {
+  @if (eventListSig().length) {
     <h1 class="py-4 text-3xl font-bold md:py-8">{{ 'BUILDIG_PAGE.EVENTS' | translate }}</h1>
     <div class="flex flex-col gap-8 pb-4 lg:grid lg:grid-cols-2">
-      @for (building of eventListSigLegacy(); track building.name) {
-        <free-spot-building-card [buildingSig]="building"></free-spot-building-card>
+      @for (specialEvent of eventListSig(); track specialEvent.id) {
+        <free-spot-event-card [specialEventSig]="specialEvent"></free-spot-event-card>
       } @empty {
         <h3>{{ 'BUILDIG_PAGE.NO_EVENTS_MESSAGE' | translate }}</h3>
       }
     </div>
-  } -->
+  }
 </div>

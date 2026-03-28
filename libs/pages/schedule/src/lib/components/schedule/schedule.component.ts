@@ -1,66 +1,40 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit, Signal } from '@angular/core';
-
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit } from '@angular/core';
 import { TimetableItemComponent } from '@free-spot/ui';
-import { FreeSpotUser, GroupLegacy, SemiGroup, TimeTableItemLecagy } from '@free-spot/models';
+import { AdminTimetableActivityService } from '@free-spot-service/timetable-activity';
 import { WeekDay } from '@free-spot/enums';
 import { UserService } from '@free-spot-service/user';
-import { AdminFacultyService } from '@free-spot-service/faculty';
+import { TimetableActivityCardVM } from '@free-spot-presentation/timetable-activity-card';
 
 @Component({
   selector: 'free-spot-schedule',
-
   imports: [TimetableItemComponent],
   templateUrl: './schedule.component.html',
   styleUrl: './schedule.component.sass',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ScheduleComponent implements OnInit {
+export class ScheduleComponent implements OnInit {//TODO: impement timetable data from user
   private _userService: UserService = inject(UserService);
-  private _adminFacultyService: AdminFacultyService = inject(AdminFacultyService);
+  private readonly _timetableActivityService: AdminTimetableActivityService = inject(AdminTimetableActivityService);
 
-  private _currentUserEmail = (
-    JSON.parse(localStorage.getItem('user') as string) as {
-      email: string;
-      id: string;
-      _token: string;
-      _tokenExpirationDate: Date;
-    }
-  ).email;
-
-  currentUserSig: Signal<FreeSpotUser> = this._userService.getFreeSpotUserByEmail(this._currentUserEmail);
-  userTimetableItemsSig: Signal<TimeTableItemLecagy[]> = computed(() => this._getUserTimetableItemList());
-
-  emptyTimetable: TimeTableItemLecagy[] = [
-    { weekDay: WeekDay.MONDAY, activities: [], date: new Date() },
-    { weekDay: WeekDay.TUESDAY, activities: [], date: new Date() },
-    { weekDay: WeekDay.WEDNESDAY, activities: [], date: new Date() },
-    { weekDay: WeekDay.THURSDAY, activities: [], date: new Date() },
-    { weekDay: WeekDay.FRIDAY, activities: [], date: new Date() },
+  readonly workWeek: WeekDay[] = [
+    WeekDay.MONDAY,
+    WeekDay.TUESDAY,
+    WeekDay.WEDNESDAY,
+    WeekDay.THURSDAY,
+    WeekDay.FRIDAY,
   ];
+
+  readonly timetablePerDay = computed(() => {
+    const allTimetableActivities: TimetableActivityCardVM[] = [];
+    return this.workWeek.map((day: WeekDay) => ({
+      day,
+      activities: allTimetableActivities.filter((timetableActivity) => timetableActivity.weekDay === day),
+    }));
+  });
+
 
   ngOnInit(): void {
     this._userService.init();
-    this._adminFacultyService.init();
-  }
-
-  private _getUserTimetableItemList(): TimeTableItemLecagy[] {
-    let userTimetableItemList: TimeTableItemLecagy[] = [];
-    if (Object.keys(this.currentUserSig()).length) {
-      const userGroup: GroupLegacy = this._adminFacultyService.getGroupByName(this.currentUserSig().group as string)();
-      const userSemiGroup: SemiGroup = this._getUserSemigroup(this.currentUserSig().semiGroup as string, userGroup);
-
-      if (Object.keys(userGroup).length) {
-        if (Object.keys(userSemiGroup).length) {
-          userTimetableItemList = userSemiGroup.timetable;
-        } else {
-          userTimetableItemList = userGroup.timetable;
-        }
-      }
-    }
-    return userTimetableItemList;
-  }
-
-  private _getUserSemigroup(semiGroupName: string, userGroup: GroupLegacy): SemiGroup {
-    return userGroup.semigroups?.find((semiGroup: SemiGroup) => semiGroup.name === semiGroupName) || ({} as SemiGroup);
+    this._timetableActivityService.init();
   }
 }

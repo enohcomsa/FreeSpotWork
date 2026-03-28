@@ -4,9 +4,9 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { BookedEvent } from '@free-spot/models';
-import { Event } from '@free-spot/enums';
 import { MatButtonModule } from '@angular/material/button';
 import { TranslateModule } from '@ngx-translate/core';
+import { ActivityType } from '@free-spot/enums';
 
 @Component({
   selector: 'free-spot-booked-spot',
@@ -20,5 +20,5 @@ export class BookedSpotComponent {
   eventSig = input.required<BookedEvent>();
   deleteEvent = output<BookedEvent>();
 
-  EVENT = Event;
+  ACTIVITY_TYPE=ActivityType;
 }

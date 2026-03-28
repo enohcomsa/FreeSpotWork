@@ -15,10 +15,9 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, Validators, AbstractCont
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { TimeTableItemLecagy } from '@free-spot/models';
 import { AdminRoomCardComponent } from '../admin-room-card/admin-room-card.component';
 import { AdminRoomService } from '@free-spot-service/room';
-import { WeekDay } from '@free-spot/enums';
+
 import { AddItemCardComponent } from '@free-spot/ui';
 import { AdminFloorService } from '@free-spot-service/floor';
 import { AppDateService } from '@free-spot-service/app-date';
@@ -67,13 +66,6 @@ export class AdminFloorDetailComponent implements OnInit {
     totalSpotsNumber: [0, Validators.required],
     unavailableSpots: [0, Validators.required],
   });
-  // roomEmptyTimetable: Signal<TimeTableItemLecagy[]> = computed(() => [
-  //   { weekDay: WeekDay.MONDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.MONDAY) },
-  //   { weekDay: WeekDay.TUESDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.TUESDAY) },
-  //   { weekDay: WeekDay.WEDNESDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.WEDNESDAY) },
-  //   { weekDay: WeekDay.THURSDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.THURSDAY) },
-  //   { weekDay: WeekDay.FRIDAY, activities: [], date: this._appDateService.getAppDateByWeekDay(WeekDay.FRIDAY) },
-  // ]);
 
   readonly floorRoomListSig: Signal<Room[]> = computed(() => this._adminRoomService.selectRoomsByFloorId(this.floorIdSig())());
   readonly roomCardVMs = computed<RoomCardVM[]>(() => (this.floorRoomListSig()).map(toRoomCardVM));

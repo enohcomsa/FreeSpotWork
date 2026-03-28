@@ -14,14 +14,15 @@ export class UserService {
   userListSig = this._userListSig.asReadonly();
 
   init(): void {
-    if (!this._userListSig().length) {
-      this._httpFreeSpotUserService
-        .getUserList()
-        .pipe(take(1))
-        .subscribe((userList: FreeSpotUser[]) => {
-          this._userListSig.set(userList?.filter((user: FreeSpotUser) => user !== null));
-        });
-    }
+    // if (!this._userListSig().length) {
+    //   this._httpFreeSpotUserService
+    //     .getUserList()
+    //     .pipe(take(1))
+    //     .subscribe((userList: FreeSpotUser[]) => {
+    //       this._userListSig.set(userList?.filter((user: FreeSpotUser) => user !== null));
+    //     });
+    // }
+    this._userListSig.set([{firstName:'no users yet'} as FreeSpotUser]);
   }
 
   getFreeSpotUserByEmail(userEmail: string): Signal<FreeSpotUser> {

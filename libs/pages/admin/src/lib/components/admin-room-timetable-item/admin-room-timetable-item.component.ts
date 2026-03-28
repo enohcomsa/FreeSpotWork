@@ -7,7 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { Event, WeekDay, WeekParity } from '@free-spot/enums';
+import { ActivityType, WeekDay, WeekParity } from '@free-spot/enums';
 import { AdminFacultyService } from '@free-spot-service/faculty';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ConfirmModalService } from '@free-spot-service/confirm-modal';
@@ -53,7 +53,7 @@ export class AdminRoomTimetableItemComponent implements OnInit {
   readonly timetableActivityListSig: Signal<TimetableActivity[]> = computed(() => this._adminTimetableActivityService.getTimetableActivityListSignalByRoomId(this.roomIdSig())());
   roomSig: Signal<Room> = computed(() => this._adminRoomService.getSignalById(this.roomIdSig())());
   startHourList: number[] = [8, 10, 12, 14, 16, 18];
-  eventList: Event[] = Object.values(Event).filter((event: Event) => event !== Event.SPECIAL_EVENT);
+  eventList: ActivityType[] = Object.values(ActivityType).filter((event: ActivityType) => event !== ActivityType.SPECIAL_EVENT);
   weekParityList: WeekParity[] = Object.values(WeekParity);
   addTimetableActivityFormGroup!: FormGroup;
   addingTimetableActivity = false;
@@ -63,7 +63,7 @@ export class AdminRoomTimetableItemComponent implements OnInit {
     this.addTimetableActivityFormGroup = this._formBuilder.nonNullable.group({
       startHour: [this.startHourList[0], Validators.required],
       subjectName: [this.subjectListSig()[0], [Validators.required, Validators.minLength(1)]],
-      activityType: [Event.COURSE, Validators.required],
+      activityType: [ActivityType.COURSE, Validators.required],
       weekParity: [WeekParity.BOTH, Validators.required],
     });
   }
