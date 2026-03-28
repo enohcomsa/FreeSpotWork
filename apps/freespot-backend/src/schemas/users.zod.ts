@@ -36,6 +36,15 @@ export const UserMeProfileUpdate = strictObj({
   semigroupCohortId: ObjectIdStr.nullable().optional(),
 }).openapi("UserMeProfileUpdate");
 
+export const UserMePreferencesUpdate = strictObj({
+  preferredLanguage: PreferredLanguage.nullable().optional(),
+  preferredTheme: PreferredTheme.nullable().optional(),
+}).refine(
+  (v) => v.preferredLanguage !== undefined || v.preferredTheme !== undefined,
+  { message: "At least one preference must be provided" }
+).openapi("UserMePreferencesUpdate");
+
+
 export const UserResponse = UserBase.extend({ id: ObjectIdStr }).openapi("UserResponse");
 export const UserList = z.array(UserResponse).openapi("UserList");
 
@@ -43,5 +52,6 @@ export type UserBaseT = z.infer<typeof UserBase>;
 export type UserCreateRequest = z.infer<typeof UserCreate>;
 export type UserUpdateRequest = z.infer<typeof UserUpdate>;
 export type UserMeProfileUpdateRequest = z.infer<typeof UserMeProfileUpdate>;
+export type UserMePreferencesUpdateRequest = z.infer<typeof UserMePreferencesUpdate>;
 export type UserIdParamT = z.infer<typeof UserIdParam>;
 export type UserResponseDto = z.infer<typeof UserResponse>;

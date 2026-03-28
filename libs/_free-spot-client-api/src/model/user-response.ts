@@ -15,8 +15,8 @@ import { PreferredLanguageDTO } from './preferred-language';
 export interface UserResponseDTO { 
     email: string;
     username?: string | null;
-    firstName: string;
-    familyName: string;
+    firstName: string | null;
+    familyName: string | null;
     role: UserRoleDTO;
     preferredLanguage?: PreferredLanguageDTO | null;
     preferredTheme?: PreferredThemeDTO | null;

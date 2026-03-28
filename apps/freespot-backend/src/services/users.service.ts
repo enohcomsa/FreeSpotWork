@@ -1,5 +1,5 @@
 import type { Request } from "express";
-import type { UserCreateRequest, UserMeProfileUpdateRequest, UserUpdateRequest, UserResponseDto } from "../schemas/users.zod";
+import type { UserCreateRequest, UserMeProfileUpdateRequest, UserUpdateRequest, UserResponseDto, UserMePreferencesUpdateRequest } from "../schemas/users.zod";
 import * as repo from "../repos/users.repo";
 import * as facultiesRepo from "../repos/faculties.repo";
 import * as programsRepo from "../repos/programs.repo";
@@ -110,6 +110,26 @@ export async function updateMyProfile(
     // delete future normal bookings
     // recreate bookings from timetable
 
+    return res;
+  } catch (e) {
+    mapMongoError(e);
+  }
+}
+
+export async function updateMyPreferences(
+  req: Request,
+  input: UserMePreferencesUpdateRequest
+): Promise<UserResponseDto> {
+  const claims = req.user;
+  if (!claims) throw new BadRequestError("Unauthenticated");
+
+  try {
+    const res = await repo.updateUserById(claims.sub, {
+      preferredLanguage: input.preferredLanguage,
+      preferredTheme: input.preferredTheme,
+    });
+
+    if (!res) throw new NotFoundError("User not found");
     return res;
   } catch (e) {
     mapMongoError(e);
