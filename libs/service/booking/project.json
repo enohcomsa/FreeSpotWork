@@ -4,7 +4,7 @@
   "sourceRoot": "libs/service/booking/src",
   "prefix": "free-spot",
   "projectType": "library",
-  "tags": ["scope:module"],
+  "tags": ["scope:service"],
   "targets": {
     "build": {
       "executor": "@nx/angular:package",

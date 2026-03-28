@@ -7,10 +7,22 @@ import { ObjectId } from "mongodb";
 const BOOKINGS_COLLECTION = "bookings";
 const TIMETABLE_ACTIVITIES_COLLECTION = "timetable_activities";
 
-export async function listBookings(): Promise<BookingResponseDto[]> {
+export async function listBookingsByUserId(userId: string): Promise<BookingResponseDto[]> {
   const collection = await getCollection<BookingDbDoc>(BOOKINGS_COLLECTION);
-  const docs = await collection.find({}).sort({ createdAt: -1 }).toArray();
+  const docs = await collection
+    .find({ userId: toObjectId(userId) })
+    .sort({ createdAt: -1 })
+    .toArray();
+
   return docs.map(bookingToDto);
+}
+
+export async function listBookingDocsByUserId(userId: string): Promise<BookingDbDoc[]> {
+  const collection = await getCollection<BookingDbDoc>(BOOKINGS_COLLECTION);
+  return collection
+    .find({ userId: toObjectId(userId) })
+    .sort({ createdAt: -1 })
+    .toArray();
 }
 
 export async function getBookingById(id: string): Promise<BookingResponseDto | null> {
@@ -19,9 +31,27 @@ export async function getBookingById(id: string): Promise<BookingResponseDto | n
   return doc ? bookingToDto(doc) : null;
 }
 
+export async function getBookingByIdForUser(id: string, userId: string): Promise<BookingResponseDto | null> {
+  const collection = await getCollection<BookingDbDoc>(BOOKINGS_COLLECTION);
+  const doc = await collection.findOne({
+    _id: toObjectId(id),
+    userId: toObjectId(userId),
+  });
+
+  return doc ? bookingToDto(doc) : null;
+}
+
 export async function getBookingDocById(id: string): Promise<BookingDbDoc | null> {
   const collection = await getCollection<BookingDbDoc>(BOOKINGS_COLLECTION);
   return collection.findOne({ _id: toObjectId(id) });
+}
+
+export async function getBookingDocByIdForUser(id: string, userId: string): Promise<BookingDbDoc | null> {
+  const collection = await getCollection<BookingDbDoc>(BOOKINGS_COLLECTION);
+  return collection.findOne({
+    _id: toObjectId(id),
+    userId: toObjectId(userId),
+  });
 }
 
 export async function createBooking(input: BookingCreateRequest): Promise<BookingResponseDto> {
@@ -91,14 +121,9 @@ export async function getTimetableActivityDocById(id: string): Promise<Timetable
 
 export async function getTimetableActivityDocsByIds(ids: string[]): Promise<TimetableActivityDbDoc[]> {
   const collection = await getCollection<TimetableActivityDbDoc>(TIMETABLE_ACTIVITIES_COLLECTION);
-
   const objectIds: ObjectId[] = ids.map(toObjectId);
 
-  return collection
-    .find({
-      _id: { $in: objectIds },
-    })
-    .toArray();
+  return collection.find({ _id: { $in: objectIds } }).toArray();
 }
 
 export async function reserveSpotForActivity(activityId: string): Promise<"CONFIRMED" | "WAITLISTED"> {

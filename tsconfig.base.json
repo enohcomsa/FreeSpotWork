@@ -69,6 +69,7 @@
       "@free-spot/ui": ["libs/ui/src/index.ts"],
       "@free-spot/util": ["libs/util/src/index.ts"],
       "@http-free-spot/app-date": ["libs/http-free-spot/app-date/src/index.ts"],
+      "@http-free-spot/booking": ["libs/http-free-spot/booking/src/index.ts"],
       "@http-free-spot/building": ["libs/http-free-spot/building/src/index.ts"],
       "@http-free-spot/building-card": ["libs/http-free-spot/building-card/src/index.ts"],
       "@http-free-spot/cohort": ["libs/http-free-spot/cohort/src/index.ts"],
