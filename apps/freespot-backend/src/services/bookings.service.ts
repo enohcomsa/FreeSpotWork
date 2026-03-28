@@ -12,12 +12,16 @@ class BadRequestError extends Error {
   }
 }
 
-export async function getBookings(): Promise<BookingResponseDto[]> {
-  return repo.listBookings();
+export async function getMyBookings(userId: string): Promise<BookingResponseDto[]> {
+  return repo.listBookingsByUserId(userId);
 }
 
-export async function getBooking(id: string): Promise<BookingResponseDto> {
-  const res = await repo.getBookingById(id);
+export async function getBookingsByUserIdForAdmin(userId: string): Promise<BookingResponseDto[]> {
+  return repo.listBookingsByUserId(userId);
+}
+
+export async function getMyBooking(id: string, userId: string): Promise<BookingResponseDto> {
+  const res = await repo.getBookingByIdForUser(id, userId);
   if (!res) throw new NotFoundError("Booking not found");
   return res;
 }
@@ -56,8 +60,12 @@ function activitiesOverlap(
   return aStart < bEnd && bStart < aEnd;
 }
 
-export async function rescheduleBooking(id: string, input: BookingRescheduleRequest): Promise<BookingResponseDto> {
-  const booking = await repo.getBookingDocById(id);
+export async function rescheduleMyBooking(
+  id: string,
+  userId: string,
+  input: BookingRescheduleRequest
+): Promise<BookingResponseDto> {
+  const booking = await repo.getBookingDocByIdForUser(id, userId);
   if (!booking) throw new NotFoundError("Booking not found");
 
   if (booking.activityType === "SPECIAL_EVENT") {
@@ -167,9 +175,9 @@ export async function updateBooking(id: string, patch: BookingUpdateRequest): Pr
   }
 }
 
-export async function deleteBooking(id: string): Promise<boolean> {
+export async function deleteMyBooking(id: string, userId: string): Promise<boolean> {
   try {
-    const booking = await repo.getBookingDocById(id);
+    const booking = await repo.getBookingDocByIdForUser(id, userId);
     if (!booking) throw new NotFoundError("Booking not found");
 
     if (booking.activityType !== "SPECIAL_EVENT") {

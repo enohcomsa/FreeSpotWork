@@ -1,5 +1,6 @@
 import type {
   BookingIdParamT,
+  BookingUserIdParamT,
   BookingCreateRequest,
   BookingRescheduleRequest,
   BookingUpdateRequest,
@@ -8,13 +9,18 @@ import type {
 import * as svc from "../services/bookings.service";
 import { withParams, withBody, withParamsAndBody, withQuery } from "../utils/async-handler";
 
-export const list = withQuery<unknown, BookingResponseDto[]>()(async (_req, res) => {
-  const data = await svc.getBookings();
+export const listMine = withQuery<unknown, BookingResponseDto[]>()(async (req, res) => {
+  const data = await svc.getMyBookings(req.user!.sub);
+  res.json(data);
+});
+
+export const listByUserIdAdmin = withParams<BookingUserIdParamT, BookingResponseDto[]>()(async (req, res) => {
+  const data = await svc.getBookingsByUserIdForAdmin(req.params.userId);
   res.json(data);
 });
 
 export const getById = withParams<BookingIdParamT, BookingResponseDto>()(async (req, res) => {
-  const data = await svc.getBooking(req.params.id);
+  const data = await svc.getMyBooking(req.params.id, req.user!.sub);
   res.json(data);
 });
 
@@ -24,7 +30,7 @@ export const create = withBody<BookingCreateRequest, BookingResponseDto>()(async
 });
 
 export const reschedule = withParamsAndBody<BookingIdParamT, BookingRescheduleRequest, BookingResponseDto>()(async (req, res) => {
-  const data = await svc.rescheduleBooking(req.params.id, req.body);
+  const data = await svc.rescheduleMyBooking(req.params.id, req.user!.sub, req.body);
   res.json(data);
 });
 
@@ -34,6 +40,6 @@ export const update = withParamsAndBody<BookingIdParamT, BookingUpdateRequest, B
 });
 
 export const destroy = withParams<BookingIdParamT, void>()(async (req, res) => {
-  await svc.deleteBooking(req.params.id);
+  await svc.deleteMyBooking(req.params.id, req.user!.sub);
   res.status(204).end();
 });

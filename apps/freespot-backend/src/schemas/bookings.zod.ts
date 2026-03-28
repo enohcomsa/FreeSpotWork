@@ -25,7 +25,14 @@ export const BookingBase = strictObj({
   rescheduledAt: ISODateStr.nullable().optional(),
 }).openapi("BookingBase");
 
-export const BookingIdParam = z.object({ id: ObjectIdStr }).openapi("BookingIdParam");
+export const BookingIdParam = z.object({
+  id: ObjectIdStr,
+}).openapi("BookingIdParam");
+
+export const BookingUserIdParam = z.object({
+  userId: ObjectIdStr,
+}).openapi("BookingUserIdParam");
+
 export const BookingCreate = BookingBase.openapi("BookingCreate");
 export const BookingUpdate = nonEmptyDefinedPatch(BookingBase.partial()).openapi("BookingUpdate");
 
@@ -46,4 +53,5 @@ export type BookingCreateRequest = z.infer<typeof BookingCreate>;
 export type BookingUpdateRequest = z.infer<typeof BookingUpdate>;
 export type BookingRescheduleRequest = z.infer<typeof BookingReschedule>;
 export type BookingIdParamT = z.infer<typeof BookingIdParam>;
+export type BookingUserIdParamT = z.infer<typeof BookingUserIdParam>;
 export type BookingResponseDto = z.infer<typeof BookingResponse>;

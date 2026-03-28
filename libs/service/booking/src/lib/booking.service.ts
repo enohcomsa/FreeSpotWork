@@ -1,126 +1,83 @@
-import { inject, Injectable } from '@angular/core';
-import { BuildingService } from '@free-spot-service/building';
-import { AdminEventService } from '@free-spot-service/event';
-import { AdminFacultyService } from '@free-spot-service/faculty';
-import { AdminFloorService } from '@free-spot-service/floor';
-import { AdminRoomService } from '@free-spot-service/room';
-import { TimetableActivity } from '@free-spot-domain/timetable-activity';
-import { SubjectService } from '@free-spot-service/subject';
-
-import { ActivityType } from '@free-spot/enums';
-import { BookedEvent } from '@free-spot/models';
-import { Room } from '@free-spot-domain/room';
-import { Floor } from '@free-spot-domain/floor';
-import { Building } from '@free-spot-domain/building';
+import { computed, DestroyRef, inject, Injectable, Signal, signal, WritableSignal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Booking, RescheduleBookingCmd } from '@free-spot-domain/booking';
+import { HttpBookingService } from '@http-free-spot/booking';
+import { SignalArrayUtil } from '@free-spot/util';
+import { Observable, take } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BookingService {
-  private _adminRoomService: AdminRoomService = inject(AdminRoomService);
-  private _adminFloorService: AdminFloorService = inject(AdminFloorService);
-  private _adminBuildingService: BuildingService = inject(BuildingService);
-  private _adminFacultyService: AdminFacultyService = inject(AdminFacultyService);
-  private _adminEventService: AdminEventService = inject(AdminEventService);
+  private readonly _httpBookingService = inject(HttpBookingService);
+  private readonly _destroyRef = inject(DestroyRef);
 
-  private _subjectService: SubjectService = inject(SubjectService);
+  private readonly _bookingListSig: WritableSignal<Booking[]> = signal([]);
+  readonly bookingListSig = this._bookingListSig.asReadonly();
 
+  private readonly _loadingSig: WritableSignal<boolean> = signal(false);
+  readonly loadingSig = this._loadingSig.asReadonly();
 
-  init(): void {
-    this._adminRoomService.init();
-    this._adminFloorService.init();
-    this._adminBuildingService.init();
-    this._adminFacultyService.init();
-    this._subjectService.init();
+  private readonly _errorSig: WritableSignal<string | null> = signal(null);
+  readonly errorSig = this._errorSig.asReadonly();
 
-    this._adminEventService.init();
+  setBookingList(items: Booking[]): void {
+    this._bookingListSig.set(items);
   }
 
-  generateBooking(timetableActivityItem: TimetableActivity): BookedEvent {
-    if (timetableActivityItem.activityType === ActivityType.SPECIAL_EVENT) {
-      return {
-        ...this._getLocation(timetableActivityItem.roomId),
-        activityType: timetableActivityItem.activityType,
-        subjectItem: this._subjectService.getSignalById(timetableActivityItem.subjectId)(),
-        date: new Date(timetableActivityItem.date),
-        startHour: timetableActivityItem.startHour,
-        endHour: timetableActivityItem.endHour,
-        weekParity: timetableActivityItem.weekParity,
-        name: 'special event name',
-      };
-    } else {
-      return {
-        ...this._getLocation(timetableActivityItem.roomId),
-        activityType: timetableActivityItem.activityType,
-        subjectItem: this._subjectService.getSignalById(timetableActivityItem.subjectId)(),
-        date: new Date(timetableActivityItem.date),
-        startHour: timetableActivityItem.startHour,
-        endHour: timetableActivityItem.endHour,
-        weekParity: timetableActivityItem.weekParity,
-      };
-    }
+  getSignalById(id: string): Signal<Booking> {
+    return computed(() => this.bookingListSig().find((booking: Booking) => booking.id === id) || ({} as Booking));
   }
 
-  // generateUserBookedItems(group: GroupLegacy, addingBooking: boolean, semiGroup?: SemiGroup): BookedEvent[] {
-  //   const newUserBookingList: BookedEvent[] = [];
-  //   this._getUserTimetableItems(group, semiGroup).forEach((timeTableItem: TimeTableItemLecagy) => {
-  //     timeTableItem.activities.forEach((timetableActivity: TimetableActivityItemLegacy) => {
-  //       newUserBookingList.push(this.generateBooking(timetableActivity));
-  //       this._adminFacultyService.updateTimetableActivitySpots(timetableActivity, addingBooking);
-  //       // this._adminBuildingService.updateTimetableActivitySpots(timetableActivity, addingBooking);
-  //       this._adminFloorService.updateTimetableActivitySpots(timetableActivity, addingBooking);
-  //       this._adminRoomService.updateTimetableActivitySpots(timetableActivity, addingBooking);
-  //     });
-  //   });
+  getById(id: string): Observable<Booking> {
+    return this._httpBookingService.getBookingById$(id);
+  }
 
-  //   return newUserBookingList;
-  // }
+  upsertLocal(booking: Booking): void {
+    SignalArrayUtil.upsertBy('id', booking, this._bookingListSig);
+  }
 
-  // generateUserBookedItemByActivity(
-  //   timetableActivity: TimetableActivityItemLegacy,
-  //   addingBooking: boolean,
-  //   updateFaculty?: boolean,
-  // ): BookedEvent {
-  //   // this._adminBuildingService.updateTimetableActivitySpots(timetableActivity, addingBooking);
-  //   this._adminFloorService.updateTimetableActivitySpots(timetableActivity, addingBooking);
-  //   this._adminRoomService.updateTimetableActivitySpots(timetableActivity, addingBooking);
-  //   if (updateFaculty !== undefined && updateFaculty !== null && updateFaculty) {
-  //     this._adminFacultyService.updateTimetableActivitySpots(timetableActivity, addingBooking);
-  //   }
-  //   return this.generateBooking(timetableActivity);
-  // }
+  removeLocal(id: string): void {
+    SignalArrayUtil.removeBy('id', id, this._bookingListSig);
+  }
 
-  // generateSpecialEventBookedItemByActivity(timetableActivity: TimetableActivityItemLegacy, addingBooking: boolean): BookedEvent {
-  //   // this._adminEventService.updateEventSpots(timetableActivity.name as string, addingBooking);
-  //   return this.generateBooking(timetableActivity);
-  // }
+  reschedule(id: string, input: RescheduleBookingCmd): void {
+    this._loadingSig.set(true);
+    this._errorSig.set(null);
 
-  // private _getUserTimetableItems(group: GroupLegacy, semiGroup?: SemiGroup): TimeTableItemLecagy[] {
-  //   const timetableItemList: TimeTableItemLecagy[] = [];
-  //   if (semiGroup !== null && semiGroup !== undefined) {
-  //     semiGroup.timetable?.forEach((timetableItem: TimeTableItemLecagy) =>
-  //       timetableItem.activities ? timetableItemList.push(timetableItem) : '',
-  //     );
-  //   } else {
-  //     group.timetable?.forEach((timetableItem: TimeTableItemLecagy) =>
-  //       timetableItem.activities ? timetableItemList.push(timetableItem) : '',
-  //     );
-  //   }
-  //   return timetableItemList;
-  // }
+    this._httpBookingService
+      .rescheduleBooking$(id, input)
+      .pipe(take(1), takeUntilDestroyed(this._destroyRef))
+      .subscribe({
+        next: (updated: Booking) => {
+          SignalArrayUtil.upsertBy('id', updated, this._bookingListSig);
+          this._loadingSig.set(false);
+        },
+        error: (err: unknown) => {
+          console.error(err);
+          this._errorSig.set('Failed to reschedule booking');
+          this._loadingSig.set(false);
+        },
+      });
+  }
 
-  private _getLocation(roomId: string): Pick<BookedEvent, 'buildingName' | 'floorName' | 'roomName'> {
-    const room: Room = this._adminRoomService.getSignalById(roomId)();
-    const building: Building = this._adminBuildingService.getSignalById(room.buildingId)();
-    const activityFloor: Floor = this._adminFloorService.getSignalById(room.floorId)();
+  remove(id: string): void {
+    this._loadingSig.set(true);
+    this._errorSig.set(null);
 
-
-    const newLocation: Pick<BookedEvent, 'buildingName' | 'floorName' | 'roomName'> = {
-      buildingName: building.name,
-      floorName: activityFloor.name,
-      roomName: room.name,
-    };
-
-    return newLocation;
+    this._httpBookingService
+      .deleteBooking$(id)
+      .pipe(take(1), takeUntilDestroyed(this._destroyRef))
+      .subscribe({
+        next: () => {
+          SignalArrayUtil.removeBy('id', id, this._bookingListSig);
+          this._loadingSig.set(false);
+        },
+        error: (err: unknown) => {
+          console.error(err);
+          this._errorSig.set('Failed to delete booking');
+          this._loadingSig.set(false);
+        },
+      });
   }
 }
