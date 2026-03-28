@@ -17,9 +17,29 @@ const authProjection = {
   security: 1,
 } as const;
 
+const meProjection = {
+  _id: 1,
+  email: 1,
+  role: 1,
+  firstName: 1,
+  familyName: 1,
+  preferredLanguage: 1,
+  preferredTheme: 1,
+  facultyId: 1,
+  programId: 1,
+  programYearId: 1,
+  groupCohortId: 1,
+  semigroupCohortId: 1,
+} as const;
+
 export async function findUserAuthById(userId: ObjectId): Promise<UserAuthProjection | null> {
   const collection = await getCollection<UserDbDoc>(USERS_COLLECTION);
   return collection.findOne<UserAuthProjection>({ _id: userId }, { projection: authProjection });
+}
+
+export async function findUserMeById(userId: ObjectId): Promise<UserDbDoc | null> {
+  const collection = await getCollection<UserDbDoc>(USERS_COLLECTION);
+  return collection.findOne({ _id: userId }, { projection: meProjection });
 }
 
 export async function findUserAuthByIdentifier(identifier: string): Promise<UserAuthProjection | null> {

@@ -22,15 +22,24 @@ export const LoginSchema = strictObj({
 
 export const RefreshSchema = strictObj({}).openapi("RefreshRequest");
 
-export const UserPublicSchema = strictObj({
+export const AuthUserSchema = strictObj({
   id: ObjectIdStr,
   email: z.string().email(),
   role: z.enum(["ADMIN", "MEMBER"]),
-}).openapi("UserPublic");
+  firstName: z.string().nullable(),
+  familyName: z.string().nullable(),
+  preferredLanguage: z.enum(["en", "ro"]).nullable().optional(),
+  preferredTheme: z.enum(["DARK", "LIGHT"]).nullable().optional(),
+  facultyId: ObjectIdStr.nullable(),
+  programId: ObjectIdStr.nullable(),
+  programYearId: ObjectIdStr.nullable(),
+  groupCohortId: ObjectIdStr.nullable(),
+  semigroupCohortId: ObjectIdStr.nullable().optional(),
+}).openapi("AuthUser");
 
 export const AuthOkResponse = strictObj({
   ok: z.literal(true),
-  user: UserPublicSchema,
+  user: AuthUserSchema,
 }).openapi("AuthOkResponse");
 
 export const MeResponse = AuthOkResponse.openapi("MeResponse");
@@ -38,6 +47,6 @@ export const MeResponse = AuthOkResponse.openapi("MeResponse");
 export type SignupRequestT = z.infer<typeof SignupSchema>;
 export type LoginRequestT = z.infer<typeof LoginSchema>;
 export type RefreshRequestT = z.infer<typeof RefreshSchema>;
-export type UserPublicT = z.infer<typeof UserPublicSchema>;
+export type AuthUserT = z.infer<typeof AuthUserSchema>;
 export type AuthOkResponseT = z.infer<typeof AuthOkResponse>;
 export type MeResponseT = z.infer<typeof MeResponse>;

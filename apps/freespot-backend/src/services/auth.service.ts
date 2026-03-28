@@ -3,6 +3,7 @@ import type { Request, Response } from "express";
 import type { AuthOkResponseT, LoginRequestT, SignupRequestT } from "../schemas/auth.zod";
 
 import * as usersRepo from "../repos/users.repo";
+import { userToAuthMeDto } from "../mappers";
 import * as refreshRepo from "../repos/refresh-tokens.repo";
 
 import { hashPassword, verifyPassword } from "../utils/password";
@@ -40,10 +41,29 @@ function getUserAgent(req: Request): string | null {
   return typeof ua === "string" ? ua : null;
 }
 
-function toAuthOk(user: { id: string; email: string; role: "ADMIN" | "MEMBER" }): AuthOkResponseT {
-  return { ok: true, user };
+function toAuthOkBasic(user: { id: string; email: string; role: "ADMIN" | "MEMBER" }): AuthOkResponseT {
+  return {
+    ok: true,
+    user: {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+      firstName: null,
+      familyName: null,
+      preferredLanguage: null,
+      preferredTheme: null,
+      facultyId: null,
+      programId: null,
+      programYearId: null,
+      groupCohortId: null,
+      semigroupCohortId: null,
+    },
+  };
 }
 
+function toAuthOkMe(user: ReturnType<typeof userToAuthMeDto>): AuthOkResponseT {
+  return { ok: true, user };
+}
 
 export async function signup(
   req: Request,
@@ -83,7 +103,7 @@ export async function signup(
   res.cookie(REFRESH_COOKIE, refreshToken, refreshCookieOpts);
   issueXsrfCookie(res);
 
-  return toAuthOk({
+  return toAuthOkBasic({
     id: u._id.toHexString(),
     email: u.email,
     role: u.role,
@@ -134,7 +154,7 @@ export async function login(
   res.cookie(REFRESH_COOKIE, refreshToken, refreshCookieOpts);
   issueXsrfCookie(res);
 
-  return toAuthOk({
+  return toAuthOkBasic({
     id: u._id.toHexString(),
     email: u.email,
     role: u.role,
@@ -213,12 +233,8 @@ export async function me(req: Request): Promise<AuthOkResponseT> {
   const claims = req.user;
   if (!claims) throw appError(401, "UNAUTHENTICATED", "Unauthenticated");
 
-  const u = await usersRepo.findUserAuthById(toObjectId(claims.sub));
+  const u = await usersRepo.findUserMeById(toObjectId(claims.sub));
   if (!u) throw appError(401, "UNAUTHENTICATED", "Unauthenticated");
 
-  return toAuthOk({
-    id: u._id.toHexString(),
-    email: u.email,
-    role: u.role,
-  });
+  return toAuthOkMe(userToAuthMeDto(u));
 }

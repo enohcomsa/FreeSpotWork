@@ -1,5 +1,11 @@
 import { ObjectId } from "mongodb";
-import type { PreferredLanguageT, PreferredThemeT, UserAuthT, UserRoleT, UserSecurityT } from "../../schemas/common.zod";
+import type {
+  PreferredLanguageT,
+  PreferredThemeT,
+  UserAuthT,
+  UserRoleT,
+  UserSecurityT
+} from "../../schemas/common.zod";
 
 export type UserDbBase = {
   email: string;
@@ -12,6 +18,7 @@ export type UserDbBase = {
   preferredTheme?: PreferredThemeT | null;
 
   facultyId: ObjectId | null;
+  programId: ObjectId | null;
   programYearId: ObjectId | null;
   groupCohortId: ObjectId | null;
   semigroupCohortId: ObjectId | null;
@@ -36,4 +43,3 @@ export type UserAuthProjection = Pick<UserDbDoc,
   | "auth"
   | "security"
 >;
-
