@@ -2,6 +2,7 @@ import { BookingCreateRequest, BookingUpdateRequest, BookingResponseDto } from "
 import { getCollection, isEmptySet, toObjectId } from "../utils/mongo";
 import { BookingDbDoc, BookingDbRecord, TimetableActivityDbDoc } from "../db/types";
 import { bookingToDbRecord, bookingToDto, bookingPatchToDbSet } from "../mappers";
+import { ObjectId } from "mongodb";
 
 const BOOKINGS_COLLECTION = "bookings";
 const TIMETABLE_ACTIVITIES_COLLECTION = "timetable_activities";
@@ -88,6 +89,18 @@ export async function getTimetableActivityDocById(id: string): Promise<Timetable
   return collection.findOne({ _id: toObjectId(id) });
 }
 
+export async function getTimetableActivityDocsByIds(ids: string[]): Promise<TimetableActivityDbDoc[]> {
+  const collection = await getCollection<TimetableActivityDbDoc>(TIMETABLE_ACTIVITIES_COLLECTION);
+
+  const objectIds: ObjectId[] = ids.map(toObjectId);
+
+  return collection
+    .find({
+      _id: { $in: objectIds },
+    })
+    .toArray();
+}
+
 export async function reserveSpotForActivity(activityId: string): Promise<"CONFIRMED" | "WAITLISTED"> {
   const collection = await getCollection<TimetableActivityDbDoc>(TIMETABLE_ACTIVITIES_COLLECTION);
 
@@ -145,4 +158,15 @@ export async function releaseSpotForActivity(activityId: string, bookingStatus: 
       },
     }
   );
+}
+
+export async function findUserBookingDocsByUserId(userId: string): Promise<BookingDbDoc[]> {
+  const collection = await getCollection<BookingDbDoc>(BOOKINGS_COLLECTION);
+
+  return collection
+    .find({
+      userId: toObjectId(userId),
+      status: { $in: ["CONFIRMED", "WAITLISTED"] },
+    })
+    .toArray();
 }
