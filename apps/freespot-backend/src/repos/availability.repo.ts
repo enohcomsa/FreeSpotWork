@@ -13,38 +13,37 @@ export async function findRescheduleOptions(bookingId: string): Promise<Reschedu
   const booking = await bookings.findOne({ _id: toObjectId(bookingId) });
   if (!booking) return null;
 
+  const currentBooking = {
+    id: booking._id.toHexString(),
+    activityId: booking.activityId.toHexString(),
+    subjectId: booking.subjectId == null ? null : booking.subjectId.toHexString(),
+    activityType: booking.activityType,
+    programYearId: booking.programYearId == null ? null : booking.programYearId.toHexString(),
+    groupCohortId: booking.groupCohortId == null ? null : booking.groupCohortId.toHexString(),
+    semigroupCohortId: booking.semigroupCohortId == null ? null : booking.semigroupCohortId.toHexString(),
+    originalActivityId: booking.originalActivityId == null ? null : booking.originalActivityId.toHexString(),
+    isRescheduled: booking.isRescheduled ?? null,
+    rescheduledAt: booking.rescheduledAt == null ? null : booking.rescheduledAt.toISOString(),
+  };
+
   if (!booking.subjectId || !booking.programYearId || booking.activityType === "SPECIAL_EVENT") {
     return {
-      currentBooking: {
-        id: booking._id.toHexString(),
-        activityId: booking.activityId.toHexString(),
-        subjectId: booking.subjectId == null ? null : booking.subjectId.toHexString(),
-        activityType: booking.activityType,
-        programYearId: booking.programYearId == null ? null : booking.programYearId.toHexString(),
-        groupCohortId: booking.groupCohortId == null ? null : booking.groupCohortId.toHexString(),
-        semigroupCohortId: booking.semigroupCohortId == null ? null : booking.semigroupCohortId.toHexString(),
-        originalActivityId: booking.originalActivityId == null ? null : booking.originalActivityId.toHexString(),
-        isRescheduled: booking.isRescheduled ?? null,
-        rescheduledAt: booking.rescheduledAt == null ? null : booking.rescheduledAt.toISOString(),
-      },
+      currentBooking,
       items: [],
       total: 0,
     };
   }
 
-  const cohortIds = [
-    booking.groupCohortId?.toHexString() ?? null,
-    booking.semigroupCohortId?.toHexString() ?? null,
-  ].filter((v): v is string => Boolean(v));
-
-  const docs = await activities.find({
-    _id: { $ne: booking.activityId },
-    date: { $gte: todayIsoDateUtc() },
-    subjectId: booking.subjectId,
-    activityType: booking.activityType,
-    freeSpots: { $gt: 0 },
-    cohortIds: { $in: cohortIds.map(toObjectId) },
-  }).sort({ date: 1, startHour: 1 }).toArray();
+  const docs = await activities
+    .find({
+      _id: { $ne: booking.activityId },
+      date: { $gte: todayIsoDateUtc() },
+      subjectId: booking.subjectId,
+      activityType: booking.activityType,
+      freeSpots: { $gt: 0 },
+    })
+    .sort({ date: 1, startHour: 1 })
+    .toArray();
 
   const items: RescheduleOptionDto[] = docs.map((a) => ({
     activityId: a._id.toHexString(),
@@ -62,18 +61,7 @@ export async function findRescheduleOptions(bookingId: string): Promise<Reschedu
   }));
 
   return {
-    currentBooking: {
-      id: booking._id.toHexString(),
-      activityId: booking.activityId.toHexString(),
-      subjectId: booking.subjectId == null ? null : booking.subjectId.toHexString(),
-      activityType: booking.activityType,
-      programYearId: booking.programYearId == null ? null : booking.programYearId.toHexString(),
-      groupCohortId: booking.groupCohortId == null ? null : booking.groupCohortId.toHexString(),
-      semigroupCohortId: booking.semigroupCohortId == null ? null : booking.semigroupCohortId.toHexString(),
-      originalActivityId: booking.originalActivityId == null ? null : booking.originalActivityId.toHexString(),
-      isRescheduled: booking.isRescheduled ?? null,
-      rescheduledAt: booking.rescheduledAt == null ? null : booking.rescheduledAt.toISOString(),
-    },
+    currentBooking,
     items,
     total: items.length,
   };

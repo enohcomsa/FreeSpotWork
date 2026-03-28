@@ -7,19 +7,23 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { ActivityTypeDTO } from './activity-type';
 
 
-export interface AvailabilitySlotDTO { 
+export interface RescheduleOptionDTO { 
+    activityId: string;
+    subjectId: string;
+    activityType: ActivityTypeDTO;
     date: string;
-    roomId: string;
+    weekDay: string;
     startHour: number;
     endHour: number;
     capacity: number;
     reservedSpots: number;
     busySpots: number;
     freeSpots: number;
-    subjectId?: string;
-    activityId?: string;
-    cohortIds?: Array<string>;
+    cohortIds: Array<string>;
 }
+
+
 
