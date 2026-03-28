@@ -19,9 +19,10 @@ export interface UserUpdateDTO {
     role?: UserRoleDTO;
     preferredLanguage?: PreferredLanguageDTO | null;
     preferredTheme?: PreferredThemeDTO | null;
-    facultyId?: string;
-    programYearId?: string;
-    groupCohortId?: string;
+    facultyId?: string | null;
+    programId?: string | null;
+    programYearId?: string | null;
+    groupCohortId?: string | null;
     semigroupCohortId?: string | null;
 }
 

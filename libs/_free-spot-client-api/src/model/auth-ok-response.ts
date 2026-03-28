@@ -7,11 +7,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { UserPublicDTO } from './user-public';
+import { AuthUserDTO } from './auth-user';
 
 
 export interface AuthOkResponseDTO { 
     ok: boolean;
-    user: UserPublicDTO;
+    user: AuthUserDTO;
 }
 

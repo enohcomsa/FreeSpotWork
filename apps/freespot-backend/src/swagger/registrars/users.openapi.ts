@@ -1,10 +1,11 @@
 import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
 import { z } from "zod";
-import { UserUpdate, UserResponse, UserIdParam } from "../../schemas/users.zod";
+import { UserUpdate, UserResponse, UserIdParam, UserMeProfileUpdate } from "../../schemas/users.zod";
 
 export function registerUsers(registry: OpenAPIRegistry) {
   registry.register("UserResponse", UserResponse);
   registry.register("UserUpdate", UserUpdate);
+  registry.register("UserMeProfileUpdate", UserMeProfileUpdate);
   registry.register("UserIdParam", UserIdParam);
 
   registry.registerPath({
@@ -20,6 +21,31 @@ export function registerUsers(registry: OpenAPIRegistry) {
         },
       },
       500: { description: "Internal server error" },
+    },
+  });
+
+  registry.registerPath({
+    method: "patch",
+    path: "/users/me/profile",
+    operationId: "usersMeProfilePatch",
+    tags: ["Users"],
+    security: [{ accessCookie: [] }],
+    request: {
+      body: {
+        content: {
+          "application/json": { schema: UserMeProfileUpdate },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: "Updated",
+        content: {
+          "application/json": { schema: UserResponse },
+        },
+      },
+      400: { description: "Invalid hierarchy" },
+      401: { description: "Unauthenticated" },
     },
   });
 

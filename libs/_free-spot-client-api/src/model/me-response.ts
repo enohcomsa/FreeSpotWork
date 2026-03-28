@@ -7,17 +7,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { AuthUserDTO } from './auth-user';
 
 
-export interface UserPublicDTO { 
-    id: string;
-    email: string;
-    role: UserPublicDTORoleEnum;
+export interface MeResponseDTO { 
+    ok: boolean;
+    user: AuthUserDTO;
 }
-export enum UserPublicDTORoleEnum {
-    ADMIN = 'ADMIN',
-    MEMBER = 'MEMBER'
-};
-
-
 
