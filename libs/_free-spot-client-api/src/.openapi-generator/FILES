@@ -103,6 +103,7 @@ model/timetable-activity-response.ts
 model/timetable-activity-update.ts
 model/user-base.ts
 model/user-id-param.ts
+model/user-me-preferences-update.ts
 model/user-me-profile-update.ts
 model/user-response.ts
 model/user-role.ts

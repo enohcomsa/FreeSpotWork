@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
-import { ObjectIdStr, BookingStatus, Source, ISODateStr } from "./common.zod";
+import { ObjectIdStr, BookingStatus, ActivityType, ISODateStr } from "./common.zod";
 import { strictObj, nonEmptyDefinedPatch } from "../utils/zod-helpers";
 
 extendZodWithOpenApi(z);
@@ -8,19 +8,33 @@ extendZodWithOpenApi(z);
 export const BookingBase = strictObj({
   activityId: ObjectIdStr,
   userId: ObjectIdStr,
+
+  facultyId: ObjectIdStr.nullable().optional(),
+  programId: ObjectIdStr.nullable().optional(),
+  programYearId: ObjectIdStr.nullable().optional(),
+  groupCohortId: ObjectIdStr.nullable().optional(),
+  semigroupCohortId: ObjectIdStr.nullable().optional(),
+
+  subjectId: ObjectIdStr.nullable().optional(),
+  activityType: ActivityType,
+
   status: BookingStatus.default("WAITLISTED"),
-  cohortId: ObjectIdStr.nullable().optional(),
-  source: Source.nullable().optional(),
-}).openapi("BookingCreate");
+
+  originalActivityId: ObjectIdStr.nullable().optional(),
+  isRescheduled: z.boolean().nullable().optional(),
+  rescheduledAt: ISODateStr.nullable().optional(),
+}).openapi("BookingBase");
 
 export const BookingIdParam = z.object({ id: ObjectIdStr }).openapi("BookingIdParam");
 export const BookingCreate = BookingBase.openapi("BookingCreate");
 export const BookingUpdate = nonEmptyDefinedPatch(BookingBase.partial()).openapi("BookingUpdate");
+
 export const BookingResponse = BookingBase.extend({
   id: ObjectIdStr,
   createdAt: ISODateStr,
   updatedAt: ISODateStr.nullable().optional(),
 }).openapi("BookingResponse");
+
 export const BookingList = z.array(BookingResponse).openapi("BookingList");
 
 export type BookingBaseT = z.infer<typeof BookingBase>;

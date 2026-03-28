@@ -7,6 +7,7 @@ import * as programYearsRepo from "../repos/program-years.repo";
 import * as cohortsRepo from "../repos/cohorts.repo";
 import { NotFoundError } from "./errors";
 import { mapMongoError } from "./mongo";
+import * as bookingsRepo from "../repos/bookings.repo";
 
 class BadRequestError extends Error {
   status = 400;
@@ -94,6 +95,8 @@ export async function updateMyProfile(
   await validateProfileHierarchy(input);
 
   try {
+    await bookingsRepo.deleteFutureNormalBookingsForUser(claims.sub);
+
     const res = await repo.updateUserById(claims.sub, {
       firstName: input.firstName,
       familyName: input.familyName,
