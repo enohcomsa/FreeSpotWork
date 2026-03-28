@@ -7,7 +7,7 @@ const BOOKINGS_COLLECTION = "bookings";
 
 export async function listBookings(): Promise<BookingResponseDto[]> {
   const collection = await getCollection<BookingDbDoc>(BOOKINGS_COLLECTION);
-  const docs = await collection.find({}).sort({ name: 1 }).toArray();
+  const docs = await collection.find({}).sort({ createdAt: -1 }).toArray();
   return docs.map(bookingToDto);
 }
 
@@ -27,11 +27,18 @@ export async function createBooking(input: BookingCreateRequest): Promise<Bookin
 export async function updateBookingById(id: string, patch: BookingUpdateRequest): Promise<BookingResponseDto | null> {
   const collection = await getCollection<BookingDbDoc>(BOOKINGS_COLLECTION);
   const updateSet = bookingPatchToDbSet(patch);
+
   if (isEmptySet(updateSet)) {
     const current = await collection.findOne({ _id: toObjectId(id) });
     return current ? bookingToDto(current) : null;
   }
-  const updated = await collection.findOneAndUpdate({ _id: toObjectId(id) }, { $set: updateSet }, { returnDocument: "after" });
+
+  const updated = await collection.findOneAndUpdate(
+    { _id: toObjectId(id) },
+    { $set: updateSet },
+    { returnDocument: "after" }
+  );
+
   return updated ? bookingToDto(updated) : null;
 }
 
@@ -39,4 +46,15 @@ export async function deleteBookingById(id: string): Promise<boolean> {
   const collection = await getCollection<BookingDbDoc>(BOOKINGS_COLLECTION);
   const { deletedCount } = await collection.deleteOne({ _id: toObjectId(id) });
   return deletedCount === 1;
+}
+
+export async function deleteFutureNormalBookingsForUser(userId: string): Promise<number> {
+  const collection = await getCollection<BookingDbDoc>(BOOKINGS_COLLECTION);
+
+  const { deletedCount } = await collection.deleteMany({
+    userId: toObjectId(userId),
+    activityType: { $ne: "SPECIAL_EVENT" },
+  });
+
+  return deletedCount ?? 0;
 }

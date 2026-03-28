@@ -4,31 +4,51 @@ export const bookingsSpec: CollectionSpec = {
   name: "bookings",
   validator: {
     bsonType: "object",
-    required: ["_id", "activityId", "userId", "status", "createdAt"],
+    required: [
+      "_id",
+      "activityId",
+      "userId",
+      "activityType",
+      "status",
+      "createdAt"
+    ],
     properties: {
       _id: { bsonType: "objectId" },
+
       activityId: { bsonType: "objectId" },
       userId: { bsonType: "objectId" },
-      cohortId: { bsonType: ["objectId", "null"] },
-      status: { enum: ["CONFIRMED", "WAITLISTED", "CANCELLED"] },
-      createdAt: { bsonType: "date" },
-      updatedAt: { bsonType: ["date", "null"] },
-      source: {
-        bsonType: ["object", "null"],
-        required: ["type", "id"],
-        properties: {
-          type: { enum: ["ROOM_TIMETABLE", "COHORT_TIMETABLE", "EVENT"] },
-          id: { bsonType: "objectId" }
-        },
-        additionalProperties: false
+
+      facultyId: { oneOf: [{ bsonType: "objectId" }, { bsonType: "null" }] },
+      programId: { oneOf: [{ bsonType: "objectId" }, { bsonType: "null" }] },
+      programYearId: { oneOf: [{ bsonType: "objectId" }, { bsonType: "null" }] },
+      groupCohortId: { oneOf: [{ bsonType: "objectId" }, { bsonType: "null" }] },
+      semigroupCohortId: { oneOf: [{ bsonType: "objectId" }, { bsonType: "null" }] },
+
+      subjectId: { oneOf: [{ bsonType: "objectId" }, { bsonType: "null" }] },
+
+      activityType: {
+        enum: ["LABORATORY", "COURSE", "PROJECT", "SEMINAR", "SPECIAL_EVENT"]
       },
+
+      status: { enum: ["CONFIRMED", "WAITLISTED", "CANCELLED"] },
+
+      originalActivityId: { oneOf: [{ bsonType: "objectId" }, { bsonType: "null" }] },
+      isRescheduled: { oneOf: [{ bsonType: "bool" }, { bsonType: "null" }] },
+      rescheduledAt: { oneOf: [{ bsonType: "date" }, { bsonType: "null" }] },
+
+      createdAt: { bsonType: "date" },
+      updatedAt: { oneOf: [{ bsonType: "date" }, { bsonType: "null" }] }
     },
     additionalProperties: false
   },
+
   indexes: [
     { key: { userId: 1, activityId: 1 }, name: "uniq_user_activity", unique: true },
     { key: { activityId: 1 }, name: "by_activity" },
     { key: { userId: 1, createdAt: 1 }, name: "by_user_createdAt" },
-    { key: { cohortId: 1 }, name: "by_cohort" }
+    { key: { userId: 1, status: 1 }, name: "by_user_status" },
+    { key: { programYearId: 1, activityType: 1 }, name: "by_programYear_activityType" },
+    { key: { subjectId: 1, activityType: 1 }, name: "by_subject_activityType" },
+    { key: { originalActivityId: 1 }, name: "by_originalActivityId" }
   ]
 };

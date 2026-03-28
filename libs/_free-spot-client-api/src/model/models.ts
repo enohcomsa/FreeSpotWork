@@ -76,6 +76,7 @@ export * from './timetable-activity-response';
 export * from './timetable-activity-update';
 export * from './user-base';
 export * from './user-id-param';
+export * from './user-me-preferences-update';
 export * from './user-me-profile-update';
 export * from './user-response';
 export * from './user-role';
