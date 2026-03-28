@@ -8,6 +8,7 @@ import * as cohortsRepo from "../repos/cohorts.repo";
 import { NotFoundError } from "./errors";
 import { mapMongoError } from "./mongo";
 import * as bookingsRepo from "../repos/bookings.repo";
+import * as timetableActivitiesRepo from "../repos/timetable-activities.repo";
 
 class BadRequestError extends Error {
   status = 400;
@@ -109,9 +110,40 @@ export async function updateMyProfile(
 
     if (!res) throw new NotFoundError("User not found");
 
-    // TODO next step:
-    // delete future normal bookings
-    // recreate bookings from timetable
+    const cohortIds = [
+      input.groupCohortId,
+      input.semigroupCohortId ?? null,
+    ].filter((v): v is string => Boolean(v));
+
+    const activities = await timetableActivitiesRepo.findFutureActivitiesForCohorts(cohortIds);
+
+    const uniqueActivities = Array.from(
+      new Map(activities.map((a) => [a._id.toHexString(), a])).values()
+    );
+
+    for (const activity of uniqueActivities) {
+      const status = await bookingsRepo.reserveSpotForActivity(activity._id.toHexString());
+
+      await bookingsRepo.createBooking({
+        activityId: activity._id.toHexString(),
+        userId: claims.sub,
+
+        facultyId: input.facultyId,
+        programId: input.programId,
+        programYearId: input.programYearId,
+        groupCohortId: input.groupCohortId,
+        semigroupCohortId: input.semigroupCohortId ?? null,
+
+        subjectId: activity.subjectId.toHexString(),
+        activityType: activity.activityType,
+
+        status,
+
+        originalActivityId: null,
+        isRescheduled: false,
+        rescheduledAt: null,
+      });
+    }
 
     return res;
   } catch (e) {
