@@ -6,6 +6,7 @@ import { mapMongoError } from "./mongo";
 class BadRequestError extends Error {
   status = 400;
   code = "BAD_REQUEST";
+
   constructor(message: string) {
     super(message);
   }
@@ -29,6 +30,32 @@ export async function createBooking(input: BookingCreateRequest): Promise<Bookin
   }
 }
 
+function getActivityStartMs(activity: { date: string; startHour: number }): number {
+  const base = new Date(activity.date);
+  const start = new Date(base);
+  start.setUTCHours(activity.startHour, 0, 0, 0);
+  return start.getTime();
+}
+
+function getActivityEndMs(activity: { date: string; endHour: number }): number {
+  const base = new Date(activity.date);
+  const end = new Date(base);
+  end.setUTCHours(activity.endHour, 0, 0, 0);
+  return end.getTime();
+}
+
+function activitiesOverlap(
+  a: { date: string; startHour: number; endHour: number },
+  b: { date: string; startHour: number; endHour: number }
+): boolean {
+  const aStart = getActivityStartMs(a);
+  const aEnd = getActivityEndMs(a);
+  const bStart = getActivityStartMs(b);
+  const bEnd = getActivityEndMs(b);
+
+  return aStart < bEnd && bStart < aEnd;
+}
+
 export async function rescheduleBooking(id: string, input: BookingRescheduleRequest): Promise<BookingResponseDto> {
   const booking = await repo.getBookingDocById(id);
   if (!booking) throw new NotFoundError("Booking not found");
@@ -45,12 +72,23 @@ export async function rescheduleBooking(id: string, input: BookingRescheduleRequ
     throw new BadRequestError("Booking programYearId is required for reschedule");
   }
 
+  if (booking.status !== "CONFIRMED" && booking.status !== "WAITLISTED") {
+    throw new BadRequestError("Only active bookings can be rescheduled");
+  }
+
   if (booking.activityId.toHexString() === input.activityId) {
     throw new BadRequestError("New activity must be different from current activity");
   }
 
+  const currentActivity = await repo.getTimetableActivityDocById(booking.activityId.toHexString());
+  if (!currentActivity) {
+    throw new BadRequestError("Current activity not found");
+  }
+
   const nextActivity = await repo.getTimetableActivityDocById(input.activityId);
-  if (!nextActivity) throw new BadRequestError("Target activity not found");
+  if (!nextActivity) {
+    throw new BadRequestError("Target activity not found");
+  }
 
   if (nextActivity.activityType === "SPECIAL_EVENT") {
     throw new BadRequestError("Cannot reschedule to SPECIAL_EVENT");
@@ -64,17 +102,22 @@ export async function rescheduleBooking(id: string, input: BookingRescheduleRequ
     throw new BadRequestError("Target activity must have same activityType");
   }
 
-  const nextCohortIds = new Set(nextActivity.cohortIds.map((x) => x.toHexString()));
-  const matchesProgramYear =
-    (booking.groupCohortId && nextCohortIds.has(booking.groupCohortId.toHexString())) ||
-    (booking.semigroupCohortId && nextCohortIds.has(booking.semigroupCohortId.toHexString()));
+  const userBookings = await repo.findUserBookingDocsByUserId(booking.userId.toHexString());
 
-  if (!matchesProgramYear && !booking.programYearId) {
-    throw new BadRequestError("Target activity is not compatible");
-  }
+  const otherBookings = userBookings.filter(
+    (otherBooking) => otherBooking._id.toHexString() !== booking._id.toHexString()
+  );
 
-  if (booking.status !== "CONFIRMED" && booking.status !== "WAITLISTED") {
-    throw new BadRequestError("Only active bookings can be rescheduled");
+  const otherActivityIds = [...new Set(otherBookings.map((b) => b.activityId.toHexString()))];
+
+  if (otherActivityIds.length > 0) {
+    const otherActivities = await repo.getTimetableActivityDocsByIds(otherActivityIds);
+
+    for (const otherActivity of otherActivities) {
+      if (activitiesOverlap(nextActivity, otherActivity)) {
+        throw new BadRequestError("Target activity overlaps with another booking");
+      }
+    }
   }
 
   const nextStatus = await repo.reserveSpotForActivity(input.activityId);
@@ -90,7 +133,9 @@ export async function rescheduleBooking(id: string, input: BookingRescheduleRequ
     rescheduledAt: new Date(),
   });
 
-  if (!updated) throw new NotFoundError("Booking not found");
+  if (!updated) {
+    throw new NotFoundError("Booking not found");
+  }
 
   return {
     id: updated._id.toHexString(),
