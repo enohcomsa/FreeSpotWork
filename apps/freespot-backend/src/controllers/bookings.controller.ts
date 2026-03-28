@@ -1,4 +1,10 @@
-import type { BookingIdParamT, BookingCreateRequest, BookingUpdateRequest, BookingResponseDto } from "../schemas/bookings.zod";
+import type {
+  BookingIdParamT,
+  BookingCreateRequest,
+  BookingRescheduleRequest,
+  BookingUpdateRequest,
+  BookingResponseDto
+} from "../schemas/bookings.zod";
 import * as svc from "../services/bookings.service";
 import { withParams, withBody, withParamsAndBody, withQuery } from "../utils/async-handler";
 
@@ -15,6 +21,11 @@ export const getById = withParams<BookingIdParamT, BookingResponseDto>()(async (
 export const create = withBody<BookingCreateRequest, BookingResponseDto>()(async (req, res) => {
   const data = await svc.createBooking(req.body);
   res.status(201).json(data);
+});
+
+export const reschedule = withParamsAndBody<BookingIdParamT, BookingRescheduleRequest, BookingResponseDto>()(async (req, res) => {
+  const data = await svc.rescheduleBooking(req.params.id, req.body);
+  res.json(data);
 });
 
 export const update = withParamsAndBody<BookingIdParamT, BookingUpdateRequest, BookingResponseDto>()(async (req, res) => {

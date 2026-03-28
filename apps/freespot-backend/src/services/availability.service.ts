@@ -1,8 +1,9 @@
-// src/services/availability.service.ts
-import type { AvailabilityQueryInput, AvailabilityResponseDto } from "../schemas/availability.zod";
-// import { findAvailabilitySimple } from "../repos/availability.repo";
+import type { RescheduleOptionsQueryInput, RescheduleOptionsResponseDto } from "../schemas/availability.zod";
+import { findRescheduleOptions } from "../repos/availability.repo";
+import { NotFoundError } from "./errors";
 
-export async function findAvailability(q: AvailabilityQueryInput): Promise<AvailabilityResponseDto> {
-  // Add any extra guards or business rules here if needed
-  return findAvailability(q);
+export async function getRescheduleOptions(q: RescheduleOptionsQueryInput): Promise<RescheduleOptionsResponseDto> {
+  const res = await findRescheduleOptions(q.bookingId);
+  if (!res) throw new NotFoundError("Booking not found");
+  return res;
 }
