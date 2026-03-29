@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, OnInit, Si
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSlideToggle, MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { DynamicChipListComponent, TimetableItemComponent } from '@free-spot/ui';
-import { FreeSpotUser } from '@free-spot/models';
 import { AdminFacultyService } from '@free-spot-service/faculty';
 import { FormsModule } from '@angular/forms';
 import { BuildingService } from '@free-spot-service/building';
@@ -19,12 +18,12 @@ import { CohortService } from '@free-spot-service/cohort';
 import { Cohort, CreateCohortCmd } from '@free-spot-domain/cohort';
 import { CohortTypeDTO } from '@free-spot/api-client';
 import { AdminTimetableActivityService } from '@free-spot-service/timetable-activity';
-import { _ } from '@ngx-translate/core';
 import { ProgramYearService } from '@free-spot-service/program-year';
 import { ProgramService } from '@free-spot-service/program';
 import { TimetableActivity } from '@free-spot-domain/timetable-activity';
 import { TimetableActivityCardVM } from '@free-spot-presentation/timetable-activity-card';
 import { SubjectService } from '@free-spot-service/subject';
+import { User } from '@free-spot-domain/user';
 
 @Component({
   selector: 'free-spot-group',
@@ -58,16 +57,49 @@ export class GroupComponent implements OnInit {
   private _adminSubjectService: SubjectService = inject(SubjectService);
 
   readonly facultySubjectListSig = computed(() => {
-    const programYearId = this._adminProgramYearService.getSignalById(this.groupSig().programYearId)().programId;
-    const facultyId = this._adminProgramService.getSignalById(programYearId)().facultyId;
-    return this._adminFacultyService.getSignalById(facultyId)().subjectList
+    const programId = this._adminProgramYearService.getSignalById(this.groupSig().programYearId)().programId;
+    const facultyId = this._adminProgramService.getSignalById(programId)().facultyId;
+    return this._adminFacultyService.getSignalById(facultyId)().subjectList;
   });
 
   groupIdSig = input.required<string>();
   readonly groupSig = computed(() => this._adminCohortService.getSignalById(this.groupIdSig())());
   readonly semigroupListSig = computed(() => this._adminCohortService.selectSemigroupByparentGroupId(this.groupIdSig())());
-  semiGroup1IdSig = computed(() => this.semigroupListSig()[0].id);//check to ensure first vs sconde semigroup
-  semiGroup2IdSig = computed(() => this.semigroupListSig()[1].id);
+  readonly semiGroup1IdSig = computed(() => this.semigroupListSig()[0]?.id ?? null);
+  readonly semiGroup2IdSig = computed(() => this.semigroupListSig()[1]?.id ?? null);
+
+  readonly userListSig = this._userService.userListSig;
+
+  readonly groupUserListSig = computed(() =>
+    this.userListSig().filter((user: User) => user.groupCohortId === this.groupIdSig())
+  );
+
+  readonly availableGroupUserListSig = computed(() =>
+    this.userListSig().filter((user: User) => user.groupCohortId !== this.groupIdSig())
+  );
+
+  readonly semigroup1UserListSig = computed(() =>
+    this.userListSig().filter((user: User) => user.semigroupCohortId === this.semiGroup1IdSig())
+  );
+
+  readonly semigroup2UserListSig = computed(() =>
+    this.userListSig().filter((user: User) => user.semigroupCohortId === this.semiGroup2IdSig())
+  );
+
+  readonly allSemigroupUsersListSig = computed(() => [
+    ...this.semigroup1UserListSig(),
+    ...this.semigroup2UserListSig(),
+  ]);
+
+  readonly availableSemigroup1UserListSig = computed(() =>
+    this.userListSig().filter((user: User) => user.groupCohortId === null)
+  );
+
+  readonly availableSemigroup2UserListSig = computed(() =>
+    this.userListSig().filter((user: User) => user.groupCohortId === null)
+  );
+
+  readonly nonDeletableSemigroupUsersListSig = computed(() => [] as User[]);
 
   readonly workWeek: WeekDay[] = [
     WeekDay.MONDAY,
@@ -84,11 +116,6 @@ export class GroupComponent implements OnInit {
   readonly timetableGroupPerDay = this._perDay(this.groupTimetableActivityCardVMs);
   readonly timetableSemigroup1PerDay = this._perDay(this.semigroup1TimetableActivityCardVMs);
   readonly timetableSemigroup2PerDay = this._perDay(this.semigroup2TimetableActivityCardVMs);
-
-  userListSig: Signal<FreeSpotUser[]> = this._userService.userListSig;
-  // deletableUserListSig: Signal<FreeSpotUser[]> = computed(() =>
-  //   this.userListSig().filter((user: FreeSpotUser) => !this._checkUserInSemigroup(user)),
-  // );
 
   semigroupToggle = viewChild.required<MatSlideToggle>('semigroupsToggle');
   semigroupsEnabledSig = computed(() => !!this.semigroupListSig().length);
@@ -107,6 +134,87 @@ export class GroupComponent implements OnInit {
     this._adminSubjectService.init();
   }
 
+  updateGroupStudentList(updatedStudentGroupList: User[]): void {
+    const currentStudentGroupList = this.groupUserListSig();
+
+    const addedUser = updatedStudentGroupList.find(
+      (user) => !currentStudentGroupList.some((currentUser) => currentUser.id === user.id)
+    );
+
+    if (addedUser) {
+      this._userService.updateUser(addedUser.id, {
+        groupCohortId: this.groupIdSig(),
+        semigroupCohortId: null,
+      });
+      return;
+    }
+
+    const removedUser = currentStudentGroupList.find(
+      (user) => !updatedStudentGroupList.some((updatedUser) => updatedUser.id === user.id)
+    );
+
+    if (removedUser) {
+      this._userService.updateUser(removedUser.id, {
+        groupCohortId: null,
+        semigroupCohortId: null,
+      });
+    }
+  }
+
+  updateSemigroup1StudentList(updatedStudentSemigroupList: User[]): void {
+    const currentStudentSemigroupList = this.semigroup1UserListSig();
+
+    const addedUser = updatedStudentSemigroupList.find(
+      (user) => !currentStudentSemigroupList.some((currentUser) => currentUser.id === user.id)
+    );
+
+    if (addedUser && this.semiGroup1IdSig()) {
+      this._userService.updateUser(addedUser.id, {
+        groupCohortId: this.groupIdSig(),
+        semigroupCohortId: this.semiGroup1IdSig(),
+      });
+      return;
+    }
+
+    const removedUser = currentStudentSemigroupList.find(
+      (user) => !updatedStudentSemigroupList.some((updatedUser) => updatedUser.id === user.id)
+    );
+
+    if (removedUser) {
+      this._userService.updateUser(removedUser.id, {
+        groupCohortId: null,
+        semigroupCohortId: null,
+      });
+    }
+  }
+
+  updateSemigroup2StudentList(updatedStudentSemigroupList: User[]): void {
+    const currentStudentSemigroupList = this.semigroup2UserListSig();
+
+    const addedUser = updatedStudentSemigroupList.find(
+      (user) => !currentStudentSemigroupList.some((currentUser) => currentUser.id === user.id)
+    );
+
+    if (addedUser && this.semiGroup2IdSig()) {
+      this._userService.updateUser(addedUser.id, {
+        groupCohortId: this.groupIdSig(),
+        semigroupCohortId: this.semiGroup2IdSig(),
+      });
+      return;
+    }
+
+    const removedUser = currentStudentSemigroupList.find(
+      (user) => !updatedStudentSemigroupList.some((updatedUser) => updatedUser.id === user.id)
+    );
+
+    if (removedUser) {
+      this._userService.updateUser(removedUser.id, {
+        groupCohortId: null,
+        semigroupCohortId: null,
+      });
+    }
+  }
+
   toggleSemigroups(enableSemigroups: boolean): void {
     this._confirmService
       .openConfirmDialog('Are you sure you want to switch semigroups? Timetable data will be lost!')
@@ -121,14 +229,14 @@ export class GroupComponent implements OnInit {
               programYearId: this.groupSig().programYearId,
               name: `${this.groupSig().name} sg1`,
               parentGroupId: this.groupIdSig()
-            }
+            };
 
             const newSemigroup2: CreateCohortCmd = {
               type: CohortTypeDTO.SEMIGROUP,
               programYearId: this.groupSig().programYearId,
               name: `${this.groupSig().name} sg2`,
               parentGroupId: this.groupIdSig()
-            }
+            };
 
             this._adminCohortService.create(newSemigroup1);
             this._adminCohortService.create(newSemigroup2);
@@ -187,219 +295,4 @@ export class GroupComponent implements OnInit {
       }));
     });
   }
-
-  // updateGroupStudentList(updatedStudentGroupList: FreeSpotUser[]): void {
-  //   const updatedGroup: GroupLegacy = { ...this.groupSigLEgacy(), studentList: updatedStudentGroupList };
-
-  //   if (this.groupSigLEgacy().studentList?.length < updatedStudentGroupList.length || this.groupSigLEgacy().studentList === undefined) {
-  //     const oldUserName: FreeSpotUser = updatedStudentGroupList.filter(
-  //       (student: FreeSpotUser) =>
-  //         this.groupSigLEgacy().studentList?.find(
-  //           (oldStudent: FreeSpotUser) =>
-  //             oldStudent.firstName === student.firstName && oldStudent.familyName === student.familyName,
-  //         ) === undefined,
-  //     )[0];
-
-  //     const oldUser: FreeSpotUser =
-  //       this.userListSig().find(
-  //         (user: FreeSpotUser) => user.firstName === oldUserName.firstName && user.familyName === oldUserName.familyName,
-  //       ) || ({} as FreeSpotUser);
-
-  //     const newUser: FreeSpotUser = {
-  //       ...(oldUser as FreeSpotUser),
-  //       bookingList: this._bookingService.generateUserBookedItems(this.groupSigLEgacy(), true),
-  //       faculty: this.facultySig().name,
-  //       currentYear: this.yearSig().name,
-  //       group: this.groupSigLEgacy().name,
-  //     };
-  //     updatedGroup.timetable = updatedGroup.timetable.map((timetableItem: TimeTableItemLecagy) => {
-  //       return {
-  //         ...timetableItem,
-  //         activities: timetableItem.activities?.map((timetableActivity: TimetableActivityItemLegacy) => {
-  //           return {
-  //             ...timetableActivity,
-  //             freeSpots: timetableActivity.freeSpots - 1,
-  //             busySpots: timetableActivity.busySpots + 1,
-  //           };
-  //         }),
-  //       };
-  //     });
-
-  //     this._userService.updateFreeSpotUser(oldUser, newUser);
-  //   } else {
-  //     const oldUserName: FreeSpotUser = this.groupSigLEgacy().studentList.filter(
-  //       (student: FreeSpotUser) =>
-  //         updatedStudentGroupList?.find(
-  //           (oldStudent: FreeSpotUser) =>
-  //             oldStudent.firstName === student.firstName && oldStudent.familyName === student.familyName,
-  //         ) === undefined,
-  //     )[0];
-
-  //     const oldUser: FreeSpotUser =
-  //       this.userListSig().find(
-  //         (user: FreeSpotUser) => user.firstName === oldUserName.firstName && user.familyName === oldUserName.familyName,
-  //       ) || ({} as FreeSpotUser);
-
-  //     const newUser: FreeSpotUser = {
-  //       ...oldUser,
-  //       bookingList: this._bookingService.generateUserBookedItems(this.groupSigLEgacy(), false),
-  //       faculty: undefined,
-  //       currentYear: undefined,
-  //       group: undefined,
-  //     };
-  //     newUser.bookingList = [];
-
-  //     updatedGroup.timetable = updatedGroup.timetable.map((timetableItem: TimeTableItemLecagy) => {
-  //       return {
-  //         ...timetableItem,
-  //         activities: timetableItem.activities?.map((timetableActivity: TimetableActivityItemLegacy) => {
-  //           return {
-  //             ...timetableActivity,
-  //             freeSpots: timetableActivity.freeSpots + 1,
-  //             busySpots: timetableActivity.busySpots - 1,
-  //           };
-  //         }),
-  //       };
-  //     });
-
-  //     this._userService.updateFreeSpotUser(oldUser, newUser);
-  //   }
-
-  //   this._updateFaculty(updatedGroup);
-  // }
-
-
-  // updateSemiGroupStudentList(updatedStudentSemiGroupList: FreeSpotUser[], oldSemiGroup: SemiGroup): void {
-  //   const updatedSemiGroup: SemiGroup = { ...oldSemiGroup, students: updatedStudentSemiGroupList };
-
-  //   if (oldSemiGroup.students?.length < updatedStudentSemiGroupList.length || oldSemiGroup.students === undefined) {
-  //     const oldUserName: FreeSpotUser = updatedStudentSemiGroupList.filter(
-  //       (student: FreeSpotUser) =>
-  //         oldSemiGroup.students?.find(
-  //           (oldStudent: FreeSpotUser) =>
-  //             oldStudent.firstName === student.firstName && oldStudent.familyName === student.familyName,
-  //         ) === undefined,
-  //     )[0];
-
-  //     const oldUser: FreeSpotUser =
-  //       this.userListSig().find(
-  //         (user: FreeSpotUser) => user.firstName === oldUserName.firstName && user.familyName === oldUserName.familyName,
-  //       ) || ({} as FreeSpotUser);
-
-  //     const newUser: FreeSpotUser = {
-  //       ...(oldUser as FreeSpotUser),
-  //       bookingList: this._bookingService.generateUserBookedItems(this.groupSigLEgacy(), true, oldSemiGroup),
-  //       faculty: this.facultySig().name,
-  //       currentYear: this.yearSig().name,
-  //       group: this.groupSigLEgacy().name,
-  //       semiGroup: oldSemiGroup.name,
-  //     };
-
-  //     updatedSemiGroup.timetable = updatedSemiGroup.timetable.map((timetableItem: TimeTableItemLecagy) => {
-  //       return {
-  //         ...timetableItem,
-  //         activities: timetableItem.activities?.map((timetableActivity: TimetableActivityItemLegacy) => {
-  //           return {
-  //             ...timetableActivity,
-  //             freeSpots: timetableActivity.freeSpots - 1,
-  //             busySpots: timetableActivity.busySpots + 1,
-  //           };
-  //         }),
-  //       };
-  //     });
-
-  //     this._userService.updateFreeSpotUser(oldUser, newUser);
-  //   } else {
-  //     const oldUserName: FreeSpotUser = oldSemiGroup.students.filter(
-  //       (student: FreeSpotUser) =>
-  //         updatedStudentSemiGroupList?.find(
-  //           (oldStudent: FreeSpotUser) =>
-  //             oldStudent.firstName === student.firstName && oldStudent.familyName === student.familyName,
-  //         ) === undefined,
-  //     )[0];
-
-  //     const oldUser: FreeSpotUser =
-  //       this.userListSig().find(
-  //         (user: FreeSpotUser) => user.firstName === oldUserName.firstName && user.familyName === oldUserName.familyName,
-  //       ) || ({} as FreeSpotUser);
-
-  //     const newUser: FreeSpotUser = {
-  //       ...oldUser,
-  //       bookingList: this._bookingService.generateUserBookedItems(this.groupSigLEgacy(), false, oldSemiGroup),
-  //       faculty: undefined,
-  //       currentYear: undefined,
-  //       group: undefined,
-  //       semiGroup: undefined,
-  //     };
-  //     newUser.bookingList = [];
-  //     updatedSemiGroup.timetable = updatedSemiGroup.timetable.map((timetableItem: TimeTableItemLecagy) => {
-  //       return {
-  //         ...timetableItem,
-  //         activities: timetableItem.activities?.map((timetableActivity: TimetableActivityItemLegacy) => {
-  //           return {
-  //             ...timetableActivity,
-  //             freeSpots: timetableActivity.freeSpots + 1,
-  //             busySpots: timetableActivity.busySpots - 1,
-  //           };
-  //         }),
-  //       };
-  //     });
-  //     this._userService.updateFreeSpotUser(oldUser, newUser);
-  //   }
-
-  //   const updatedGroup: GroupLegacy = {
-  //     ...this.groupSigLEgacy(),
-  //     semigroups: this.groupSigLEgacy().semigroups?.map((semiGroup: SemiGroup) =>
-  //       semiGroup.name === updatedSemiGroup.name ? updatedSemiGroup : semiGroup,
-  //     ),
-  //   };
-
-  //   of(null)
-  //     .pipe(delay(1500))
-  //     .subscribe(() => {
-  //       this._updateFaculty(updatedGroup);
-  //     });
-  // }
-
-  // updateSemiGroupTimetable(updatedSemiGroup: SemiGroup): void {
-  //   const updatedGroup: GroupLegacy = {
-  //     ...this.groupSigLEgacy(),
-  //     semigroups: this.groupSigLEgacy().semigroups?.map((semiGroup: SemiGroup) =>
-  //       semiGroup.name === updatedSemiGroup.name ? updatedSemiGroup : semiGroup,
-  //     ),
-  //   };
-
-  //   this._updateFaculty(updatedGroup);
-  // }
-
-  // private _checkUserInSemigroup(user: FreeSpotUser): boolean {
-  //   if (this.groupSigLEgacy().semigroups === undefined || this.groupSigLEgacy().semigroups === null) {
-  //     return false;
-  //   } else {
-  //     return (
-  //       this.groupSigLEgacy()
-  //         .semigroups?.map((semigroup: SemiGroup) =>
-  //           semigroup.students?.some(
-  //             (student: FreeSpotUser) => student.firstName === user.firstName && student.familyName === user.familyName,
-  //           ),
-  //         )
-  //         ?.some((check: boolean) => check) || false
-  //     );
-  //   }
-  // }
-
-  // private _updateFaculty(updatedGroup: GroupLegacy): void {
-  //   const updatedYear: Year = {
-  //     ...this.yearSig(),
-  //     yearGroupList: this.yearSig().yearGroupList.map((yearGroup: GroupLegacy) =>
-  //       yearGroup.name === updatedGroup.name ? updatedGroup : yearGroup,
-  //     ),
-  //   };
-
-  //   const updatedFaculty: FacultyLegacy = {
-  //     ...this.facultySig(),
-  //     yearList: this.facultySig().yearList?.map((year: Year) => (year.name === updatedYear.name ? updatedYear : year)),
-  //   };
-  //   this._adminFacultyService.updateFaculty(this.facultySig(), updatedFaculty);
-  // }
 }

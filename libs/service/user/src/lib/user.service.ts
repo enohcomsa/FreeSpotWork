@@ -1,54 +1,131 @@
-import { computed, inject, Injectable, signal, Signal, WritableSignal } from '@angular/core';
-import { BookedEvent, FreeSpotUser } from '@free-spot/models';
+import { computed, inject, Injectable, Signal, signal, WritableSignal } from '@angular/core';
+import { take } from 'rxjs';
+import { User, UpdateMyPreferencesCmd, UpdateMyProfileCmd, UpdateUserCmd } from '@free-spot-domain/user';
 import { SignalArrayUtil } from '@free-spot/util';
 import { HttpUserService } from '@http-free-spot/user';
-import { take } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  private _httpFreeSpotUserService: HttpUserService = inject(HttpUserService);
+  private _httpUserService = inject(HttpUserService);
 
-  private _userListSig: WritableSignal<FreeSpotUser[]> = signal([]);
-  userListSig = this._userListSig.asReadonly();
+  private _userListSig: WritableSignal<User[]> = signal([]);
+  readonly userListSig = this._userListSig.asReadonly();
+
+  private _loadingSig: WritableSignal<boolean> = signal(false);
+  readonly loadingSig = this._loadingSig.asReadonly();
+
+  private _errorSig: WritableSignal<string | null> = signal(null);
+  readonly errorSig = this._errorSig.asReadonly();
 
   init(): void {
-    // if (!this._userListSig().length) {
-    //   this._httpFreeSpotUserService
-    //     .getUserList()
-    //     .pipe(take(1))
-    //     .subscribe((userList: FreeSpotUser[]) => {
-    //       this._userListSig.set(userList?.filter((user: FreeSpotUser) => user !== null));
-    //     });
-    // }
-    this._userListSig.set([{firstName:'no users yet'} as FreeSpotUser]);
+    if (!this._userListSig().length) {
+      this.loadUsers();
+    }
   }
 
-  getFreeSpotUserByEmail(userEmail: string): Signal<FreeSpotUser> {
-    return computed(() => this._userListSig()?.find((user: FreeSpotUser) => user.email === userEmail) || ({} as FreeSpotUser));
+  loadUsers(): void {
+    this._loadingSig.set(true);
+    this._errorSig.set(null);
+
+    this._httpUserService
+      .listUsers$()
+      .pipe(take(1))
+      .subscribe({
+        next: (userList: User[]) => {
+          this._userListSig.set(userList ?? []);
+          this._loadingSig.set(false);
+        },
+        error: (err: unknown) => {
+          console.error(err);
+          this._errorSig.set('Failed to load users');
+          this._loadingSig.set(false);
+        },
+      });
   }
 
-  removeTimetableActivitiesByRoomName(deletedRoomName: string): void {
-    const newUserList: FreeSpotUser[] = this._userListSig().map((user: FreeSpotUser) => {
-      return { ...user, bookingList: user.bookingList?.filter((booking: BookedEvent) => booking.roomName !== deletedRoomName) };
-    });
-    this._userListSig.set(newUserList);
-    this._httpFreeSpotUserService.storeUserList(this._userListSig());
+  getSignalById(id: string): Signal<User> {
+    return computed(() => this._userListSig().find((user: User) => user.id === id) || ({} as User));
   }
 
-  addFreeSpotUser(newFreeSpotUser: FreeSpotUser): void {
-    SignalArrayUtil.addItem(newFreeSpotUser, this._userListSig);
-    this._httpFreeSpotUserService.storeUserList(this._userListSig());
+  updateMyProfile(input: UpdateMyProfileCmd): void {
+    this._loadingSig.set(true);
+    this._errorSig.set(null);
+
+    this._httpUserService
+      .updateMyProfile$(input)
+      .pipe(take(1))
+      .subscribe({
+        next: (updatedUser: User) => {
+          SignalArrayUtil.upsertBy('id', updatedUser, this._userListSig);
+          this._loadingSig.set(false);
+        },
+        error: (err: unknown) => {
+          console.error(err);
+          this._errorSig.set('Failed to update profile');
+          this._loadingSig.set(false);
+        },
+      });
   }
 
-  updateFreeSpotUser(oldFreeSpotUser: FreeSpotUser, updatedFreeSpotUser: FreeSpotUser): void {
-    SignalArrayUtil.replaceItem(oldFreeSpotUser, this._userListSig, updatedFreeSpotUser);
-    this._httpFreeSpotUserService.storeUserList(this._userListSig());
+  updateMyPreferences(input: UpdateMyPreferencesCmd): void {
+    this._loadingSig.set(true);
+    this._errorSig.set(null);
+
+    this._httpUserService
+      .updateMyPreferences$(input)
+      .pipe(take(1))
+      .subscribe({
+        next: (updatedUser: User) => {
+          SignalArrayUtil.upsertBy('id', updatedUser, this._userListSig);
+          this._loadingSig.set(false);
+        },
+        error: (err: unknown) => {
+          console.error(err);
+          this._errorSig.set('Failed to update preferences');
+          this._loadingSig.set(false);
+        },
+      });
   }
 
-  deleteFreeSpotUser(deletedFreeSpotUser: FreeSpotUser): void {
-    SignalArrayUtil.deleteItem(deletedFreeSpotUser, this._userListSig);
-    this._httpFreeSpotUserService.storeUserList(this._userListSig());
+  updateUser(id: string, patch: UpdateUserCmd): void {
+    this._loadingSig.set(true);
+    this._errorSig.set(null);
+
+    this._httpUserService
+      .updateUser$(id, patch)
+      .pipe(take(1))
+      .subscribe({
+        next: (updatedUser: User) => {
+          SignalArrayUtil.upsertBy('id', updatedUser, this._userListSig);
+          this._loadingSig.set(false);
+        },
+        error: (err: unknown) => {
+          console.error(err);
+          this._errorSig.set('Failed to update user');
+          this._loadingSig.set(false);
+        },
+      });
+  }
+
+  deleteUser(id: string): void {
+    this._loadingSig.set(true);
+    this._errorSig.set(null);
+
+    this._httpUserService
+      .deleteUser$(id)
+      .pipe(take(1))
+      .subscribe({
+        next: () => {
+          SignalArrayUtil.removeBy('id', id, this._userListSig);
+          this._loadingSig.set(false);
+        },
+        error: (err: unknown) => {
+          console.error(err);
+          this._errorSig.set('Failed to delete user');
+          this._loadingSig.set(false);
+        },
+      });
   }
 }

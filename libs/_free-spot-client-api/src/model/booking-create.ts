@@ -7,25 +7,9 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { BookingStatusDTO } from './booking-status';
-import { ActivityTypeDTO } from './activity-type';
 
 
 export interface BookingCreateDTO { 
     activityId: string;
-    userId: string;
-    facultyId?: string | null;
-    programId?: string | null;
-    programYearId?: string | null;
-    groupCohortId?: string | null;
-    semigroupCohortId?: string | null;
-    subjectId?: string | null;
-    activityType: ActivityTypeDTO;
-    status?: BookingStatusDTO;
-    originalActivityId?: string | null;
-    isRescheduled?: boolean | null;
-    rescheduledAt?: string | null;
 }
-
-
 

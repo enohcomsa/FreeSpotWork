@@ -32,7 +32,6 @@ import { TranslateModule } from '@ngx-translate/core';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatInputModule,
     MatCardModule,
     MatIconModule,
     TranslateModule,
@@ -58,8 +57,6 @@ export class AuthComponent {
     identifier: ['', [Validators.required, Validators.minLength(3)]],
     email: ['', [Validators.email]],
     username: [''],
-    firstName: [''],
-    familyName: [''],
     password: ['', [Validators.required, Validators.minLength(8)]],
   });
 
@@ -68,8 +65,6 @@ export class AuthComponent {
   constructor() {
     this.authForm.controls['email'].disable();
     this.authForm.controls['username'].disable();
-    this.authForm.controls['firstName'].disable();
-    this.authForm.controls['familyName'].disable();
   }
 
   onSwitchMode(): void {
@@ -80,33 +75,23 @@ export class AuthComponent {
 
       this.authForm.controls['email'].disable();
       this.authForm.controls['username'].disable();
-      this.authForm.controls['firstName'].disable();
-      this.authForm.controls['familyName'].disable();
 
       this.authForm.controls['identifier'].setValidators([Validators.required, Validators.minLength(3)]);
       this.authForm.controls['email'].clearValidators();
       this.authForm.controls['username'].clearValidators();
-      this.authForm.controls['firstName'].clearValidators();
-      this.authForm.controls['familyName'].clearValidators();
     } else {
       this.authForm.controls['identifier'].disable();
 
       this.authForm.controls['email'].enable();
       this.authForm.controls['username'].enable();
-      this.authForm.controls['firstName'].enable();
-      this.authForm.controls['familyName'].enable();
 
       this.authForm.controls['email'].setValidators([Validators.required, Validators.email]);
       this.authForm.controls['username'].setValidators([Validators.required, Validators.minLength(3)]);
-      this.authForm.controls['firstName'].setValidators([Validators.required, Validators.minLength(2)]);
-      this.authForm.controls['familyName'].setValidators([Validators.required, Validators.minLength(2)]);
     }
 
     this.authForm.controls['identifier'].updateValueAndValidity();
     this.authForm.controls['email'].updateValueAndValidity();
     this.authForm.controls['username'].updateValueAndValidity();
-    this.authForm.controls['firstName'].updateValueAndValidity();
-    this.authForm.controls['familyName'].updateValueAndValidity();
     this.authForm.controls['password'].updateValueAndValidity();
 
     this.authForm.reset();

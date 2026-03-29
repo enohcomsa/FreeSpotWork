@@ -1,16 +1,14 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router, UrlTree } from '@angular/router';
 import { map, Observable } from 'rxjs';
-import { AuthUserDTORoleEnum } from '@free-spot/api-client';
 import { AuthService } from './auth.service';
+import { Role } from '@free-spot/enums';
 
 export const adminGuard: CanActivateFn = (): boolean | UrlTree | Observable<boolean | UrlTree> => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  console.log(authService.userSignal$());
-
-  if (authService.userSignal$()?.role === AuthUserDTORoleEnum.ADMIN) {
+  if (authService.userSignal$()?.role === Role.ADMIN) {
     return true;
   }
 
@@ -20,7 +18,7 @@ export const adminGuard: CanActivateFn = (): boolean | UrlTree | Observable<bool
 
   return authService.loadMe().pipe(
     map(() => {
-      return authService.userSignal$()?.role === AuthUserDTORoleEnum.ADMIN
+      return authService.userSignal$()?.role === Role.ADMIN
         ? true
         : router.createUrlTree(['/dashboard']);
     }),

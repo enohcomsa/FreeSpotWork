@@ -60,23 +60,11 @@
               <input matInput formControlName="username" />
               <mat-error>{{ displayError(authForm.controls['username']) }}</mat-error>
             </mat-form-field>
-
-            <mat-form-field>
-              <mat-label>{{ 'LOGIN.FIRST_NAME' | translate }}</mat-label>
-              <input matInput formControlName="firstName" />
-              <mat-error>{{ displayError(authForm.controls['firstName']) }}</mat-error>
-            </mat-form-field>
-
-            <mat-form-field>
-              <mat-label>{{ 'LOGIN.LAST_NAME' | translate }}</mat-label>
-              <input matInput formControlName="familyName" />
-              <mat-error>{{ displayError(authForm.controls['familyName']) }}</mat-error>
-            </mat-form-field>
           }
 
           <mat-form-field>
             <mat-label>{{ 'LOGIN.PASSWORD' | translate }}</mat-label>
-            <mat-hint>{{ 'LOGIN.PASSWORD_HINT' | translate }}</mat-hint>
+            <mat-hint>Minimum 8 characters</mat-hint>
             <input [type]="hide ? 'password' : 'text'" matInput formControlName="password" />
             <mat-icon class="primary-icon cursor-pointer" matSuffix (click)="hide = !hide">
               {{ hide ? 'visibility_off' : 'visibility' }}

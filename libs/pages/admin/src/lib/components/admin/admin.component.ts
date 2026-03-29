@@ -13,8 +13,7 @@ import {
 } from '@angular/core';
 import { FacultyComponent } from '../faculty/faculty.component';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { FreeSpotUser } from '@free-spot/models';
-import { AddItemCardComponent, DynamicChipListComponent } from '@free-spot/ui';
+import { AddItemCardComponent } from '@free-spot/ui';
 import { AdminBuildingCardComponent } from '../admin-building-card/admin-building-card.component';
 import { AdminEventCardComponent } from '../admin-event-card/admin-event-card.component';
 import { AbstractControl, FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -25,7 +24,7 @@ import { BuildingService } from '@free-spot-service/building';
 import { BuildingCardService } from '@free-spot-service/building-card';
 import { AdminFacultyService } from '@free-spot-service/faculty';
 import { UserService } from '@free-spot-service/user';
-import { Role, } from '@free-spot/enums';
+import { Role } from '@free-spot/enums';
 import { ConfirmModalService } from '@free-spot-service/confirm-modal';
 import { FormErrorMessage } from '@free-spot/util';
 import { AdminEventService } from '@free-spot-service/event';
@@ -43,6 +42,10 @@ import { Faculty } from '@free-spot-domain/faculty';
 import { Room } from '@free-spot-domain/room';
 import { CreateSpecialEventCmd, SpecialEvent, UpdateSpecialEventCmd } from '@free-spot-domain/event';
 import { EventTypeDTO } from '@free-spot/api-client';
+import { User } from '@free-spot-domain/user';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'free-spot-admin',
@@ -55,12 +58,14 @@ import { EventTypeDTO } from '@free-spot/api-client';
     MatButtonModule,
     FacultyComponent,
     MatExpansionModule,
-    DynamicChipListComponent,
     AdminBuildingCardComponent,
     AdminEventCardComponent,
     AddItemCardComponent,
     MatDatepickerModule,
-    MatSelectModule
+    MatSelectModule,
+    MatChipsModule,
+    MatAutocompleteModule,
+    MatIconModule,
   ],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.sass',
@@ -82,23 +87,34 @@ export class AdminComponent implements OnInit, OnDestroy {
   editBuilding = viewChild<ElementRef>('editBuilding');
   editEvent = viewChild<ElementRef>('editEvent');
 
-  facultyListSig: Signal<Faculty[]> = this._adminFacultyService.facultyListSig;
-  buildingListSig: Signal<Building[]> = this._adminBuildingService.buildingListSig;
-  eventListSig: Signal<SpecialEvent[]> = this._adminEventService.eventListSig;
+  readonly facultyListSig: Signal<Faculty[]> = this._adminFacultyService.facultyListSig;
+  readonly buildingListSig: Signal<Building[]> = this._adminBuildingService.buildingListSig;
+  readonly eventListSig: Signal<SpecialEvent[]> = this._adminEventService.eventListSig;
   readonly floorListSig: Signal<Floor[]> = this._adminFloorService.floorListSig;
+  readonly buildingCardVMs: Signal<BuildingCardVM[]> = this._adminBuildingCardService.buildingCardListSig;
+
+  readonly userListSig: Signal<User[]> = this._userService.userListSig;
+  readonly adminUserListSig: Signal<User[]> = computed(() =>
+    this.userListSig().filter((user: User) => user.role === Role.ADMIN)
+  );
+  readonly memberUserListSig: Signal<User[]> = computed(() =>
+    this.userListSig().filter((user: User) => user.role === Role.MEMBER)
+  );
+  readonly foundMemberUserListSig: WritableSignal<User[]> = signal([]);
+
   buildingSig: WritableSignal<BuildingCardVM> = signal({} as BuildingCardVM);
   specialEventSig: WritableSignal<SpecialEvent> = signal({} as SpecialEvent);
   subscriptionList: Subscription[] = [];
-  //TO DO: fix update building card UI
-  readonly buildingCardVMs: Signal<BuildingCardVM[]> = this._adminBuildingCardService.buildingCardListSig;
-
-  userListSig: Signal<FreeSpotUser[]> = this._userService.userListSig;
 
   addingBuilding = false;
   editingBuilding = false;
   addBuildingFormGroup = this._formBuilder.nonNullable.group({
     name: ['', [Validators.required, Validators.minLength(3)]],
     adress: ['', [Validators.required, Validators.minLength(3)]],
+  });
+
+  addAdminFormGroup = this._formBuilder.group({
+    user: [null as User | string | null, [Validators.required]],
   });
 
   startHourList: number[] = [8, 10, 12, 14, 16, 18];
@@ -113,10 +129,6 @@ export class AdminComponent implements OnInit, OnDestroy {
     room: [{} as Room, [Validators.required]],
     unavailable: [0, [Validators.required]],
   });
-
-  adminUserListSig: Signal<FreeSpotUser[]> = computed(
-    () => this.userListSig().filter((user: FreeSpotUser) => user.role === Role.ADMIN) || [],
-  );
 
   ngOnInit(): void {
     this._adminBuildingService.init();
@@ -137,6 +149,31 @@ export class AdminComponent implements OnInit, OnDestroy {
           }
         }),
     );
+
+    this.subscriptionList.push(
+      this.addAdminFormGroup.controls['user'].valueChanges.subscribe((value) => {
+        if (!value) {
+          this.foundMemberUserListSig.set(this.memberUserListSig());
+          return;
+        }
+
+        if (typeof value !== 'string') {
+          return;
+        }
+
+        const query = value.toLowerCase().trim();
+
+        this.foundMemberUserListSig.set(
+          this.memberUserListSig().filter((user: User) =>
+            `${user.firstName ?? ''} ${user.familyName ?? ''} ${user.email}`
+              .toLowerCase()
+              .includes(query)
+          )
+        );
+      }),
+    );
+
+    this.foundMemberUserListSig.set(this.memberUserListSig());
   }
 
   ngOnDestroy(): void {
@@ -153,26 +190,51 @@ export class AdminComponent implements OnInit, OnDestroy {
     return this._adminRoomService.getSignalById(roomId)();
   }
 
-  updateAdminList(updatedAdminList: FreeSpotUser[]): void {
-    if (this.adminUserListSig().length < updatedAdminList.length) {
-      const oldUser: FreeSpotUser = updatedAdminList.filter(
-        (admin: FreeSpotUser) =>
-          this.adminUserListSig().find(
-            (oldAdmin: FreeSpotUser) => oldAdmin.firstName === admin.firstName && oldAdmin.familyName === admin.familyName,
-          ) === undefined,
-      )[0];
-      const addedAdmin: FreeSpotUser = { ...oldUser, role: Role.ADMIN };
-      this._userService.updateFreeSpotUser(oldUser, addedAdmin);
-    } else {
-      const oldUser: FreeSpotUser = this.adminUserListSig().filter(
-        (admin: FreeSpotUser) =>
-          updatedAdminList.find(
-            (oldAdmin: FreeSpotUser) => oldAdmin.firstName === admin.firstName && oldAdmin.familyName === admin.familyName,
-          ) === undefined,
-      )[0];
-      const removedAdmin: FreeSpotUser = { ...oldUser, role: Role.MEMBER };
-      this._userService.updateFreeSpotUser(oldUser, removedAdmin);
+  displayUser = (user?: User | string | null): string => {
+    if (!user || typeof user === 'string') {
+      return typeof user === 'string' ? user : '';
     }
+
+    return this.getUserDisplayName(user);
+  };
+
+  getUserDisplayName(user: User): string {
+    return `${user.firstName ?? ''} ${user.familyName ?? ''}`.trim() || user.email;
+  }
+
+  onAddAdmin(): void {
+    const value = this.addAdminFormGroup.controls['user'].value;
+
+    if (!value || typeof value === 'string') {
+      return;
+    }
+
+    const user = value;
+
+    this._confirmService
+      .openConfirmDialog(`Are you sure you want to make ${this.getUserDisplayName(user)} an admin?`)
+      .afterClosed()
+      .subscribe((result: boolean) => {
+        if (result) {
+          this._userService.updateUser(user.id, { role: Role.ADMIN });
+          this.addAdminFormGroup.reset();
+          this.foundMemberUserListSig.set(this.memberUserListSig());
+        }
+      });
+  }
+  onRemoveAdmin(userId: string): void {
+    const user = this.adminUserListSig().find((item: User) => item.id === userId);
+    const label = user ? this.getUserDisplayName(user) : 'this user';
+
+    this._confirmService
+      .openConfirmDialog(`Are you sure you want to remove admin rights from ${label}?`)
+      .afterClosed()
+      .subscribe((result: boolean) => {
+        if (result) {
+          this._userService.updateUser(userId, { role: Role.MEMBER });
+          this.foundMemberUserListSig.set(this.memberUserListSig());
+        }
+      });
   }
 
   onAddingBuilding(): void {
@@ -186,8 +248,7 @@ export class AdminComponent implements OnInit, OnDestroy {
     const newBuilding: CreateBuildingCmd = {
       name: this.addBuildingFormGroup.controls['name'].value,
       address: this.addBuildingFormGroup.controls['adress'].value,
-
-    }
+    };
     this._adminBuildingService.create(newBuilding);
     this.addingBuilding = false;
     this.editingBuilding = false;
@@ -213,11 +274,13 @@ export class AdminComponent implements OnInit, OnDestroy {
   }
 
   onDeleteBuildingVM(vm: BuildingCardVM): void {
-    this._confirmService.openConfirmDialog('Are you sure you want to delete this building?')
+    this._confirmService
+      .openConfirmDialog('Are you sure you want to delete this building?')
       .afterClosed()
       .subscribe((ok) => {
         if (ok) this._adminBuildingService.remove(vm.id);
       });
+
     this.addingBuilding = false;
     this.editingBuilding = false;
   }
@@ -241,7 +304,7 @@ export class AdminComponent implements OnInit, OnDestroy {
       buildingId: this.addEventFormGroup.controls['building'].value.id,
       roomId: this.addEventFormGroup.controls['room'].value.id,
       reservedSpots: this.addEventFormGroup.controls['unavailable'].value,
-    }
+    };
 
     this._adminEventService.create(newSpecialEvent);
     this.editingEvent = false;
@@ -252,7 +315,7 @@ export class AdminComponent implements OnInit, OnDestroy {
     this.editingEvent = true;
     this.addEventFormGroup.setValue({
       name: eventToEdit.name,
-      date: new Date(eventToEdit.date ? new Date(eventToEdit?.date) : new Date()),
+      date: new Date(eventToEdit.date ? new Date(eventToEdit.date) : new Date()),
       startHour: eventToEdit.startHour as number,
       building: this._adminBuildingService.getSignalById(eventToEdit.buildingId)(),
       room: this._adminRoomService.getSignalById(eventToEdit.roomId)(),
@@ -262,6 +325,7 @@ export class AdminComponent implements OnInit, OnDestroy {
     this.addEventFormGroup.controls['room'].setValue(
       this.foundRoomListSig().filter((room: Room) => room.id === eventToEdit.roomId)[0],
     );
+
     this.specialEventSig.set(eventToEdit);
     this.editEvent()?.nativeElement.scrollIntoView({ block: 'center', behavior: 'smooth' });
   }
@@ -278,7 +342,7 @@ export class AdminComponent implements OnInit, OnDestroy {
       buildingId: this.addEventFormGroup.controls['building'].value.id,
       roomId: this.addEventFormGroup.controls['room'].value.id,
       reservedSpots: this.addEventFormGroup.controls['unavailable'].value,
-    }
+    };
 
     this._adminEventService.update(this.specialEventSig().id, updatedSpecialEvent);
     this.addEventFormGroup.reset();
@@ -292,7 +356,6 @@ export class AdminComponent implements OnInit, OnDestroy {
       .afterClosed()
       .subscribe((result: boolean) => {
         if (result) {
-
           this._adminEventService.remove(deletedSpecialEventId);
         }
       });

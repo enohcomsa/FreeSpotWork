@@ -1,20 +1,18 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { catchError, finalize, Observable, of, tap } from 'rxjs';
-import { AuthHttpService } from '@free-spot/api-client';
-import { AuthOkResponseDTO } from '@free-spot/api-client';
-import { LoginRequestDTO } from '@free-spot/api-client';
-import { SignupRequestDTO } from '@free-spot/api-client';
-import { AuthUser } from './models/auth-user.model';
+import { catchError, finalize, Observable, of, switchMap, tap } from 'rxjs';
+import { AuthHttpService, AuthOkResponseDTO, LoginRequestDTO, SignupRequestDTO } from '@free-spot/api-client';
 import { Router } from '@angular/router';
+import { authDtoToDomain, User } from '@free-spot-domain/user';
+import { Role } from '@free-spot/enums';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private _authHttp = inject(AuthHttpService);
-
   private _router = inject(Router);
-  private _user = signal<AuthUser | null>(null);
+
+  private _user = signal<User | null>(null);
   private _initialized = signal(false);
   private _loadingMe = signal(false);
 
@@ -23,23 +21,19 @@ export class AuthService {
   loadingMeSignal$ = this._loadingMe.asReadonly();
 
   isAuthenticated = computed(() => !!this._user());
-  isAdmin = computed(() => this._user()?.role === 'ADMIN');
+  isAdmin = computed(() => this._user()?.role === Role.ADMIN);
 
-  login(payload: LoginRequestDTO): Observable<AuthOkResponseDTO> {
-    return this._authHttp.authLogin({ loginRequestDTO: payload }).pipe(
-      tap((response) => {
-        this._setUserFromResponse(response);
-      }),
-    );
-  }
+login(payload: LoginRequestDTO): Observable<AuthOkResponseDTO | null> {
+  return this._authHttp.authLogin({ loginRequestDTO: payload }).pipe(
+    switchMap(() => this.loadMe()),
+  );
+}
 
-  signup(payload: SignupRequestDTO): Observable<AuthOkResponseDTO> {
-    return this._authHttp.authSignup({ signupRequestDTO: payload }).pipe(
-      tap((response) => {
-        this._setUserFromResponse(response);
-      }),
-    );
-  }
+signup(payload: SignupRequestDTO): Observable<AuthOkResponseDTO | null> {
+  return this._authHttp.authSignup({ signupRequestDTO: payload }).pipe(
+    switchMap(() => this.loadMe()),
+  );
+}
 
   logout(): void {
     this.clearSession();
@@ -54,7 +48,7 @@ export class AuthService {
     this._loadingMe.set(true);
 
     return this._authHttp.authMe().pipe(
-      tap((response) => {
+      tap((response: AuthOkResponseDTO) => {
         this._setUserFromResponse(response);
       }),
       catchError(() => {
@@ -72,21 +66,13 @@ export class AuthService {
     this._initialized.set(true);
   }
 
-
-
   private _setUserFromResponse(response: AuthOkResponseDTO): void {
-    console.log(response);
-
     if (!response.user?.id || !response.user.email || !response.user.role) {
       this.clearSession();
       return;
     }
 
-    this._user.set({
-      id: response.user.id,
-      email: response.user.email,
-      role: response.user.role,
-    });
+    this._user.set(authDtoToDomain(response.user));
     this._initialized.set(true);
   }
 }
