@@ -1,5 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, Signal } from '@angular/core';
-import { DynamicFormComponent } from '@free-spot/ui';
+import { ChangeDetectionStrategy, Component, inject, OnInit, Signal, signal, WritableSignal } from '@angular/core';
 import { BuildingCardComponent } from '../building-card/building-card.component';
 import { BuildingService } from '@free-spot-service/building';
 import { FreeSpotDate, FreeSpotUser } from '@free-spot/models';
@@ -15,12 +14,11 @@ import { BuildingCardVM } from '@free-spot-presentation/building-card';
 import { BuildingCardService } from '@free-spot-service/building-card';
 import { SpecialEvent } from '@free-spot-domain/event';
 import { EventCardComponent } from '../event-card/event-card.component';
-
+import { SpecialEventBookingComponent } from '../special-event-booking/special-event-booking.component';
 
 @Component({
   selector: 'free-spot-dashboard',
-
-  imports: [BuildingCardComponent, EventCardComponent, DynamicFormComponent, TranslateModule],
+  imports: [BuildingCardComponent, EventCardComponent, SpecialEventBookingComponent, TranslateModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.sass',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,7 +33,6 @@ export class DashboardComponent implements OnInit {
   private _userService: UserService = inject(UserService);
   private _appDateService: AppDateService = inject(AppDateService);
 
-
   readonly buildingCardVMs: Signal<BuildingCardVM[]> = this._adminBuildingCardService.buildingCardListSig;
   eventListSig: Signal<SpecialEvent[]> = this._adminEventService.eventListSig;
 
@@ -43,6 +40,7 @@ export class DashboardComponent implements OnInit {
 
   appDateSig: Signal<FreeSpotDate> = this._appDateService.appDateSig;
 
+  readonly selectedSpecialEventIdSig: WritableSignal<string | null> = signal(null);
 
   currentUserEmail = (
     JSON.parse(localStorage.getItem('user') as string) as {
@@ -52,7 +50,9 @@ export class DashboardComponent implements OnInit {
       _tokenExpirationDate: Date;
     }
   ).email;
+
   currentUserSig: Signal<FreeSpotUser> = this._userService.getFreeSpotUserByEmail(this.currentUserEmail);
+
   currentUserSubscription: Subscription = toObservable(this.currentUserSig)
     .pipe(
       filter((user: FreeSpotUser) => Object.keys(user).length !== 0),
@@ -63,12 +63,14 @@ export class DashboardComponent implements OnInit {
         this._dialog.open(
           await import('../user-setup-dialog/user-setup-dialog.component').then(
             (m) => m.UserSetupDialogComponent
-          ), {
-          delayFocusTrap: true,
-          disableClose: true,
-          panelClass: ['w-full', 'sm:w-3/5', 'md:w-1/2'],
-          data: this.currentUserSig(),
-        });
+          ),
+          {
+            delayFocusTrap: true,
+            disableClose: true,
+            panelClass: ['w-full', 'sm:w-3/5', 'md:w-1/2'],
+            data: this.currentUserSig(),
+          }
+        );
       }
     });
 
@@ -79,5 +81,9 @@ export class DashboardComponent implements OnInit {
     this._adminBuildingService.init();
 
     // this._userService.init();
+  }
+
+  onSpecialEventSelected(eventId: string): void {
+    this.selectedSpecialEventIdSig.set(eventId);
   }
 }

@@ -1,13 +1,12 @@
 import type {
   BookingIdParamT,
   BookingUserIdParamT,
-  BookingCreateRequest,
   BookingRescheduleRequest,
   BookingUpdateRequest,
   BookingResponseDto
 } from "../schemas/bookings.zod";
 import * as svc from "../services/bookings.service";
-import { withParams, withBody, withParamsAndBody, withQuery } from "../utils/async-handler";
+import { withParams, withParamsAndBody, withQuery } from "../utils/async-handler";
 
 export const listMine = withQuery<unknown, BookingResponseDto[]>()(async (req, res) => {
   const data = await svc.getMyBookings(req.user!.sub);
@@ -24,10 +23,14 @@ export const getById = withParams<BookingIdParamT, BookingResponseDto>()(async (
   res.json(data);
 });
 
-export const create = withBody<BookingCreateRequest, BookingResponseDto>()(async (req, res) => {
-  const data = await svc.createBooking(req.body);
-  res.status(201).json(data);
-});
+export async function create(req, res, next) {
+  try {
+    const result = await svc.createBooking(req.user.sub, req.body);
+    res.status(201).json(result);
+  } catch (err) {
+    next(err);
+  }
+}
 
 export const reschedule = withParamsAndBody<BookingIdParamT, BookingRescheduleRequest, BookingResponseDto>()(async (req, res) => {
   const data = await svc.rescheduleMyBooking(req.params.id, req.user!.sub, req.body);

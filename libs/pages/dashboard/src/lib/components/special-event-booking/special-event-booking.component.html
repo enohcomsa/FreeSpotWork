@@ -1,0 +1,56 @@
+<mat-card class="@container">
+  <mat-card-content>
+    <form
+      [formGroup]="bookingForm"
+      (ngSubmit)="onSubmit()"
+      class="@md:flex-row @md:gap-4 mb-4 flex flex-col items-center justify-center"
+    >
+      <mat-form-field class="w-full">
+        <mat-label>{{ 'SPECIAL_EVENT_FORM.SELECT_EVENT' | translate }}</mat-label>
+
+        <input
+          matInput
+          type="text"
+          formControlName="eventQuery"
+          [matAutocomplete]="eventAuto"
+        />
+
+        <mat-autocomplete #eventAuto="matAutocomplete" (optionSelected)="onEventSelected($event)">
+          @for (specialEvent of filteredSpecialEventListSig(); track specialEvent.id) {
+            <mat-option [value]="specialEvent.id">
+              {{ displayEventLabel(specialEvent) }}
+            </mat-option>
+          } @empty {
+            <mat-option disabled>{{ 'SPECIAL_EVENT_FORM.NO_EVENTS_FOUND' | translate }}</mat-option>
+          }
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <button
+        mat-flat-button
+        type="submit"
+        [disabled]="!selectedEventSig() || loadingSig()"
+        class="@md:mb-5 w-full"
+      >
+        {{ 'SPECIAL_EVENT_FORM.BOOK' | translate }}
+      </button>
+    </form>
+
+    @if (selectedEventSig(); as selectedEvent) {
+      <div class="rounded border px-4 py-3">
+        <p class="font-semibold">{{ selectedEvent.name }}</p>
+        <p class="text-sm tracking-tight">
+          {{ selectedEvent.date | date: 'MMM dd, yyyy HH:mm' }}
+        </p>
+      </div>
+    }
+  </mat-card-content>
+
+  @if (!selectedEventSig()) {
+    <mat-card-footer>
+      <p class="@md:mt-0 my-4 px-4 text-sm tracking-tighter">
+        {{ 'SPECIAL_EVENT_FORM.SELECT_EVENT_HINT' | translate }}
+      </p>
+    </mat-card-footer>
+  }
+</mat-card>

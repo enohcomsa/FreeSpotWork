@@ -1,4 +1,4 @@
-import { BookingResponseDTO, BookingUpdateDTO } from '@free-spot/api-client';
+import { BookingResponseDTO, BookingRescheduleDTO } from '@free-spot/api-client';
 import { Booking } from './booking.model';
 import { RescheduleBookingCmd } from './booking.commands';
 import { ActivityType, BookingStatus } from '@free-spot/enums';
@@ -52,7 +52,7 @@ export function dtoToDomain(dto: BookingResponseDTO): Booking {
   };
 }
 
-export function toRescheduleUpdateDTO(input: RescheduleBookingCmd): BookingUpdateDTO {
+export function toRescheduleUpdateDTO(input: RescheduleBookingCmd): BookingRescheduleDTO {
   return {
     activityId: input.activityId,
   };

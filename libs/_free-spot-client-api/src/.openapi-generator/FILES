@@ -30,9 +30,12 @@ model/auth-user.ts
 model/booking-base.ts
 model/booking-create.ts
 model/booking-id-param.ts
+model/booking-reschedule.ts
+model/booking-response-list.ts
 model/booking-response.ts
 model/booking-status.ts
 model/booking-update.ts
+model/booking-user-id-param.ts
 model/building-base.ts
 model/building-card-floor.ts
 model/building-card-id-param.ts

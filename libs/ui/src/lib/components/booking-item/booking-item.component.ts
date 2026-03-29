@@ -1,130 +1,106 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, InputSignal, OnInit, output, Signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  input,
+  InputSignal,
+  output,
+  Signal,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
-import { BookedEvent, FreeSpotUser } from '@free-spot/models';
-import { ActivityType } from '@free-spot/enums';
-import { BookingService } from '@free-spot-service/booking';
-import { UserService } from '@free-spot-service/user';
-import { ConfirmModalService } from '@free-spot-service/confirm-modal';
 import { MatDividerModule } from '@angular/material/divider';
-import { ToastrService } from 'ngx-toastr';
 import { TranslateModule } from '@ngx-translate/core';
-import { TimetableActivity } from '@free-spot-domain/timetable-activity';
+import { ToastrService } from 'ngx-toastr';
+import { take } from 'rxjs';
 
+import { TimetableActivity } from '@free-spot-domain/timetable-activity';
+import { BookingService } from '@free-spot-service/booking';
+import { ConfirmModalService } from '@free-spot-service/confirm-modal';
+import { AdminRoomService } from '@free-spot-service/room';
+import { BuildingService } from '@free-spot-service/building';
+import { AdminFloorService } from '@free-spot-service/floor';
+import { SubjectService } from '@free-spot-service/subject';
+import { Room } from '@free-spot-domain/room';
+import { Building } from '@free-spot-domain/building';
+import { Floor } from '@free-spot-domain/floor';
+import { SubjectItem } from '@free-spot-domain/subject';
 
 @Component({
   selector: 'free-spot-booking-item',
-
   imports: [CommonModule, MatCardModule, MatButtonModule, MatDividerModule, TranslateModule],
   templateUrl: './booking-item.component.html',
   styleUrl: './booking-item.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BookingItemComponent implements OnInit {
-  private _bookingService: BookingService = inject(BookingService);
-  private _userService: UserService = inject(UserService);
-  private _confirmService: ConfirmModalService = inject(ConfirmModalService);
-  private _toastrService: ToastrService = inject(ToastrService);
+export class BookingItemComponent {
+  private readonly _bookingService = inject(BookingService);
+  private readonly _confirmService = inject(ConfirmModalService);
+  private readonly _toastrService = inject(ToastrService);
 
-  timetableActivitySig: InputSignal<TimetableActivity> = input.required<TimetableActivity>();//TODO: correct the logic
-  oldTimetableActivitySig: InputSignal<TimetableActivity> = input.required<TimetableActivity>();//TODO: correct the logic
+  private readonly _roomService = inject(AdminRoomService);
+  private readonly _buildingService = inject(BuildingService);
+  private readonly _floorService = inject(AdminFloorService);
+  private readonly _subjectService = inject(SubjectService);
+
+  timetableActivitySig: InputSignal<TimetableActivity> = input.required<TimetableActivity>();
+  oldTimetableActivitySig: InputSignal<TimetableActivity> = input.required<TimetableActivity>();
+  bookingIdSig: InputSignal<string> = input.required<string>();
+
   bookingActive = output<boolean>();
-  eventBookingSig: Signal<BookedEvent> = computed(() => this._bookingService.generateBooking(this.timetableActivitySig()));
 
-  private _currentUserEmail = (
-    JSON.parse(localStorage.getItem('user') as string) as {
-      email: string;
-      id: string;
-      _token: string;
-      _tokenExpirationDate: Date;
-    }
-  ).email;
+  subjectSig: Signal<SubjectItem> = computed(() => {
+    const subjectId = this.timetableActivitySig().subjectId;
+    return subjectId ? this._subjectService.getSignalById(subjectId)() : ({} as SubjectItem);
+  });
 
-  currentUserSig: Signal<FreeSpotUser> = this._userService.getFreeSpotUserByEmail(this._currentUserEmail);
+  roomSig: Signal<Room> = computed(() => {
+    const roomId = this.timetableActivitySig().roomId;
+    return roomId ? this._roomService.getSignalById(roomId)() : ({} as Room);
+  });
 
-  ACTIVITY_TYPE = ActivityType;
+  buildingSig: Signal<Building> = computed(() => {
+    const room = this.roomSig();
+    return room?.buildingId ? this._buildingService.getSignalById(room.buildingId)() : ({} as Building);
+  });
 
-  ngOnInit(): void {
-    this._bookingService.init();
-    this._userService.init();
-  }
+  floorSig: Signal<Floor> = computed(() => {
+    const room = this.roomSig();
+    return room?.floorId ? this._floorService.getSignalById(room.floorId)() : ({} as Floor);
+  });
 
   bookSpot(): void {
-    if (this.eventBookingSig().activityType === ActivityType.SPECIAL_EVENT) {
-      // this._bookingService.generateSpecialEventBookedItemByActivity(this.timetableActivitySig(), true);
+    const bookingId = this.bookingIdSig();
+    const targetActivityId = this.timetableActivitySig().id;
 
-      const newUserBookingList: FreeSpotUser = {
-        ...this.currentUserSig(),
-        eventList: this.currentUserSig().eventList
-          ? [...(this.currentUserSig().eventList as BookedEvent[]), this.eventBookingSig()]
-          : [this.eventBookingSig()],
-      };
-
-      const successMessage = this.eventBookingSig().name + ' successfully booked!';
-      this._toastrService.success(successMessage, '', {
-        closeButton: true,
-        progressBar: true,
-        timeOut: 5000,
-        onActivateTick: true,
-        positionClass: 'toast-bottom-center',
-      });
-
-      this._userService.updateFreeSpotUser(this.currentUserSig(), newUserBookingList);
-      this.bookingActive.emit(false);
-    } else {
-      this._confirmService
-        .openConfirmDialog('Are you sure you wnat to book this spot? The old booking will be lost!')
-        .afterClosed()
-        .subscribe((result: boolean) => {
-          if (result) {
-            // this._bookingService.generateUserBookedItemByActivity(this.oldTimetableActivitySig(), false, true);
-            // this._bookingService.generateUserBookedItemByActivity(this.timetableActivitySig(), true, true);
-
-            const oldBookedEvent: BookedEvent =
-              this.currentUserSig().bookingList.find(
-                (bookedEvent: BookedEvent) =>
-                  bookedEvent.subjectItem.name === this.oldTimetableActivitySig().subjectId &&//todo Update logic
-                  bookedEvent.activityType === this.oldTimetableActivitySig().activityType,
-              ) || ({} as BookedEvent);
-
-            const newUserBookingList: FreeSpotUser = {
-              ...this.currentUserSig(),
-              bookingList: this.currentUserSig().bookingList
-                ? [
-                    ...this.currentUserSig().bookingList.filter(
-                      (bookedEvent: BookedEvent) => !this._checkBookedEventEquality(bookedEvent, oldBookedEvent),
-                    ),
-                    this.eventBookingSig(),
-                  ]
-                : [this.eventBookingSig()],
-            };
-
-            const successMessage =
-              this.eventBookingSig().subjectItem.shortName + ' ' + this.eventBookingSig().activityType + ' successfully booked!';
-            this._toastrService.success(successMessage, '', {
-              closeButton: true,
-              progressBar: true,
-              timeOut: 5000,
-              onActivateTick: true,
-              positionClass: 'toast-bottom-center',
-            });
-
-            this._userService.updateFreeSpotUser(this.currentUserSig(), newUserBookingList);
-            this.bookingActive.emit(false);
-          }
-        });
+    if (!bookingId || !targetActivityId) {
+      return;
     }
-  }
 
-  private _checkBookedEventEquality(bookedEvent1: BookedEvent, bookedEvent2: BookedEvent): boolean {
-    return (
-      bookedEvent1.roomName === bookedEvent2.roomName &&
-      bookedEvent1.subjectItem.name === bookedEvent2.subjectItem.name &&
-      bookedEvent1.startHour === bookedEvent2.startHour &&
-      bookedEvent1.date === bookedEvent2.date &&
-      bookedEvent1.activityType === bookedEvent2.activityType &&
-      bookedEvent1.weekParity === bookedEvent2.weekParity
-    );
+    this._confirmService
+      .openConfirmDialog('Are you sure you want to reschedule this booking? The old booking slot will be lost.')
+      .afterClosed()
+      .pipe(take(1))
+      .subscribe((result: boolean) => {
+        if (!result) {
+          return;
+        }
+
+        this._bookingService.reschedule(bookingId, {
+          activityId: targetActivityId,
+        });
+
+        this._toastrService.success('Booking successfully rescheduled', '', {
+          closeButton: true,
+          progressBar: true,
+          timeOut: 5000,
+          onActivateTick: true,
+          positionClass: 'toast-bottom-center',
+        });
+
+        this.bookingActive.emit(false);
+      });
   }
 }

@@ -26,9 +26,62 @@ export async function getMyBooking(id: string, userId: string): Promise<BookingR
   return res;
 }
 
-export async function createBooking(input: BookingCreateRequest): Promise<BookingResponseDto> {
+export async function createBooking(userId: string, input: BookingCreateRequest): Promise<BookingResponseDto> {
   try {
-    return await repo.createBooking(input);
+    const event = await repo.getEventDocById(input.activityId);
+    if (!event) {
+      throw new BadRequestError("Special event not found");
+    }
+
+    const userBookings = await repo.findUserBookingDocsByUserId(userId);
+    const duplicate = userBookings.find(
+      (booking) =>
+        booking.activityType === "SPECIAL_EVENT" &&
+        booking.activityId.toHexString() === input.activityId
+    );
+
+    if (duplicate) {
+      throw new BadRequestError("Special event already booked");
+    }
+
+    await repo.incrementReservedSpotsForEvent(input.activityId);
+
+    const created = await repo.createBookingFromRecord({
+      activityId: event._id,
+      userId: repo["toObjectId"] ? repo["toObjectId"](userId) : undefined as never,
+      facultyId: null,
+      programId: null,
+      programYearId: null,
+      groupCohortId: null,
+      semigroupCohortId: null,
+      subjectId: null,
+      activityType: "SPECIAL_EVENT",
+      status: "CONFIRMED",
+      originalActivityId: null,
+      isRescheduled: false,
+      rescheduledAt: null,
+      createdAt: new Date(),
+      updatedAt: null,
+    });
+
+    return {
+      id: created._id.toHexString(),
+      activityId: created.activityId.toHexString(),
+      userId: created.userId.toHexString(),
+      facultyId: created.facultyId == null ? null : created.facultyId.toHexString(),
+      programId: created.programId == null ? null : created.programId.toHexString(),
+      programYearId: created.programYearId == null ? null : created.programYearId.toHexString(),
+      groupCohortId: created.groupCohortId == null ? null : created.groupCohortId.toHexString(),
+      semigroupCohortId: created.semigroupCohortId == null ? null : created.semigroupCohortId.toHexString(),
+      subjectId: created.subjectId == null ? null : created.subjectId.toHexString(),
+      activityType: created.activityType,
+      status: created.status,
+      originalActivityId: created.originalActivityId == null ? null : created.originalActivityId.toHexString(),
+      isRescheduled: created.isRescheduled ?? null,
+      rescheduledAt: created.rescheduledAt == null ? null : created.rescheduledAt.toISOString(),
+      createdAt: created.createdAt.toISOString(),
+      updatedAt: created.updatedAt == null ? null : created.updatedAt.toISOString(),
+    };
   } catch (e) {
     mapMongoError(e);
   }
@@ -183,6 +236,8 @@ export async function deleteMyBooking(id: string, userId: string): Promise<boole
     if (booking.activityType !== "SPECIAL_EVENT") {
       throw new BadRequestError("Only SPECIAL_EVENT bookings can be deleted");
     }
+
+    await repo.decrementReservedSpotsForEvent(booking.activityId.toHexString());
 
     const ok = await repo.deleteBookingById(id);
     if (!ok) throw new NotFoundError("Booking not found");

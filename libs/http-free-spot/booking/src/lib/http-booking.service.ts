@@ -1,23 +1,38 @@
 import { inject, Injectable } from '@angular/core';
-import { BookingsHttpService } from '@free-spot/api-client';
-import { Booking, dtoToDomain, RescheduleBookingCmd, toRescheduleUpdateDTO } from '@free-spot-domain/booking';
+import { BookingsHttpService, BookingCreateDTO, BookingResponseDTO } from '@free-spot/api-client';
+import {
+  Booking,
+  dtoToDomain,
+  RescheduleBookingCmd,
+  toRescheduleUpdateDTO,
+} from '@free-spot-domain/booking';
 import { map, Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class HttpBookingService {
   private readonly api = inject(BookingsHttpService);
 
+  listBookings$(): Observable<Booking[]> {
+    return this.api.bookingsGet().pipe(
+      map((dtos: BookingResponseDTO[]) => (dtos ?? []).map(dtoToDomain))
+    );
+  }
+
   getBookingById$(id: string): Observable<Booking> {
     return this.api.bookingsIdGet({ id }).pipe(map(dtoToDomain));
+  }
+
+  createBooking$(input: BookingCreateDTO): Observable<Booking> {
+    return this.api.bookingsPost({ bookingCreateDTO: input }).pipe(map(dtoToDomain));
   }
 
   rescheduleBooking$(id: string, input: RescheduleBookingCmd): Observable<Booking> {
     return this.api
       .bookingsIdPatch({
         id,
-        bookingUpdateDTO: toRescheduleUpdateDTO(input),
+        bookingRescheduleDTO: toRescheduleUpdateDTO(input),
       })
       .pipe(map(dtoToDomain));
   }
