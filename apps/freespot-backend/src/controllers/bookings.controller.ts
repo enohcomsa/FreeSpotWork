@@ -1,4 +1,5 @@
 import type {
+  BookingCreateRequest,
   BookingIdParamT,
   BookingUserIdParamT,
   BookingRescheduleRequest,
@@ -23,14 +24,10 @@ export const getById = withParams<BookingIdParamT, BookingResponseDto>()(async (
   res.json(data);
 });
 
-export async function create(req, res, next) {
-  try {
-    const result = await svc.createBooking(req.user.sub, req.body);
-    res.status(201).json(result);
-  } catch (err) {
-    next(err);
-  }
-}
+export const create = withParamsAndBody<Record<string, never>, BookingCreateRequest, BookingResponseDto>()(async (req, res) => {
+  const data = await svc.createBooking(req.user!.sub, req.body);
+  res.status(201).json(data);
+});
 
 export const reschedule = withParamsAndBody<BookingIdParamT, BookingRescheduleRequest, BookingResponseDto>()(async (req, res) => {
   const data = await svc.rescheduleMyBooking(req.params.id, req.user!.sub, req.body);

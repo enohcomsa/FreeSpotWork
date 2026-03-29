@@ -4,6 +4,8 @@ import { BookingDbDoc, BookingDbRecord, TimetableActivityDbDoc, EventDbDoc } fro
 import { bookingToDto, bookingPatchToDbSet } from "../mappers";
 import { ObjectId } from "mongodb";
 
+export { toObjectId } from "../utils/mongo";
+
 const BOOKINGS_COLLECTION = "bookings";
 const TIMETABLE_ACTIVITIES_COLLECTION = "timetable_activities";
 const EVENTS_COLLECTION = "events";
@@ -55,6 +57,10 @@ export async function getBookingDocByIdForUser(id: string, userId: string): Prom
   });
 }
 
+/**
+ * Internal booking creation for backend-owned flows
+ * (profile update regeneration, future automation, derived booking creation, etc.)
+ */
 export async function createBookingFromRecord(record: BookingDbRecord): Promise<BookingDbDoc> {
   const collection = await getCollection<BookingDbRecord>(BOOKINGS_COLLECTION);
   const result = await collection.insertOne(record);
