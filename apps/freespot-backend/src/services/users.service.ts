@@ -124,17 +124,17 @@ export async function updateMyProfile(
     for (const activity of uniqueActivities) {
       const status = await bookingsRepo.reserveSpotForActivity(activity._id.toHexString());
 
-      await bookingsRepo.createBooking({
-        activityId: activity._id.toHexString(),
-        userId: claims.sub,
+      await bookingsRepo.createBookingFromRecord({
+        activityId: activity._id,
+        userId: bookingsRepo.toObjectId(claims.sub),
 
-        facultyId: input.facultyId,
-        programId: input.programId,
-        programYearId: input.programYearId,
-        groupCohortId: input.groupCohortId,
-        semigroupCohortId: input.semigroupCohortId ?? null,
+        facultyId: bookingsRepo.toObjectId(input.facultyId),
+        programId: bookingsRepo.toObjectId(input.programId),
+        programYearId: bookingsRepo.toObjectId(input.programYearId),
+        groupCohortId: bookingsRepo.toObjectId(input.groupCohortId),
+        semigroupCohortId: input.semigroupCohortId ? bookingsRepo.toObjectId(input.semigroupCohortId) : null,
 
-        subjectId: activity.subjectId.toHexString(),
+        subjectId: activity.subjectId,
         activityType: activity.activityType,
 
         status,
@@ -142,6 +142,8 @@ export async function updateMyProfile(
         originalActivityId: null,
         isRescheduled: false,
         rescheduledAt: null,
+        createdAt: new Date(),
+        updatedAt: null,
       });
     }
 
