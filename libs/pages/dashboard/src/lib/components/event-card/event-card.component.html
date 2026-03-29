@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card class="cursor-pointer" (click)="onSelect()">
   <mat-card-header class="!block">
     <mat-card-title class="!flex items-center justify-between">
       <p>{{ specialEventSig().name }}</p>
@@ -28,7 +28,7 @@
       </mat-list-item>
       <mat-divider></mat-divider>
 
-      <mat-list-item class="!cursor-pointer !p-0">
+      <mat-list-item class="!p-0">
         <div class="flex justify-between text-sm tracking-tighter">
           <p class="min-w-24 truncate">{{ specialEventRoomSig().name }}</p>
           <div class="flex gap-4 [&>p]:w-14 [&>p]:text-center">

@@ -1,11 +1,12 @@
-import { BookingCreateRequest, BookingUpdateRequest, BookingResponseDto } from "../schemas/bookings.zod";
+import { BookingUpdateRequest, BookingResponseDto } from "../schemas/bookings.zod";
 import { getCollection, isEmptySet, toObjectId } from "../utils/mongo";
-import { BookingDbDoc, BookingDbRecord, TimetableActivityDbDoc } from "../db/types";
-import { bookingToDbRecord, bookingToDto, bookingPatchToDbSet } from "../mappers";
+import { BookingDbDoc, BookingDbRecord, TimetableActivityDbDoc, EventDbDoc } from "../db/types";
+import { bookingToDto, bookingPatchToDbSet } from "../mappers";
 import { ObjectId } from "mongodb";
 
 const BOOKINGS_COLLECTION = "bookings";
 const TIMETABLE_ACTIVITIES_COLLECTION = "timetable_activities";
+const EVENTS_COLLECTION = "events";
 
 export async function listBookingsByUserId(userId: string): Promise<BookingResponseDto[]> {
   const collection = await getCollection<BookingDbDoc>(BOOKINGS_COLLECTION);
@@ -52,13 +53,6 @@ export async function getBookingDocByIdForUser(id: string, userId: string): Prom
     _id: toObjectId(id),
     userId: toObjectId(userId),
   });
-}
-
-export async function createBooking(input: BookingCreateRequest): Promise<BookingResponseDto> {
-  const collection = await getCollection<BookingDbRecord>(BOOKINGS_COLLECTION);
-  const record = bookingToDbRecord(input);
-  const result = await collection.insertOne(record);
-  return bookingToDto({ _id: result.insertedId, ...record });
 }
 
 export async function createBookingFromRecord(record: BookingDbRecord): Promise<BookingDbDoc> {
@@ -124,6 +118,37 @@ export async function getTimetableActivityDocsByIds(ids: string[]): Promise<Time
   const objectIds: ObjectId[] = ids.map(toObjectId);
 
   return collection.find({ _id: { $in: objectIds } }).toArray();
+}
+
+export async function getEventDocById(id: string): Promise<EventDbDoc | null> {
+  const collection = await getCollection<EventDbDoc>(EVENTS_COLLECTION);
+  return collection.findOne({ _id: toObjectId(id) });
+}
+
+export async function incrementReservedSpotsForEvent(eventId: string): Promise<void> {
+  const collection = await getCollection<EventDbDoc>(EVENTS_COLLECTION);
+
+  await collection.updateOne(
+    { _id: toObjectId(eventId) },
+    {
+      $inc: {
+        reservedSpots: 1,
+      },
+    }
+  );
+}
+
+export async function decrementReservedSpotsForEvent(eventId: string): Promise<void> {
+  const collection = await getCollection<EventDbDoc>(EVENTS_COLLECTION);
+
+  await collection.updateOne(
+    { _id: toObjectId(eventId) },
+    {
+      $inc: {
+        reservedSpots: -1,
+      },
+    }
+  );
 }
 
 export async function reserveSpotForActivity(activityId: string): Promise<"CONFIRMED" | "WAITLISTED"> {

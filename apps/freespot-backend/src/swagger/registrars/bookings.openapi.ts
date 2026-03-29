@@ -92,7 +92,6 @@ export function registerBookings(registry: OpenAPIRegistry) {
         content: { "application/json": { schema: BookingResponse } },
       },
       401: { description: "Unauthenticated" },
-      403: { description: "Forbidden" },
       409: { description: "Duplicate key" },
     },
   });

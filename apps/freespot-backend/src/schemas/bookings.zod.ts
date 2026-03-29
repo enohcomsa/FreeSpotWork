@@ -33,7 +33,10 @@ export const BookingUserIdParam = z.object({
   userId: ObjectIdStr,
 }).openapi("BookingUserIdParam");
 
-export const BookingCreate = BookingBase.openapi("BookingCreate");
+export const BookingCreate = strictObj({
+  activityId: ObjectIdStr,
+}).openapi("BookingCreate");
+
 export const BookingUpdate = nonEmptyDefinedPatch(BookingBase.partial()).openapi("BookingUpdate");
 
 export const BookingReschedule = strictObj({

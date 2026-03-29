@@ -93,6 +93,26 @@ export class BookingService {
     SignalArrayUtil.removeBy('id', id, this._bookingListSig);
   }
 
+  createSpecialEventBooking(activityId: string): void {
+    this._loadingSig.set(true);
+    this._errorSig.set(null);
+
+    this._httpBookingService
+      .createBooking$({ activityId })
+      .pipe(take(1), takeUntilDestroyed(this._destroyRef))
+      .subscribe({
+        next: (created: Booking) => {
+          SignalArrayUtil.upsertBy('id', created, this._bookingListSig);
+          this._loadingSig.set(false);
+        },
+        error: (err: unknown) => {
+          console.error(err);
+          this._errorSig.set('Failed to create booking');
+          this._loadingSig.set(false);
+        },
+      });
+  }
+
   reschedule(id: string, input: RescheduleBookingCmd): void {
     this._loadingSig.set(true);
     this._errorSig.set(null);

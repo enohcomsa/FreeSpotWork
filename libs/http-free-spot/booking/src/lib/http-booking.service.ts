@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { BookingsHttpService, BookingResponseDTO } from '@free-spot/api-client';
+import { BookingsHttpService, BookingCreateDTO, BookingResponseDTO } from '@free-spot/api-client';
 import {
   Booking,
   dtoToDomain,
@@ -22,6 +22,10 @@ export class HttpBookingService {
 
   getBookingById$(id: string): Observable<Booking> {
     return this.api.bookingsIdGet({ id }).pipe(map(dtoToDomain));
+  }
+
+  createBooking$(input: BookingCreateDTO): Observable<Booking> {
+    return this.api.bookingsPost({ bookingCreateDTO: input }).pipe(map(dtoToDomain));
   }
 
   rescheduleBooking$(id: string, input: RescheduleBookingCmd): Observable<Booking> {

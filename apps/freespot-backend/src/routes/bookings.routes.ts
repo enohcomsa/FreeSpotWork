@@ -10,7 +10,7 @@ r.get("/", requireAuth, ctrl.listMine);
 r.get("/admin/user/:userId", requireRole("ADMIN"), validate({ params: BookingUserIdParam }), ctrl.listByUserIdAdmin);
 r.get("/:id", requireAuth, validate({ params: BookingIdParam }), ctrl.getById);
 
-r.post("/", requireRole("ADMIN"), validate({ body: BookingCreate }), ctrl.create);
+r.post("/", requireAuth, validate({ body: BookingCreate }), ctrl.create);
 
 r.patch("/:id", requireAuth, validate({ params: BookingIdParam, body: BookingReschedule }), ctrl.reschedule);
 r.patch("/:id/admin", requireRole("ADMIN"), validate({ params: BookingIdParam, body: BookingUpdate }), ctrl.update);

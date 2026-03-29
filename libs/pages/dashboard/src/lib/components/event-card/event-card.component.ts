@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, input, Signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output, Signal } from '@angular/core';
 import { MatCardModule } from "@angular/material/card";
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
@@ -15,14 +15,16 @@ import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'free-spot-event-card',
-  imports: [CommonModule,
+  imports: [
+    CommonModule,
     RouterModule,
     MatCardModule,
     MatIconModule,
     MatListModule,
     MatDividerModule,
     MatTooltipModule,
-    TranslateModule],
+    TranslateModule,
+  ],
   templateUrl: './event-card.component.html',
   styleUrl: './event-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,8 +34,15 @@ export class EventCardComponent {
   private readonly _roomService: AdminRoomService = inject(AdminRoomService);
 
   specialEventSig = input.required<SpecialEvent>();
+  readonly specialEventSelected = output<string>();
+
   specialEventBuildingSig: Signal<Building> = computed(() => this._buildingService.getSignalById(this.specialEventSig().buildingId)());
   specialEventRoomSig: Signal<Room> = computed(() => this._roomService.getSignalById(this.specialEventSig().roomId)());
   specialEventFreeSpots: Signal<number> = computed(() =>
-    this.specialEventRoomSig().totalSpotsNumber - this.specialEventRoomSig().unavailableSpots - this.specialEventSig().reservedSpots);
+    this.specialEventRoomSig().totalSpotsNumber - this.specialEventRoomSig().unavailableSpots - this.specialEventSig().reservedSpots
+  );
+
+  onSelect(): void {
+    this.specialEventSelected.emit(this.specialEventSig().id);
+  }
 }
