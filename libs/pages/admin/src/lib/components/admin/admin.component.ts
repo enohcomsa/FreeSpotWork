@@ -13,7 +13,6 @@ import {
 } from '@angular/core';
 import { FacultyComponent } from '../faculty/faculty.component';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { FreeSpotUser } from '@free-spot/models';
 import { AddItemCardComponent, DynamicChipListComponent } from '@free-spot/ui';
 import { AdminBuildingCardComponent } from '../admin-building-card/admin-building-card.component';
 import { AdminEventCardComponent } from '../admin-event-card/admin-event-card.component';
@@ -92,7 +91,7 @@ export class AdminComponent implements OnInit, OnDestroy {
   //TO DO: fix update building card UI
   readonly buildingCardVMs: Signal<BuildingCardVM[]> = this._adminBuildingCardService.buildingCardListSig;
 
-  userListSig: Signal<FreeSpotUser[]> = this._userService.userListSig;
+  // userListSig: Signal<FreeSpotUser[]> = this._userService.userListSig;
 
   addingBuilding = false;
   editingBuilding = false;
@@ -114,9 +113,9 @@ export class AdminComponent implements OnInit, OnDestroy {
     unavailable: [0, [Validators.required]],
   });
 
-  adminUserListSig: Signal<FreeSpotUser[]> = computed(
-    () => this.userListSig().filter((user: FreeSpotUser) => user.role === Role.ADMIN) || [],
-  );
+  // adminUserListSig: Signal<FreeSpotUser[]> = computed(
+  //   () => this.userListSig().filter((user: FreeSpotUser) => user.role === Role.ADMIN) || [],
+  // );
 
   ngOnInit(): void {
     this._adminBuildingService.init();
@@ -153,27 +152,27 @@ export class AdminComponent implements OnInit, OnDestroy {
     return this._adminRoomService.getSignalById(roomId)();
   }
 
-  updateAdminList(updatedAdminList: FreeSpotUser[]): void {
-    if (this.adminUserListSig().length < updatedAdminList.length) {
-      const oldUser: FreeSpotUser = updatedAdminList.filter(
-        (admin: FreeSpotUser) =>
-          this.adminUserListSig().find(
-            (oldAdmin: FreeSpotUser) => oldAdmin.firstName === admin.firstName && oldAdmin.familyName === admin.familyName,
-          ) === undefined,
-      )[0];
-      const addedAdmin: FreeSpotUser = { ...oldUser, role: Role.ADMIN };
-      this._userService.updateFreeSpotUser(oldUser, addedAdmin);
-    } else {
-      const oldUser: FreeSpotUser = this.adminUserListSig().filter(
-        (admin: FreeSpotUser) =>
-          updatedAdminList.find(
-            (oldAdmin: FreeSpotUser) => oldAdmin.firstName === admin.firstName && oldAdmin.familyName === admin.familyName,
-          ) === undefined,
-      )[0];
-      const removedAdmin: FreeSpotUser = { ...oldUser, role: Role.MEMBER };
-      this._userService.updateFreeSpotUser(oldUser, removedAdmin);
-    }
-  }
+  // updateAdminList(updatedAdminList: FreeSpotUser[]): void {
+  //   if (this.adminUserListSig().length < updatedAdminList.length) {
+  //     const oldUser: FreeSpotUser = updatedAdminList.filter(
+  //       (admin: FreeSpotUser) =>
+  //         this.adminUserListSig().find(
+  //           (oldAdmin: FreeSpotUser) => oldAdmin.firstName === admin.firstName && oldAdmin.familyName === admin.familyName,
+  //         ) === undefined,
+  //     )[0];
+  //     const addedAdmin: FreeSpotUser = { ...oldUser, role: Role.ADMIN };
+  //     // this._userService.updateFreeSpotUser(oldUser, addedAdmin);
+  //   } else {
+  //     const oldUser: FreeSpotUser = this.adminUserListSig().filter(
+  //       (admin: FreeSpotUser) =>
+  //         updatedAdminList.find(
+  //           (oldAdmin: FreeSpotUser) => oldAdmin.firstName === admin.firstName && oldAdmin.familyName === admin.familyName,
+  //         ) === undefined,
+  //     )[0];
+  //     const removedAdmin: FreeSpotUser = { ...oldUser, role: Role.MEMBER };
+  //     // this._userService.updateFreeSpotUser(oldUser, removedAdmin);
+  //   }
+  // }
 
   onAddingBuilding(): void {
     this.addBuildingFormGroup.reset();

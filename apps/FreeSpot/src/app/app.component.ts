@@ -1,6 +1,5 @@
 import { Component, DestroyRef, inject, OnInit, DOCUMENT } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { AuthService } from '@free-spot-service/auth';
 import { LanguageService } from './translate/language.service';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { Language, Theme } from '@free-spot/enums';
@@ -16,7 +15,6 @@ import { ThemeService } from './theme/theme.service';
 })
 export class AppComponent implements OnInit {
   title = 'FreeSpot';
-  private _authService: AuthService = inject(AuthService);
   private _languageService: LanguageService = inject(LanguageService);
   private _translateService: TranslateService = inject(TranslateService);
   private _themeService: ThemeService = inject(ThemeService);
@@ -27,7 +25,6 @@ export class AppComponent implements OnInit {
   private _theme$ = toObservable(this._themeService.themeSig);
 
   ngOnInit(): void {
-    this._authService.loadMe().subscribe();
     this._lang$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((lang: Language) => {
       this._translateService.use(lang);
     });

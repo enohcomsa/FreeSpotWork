@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, OnInit, Si
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSlideToggle, MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { DynamicChipListComponent, TimetableItemComponent } from '@free-spot/ui';
-import { FreeSpotUser } from '@free-spot/models';
 import { AdminFacultyService } from '@free-spot-service/faculty';
 import { FormsModule } from '@angular/forms';
 import { BuildingService } from '@free-spot-service/building';
@@ -85,7 +84,7 @@ export class GroupComponent implements OnInit {
   readonly timetableSemigroup1PerDay = this._perDay(this.semigroup1TimetableActivityCardVMs);
   readonly timetableSemigroup2PerDay = this._perDay(this.semigroup2TimetableActivityCardVMs);
 
-  userListSig: Signal<FreeSpotUser[]> = this._userService.userListSig;
+  // userListSig: Signal<FreeSpotUser[]> = this._userService.userListSig;
   // deletableUserListSig: Signal<FreeSpotUser[]> = computed(() =>
   //   this.userListSig().filter((user: FreeSpotUser) => !this._checkUserInSemigroup(user)),
   // );

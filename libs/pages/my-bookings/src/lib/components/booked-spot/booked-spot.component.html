@@ -1,4 +1,5 @@
-<mat-card [class.ring-2]="selectedSig()" [class.ring-primary]="selectedSig()" [class.cursor-pointer]="bookingSig().activityType !== ACTIVITY_TYPE.SPECIAL_EVENT" (click)="selectBooking()">
+<mat-card [class.ring-2]="selectedSig()" [class.ring-primary]="selectedSig()"
+  [class.cursor-pointer]="bookingSig().activityType !== ACTIVITY_TYPE.SPECIAL_EVENT" (click)="selectBooking()">
   <mat-card-header>
     <mat-card-title>
       <div class="flex items-start gap-4">
@@ -6,15 +7,15 @@
 
         <div class="flex-col">
           @if (bookingSig().activityType === ACTIVITY_TYPE.SPECIAL_EVENT) {
-            <p class="-mt-2 grow text-lg font-bold">
-              {{ 'DINAMIC_FORM.SPECIAL_EVENT' | translate }}
-            </p>
+          <p class="-mt-2 grow text-lg font-bold">
+            {{ specialEventSig().name || ('DINAMIC_FORM.SPECIAL_EVENT' | translate) }}
+          </p>
           } @else {
-            <p class="-mt-2 grow text-lg font-bold">
-              {{ 'DINAMIC_FORM.' + bookingSig().activityType | translate }}
-              <span class="mx-1">:</span>
-              {{ subjectSig().shortName || subjectSig().name }}
-            </p>
+          <p class="-mt-2 grow text-lg font-bold">
+            {{ 'DINAMIC_FORM.' + bookingSig().activityType | translate }}
+            <span class="mx-1">:</span>
+            {{ subjectSig().shortName || subjectSig().name }}
+          </p>
           }
 
           <div class="flex items-center text-sm tracking-tighter">
@@ -35,18 +36,18 @@
     <mat-divider></mat-divider>
 
     <div class="flex items-center font-bold">
-      <p>{{ activitySig().date | date: 'EEEE, dd MMM, yyyy' }}<span class="mx-1">|</span></p>
-      <p>{{ activitySig().startHour }}-</p>
-      <p>{{ activitySig().endHour }}</p>
+      <p>{{ displayDateSig() | date: 'EEEE, dd MMM, yyyy' }}<span class="mx-1">|</span></p>
+      <p>{{ displayStartHourSig() }}-</p>
+      <p>{{ displayEndHourSig() }}</p>
     </div>
   </mat-card-content>
 
   @if (bookingSig().activityType === ACTIVITY_TYPE.SPECIAL_EVENT) {
-    <mat-card-actions>
-      <button mat-flat-button class="delete-button w-full grow" (click)="$event.stopPropagation(); removeBooking()">
-        <mat-icon class="!mr-2">delete</mat-icon>
-        <span>{{ 'BOOKINGS_PAGE.DELETE' | translate }}</span>
-      </button>
-    </mat-card-actions>
+  <mat-card-actions>
+    <button mat-flat-button class="delete-button w-full grow" (click)="$event.stopPropagation(); removeBooking()">
+      <mat-icon class="!mr-2">delete</mat-icon>
+      <span>{{ 'BOOKINGS_PAGE.DELETE' | translate }}</span>
+    </button>
+  </mat-card-actions>
   }
 </mat-card>

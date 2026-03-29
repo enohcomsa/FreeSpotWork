@@ -1,20 +1,53 @@
-import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { FreeSpotUser } from '@free-spot/models';
-import { Observable } from 'rxjs';
-// import { AppUser } from '../shared/models/user.model';
+import {
+  UserMePreferencesUpdateDTO,
+  UserMeProfileUpdateDTO,
+  UserResponseDTO,
+  UsersHttpService,
+} from '@free-spot/api-client';
+import { map, Observable } from 'rxjs';
+import {
+  dtoToDomain,
+  toMyPreferencesUpdateDTO,
+  toMyProfileUpdateDTO,
+  toUpdateUserDTO,
+  UpdateMyPreferencesCmd,
+  UpdateMyProfileCmd,
+  UpdateUserCmd,
+  User,
+} from '@free-spot-domain/user';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class HttpUserService {
-  private _http: HttpClient = inject(HttpClient);
+  private _api = inject(UsersHttpService);
 
-  storeUserList(userList: FreeSpotUser[]): void {
-    this._http.put('https://freespot-6e3c4-default-rtdb.europe-west1.firebasedatabase.app/userList.json/', userList).subscribe();
+  listUsers$(): Observable<User[]> {
+    return this._api.usersGet().pipe(
+      map((dtos: UserResponseDTO[]) => (dtos ?? []).map(dtoToDomain))
+    );
   }
 
-  getUserList(): Observable<FreeSpotUser[]> {
-    return this._http.get<FreeSpotUser[]>('https://freespot-6e3c4-default-rtdb.europe-west1.firebasedatabase.app/userList.json/');
+  getUserById$(id: string): Observable<User> {
+    return this._api.usersIdGet({ id }).pipe(map(dtoToDomain));
+  }
+
+  updateMyProfile$(input: UpdateMyProfileCmd): Observable<User> {
+    const dto: UserMeProfileUpdateDTO = toMyProfileUpdateDTO(input);
+    return this._api.usersMeProfilePatch({ userMeProfileUpdateDTO: dto }).pipe(map(dtoToDomain));
+  }
+
+  updateMyPreferences$(input: UpdateMyPreferencesCmd): Observable<User> {
+    const dto: UserMePreferencesUpdateDTO = toMyPreferencesUpdateDTO(input);
+    return this._api.usersMePreferencesPatch({ userMePreferencesUpdateDTO: dto }).pipe(map(dtoToDomain));
+  }
+
+  updateUser$(id: string, patch: UpdateUserCmd): Observable<User> {
+    return this._api.usersIdPatch({ id, userUpdateDTO: toUpdateUserDTO(patch) }).pipe(map(dtoToDomain));
+  }
+
+  deleteUser$(id: string): Observable<void> {
+    return this._api.usersIdDelete({ id }).pipe(map(() => void 0));
   }
 }

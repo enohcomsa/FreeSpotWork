@@ -1,1 +1,3 @@
-export * from './lib/user-domain/user-domain';
+export * from './lib/user.model';
+export * from './lib/user.commands';
+export * from './lib/user.mapper';

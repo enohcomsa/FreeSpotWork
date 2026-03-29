@@ -1,17 +1,11 @@
 <div class="container flex min-h-[calc(100vh-112px)] content-center">
   <div class="flex grow flex-wrap gap-4 lg:items-center lg:gap-0">
-
-    @for(dayItem of timetablePerDay(); track dayItem.day){
-    <free-spot-timetable-item class="grow" [day]="dayItem.day" [timetableItemSig]="dayItem.activities">
-    </free-spot-timetable-item>
+    @for (dayItem of timetablePerDay(); track dayItem.day) {
+      <free-spot-timetable-item
+        class="grow"
+        [day]="dayItem.day"
+        [timetableItemSig]="dayItem.activities">
+      </free-spot-timetable-item>
     }
-
-    <!-- @for (timetableItem of userTimetableItemsSig(); track timetableItem.weekDay) {
-      <free-spot-timetable-item class="grow" [timetableItemSigLegacy]="timetableItem"></free-spot-timetable-item>
-    } @empty {
-      @for (timetableItem of emptyTimetable; track timetableItem.weekDay) {
-        <free-spot-timetable-item class="grow" [timetableItemSigLegacy]="timetableItem"></free-spot-timetable-item>
-      }
-    } -->
   </div>
 </div>
