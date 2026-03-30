@@ -1,5 +1,12 @@
 import type { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
-import { SignupSchema, LoginSchema, RefreshSchema, AuthOkResponse, MeResponse } from "../../schemas/auth.zod";
+import {
+  SignupSchema,
+  LoginSchema,
+  RefreshSchema,
+  AuthOkResponse,
+  MeResponse,
+  RefreshResponse,
+} from "../../schemas/auth.zod";
 
 export function registerAuth(registry: OpenAPIRegistry) {
   registry.registerPath({
@@ -62,7 +69,12 @@ export function registerAuth(registry: OpenAPIRegistry) {
       },
     },
     responses: {
-      200: { description: "OK" },
+      200: {
+        description: "OK",
+        content: {
+          "application/json": { schema: RefreshResponse },
+        },
+      },
       401: { description: "Unauthenticated" },
     },
   });

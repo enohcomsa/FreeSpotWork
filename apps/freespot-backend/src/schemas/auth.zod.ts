@@ -22,6 +22,11 @@ export const LoginSchema = strictObj({
 
 export const RefreshSchema = strictObj({}).openapi("RefreshRequest");
 
+export const RefreshResponse = strictObj({
+  ok: z.literal(true),
+  xsrfToken: z.string(),
+}).openapi("RefreshResponse");
+
 export const AuthUserSchema = strictObj({
   id: ObjectIdStr,
   email: z.string().email(),
@@ -40,9 +45,13 @@ export const AuthUserSchema = strictObj({
 export const AuthOkResponse = strictObj({
   ok: z.literal(true),
   user: AuthUserSchema,
+  xsrfToken: z.string(),
 }).openapi("AuthOkResponse");
 
-export const MeResponse = AuthOkResponse.openapi("MeResponse");
+export const MeResponse = strictObj({
+  ok: z.literal(true),
+  user: AuthUserSchema,
+}).openapi("MeResponse");
 
 export type SignupRequestT = z.infer<typeof SignupSchema>;
 export type LoginRequestT = z.infer<typeof LoginSchema>;
@@ -50,3 +59,4 @@ export type RefreshRequestT = z.infer<typeof RefreshSchema>;
 export type AuthUserT = z.infer<typeof AuthUserSchema>;
 export type AuthOkResponseT = z.infer<typeof AuthOkResponse>;
 export type MeResponseT = z.infer<typeof MeResponse>;
+export type RefreshResponseT = z.infer<typeof RefreshResponse>;

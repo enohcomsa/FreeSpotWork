@@ -10,7 +10,7 @@ const r = Router();
 r.post("/signup", rateLimitSignup, validate({ body: SignupSchema }), ctrl.signup);
 r.post("/login", rateLimitLogin, validate({ body: LoginSchema }), ctrl.login);
 r.post("/refresh", rateLimitRefresh, validate({ body: RefreshSchema }), ctrl.refresh);
-r.post("/logout", ctrl.logout);
+r.post("/logout", requireAuth, ctrl.logout);
 r.get("/me",requireAuth, ctrl.me);
 
 export default r;

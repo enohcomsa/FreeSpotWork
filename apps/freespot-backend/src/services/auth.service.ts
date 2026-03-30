@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 
-import type { AuthOkResponseT, LoginRequestT, SignupRequestT } from "../schemas/auth.zod";
+import type { AuthOkResponseT, LoginRequestT, MeResponseT, RefreshResponseT, SignupRequestT } from "../schemas/auth.zod";
 
 import * as usersRepo from "../repos/users.repo";
 import { userToAuthMeDto } from "../mappers";
@@ -41,9 +41,13 @@ function getUserAgent(req: Request): string | null {
   return typeof ua === "string" ? ua : null;
 }
 
-function toAuthOkBasic(user: { id: string; email: string; role: "ADMIN" | "MEMBER" }): AuthOkResponseT {
+function toAuthOkBasic(
+  user: { id: string; email: string; role: "ADMIN" | "MEMBER" },
+  xsrfToken: string
+): AuthOkResponseT {
   return {
     ok: true,
+    xsrfToken,
     user: {
       id: user.id,
       email: user.email,
@@ -61,7 +65,7 @@ function toAuthOkBasic(user: { id: string; email: string; role: "ADMIN" | "MEMBE
   };
 }
 
-function toAuthOkMe(user: ReturnType<typeof userToAuthMeDto>): AuthOkResponseT {
+function toAuthOkMe(user: ReturnType<typeof userToAuthMeDto>): MeResponseT {
   return { ok: true, user };
 }
 
@@ -101,13 +105,16 @@ export async function signup(
 
   res.cookie(ACCESS_COOKIE, access, accessCookieOpts);
   res.cookie(REFRESH_COOKIE, refreshToken, refreshCookieOpts);
-  issueXsrfCookie(res);
+  const xsrfToken = issueXsrfCookie(res);
 
-  return toAuthOkBasic({
-    id: u._id.toHexString(),
-    email: u.email,
-    role: u.role,
-  });
+  return toAuthOkBasic(
+    {
+      id: u._id.toHexString(),
+      email: u.email,
+      role: u.role,
+    },
+    xsrfToken
+  );
 }
 
 export async function login(
@@ -152,16 +159,19 @@ export async function login(
 
   res.cookie(ACCESS_COOKIE, access, accessCookieOpts);
   res.cookie(REFRESH_COOKIE, refreshToken, refreshCookieOpts);
-  issueXsrfCookie(res);
+  const xsrfToken = issueXsrfCookie(res);
 
-  return toAuthOkBasic({
-    id: u._id.toHexString(),
-    email: u.email,
-    role: u.role,
-  });
+  return toAuthOkBasic(
+    {
+      id: u._id.toHexString(),
+      email: u.email,
+      role: u.role,
+    },
+    xsrfToken
+  );
 }
 
-export async function refresh(req: Request, res: Response): Promise<{ ok: true }> {
+export async function refresh(req: Request, res: Response): Promise<RefreshResponseT> {
   requireXsrf(req);
 
   const refreshToken = req.cookies?.[REFRESH_COOKIE];
@@ -210,9 +220,9 @@ export async function refresh(req: Request, res: Response): Promise<{ ok: true }
 
   res.cookie(ACCESS_COOKIE, access, accessCookieOpts);
   res.cookie(REFRESH_COOKIE, nextRefresh, refreshCookieOpts);
-  issueXsrfCookie(res);
+  const xsrfToken = issueXsrfCookie(res);
 
-  return { ok: true };
+  return { ok: true, xsrfToken };
 }
 
 export async function logout(req: Request, res: Response): Promise<{ ok: true }> {
@@ -229,7 +239,7 @@ export async function logout(req: Request, res: Response): Promise<{ ok: true }>
   return { ok: true };
 }
 
-export async function me(req: Request): Promise<AuthOkResponseT> {
+export async function me(req: Request): Promise<MeResponseT> {
   const claims = req.user;
   if (!claims) throw appError(401, "UNAUTHENTICATED", "Unauthenticated");
 
