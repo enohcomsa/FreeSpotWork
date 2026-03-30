@@ -25,7 +25,7 @@ export const refreshCookieOpts: CookieOptions = {
 };
 
 export const xsrfCookieOpts: CookieOptions = {
-  httpOnly: false,
+  httpOnly: true,
   secure,
   sameSite,
   path: "/",
@@ -48,7 +48,7 @@ export function clearAuthCookies(res: Response) {
   });
 
   res.clearCookie(XSRF_COOKIE, {
-    httpOnly: false,
+    httpOnly: true,
     secure,
     sameSite,
     path: "/",

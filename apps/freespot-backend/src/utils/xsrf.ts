@@ -1,4 +1,3 @@
-// src/utils/xsrf.ts
 import type { Request, Response } from "express";
 import crypto from "crypto";
 import { XSRF_COOKIE, xsrfCookieOpts } from "./cookies";
