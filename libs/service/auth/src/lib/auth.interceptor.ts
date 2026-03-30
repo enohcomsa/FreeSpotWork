@@ -1,21 +1,26 @@
-import { HttpInterceptorFn, HttpParams } from '@angular/common/http';
-import { AuthService } from './auth.service';
+import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
+import { AuthService } from './auth.service';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const authService: AuthService = inject(AuthService);
+  const authService = inject(AuthService);
+  const xsrfToken = authService.xsrfTokenSignal$();
 
+  const isMutating =
+    req.method === 'POST' ||
+    req.method === 'PUT' ||
+    req.method === 'PATCH' ||
+    req.method === 'DELETE';
 
-  if (req.url.startsWith('http://localhost:3333/api/v1')) {
+  if (!isMutating || !xsrfToken) {
     return next(req);
   }
 
-  if (!authService.userSignal$()) {
-    return next(req);
-  }
-
-  const tokenReq = req.clone({
-    // params: new HttpParams().set('auth', authService.userSignal$()?.token as string),
-  });
-  return next(tokenReq);
+  return next(
+    req.clone({
+      setHeaders: {
+        'X-XSRF-TOKEN': xsrfToken,
+      },
+    }),
+  );
 };

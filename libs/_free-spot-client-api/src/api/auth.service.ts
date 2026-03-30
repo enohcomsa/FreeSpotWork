@@ -23,6 +23,8 @@ import { LoginRequestDTO } from '../model/login-request';
 // @ts-ignore
 import { MeResponseDTO } from '../model/me-response';
 // @ts-ignore
+import { RefreshResponseDTO } from '../model/refresh-response';
+// @ts-ignore
 import { SignupRequestDTO } from '../model/signup-request';
 
 // @ts-ignore
@@ -239,10 +241,10 @@ export class AuthHttpService extends BaseService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public authRefresh(requestParameters?: AuthRefreshRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any>;
-    public authRefresh(requestParameters?: AuthRefreshRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
-    public authRefresh(requestParameters?: AuthRefreshRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
-    public authRefresh(requestParameters?: AuthRefreshRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public authRefresh(requestParameters?: AuthRefreshRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<RefreshResponseDTO>;
+    public authRefresh(requestParameters?: AuthRefreshRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<RefreshResponseDTO>>;
+    public authRefresh(requestParameters?: AuthRefreshRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<RefreshResponseDTO>>;
+    public authRefresh(requestParameters?: AuthRefreshRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         const body = requestParameters?.body;
 
         let localVarHeaders = this.defaultHeaders;
@@ -253,6 +255,7 @@ export class AuthHttpService extends BaseService {
         localVarHeaders = this.configuration.addCredentialToHeaders('xsrfHeader', 'x-xsrf-token', localVarHeaders);
 
         const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
+            'application/json'
         ]);
         if (localVarHttpHeaderAcceptSelected !== undefined) {
             localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
@@ -285,7 +288,7 @@ export class AuthHttpService extends BaseService {
 
         let localVarPath = `/auth/refresh`;
         const { basePath, withCredentials } = this.configuration;
-        return this.httpClient.request<any>('post', `${basePath}${localVarPath}`,
+        return this.httpClient.request<RefreshResponseDTO>('post', `${basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: body,

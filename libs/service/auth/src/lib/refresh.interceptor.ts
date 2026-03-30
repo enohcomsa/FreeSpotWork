@@ -1,10 +1,10 @@
 import {
   HttpContextToken,
   HttpErrorResponse,
-  HttpInterceptorFn
+  HttpInterceptorFn,
 } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { catchError, switchMap, throwError } from 'rxjs';
+import { catchError, switchMap, tap, throwError } from 'rxjs';
 import { AuthHttpService } from '@free-spot/api-client';
 import { AuthService } from './auth.service';
 
@@ -15,14 +15,15 @@ export const refreshInterceptor: HttpInterceptorFn = (req, next) => {
   const authHttp = inject(AuthHttpService);
   const authService = inject(AuthService);
 
-  if (
-    req.url.includes('/auth/login') ||
-    req.url.includes('/auth/signup') ||
-    req.url.includes('/auth/me') ||
-    req.url.includes('/auth/refresh')
-  ) {
-    return next(req);
-  }
+if (
+  req.url.includes('/auth/login') ||
+  req.url.includes('/auth/signup') ||
+  req.url.includes('/auth/me') ||
+  req.url.includes('/auth/refresh') ||
+  req.url.includes('/auth/logout')
+) {
+  return next(req);
+}
 
   const retryCount = req.context.get(RETRY_COUNT);
 
@@ -33,11 +34,14 @@ export const refreshInterceptor: HttpInterceptorFn = (req, next) => {
       }
 
       if (retryCount >= MAX_RETRIES) {
-        authService.logout();
+        authService.logoutLocal();
         return throwError(() => error);
       }
 
       return authHttp.authRefresh({ body: {} }).pipe(
+        tap((response) => {
+          authService.setXsrfToken(response.xsrfToken ?? null);
+        }),
         switchMap(() => authService.loadMe()),
         switchMap(() =>
           next(
@@ -47,7 +51,7 @@ export const refreshInterceptor: HttpInterceptorFn = (req, next) => {
           ),
         ),
         catchError((refreshError) => {
-          authService.logout();
+          authService.logoutLocal();
           return throwError(() => refreshError);
         }),
       );

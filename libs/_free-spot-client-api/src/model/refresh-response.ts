@@ -7,12 +7,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { AuthUserDTO } from './auth-user';
 
 
-export interface AuthOkResponseDTO { 
+export interface RefreshResponseDTO { 
     ok: boolean;
-    user: AuthUserDTO;
     xsrfToken: string;
 }
 
