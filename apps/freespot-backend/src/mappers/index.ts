@@ -1,5 +1,4 @@
 export * from "./floors.mapper";
-// export * from "./availability.mapper";
 export * from "./bookings.mapper";
 export * from "./buildings.mapper";
 export * from "./cohorts.mapper";
@@ -11,3 +10,4 @@ export * from "./subjects.mapper";
 export * from "./timetable-activities.mapper";
 export * from "./users.mapper";
 export * from "./events.mapper";
+export * from "./auth.mapper";

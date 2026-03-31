@@ -49,8 +49,6 @@ export const BookingResponse = BookingBase.extend({
   updatedAt: ISODateStr.nullable().optional(),
 }).openapi("BookingResponse");
 
-export const BookingList = z.array(BookingResponse).openapi("BookingList");
-
 export type BookingBaseT = z.infer<typeof BookingBase>;
 export type BookingCreateRequest = z.infer<typeof BookingCreate>;
 export type BookingUpdateRequest = z.infer<typeof BookingUpdate>;

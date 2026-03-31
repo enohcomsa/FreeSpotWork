@@ -14,7 +14,6 @@ export const FloorIdParam = z.object({ id: ObjectIdStr }).openapi("FloorIdParam"
 export const FloorCreate = FloorBase.openapi("FloorCreate");
 export const FloorUpdate = nonEmptyDefinedPatch(FloorBase.partial()).openapi("FloorUpdate");
 export const FloorResponse = FloorBase.extend({ id: ObjectIdStr }).openapi("FloorResponse");
-export const FloorList=z.array(FloorResponse).openapi('FloorList');
 
 export type FloorBaseT=z.infer<typeof FloorBase>;
 export type FloorCreateRequest = z.infer<typeof FloorCreate>;

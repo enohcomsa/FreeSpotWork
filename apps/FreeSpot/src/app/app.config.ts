@@ -9,10 +9,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { Language } from '@free-spot/enums';
 import { provideToastr } from 'ngx-toastr';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { provideAuthApi } from '@free-spot-service/auth';
-// later:
-import { refreshInterceptor } from '@free-spot-service/auth';
-// import { xsrfInterceptor } from '@free-spot-service/auth';
+import { provideAuthApi, authInterceptor, refreshInterceptor } from '@free-spot-service/auth';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -22,7 +19,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(
       withInterceptors([
         loadingInterceptor,
-        // xsrfInterceptor,
+        authInterceptor,
         refreshInterceptor,
       ]),
     ),

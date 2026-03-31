@@ -1,171 +1,69 @@
 import type { Request, Response } from "express";
-
-import type { AuthOkResponseT, LoginRequestT, MeResponseT, RefreshResponseT, SignupRequestT } from "../schemas/auth.zod";
+import type {
+  AuthOkResponseT,
+  LoginRequestT,
+  MeResponseT,
+  RefreshResponseT,
+  SignupRequestT,
+} from "../schemas/auth.zod";
 
 import * as usersRepo from "../repos/users.repo";
-import { userToAuthMeDto } from "../mappers";
 import * as refreshRepo from "../repos/refresh-tokens.repo";
+import { toAuthOkBasic, toAuthOkMe, userToAuthMeDto } from "../mappers";
 
 import { hashPassword, verifyPassword } from "../utils/password";
-import { issueXsrfCookie, requireXsrf } from "../utils/xsrf";
-import {
-  ACCESS_COOKIE,
-  REFRESH_COOKIE,
-  accessCookieOpts,
-  refreshCookieOpts,
-  clearAuthCookies,
-} from "../utils/cookies";
-
-import {
-  signAccessToken,
-  generateRefreshToken,
-  hashRefreshToken,
-  generateJti,
-  ACCESS_TTL,
-  REFRESH_TTL_MS,
-} from "../utils/tokens";
+import { requireXsrf } from "../utils/xsrf";
+import { REFRESH_COOKIE, clearAuthCookies } from "../utils/cookies";
 import { toObjectId } from "../utils/mongo";
 
-function appError(status: number, code: string, message: string) {
-  return { status, code, message };
-}
+import { UnauthorizedError } from "./errors";
+import { issueAuthSession } from "./auth-session.service";
+import { hashRefreshToken } from "../utils/tokens";
 
-function getIp(req: Request): string | null {
-  const xff = req.headers["x-forwarded-for"];
-  if (typeof xff === "string" && xff.length > 0) return xff.split(",")[0].trim();
-  return req.ip ?? null;
-}
+const INVALID_CREDENTIALS_MESSAGE = "Invalid credentials";
+const MISSING_REFRESH_TOKEN_MESSAGE = "Missing refresh token";
+const INVALID_REFRESH_TOKEN_MESSAGE = "Invalid refresh token";
+const EXPIRED_REFRESH_TOKEN_MESSAGE = "Expired refresh token";
+const UNAUTHENTICATED_MESSAGE = "Unauthenticated";
 
-function getUserAgent(req: Request): string | null {
-  const ua = req.headers["user-agent"];
-  return typeof ua === "string" ? ua : null;
-}
-
-function toAuthOkBasic(
-  user: { id: string; email: string; role: "ADMIN" | "MEMBER" },
-  xsrfToken: string
-): AuthOkResponseT {
-  return {
-    ok: true,
-    xsrfToken,
-    user: {
-      id: user.id,
-      email: user.email,
-      role: user.role,
-      firstName: null,
-      familyName: null,
-      preferredLanguage: null,
-      preferredTheme: null,
-      facultyId: null,
-      programId: null,
-      programYearId: null,
-      groupCohortId: null,
-      semigroupCohortId: null,
-    },
-  };
-}
-
-function toAuthOkMe(user: ReturnType<typeof userToAuthMeDto>): MeResponseT {
-  return { ok: true, user };
-}
-
-export async function signup(
-  req: Request,
-  res: Response,
-  input: SignupRequestT
-): Promise<AuthOkResponseT> {
+export async function signup(req: Request, res: Response, input: SignupRequestT): Promise<AuthOkResponseT> {
   const passwordHash = await hashPassword(input.password);
+  const user = await usersRepo.createUser(input, passwordHash);
 
-  const u = await usersRepo.createUser(input, passwordHash);
-
-  const accessJti = generateJti();
-  const access = signAccessToken(
-    {
-      sub: u._id.toHexString(),
-      role: u.role,
-      tokenVersion: u.security.tokenVersion,
-      jti: accessJti,
-    },
-    ACCESS_TTL
-  );
-
-  const { jti: refreshJti, token: refreshToken } = generateRefreshToken();
-  const tokenHash = hashRefreshToken(refreshToken);
-
-  await refreshRepo.createRefreshToken({
-    userId: u._id,
-    jti: refreshJti,
-    tokenHash,
-    createdAt: new Date(),
-    expiresAt: new Date(Date.now() + REFRESH_TTL_MS),
-    revokedAt: null,
-    ip: getIp(req),
-    userAgent: getUserAgent(req),
-  });
-
-  res.cookie(ACCESS_COOKIE, access, accessCookieOpts);
-  res.cookie(REFRESH_COOKIE, refreshToken, refreshCookieOpts);
-  const xsrfToken = issueXsrfCookie(res);
+  const { xsrfToken } = await issueAuthSession(req, res, user);
 
   return toAuthOkBasic(
     {
-      id: u._id.toHexString(),
-      email: u.email,
-      role: u.role,
+      id: user._id.toHexString(),
+      email: user.email,
+      role: user.role,
     },
     xsrfToken
   );
 }
 
-export async function login(
-  req: Request,
-  res: Response,
-  input: LoginRequestT
-): Promise<AuthOkResponseT> {
-  const ident = input.identifier.trim().toLowerCase();
+export async function login(req: Request, res: Response, input: LoginRequestT): Promise<AuthOkResponseT> {
+  const normalizedIdentifier = input.identifier.trim().toLowerCase();
 
-  const u = await usersRepo.findUserAuthByIdentifier(ident);
-  const phc = u?.auth?.local?.hash;
+  const user = await usersRepo.findUserAuthByIdentifier(normalizedIdentifier);
+  const passwordHash = user?.auth?.local?.hash;
 
-  if (!u || !phc) throw appError(401, "UNAUTHENTICATED", "Invalid credentials");
+  if (!user || !passwordHash) {
+    throw new UnauthorizedError(INVALID_CREDENTIALS_MESSAGE);
+  }
 
-  const ok = await verifyPassword(phc, input.password);
-  if (!ok) throw appError(401, "UNAUTHENTICATED", "Invalid credentials");
+  const isPasswordValid = await verifyPassword(passwordHash, input.password);
+  if (!isPasswordValid) {
+    throw new UnauthorizedError(INVALID_CREDENTIALS_MESSAGE);
+  }
 
-  const accessJti = generateJti();
-  const access = signAccessToken(
-    {
-      sub: u._id.toHexString(),
-      role: u.role,
-      tokenVersion: u.security.tokenVersion,
-      jti: accessJti,
-    },
-    ACCESS_TTL
-  );
-
-  const { jti: refreshJti, token: refreshToken } = generateRefreshToken();
-  const tokenHash = hashRefreshToken(refreshToken);
-
-  await refreshRepo.createRefreshToken({
-    userId: u._id,
-    jti: refreshJti,
-    tokenHash,
-    createdAt: new Date(),
-    expiresAt: new Date(Date.now() + REFRESH_TTL_MS),
-    revokedAt: null,
-    ip: getIp(req),
-    userAgent: getUserAgent(req),
-  });
-
-  res.cookie(ACCESS_COOKIE, access, accessCookieOpts);
-  res.cookie(REFRESH_COOKIE, refreshToken, refreshCookieOpts);
-  const xsrfToken = issueXsrfCookie(res);
+  const { xsrfToken } = await issueAuthSession(req, res, user);
 
   return toAuthOkBasic(
     {
-      id: u._id.toHexString(),
-      email: u.email,
-      role: u.role,
+      id: user._id.toHexString(),
+      email: user.email,
+      role: user.role,
     },
     xsrfToken
   );
@@ -175,52 +73,33 @@ export async function refresh(req: Request, res: Response): Promise<RefreshRespo
   requireXsrf(req);
 
   const refreshToken = req.cookies?.[REFRESH_COOKIE];
-  if (!refreshToken) throw appError(401, "UNAUTHENTICATED", "Missing refresh token");
+  if (!refreshToken) {
+    throw new UnauthorizedError(MISSING_REFRESH_TOKEN_MESSAGE);
+  }
 
-  const tokenHash = hashRefreshToken(refreshToken);
-  const row = await refreshRepo.findRefreshTokenByHash(tokenHash);
+  const refreshTokenHash = hashRefreshToken(refreshToken);
+  const refreshSession = await refreshRepo.findRefreshTokenByHash(refreshTokenHash);
 
-  if (!row) throw appError(401, "UNAUTHENTICATED", "Invalid refresh token");
+  if (!refreshSession || refreshSession.revokedAt) {
+    throw new UnauthorizedError(INVALID_REFRESH_TOKEN_MESSAGE);
+  }
 
-  if (row.revokedAt) throw appError(401, "UNAUTHENTICATED", "Invalid refresh token");
+  if (refreshSession.expiresAt.getTime() <= Date.now()) {
+    throw new UnauthorizedError(EXPIRED_REFRESH_TOKEN_MESSAGE);
+  }
 
-  if (row.expiresAt.getTime() <= Date.now())
-    throw appError(401, "UNAUTHENTICATED", "Expired refresh token");
+  const wasRevoked = await refreshRepo.revokeRefreshTokenByHash(refreshTokenHash);
 
-  const revoked = await refreshRepo.revokeRefreshTokenByHash(tokenHash);
-  if (!revoked) throw appError(401, "UNAUTHENTICATED", "Invalid refresh token");
+  if (!wasRevoked) {
+    throw new UnauthorizedError(INVALID_REFRESH_TOKEN_MESSAGE);
+  }
 
-  const { jti: nextJti, token: nextRefresh } = generateRefreshToken();
-  const nextHash = hashRefreshToken(nextRefresh);
+  const user = await usersRepo.findUserAuthById(refreshSession.userId);
+  if (!user) {
+    throw new UnauthorizedError(UNAUTHENTICATED_MESSAGE);
+  }
 
-  await refreshRepo.createRefreshToken({
-    userId: row.userId,
-    jti: nextJti,
-    tokenHash: nextHash,
-    createdAt: new Date(),
-    expiresAt: new Date(Date.now() + REFRESH_TTL_MS),
-    revokedAt: null,
-    ip: getIp(req),
-    userAgent: getUserAgent(req),
-  });
-
-  const u = await usersRepo.findUserAuthById(row.userId);
-  if (!u) throw appError(401, "UNAUTHENTICATED", "User not found");
-
-  const accessJti = generateJti();
-  const access = signAccessToken(
-    {
-      sub: u._id.toHexString(),
-      role: u.role,
-      tokenVersion: u.security.tokenVersion,
-      jti: accessJti,
-    },
-    ACCESS_TTL
-  );
-
-  res.cookie(ACCESS_COOKIE, access, accessCookieOpts);
-  res.cookie(REFRESH_COOKIE, nextRefresh, refreshCookieOpts);
-  const xsrfToken = issueXsrfCookie(res);
+  const { xsrfToken } = await issueAuthSession(req, res, user);
 
   return { ok: true, xsrfToken };
 }
@@ -231,8 +110,8 @@ export async function logout(req: Request, res: Response): Promise<{ ok: true }>
   const refreshToken = req.cookies?.[REFRESH_COOKIE];
 
   if (refreshToken) {
-    const tokenHash = hashRefreshToken(refreshToken);
-    await refreshRepo.revokeRefreshTokenByHash(tokenHash);
+    const refreshTokenHash = hashRefreshToken(refreshToken);
+    await refreshRepo.revokeRefreshTokenByHash(refreshTokenHash);
   }
 
   clearAuthCookies(res);
@@ -241,10 +120,14 @@ export async function logout(req: Request, res: Response): Promise<{ ok: true }>
 
 export async function me(req: Request): Promise<MeResponseT> {
   const claims = req.user;
-  if (!claims) throw appError(401, "UNAUTHENTICATED", "Unauthenticated");
+  if (!claims) {
+    throw new UnauthorizedError(UNAUTHENTICATED_MESSAGE);
+  }
 
-  const u = await usersRepo.findUserMeById(toObjectId(claims.sub));
-  if (!u) throw appError(401, "UNAUTHENTICATED", "Unauthenticated");
+  const user = await usersRepo.findUserMeById(toObjectId(claims.sub));
+  if (!user) {
+    throw new UnauthorizedError(UNAUTHENTICATED_MESSAGE);
+  }
 
-  return toAuthOkMe(userToAuthMeDto(u));
+  return toAuthOkMe(userToAuthMeDto(user));
 }

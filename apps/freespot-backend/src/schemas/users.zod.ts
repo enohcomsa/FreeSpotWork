@@ -46,7 +46,6 @@ export const UserMePreferencesUpdate = strictObj({
 
 
 export const UserResponse = UserBase.extend({ id: ObjectIdStr }).openapi("UserResponse");
-export const UserList = z.array(UserResponse).openapi("UserList");
 
 export type UserBaseT = z.infer<typeof UserBase>;
 export type UserCreateRequest = z.infer<typeof UserCreate>;

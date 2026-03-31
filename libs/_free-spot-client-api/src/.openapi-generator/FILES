@@ -82,6 +82,7 @@ model/program-year-create.ts
 model/program-year-id-param.ts
 model/program-year-response.ts
 model/program-year-update.ts
+model/refresh-response.ts
 model/reschedule-option.ts
 model/reschedule-options-query.ts
 model/reschedule-options-response-current-booking.ts

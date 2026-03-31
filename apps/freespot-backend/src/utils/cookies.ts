@@ -32,6 +32,11 @@ export const xsrfCookieOpts: CookieOptions = {
   maxAge: 30 * 24 * 60 * 60 * 1000,
 };
 
+export function setAuthCookies(res: Response, accessToken: string, refreshToken: string) {
+  res.cookie(ACCESS_COOKIE, accessToken, accessCookieOpts);
+  res.cookie(REFRESH_COOKIE, refreshToken, refreshCookieOpts);
+}
+
 export function clearAuthCookies(res: Response) {
   res.clearCookie(ACCESS_COOKIE, {
     httpOnly: true,

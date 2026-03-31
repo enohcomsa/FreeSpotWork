@@ -26,8 +26,6 @@ export const EventResponse = EventBase.extend({
   date: z.string(),
 }).openapi("EventResponse");
 
-export const EventList = z.array(EventResponse).openapi("EventList");
-
 export type EventBaseT = z.infer<typeof EventBase>;
 export type EventCreateRequest = z.infer<typeof EventCreate>;
 export type EventUpdateRequest = z.infer<typeof EventUpdate>;

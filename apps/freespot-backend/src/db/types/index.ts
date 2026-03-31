@@ -1,5 +1,4 @@
 export * from "./floors.db";
-// export * from "./availability.db";
 export * from "./bookings.db";
 export * from "./buildings.db";
 export * from "./cohorts.db";

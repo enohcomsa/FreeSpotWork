@@ -3,7 +3,7 @@ import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { ObjectIdStr, SubjectIdArray } from "./common.zod";
 import { strictObj, nonEmptyDefinedPatch } from "../utils/zod-helpers";
 
-extendZodWithOpenApi(z);
+extendZodWithOpenApi(z);//TODO: ananlyse the type in here and refactor/simplify
 
 export const RoomBase = strictObj({
   buildingId: ObjectIdStr,
@@ -18,7 +18,6 @@ export const RoomIdParam = z.object({ id: ObjectIdStr }).openapi("RoomIdParam");
 export const RoomCreate = RoomBase;
 export const RoomUpdate = nonEmptyDefinedPatch(RoomBase.partial());
 export const RoomResponse = RoomBase.extend({ id: ObjectIdStr });
-export const RoomList = z.array(RoomResponse);
 
 export const RoomBase_OA = strictObj({
   buildingId: ObjectIdStr,

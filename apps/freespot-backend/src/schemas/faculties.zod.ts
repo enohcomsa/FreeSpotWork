@@ -15,7 +15,6 @@ export const FacultyIdParam = z.object({ id: ObjectIdStr }).openapi("FacultyIdPa
 export const FacultyCreate = FacultyBase.openapi("FacultyCreate");
 export const FacultyUpdate = nonEmptyDefinedPatch(FacultyBase.partial()).openapi("FacultyUpdate");
 export const FacultyResponse = FacultyBase.extend({ id: ObjectIdStr }).openapi("FacultyResponse");
-export const FacultyList = z.array(FacultyResponse).openapi("FacultyList");
 
 export type FacultyBaseT = z.infer<typeof FacultyBase>;
 export type FacultyCreateRequest = z.infer<typeof FacultyCreate>;
