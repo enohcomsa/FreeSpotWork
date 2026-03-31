@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 
-export type EventTypeDTO = "SPECIAL";
+export type EventTypeDTO = "SPECIAL";//TODO: remove and create a plain type, than zod from that type
 
 export type EventDbBase = {
   type: EventTypeDTO;

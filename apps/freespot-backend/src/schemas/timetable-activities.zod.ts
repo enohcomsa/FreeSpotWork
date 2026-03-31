@@ -27,7 +27,6 @@ export const TimetableActivityCreate = TimetableActivityBaseRaw.refine((d) => d.
 export const TimetableActivityIdParam = z.object({ id: ObjectIdStr }).openapi("TimetableActivityIdParam");
 export const TimetableActivityUpdate = nonEmptyDefinedPatch(TimetableActivityBaseRaw.partial()).openapi("TimetableActivityUpdate");
 export const TimetableActivityResponse = TimetableActivityBaseRaw.extend({ id: ObjectIdStr }).openapi("TimetableActivityResponse");
-export const TimetableActivityList = z.array(TimetableActivityResponse).openapi("TimetableActivityList");
 
 export type TimetableActivityBaseT = z.infer<typeof TimetableActivityBase>;
 export type TimetableActivityCreateRequest = z.infer<typeof TimetableActivityCreate>;

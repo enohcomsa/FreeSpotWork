@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
-import { ObjectIdStr, ActivityType, ISODateStr } from "./common.zod";
+import { ObjectIdStr, ActivityType, ISODateStr, WeekDay } from "./common.zod";
 
 extendZodWithOpenApi(z);
 
@@ -13,7 +13,7 @@ export const RescheduleOption = z.object({
   subjectId: ObjectIdStr,
   activityType: ActivityType,
   date: z.string(),
-  weekDay: z.string(),
+  weekDay: WeekDay,
   startHour: z.number().int().min(0).max(23),
   endHour: z.number().int().min(1).max(24),
   capacity: z.number().int().min(0),

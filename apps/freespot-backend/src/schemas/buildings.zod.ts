@@ -14,7 +14,6 @@ export const BuildingIdParam = strictObj({ id: ObjectIdStr }).openapi("BuildingI
 export const BuildingCreate = BuildingBase.openapi("BuildingCreate");
 export const BuildingUpdate = nonEmptyDefinedPatch(BuildingBase.partial()).openapi("BuildingUpdate");
 export const BuildingResponse = BuildingBase.extend({ id: ObjectIdStr, }).openapi("BuildingResponse");
-export const BuildingList = z.array(BuildingResponse).openapi("BuildingList");
 
 export type BuildingBaseT = z.infer<typeof BuildingBase>;
 export type BuildingCreateRequest = z.infer<typeof BuildingCreate>;

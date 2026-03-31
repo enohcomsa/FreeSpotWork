@@ -16,7 +16,6 @@ export const ProgramYearIdParam = z.object({ id: ObjectIdStr }).openapi("Program
 export const ProgramYearCreate = ProgramYearBase.openapi("ProgramYearCreate");
 export const ProgramYearUpdate = nonEmptyDefinedPatch(ProgramYearBase.partial()).openapi("ProgramYearUpdate");
 export const ProgramYearResponse = ProgramYearBase.extend({ id: ObjectIdStr }).openapi("ProgramYearResponse");
-export const ProgramYearList = z.array(ProgramYearResponse).openapi("ProgramYearList");
 
 export type ProgramYearBaseT = z.infer<typeof ProgramYearBase>;
 export type ProgramYearCreateRequest = z.infer<typeof ProgramYearCreate>;

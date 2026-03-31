@@ -16,7 +16,6 @@ export const CohortIdParam = z.object({ id: ObjectIdStr }).openapi("CohortIdPara
 export const CohortCreate = CohortBase.openapi("CohortCreate");
 export const CohortUpdate = nonEmptyDefinedPatch(CohortBase.partial()).openapi("CohortUpdate");
 export const CohortResponse = CohortBase.extend({ id: ObjectIdStr }).openapi("CohortResponse");
-export const CohortList = z.array(CohortResponse).openapi("CohortList");
 
 export type CohortBaseT = z.infer<typeof CohortBase>;
 export type CohortCreateRequest = z.infer<typeof CohortCreate>;

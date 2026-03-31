@@ -14,7 +14,6 @@ export const SubjectIdParam = z.object({ id: ObjectIdStr }).openapi("SubjectIdPa
 export const SubjectCreate = SubjectBase.openapi("SubjectCreate");
 export const SubjectUpdate = nonEmptyDefinedPatch(SubjectBase.partial()).openapi("SubjectUpdate");
 export const SubjectResponse = SubjectBase.extend({ id: ObjectIdStr }).openapi("SubjectResponse");
-export const SubjectList = z.array(SubjectResponse).openapi("SubjectList");
 
 export type SubjectBaseT = z.infer<typeof SubjectBase>;
 export type SubjectCreateRequest = z.infer<typeof SubjectCreate>;

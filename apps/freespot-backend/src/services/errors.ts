@@ -31,3 +31,15 @@ export class InternalError extends AppError {
     super(500, "INTERNAL", message);
   }
 }
+
+export class UnauthorizedError extends AppError {
+  constructor(message = "Unauthenticated") {
+    super(401, "UNAUTHENTICATED", message);
+  }
+}
+
+export class ForbiddenError extends AppError {
+  constructor(message = "Forbidden", code = "FORBIDDEN") {
+    super(404, code, message);
+  }
+}

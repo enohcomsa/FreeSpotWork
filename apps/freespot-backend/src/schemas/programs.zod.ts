@@ -16,7 +16,6 @@ export const ProgramIdParam = z.object({ id: ObjectIdStr }).openapi("ProgramIdPa
 export const ProgramCreate = ProgramBase.openapi("ProgramCreate");
 export const ProgramUpdate = nonEmptyDefinedPatch(ProgramBase.partial()).openapi("ProgramUpdate");
 export const ProgramResponse = ProgramBase.extend({ id: ObjectIdStr }).openapi("ProgramResponse");
-export const ProgramList = z.array(ProgramResponse).openapi("ProgramList");
 
 export type ProgramBaseT = z.infer<typeof ProgramBase>;
 export type ProgramCreateRequest = z.infer<typeof ProgramCreate>;
