@@ -1,3 +1,4 @@
+import { DEGREES } from "../../schemas/common.constants";
 import { CollectionSpec } from "../migrate/helpers";
 
 export const programsSpec: CollectionSpec = {
@@ -9,12 +10,12 @@ export const programsSpec: CollectionSpec = {
       _id: { bsonType: "objectId" },
       facultyId: { bsonType: "objectId" },
       name: { bsonType: "string", minLength: 1 },
-      degree: { enum: ["lic", "master", "doct"], description: "Degree tag" },
-      active: { bsonType: "bool" }
+      degree: { enum: [...DEGREES], description: "Degree tag" },
+      active: { bsonType: "bool" },
     },
-    additionalProperties: false
+    additionalProperties: false,
   },
   indexes: [
-    { key: { facultyId: 1, name: 1 }, name: "uniq_faculty_program", unique: true }
-  ]
+    { key: { facultyId: 1, name: 1 }, name: "uniq_faculty_program", unique: true },
+  ],
 };

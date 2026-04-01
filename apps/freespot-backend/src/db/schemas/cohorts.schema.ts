@@ -1,3 +1,4 @@
+import { COHORT_TYPES } from "../../schemas/common.constants";
 import { CollectionSpec } from "../migrate/helpers";
 
 export const cohortsSpec: CollectionSpec = {
@@ -7,15 +8,15 @@ export const cohortsSpec: CollectionSpec = {
     required: ["_id", "type", "programYearId", "name", "parentGroupId"],
     properties: {
       _id: { bsonType: "objectId" },
-      type: { enum: ["GROUP", "SEMIGROUP"] },
+      type: { enum: [...COHORT_TYPES] },
       programYearId: { bsonType: "objectId" },
       name: { bsonType: "string", minLength: 1 },
-      parentGroupId: { bsonType: ["objectId", "null"] }
+      parentGroupId: { oneOf: [{ bsonType: "objectId" }, { bsonType: "null" }] },
     },
-    additionalProperties: false
+    additionalProperties: false,
   },
   indexes: [
     { key: { programYearId: 1, name: 1 }, name: "uniq_year_name", unique: true },
-    { key: { parentGroupId: 1 }, name: "by_parent_group" }
-  ]
+    { key: { parentGroupId: 1 }, name: "by_parent_group" },
+  ],
 };

@@ -2,7 +2,6 @@ import 'dotenv/config';
 import { withDb } from './helpers';
 import { run as init } from './000-init';
 import { run as dropFloorCounters } from "./001-drop-floor-counters";
-import { run as bookingsRefactor } from "./004-bookings-refactor";
 
 const dbName = process.env.MONGODB_DB;
 
@@ -12,7 +11,6 @@ async function main() {
   await withDb(uri, async (db) => {
     await init(db);               // creates/updates collections as they are now
     await dropFloorCounters(db);  // unsets fields, then reapplies updated floorsSpec
-    await bookingsRefactor(db);
   }, dbName);
   console.log('✅ Migrations applied');
 }

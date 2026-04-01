@@ -1,7 +1,8 @@
 import type { TimetableActivityCreateRequest, TimetableActivityUpdateRequest, TimetableActivityResponseDto } from "../schemas/timetable-activities.zod";
 import * as repo from "../repos/timetable-activities.repo";
-import { NotFoundError } from "./errors";
-import { mapMongoError } from "./mongo";
+import { NotFoundError } from "../errors/app-errors";
+import { mapMongoError } from "../errors/mongo-error.mapper";
+
 
 export async function getTimetableActivities(): Promise<TimetableActivityResponseDto[]> { return repo.listTimetableActivities(); }
 

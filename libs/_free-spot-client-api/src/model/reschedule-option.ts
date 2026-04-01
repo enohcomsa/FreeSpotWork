@@ -8,6 +8,7 @@
  * Do not edit the class manually.
  */
 import { ActivityTypeDTO } from './activity-type';
+import { WeekDayDTO } from './week-day';
 
 
 export interface RescheduleOptionDTO { 
@@ -15,7 +16,7 @@ export interface RescheduleOptionDTO {
     subjectId: string;
     activityType: ActivityTypeDTO;
     date: string;
-    weekDay: string;
+    weekDay: WeekDayDTO;
     startHour: number;
     endHour: number;
     capacity: number;

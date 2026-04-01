@@ -1,3 +1,4 @@
+import { ACTIVITY_TYPES, BOOKING_STATUSES } from "../../schemas/common.constants";
 import { CollectionSpec } from "../migrate/helpers";
 
 export const bookingsSpec: CollectionSpec = {
@@ -10,7 +11,7 @@ export const bookingsSpec: CollectionSpec = {
       "userId",
       "activityType",
       "status",
-      "createdAt"
+      "createdAt",
     ],
     properties: {
       _id: { bsonType: "objectId" },
@@ -27,19 +28,21 @@ export const bookingsSpec: CollectionSpec = {
       subjectId: { oneOf: [{ bsonType: "objectId" }, { bsonType: "null" }] },
 
       activityType: {
-        enum: ["LABORATORY", "COURSE", "PROJECT", "SEMINAR", "SPECIAL_EVENT"]
+        enum: [...ACTIVITY_TYPES],
       },
 
-      status: { enum: ["CONFIRMED", "WAITLISTED", "CANCELLED"] },
+      status: {
+        enum: [...BOOKING_STATUSES],
+      },
 
       originalActivityId: { oneOf: [{ bsonType: "objectId" }, { bsonType: "null" }] },
       isRescheduled: { oneOf: [{ bsonType: "bool" }, { bsonType: "null" }] },
       rescheduledAt: { oneOf: [{ bsonType: "date" }, { bsonType: "null" }] },
 
       createdAt: { bsonType: "date" },
-      updatedAt: { oneOf: [{ bsonType: "date" }, { bsonType: "null" }] }
+      updatedAt: { oneOf: [{ bsonType: "date" }, { bsonType: "null" }] },
     },
-    additionalProperties: false
+    additionalProperties: false,
   },
 
   indexes: [
@@ -49,6 +52,6 @@ export const bookingsSpec: CollectionSpec = {
     { key: { userId: 1, status: 1 }, name: "by_user_status" },
     { key: { programYearId: 1, activityType: 1 }, name: "by_programYear_activityType" },
     { key: { subjectId: 1, activityType: 1 }, name: "by_subject_activityType" },
-    { key: { originalActivityId: 1 }, name: "by_originalActivityId" }
-  ]
+    { key: { originalActivityId: 1 }, name: "by_originalActivityId" },
+  ],
 };

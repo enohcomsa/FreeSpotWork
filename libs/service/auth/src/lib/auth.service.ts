@@ -1,13 +1,24 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { catchError, finalize, Observable, of, switchMap, tap } from 'rxjs';
+import { Router } from '@angular/router';
+import {
+  catchError,
+  finalize,
+  map,
+  Observable,
+  of,
+  shareReplay,
+  switchMap,
+  tap,
+  throwError,
+} from 'rxjs';
 import {
   AuthHttpService,
   AuthOkResponseDTO,
   LoginRequestDTO,
   MeResponseDTO,
+  RefreshResponseDTO,
   SignupRequestDTO,
 } from '@free-spot/api-client';
-import { Router } from '@angular/router';
 import { authDtoToDomain, User } from '@free-spot-domain/user';
 import { Role } from '@free-spot/enums';
 
@@ -15,21 +26,24 @@ import { Role } from '@free-spot/enums';
   providedIn: 'root',
 })
 export class AuthService {
-  private _authHttp = inject(AuthHttpService);
-  private _router = inject(Router);
+  private readonly _authHttp = inject(AuthHttpService);
+  private readonly _router = inject(Router);
 
-  private _user = signal<User | null>(null);
-  private _xsrfToken = signal<string | null>(null);
-  private _initialized = signal(false);
-  private _loadingMe = signal(false);
+  private readonly _user = signal<User | null>(null);
+  private readonly _xsrfToken = signal<string | null>(null);
+  private readonly _initialized = signal(false);
+  private readonly _loadingMe = signal(false);
 
-  userSignal$ = this._user.asReadonly();
-  xsrfTokenSignal$ = this._xsrfToken.asReadonly();
-  initializedSignal$ = this._initialized.asReadonly();
-  loadingMeSignal$ = this._loadingMe.asReadonly();
+  private _loadMeInFlight$: Observable<MeResponseDTO | null> | null = null;
+  private _refreshSessionInFlight$: Observable<void> | null = null;
 
-  isAuthenticated = computed(() => !!this._user());
-  isAdmin = computed(() => this._user()?.role === Role.ADMIN);
+  readonly userSignal$ = this._user.asReadonly();
+  readonly xsrfTokenSignal$ = this._xsrfToken.asReadonly();
+  readonly initializedSignal$ = this._initialized.asReadonly();
+  readonly loadingMeSignal$ = this._loadingMe.asReadonly();
+
+  readonly isAuthenticated = computed(() => !!this._user());
+  readonly isAdmin = computed(() => this._user()?.role === Role.ADMIN);
 
   login(payload: LoginRequestDTO): Observable<MeResponseDTO | null> {
     return this._authHttp.authLogin({ loginRequestDTO: payload }).pipe(
@@ -68,13 +82,13 @@ export class AuthService {
   }
 
   loadMe(): Observable<MeResponseDTO | null> {
-    if (this._loadingMe()) {
-      return of(null);
+    if (this._loadMeInFlight$) {
+      return this._loadMeInFlight$;
     }
 
     this._loadingMe.set(true);
 
-    return this._authHttp.authMe().pipe(
+    this._loadMeInFlight$ = this._authHttp.authMe().pipe(
       tap((response: MeResponseDTO) => {
         this._setUserFromResponse(response);
       }),
@@ -84,8 +98,36 @@ export class AuthService {
       }),
       finalize(() => {
         this._loadingMe.set(false);
+        this._loadMeInFlight$ = null;
       }),
+      shareReplay(1),
     );
+
+    return this._loadMeInFlight$;
+  }
+
+  refreshSession(): Observable<void> {
+    if (this._refreshSessionInFlight$) {
+      return this._refreshSessionInFlight$;
+    }
+
+    this._refreshSessionInFlight$ = this._authHttp.authRefresh({ body: {} }).pipe(
+      tap((response: RefreshResponseDTO) => {
+        this.setXsrfToken(response.xsrfToken ?? null);
+      }),
+      switchMap(() => this.loadMe()),
+      map(() => void 0),
+      catchError((error) => {
+        this.clearSession();
+        return throwError(() => error);
+      }),
+      finalize(() => {
+        this._refreshSessionInFlight$ = null;
+      }),
+      shareReplay(1),
+    );
+
+    return this._refreshSessionInFlight$;
   }
 
   setXsrfToken(token: string | null): void {

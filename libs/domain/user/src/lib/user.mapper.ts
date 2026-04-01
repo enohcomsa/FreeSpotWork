@@ -1,8 +1,5 @@
 import {
   AuthUserDTO,
-  AuthUserDTOPreferredLanguageEnum,
-  AuthUserDTOPreferredThemeEnum,
-  AuthUserDTORoleEnum,
   PreferredLanguageDTO,
   PreferredThemeDTO,
   UserMePreferencesUpdateDTO,
@@ -91,7 +88,7 @@ function toRole(dto: UserRoleDTO): Role {
   return Role[dto as keyof typeof Role];
 }
 
-function toRoleFromAuth(dto: AuthUserDTORoleEnum): Role {
+function toRoleFromAuth(dto: UserRoleDTO): Role {
   return Role[dto as keyof typeof Role];
 }
 
@@ -109,14 +106,14 @@ function toLanguage(dto?: PreferredLanguageDTO | null): Language | null | undefi
   }
 }
 
-function toLanguageFromAuth(dto?: AuthUserDTOPreferredLanguageEnum | null): Language | null | undefined {
+function toLanguageFromAuth(dto?: PreferredLanguageDTO | null): Language | null | undefined {
   if (dto === undefined) return undefined;
   if (dto === null) return null;
 
   switch (dto) {
-    case AuthUserDTOPreferredLanguageEnum.EN:
+    case PreferredLanguageDTO.EN:
       return Language.EN;
-    case AuthUserDTOPreferredLanguageEnum.RO:
+    case PreferredLanguageDTO.RO:
       return Language.RO;
     default:
       return undefined;
@@ -129,7 +126,7 @@ function toTheme(dto?: PreferredThemeDTO | null): Theme | null | undefined {
   return Theme[dto as keyof typeof Theme];
 }
 
-function toThemeFromAuth(dto?: AuthUserDTOPreferredThemeEnum | null): Theme | null | undefined {
+function toThemeFromAuth(dto?: PreferredThemeDTO | null): Theme | null | undefined {
   if (dto === undefined) return undefined;
   if (dto === null) return null;
   return Theme[dto as keyof typeof Theme];

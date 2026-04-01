@@ -4,7 +4,7 @@ import { MongoClient, Db } from 'mongodb';
 let client: MongoClient | null = null;
 let db: Db | null = null;
 
-const uri = process.env.MONGODB_URI as string;
+const uri = process.env.MONGODB_URI;
 if (!uri) throw new Error('MONGODB_URI missing');
 
 const dbName = process.env.MONGODB_DB;

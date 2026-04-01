@@ -1,40 +1,66 @@
 import type { ErrorRequestHandler } from "express";
 import { ZodError } from "zod";
 
-type AppErrorLike = { status?: number; code?: string; message?: string };
-type MongoErrorLike = { code?: number; message?: string; name?: string };
+type AppErrorLike = {
+  status?: number;
+  code?: string;
+  message?: string;
+};
 
-const isZod = (err: unknown): err is ZodError => err instanceof ZodError;
-const isMongoDuplicateKey = (err: unknown): err is MongoErrorLike =>
-  typeof (err as MongoErrorLike)?.code === "number" && (err as MongoErrorLike).code === 11000;
+const HTTP_STATUS_UNPROCESSABLE_ENTITY = 422;
+const HTTP_STATUS_INTERNAL_SERVER_ERROR = 500;
 
-const normalizeAppError = (err: unknown) => {
-  const app = err as AppErrorLike;
-  const status = typeof app.status === "number" ? app.status : 500;
-  const code = typeof app.code === "string" ? app.code : status === 500 ? "INTERNAL" : "ERROR";
-  const message = (err as Error)?.message ?? "Internal Server Error";
+const ERROR_CODE_INTERNAL = "INTERNAL";
+const ERROR_CODE_GENERIC = "ERROR";
+const ERROR_CODE_VALIDATION = "ValidationError";
+
+const DEFAULT_INTERNAL_SERVER_ERROR_MESSAGE = "Internal Server Error";
+
+const isZodError = (error: unknown): error is ZodError =>
+  error instanceof ZodError;
+
+const normalizeAppError = (error: unknown) => {
+  const appError = error as AppErrorLike;
+
+  const status =
+    typeof appError.status === "number"
+      ? appError.status
+      : HTTP_STATUS_INTERNAL_SERVER_ERROR;
+
+  const code =
+    typeof appError.code === "string"
+      ? appError.code
+      : status === HTTP_STATUS_INTERNAL_SERVER_ERROR
+        ? ERROR_CODE_INTERNAL
+        : ERROR_CODE_GENERIC;
+
+  const message =
+    (error as Error)?.message ?? DEFAULT_INTERNAL_SERVER_ERROR_MESSAGE;
+
   return { status, code, message };
 };
 
-export const errorHandler: ErrorRequestHandler = (err, _req, res, next) => {
+export const errorHandler: ErrorRequestHandler = (error, _req, res, next) => {
   void next;
 
-  if (isZod(err)) {
-    return res.status(400).json({
-      error: "ValidationError",
-      issues: err.issues.map(i => ({ path: i.path.join("."), message: i.message })),
+  if (isZodError(error)) {
+    return res.status(HTTP_STATUS_UNPROCESSABLE_ENTITY).json({
+      error: ERROR_CODE_VALIDATION,
+      issues: error.issues.map(issue => ({
+        path: issue.path.join("."),
+        message: issue.message,
+      })),
     });
   }
 
-  if (isMongoDuplicateKey(err)) {
-    return res.status(409).json({ error: "Conflict", message: "Duplicate key" });
-  }
-
-  const { status, code, message } = normalizeAppError(err);
+  const { status, code, message } = normalizeAppError(error);
 
   if (process.env.NODE_ENV !== "production") {
-    console.error("[error]", err);
+    console.error("[error]", error);
   }
 
-  return res.status(status).json({ error: code, message });
+  return res.status(status).json({
+    error: code,
+    message,
+  });
 };
