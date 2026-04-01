@@ -7,34 +7,25 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { PreferredThemeDTO } from './preferred-theme';
+import { UserRoleDTO } from './user-role';
+import { PreferredLanguageDTO } from './preferred-language';
 
 
 export interface AuthUserDTO { 
     id: string;
     email: string;
-    role: AuthUserDTORoleEnum;
+    role: UserRoleDTO;
     firstName: string | null;
     familyName: string | null;
-    preferredLanguage?: AuthUserDTOPreferredLanguageEnum | null;
-    preferredTheme?: AuthUserDTOPreferredThemeEnum | null;
+    preferredLanguage?: PreferredLanguageDTO | null;
+    preferredTheme?: PreferredThemeDTO | null;
     facultyId: string | null;
     programId: string | null;
     programYearId: string | null;
     groupCohortId: string | null;
     semigroupCohortId?: string | null;
 }
-export enum AuthUserDTORoleEnum {
-    ADMIN = 'ADMIN',
-    MEMBER = 'MEMBER'
-};
-export enum AuthUserDTOPreferredLanguageEnum {
-    EN = 'en',
-    RO = 'ro'
-};
-export enum AuthUserDTOPreferredThemeEnum {
-    DARK = 'DARK',
-    LIGHT = 'LIGHT'
-};
 
 
 

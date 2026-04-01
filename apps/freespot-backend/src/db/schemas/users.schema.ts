@@ -1,3 +1,8 @@
+import {
+  USER_ROLES,
+  PREFERRED_LANGUAGES,
+  PREFERRED_THEMES,
+} from "../../schemas/common.constants";
 import { CollectionSpec } from "../migrate/helpers";
 
 export const usersSpec: CollectionSpec = {
@@ -20,47 +25,46 @@ export const usersSpec: CollectionSpec = {
       email: {
         bsonType: "string",
         minLength: 3,
-        pattern: "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$"
+        pattern: "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$",
       },
 
       username: {
         oneOf: [
           { bsonType: "string", minLength: 3, maxLength: 50 },
-          { bsonType: "null" }
-        ]
+          { bsonType: "null" },
+        ],
       },
 
       firstName: {
-        oneOf: [{ bsonType: "string", minLength: 1 }, { bsonType: "null" }]
+        oneOf: [{ bsonType: "string", minLength: 1 }, { bsonType: "null" }],
       },
       familyName: {
-        oneOf: [{ bsonType: "string", minLength: 1 }, { bsonType: "null" }]
+        oneOf: [{ bsonType: "string", minLength: 1 }, { bsonType: "null" }],
       },
 
-
-      role: { enum: ["ADMIN", "MEMBER"] },
+      role: { enum: [...USER_ROLES] },
 
       preferredLanguage: {
-        oneOf: [{ enum: ["en", "ro"] }, { bsonType: "null" }]
+        oneOf: [{ enum: [...PREFERRED_LANGUAGES] }, { bsonType: "null" }],
       },
       preferredTheme: {
-        oneOf: [{ enum: ["DARK", "LIGHT"] }, { bsonType: "null" }]
+        oneOf: [{ enum: [...PREFERRED_THEMES] }, { bsonType: "null" }],
       },
 
       facultyId: {
-        oneOf: [{ bsonType: "objectId" }, { bsonType: "null" }]
+        oneOf: [{ bsonType: "objectId" }, { bsonType: "null" }],
       },
       programId: {
-        oneOf: [{ bsonType: "objectId" }, { bsonType: "null" }]
+        oneOf: [{ bsonType: "objectId" }, { bsonType: "null" }],
       },
       programYearId: {
-        oneOf: [{ bsonType: "objectId" }, { bsonType: "null" }]
+        oneOf: [{ bsonType: "objectId" }, { bsonType: "null" }],
       },
       groupCohortId: {
-        oneOf: [{ bsonType: "objectId" }, { bsonType: "null" }]
+        oneOf: [{ bsonType: "objectId" }, { bsonType: "null" }],
       },
       semigroupCohortId: {
-        oneOf: [{ bsonType: "objectId" }, { bsonType: "null" }]
+        oneOf: [{ bsonType: "objectId" }, { bsonType: "null" }],
       },
 
       emailVerified: { bsonType: "bool" },
@@ -71,26 +75,26 @@ export const usersSpec: CollectionSpec = {
           local: {
             bsonType: "object",
             properties: {
-              hash: { bsonType: "string", minLength: 20 }
+              hash: { bsonType: "string", minLength: 20 },
             },
-            additionalProperties: false
-          }
+            additionalProperties: false,
+          },
         },
-        additionalProperties: false
+        additionalProperties: false,
       },
 
       security: {
         bsonType: "object",
         properties: {
-          tokenVersion: { bsonType: "int", minimum: 0 }
+          tokenVersion: { bsonType: "int", minimum: 0 },
         },
-        additionalProperties: false
+        additionalProperties: false,
       },
 
       createdAt: { bsonType: "date" },
-      updatedAt: { bsonType: "date" }
+      updatedAt: { bsonType: "date" },
     },
-    additionalProperties: false
+    additionalProperties: false,
   },
 
   indexes: [
@@ -99,10 +103,10 @@ export const usersSpec: CollectionSpec = {
       key: { username: 1 },
       name: "uniq_username",
       unique: true,
-      partialFilterExpression: { username: { $type: "string" } }
+      partialFilterExpression: { username: { $type: "string" } },
     },
     { key: { programId: 1 }, name: "by_programId" },
     { key: { groupCohortId: 1 }, name: "by_groupCohortId" },
-    { key: { semigroupCohortId: 1 }, name: "by_semigroupCohortId" }
-  ]
+    { key: { semigroupCohortId: 1 }, name: "by_semigroupCohortId" },
+  ],
 };

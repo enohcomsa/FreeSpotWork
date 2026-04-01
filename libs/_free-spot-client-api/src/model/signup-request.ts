@@ -12,6 +12,6 @@
 export interface SignupRequestDTO { 
     email: string;
     password: string;
-    username?: string;
+    username: string;
 }
 

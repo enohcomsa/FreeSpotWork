@@ -16,9 +16,10 @@ import { requireXsrf } from "../utils/xsrf";
 import { REFRESH_COOKIE, clearAuthCookies } from "../utils/cookies";
 import { toObjectId } from "../utils/mongo";
 
-import { UnauthorizedError } from "./errors";
 import { issueAuthSession } from "./auth-session.service";
 import { hashRefreshToken } from "../utils/tokens";
+import { UnauthorizedError } from "../errors/app-errors";
+import { mapMongoError } from "../errors/mongo-error.mapper";
 
 const INVALID_CREDENTIALS_MESSAGE = "Invalid credentials";
 const MISSING_REFRESH_TOKEN_MESSAGE = "Missing refresh token";
@@ -26,9 +27,20 @@ const INVALID_REFRESH_TOKEN_MESSAGE = "Invalid refresh token";
 const EXPIRED_REFRESH_TOKEN_MESSAGE = "Expired refresh token";
 const UNAUTHENTICATED_MESSAGE = "Unauthenticated";
 
-export async function signup(req: Request, res: Response, input: SignupRequestT): Promise<AuthOkResponseT> {
+export async function signup(
+  req: Request,
+  res: Response,
+  input: SignupRequestT,
+): Promise<AuthOkResponseT> {
   const passwordHash = await hashPassword(input.password);
-  const user = await usersRepo.createUser(input, passwordHash);
+
+  let user: Awaited<ReturnType<typeof usersRepo.createUser>> | null = null;
+
+  try {
+    user = await usersRepo.createUser(input, passwordHash);
+  } catch (error) {
+    mapMongoError(error);
+  }
 
   const { xsrfToken } = await issueAuthSession(req, res, user);
 
@@ -38,11 +50,15 @@ export async function signup(req: Request, res: Response, input: SignupRequestT)
       email: user.email,
       role: user.role,
     },
-    xsrfToken
+    xsrfToken,
   );
 }
 
-export async function login(req: Request, res: Response, input: LoginRequestT): Promise<AuthOkResponseT> {
+export async function login(
+  req: Request,
+  res: Response,
+  input: LoginRequestT,
+): Promise<AuthOkResponseT> {
   const normalizedIdentifier = input.identifier.trim().toLowerCase();
 
   const user = await usersRepo.findUserAuthByIdentifier(normalizedIdentifier);
@@ -65,11 +81,14 @@ export async function login(req: Request, res: Response, input: LoginRequestT): 
       email: user.email,
       role: user.role,
     },
-    xsrfToken
+    xsrfToken,
   );
 }
 
-export async function refresh(req: Request, res: Response): Promise<RefreshResponseT> {
+export async function refresh(
+  req: Request,
+  res: Response,
+): Promise<RefreshResponseT> {
   requireXsrf(req);
 
   const refreshToken = req.cookies?.[REFRESH_COOKIE];
@@ -88,7 +107,13 @@ export async function refresh(req: Request, res: Response): Promise<RefreshRespo
     throw new UnauthorizedError(EXPIRED_REFRESH_TOKEN_MESSAGE);
   }
 
-  const wasRevoked = await refreshRepo.revokeRefreshTokenByHash(refreshTokenHash);
+  let wasRevoked = false;
+
+  try {
+    wasRevoked = await refreshRepo.revokeRefreshTokenByHash(refreshTokenHash);
+  } catch (error) {
+    mapMongoError(error);
+  }
 
   if (!wasRevoked) {
     throw new UnauthorizedError(INVALID_REFRESH_TOKEN_MESSAGE);
@@ -104,14 +129,22 @@ export async function refresh(req: Request, res: Response): Promise<RefreshRespo
   return { ok: true, xsrfToken };
 }
 
-export async function logout(req: Request, res: Response): Promise<{ ok: true }> {
+export async function logout(
+  req: Request,
+  res: Response,
+): Promise<{ ok: true }> {
   requireXsrf(req);
 
   const refreshToken = req.cookies?.[REFRESH_COOKIE];
 
   if (refreshToken) {
     const refreshTokenHash = hashRefreshToken(refreshToken);
-    await refreshRepo.revokeRefreshTokenByHash(refreshTokenHash);
+
+    try {
+      await refreshRepo.revokeRefreshTokenByHash(refreshTokenHash);
+    } catch (error) {
+      mapMongoError(error);
+    }
   }
 
   clearAuthCookies(res);

@@ -1,7 +1,8 @@
 import type { RoomCreateRequest, RoomUpdateRequest, RoomResponseDto } from "../schemas/rooms.zod";
 import * as repo from "../repos/rooms.repo";
-import { NotFoundError } from "./errors";
-import { mapMongoError } from "./mongo";
+import { NotFoundError } from "../errors/app-errors";
+import { mapMongoError } from "../errors/mongo-error.mapper";
+
 
 export async function getRooms(): Promise<RoomResponseDto[]> { return repo.listRooms(); }
 

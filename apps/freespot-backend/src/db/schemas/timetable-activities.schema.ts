@@ -1,3 +1,8 @@
+import {
+  ACTIVITY_TYPES,
+  WEEK_DAYS,
+  WEEK_PARITIES,
+} from "../../schemas/common.constants";
 import { CollectionSpec } from "../migrate/helpers";
 
 export const timetableActivitiesSpec: CollectionSpec = {
@@ -18,7 +23,7 @@ export const timetableActivitiesSpec: CollectionSpec = {
       "capacity",
       "reservedSpots",
       "busySpots",
-      "freeSpots"
+      "freeSpots",
     ],
     properties: {
       _id: { bsonType: "objectId" },
@@ -26,33 +31,25 @@ export const timetableActivitiesSpec: CollectionSpec = {
       subjectId: { bsonType: "objectId" },
       date: { bsonType: "string" },
       weekDay: {
-        enum: [
-          "MONDAY",
-          "TUESDAY",
-          "WEDNESDAY",
-          "THURSDAY",
-          "FRIDAY",
-          "SATURDAY",
-          "SUNDAY"
-        ]
+        enum: [...WEEK_DAYS],
       },
       activityType: {
-        enum: ["LABORATORY", "COURSE", "PROJECT", "SEMINAR", "SPECIAL_EVENT"]
+        enum: [...ACTIVITY_TYPES],
       },
       cohortIds: {
         bsonType: "array",
         uniqueItems: true,
-        items: { bsonType: "objectId" }
+        items: { bsonType: "objectId" },
       },
       startHour: { bsonType: "int", minimum: 0, maximum: 23 },
       endHour: { bsonType: "int", minimum: 1, maximum: 24 },
-      weekParity: { enum: ["BOTH", "EVEN", "ODD"] },
+      weekParity: { enum: [...WEEK_PARITIES] },
       capacity: { bsonType: "int", minimum: 0 },
       reservedSpots: { bsonType: "int", minimum: 0 },
       busySpots: { bsonType: "int", minimum: 0 },
-      freeSpots: { bsonType: "int", minimum: 0 }
+      freeSpots: { bsonType: "int", minimum: 0 },
     },
-    additionalProperties: false
+    additionalProperties: false,
   },
   indexes: [
     { key: { roomId: 1, date: 1, startHour: 1 }, name: "by_room_date_start" },
@@ -60,6 +57,6 @@ export const timetableActivitiesSpec: CollectionSpec = {
     { key: { cohortIds: 1, date: 1, startHour: 1 }, name: "by_cohort_date_start" },
     { key: { date: 1 }, name: "by_date" },
     { key: { subjectId: 1, date: 1 }, name: "by_subject_date" },
-    { key: { activityType: 1, date: 1 }, name: "by_type_date" }
-  ]
+    { key: { activityType: 1, date: 1 }, name: "by_type_date" },
+  ],
 };

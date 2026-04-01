@@ -4,28 +4,31 @@ import {
   HttpInterceptorFn,
 } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { catchError, switchMap, tap, throwError } from 'rxjs';
-import { AuthHttpService } from '@free-spot/api-client';
+import { catchError, switchMap, throwError } from 'rxjs';
 import { AuthService } from './auth.service';
 
 const RETRY_COUNT = new HttpContextToken<number>(() => 0);
 const MAX_RETRIES = 3;
 
-export const refreshInterceptor: HttpInterceptorFn = (req, next) => {
-  const authHttp = inject(AuthHttpService);
-  const authService = inject(AuthService);
+const AUTH_ROUTES_TO_SKIP = [
+  '/auth/login',
+  '/auth/signup',
+  '/auth/me',
+  '/auth/refresh',
+  '/auth/logout',
+] as const;
 
-if (
-  req.url.includes('/auth/login') ||
-  req.url.includes('/auth/signup') ||
-  req.url.includes('/auth/me') ||
-  req.url.includes('/auth/refresh') ||
-  req.url.includes('/auth/logout')
-) {
-  return next(req);
+function shouldSkipRefreshHandling(url: string): boolean {
+  return AUTH_ROUTES_TO_SKIP.some((route) => url.includes(route));
 }
 
+export const refreshInterceptor: HttpInterceptorFn = (req, next) => {
+  const authService = inject(AuthService);
   const retryCount = req.context.get(RETRY_COUNT);
+
+  if (shouldSkipRefreshHandling(req.url)) {
+    return next(req);
+  }
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
@@ -38,11 +41,7 @@ if (
         return throwError(() => error);
       }
 
-      return authHttp.authRefresh({ body: {} }).pipe(
-        tap((response) => {
-          authService.setXsrfToken(response.xsrfToken ?? null);
-        }),
-        switchMap(() => authService.loadMe()),
+      return authService.refreshSession().pipe(
         switchMap(() =>
           next(
             req.clone({

@@ -19,8 +19,8 @@ import {
   registerTimetableActivities,
   registerTimetableActivityCards,
   registerUsers,
+  registerAuth
 } from "./registrars";
-import { registerAuth } from "./registrars/auth.openapi";
 
 export function setupSwagger(app: Express) {
   const registry = new OpenAPIRegistry();

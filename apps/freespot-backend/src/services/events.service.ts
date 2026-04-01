@@ -1,7 +1,11 @@
-import type { EventCreateRequest, EventUpdateRequest, EventResponseDto } from "../schemas/events.zod";
+import type {
+  EventCreateRequest,
+  EventUpdateRequest,
+  EventResponseDto,
+} from "../schemas/events.zod";
 import * as repo from "../repos/events.repo";
-import { NotFoundError } from "./errors";
-import { mapMongoError } from "./mongo";
+import { NotFoundError } from "../errors/app-errors";
+import { mapMongoError } from "../errors/mongo-error.mapper";
 
 export async function getEvents(): Promise<EventResponseDto[]> {
   return repo.listEvents();
@@ -9,27 +13,55 @@ export async function getEvents(): Promise<EventResponseDto[]> {
 
 export async function getEvent(id: string): Promise<EventResponseDto> {
   const res = await repo.getEventById(id);
-  if (!res) throw new NotFoundError("Event not found");
+
+  if (!res) {
+    throw new NotFoundError("Event not found");
+  }
+
   return res;
 }
 
-export async function createEvent(input: EventCreateRequest): Promise<EventResponseDto> {
-  try { return await repo.createEvent(input); }
-  catch (e) { mapMongoError(e); }
+export async function createEvent(
+  input: EventCreateRequest,
+): Promise<EventResponseDto> {
+  try {
+    return await repo.createEvent(input);
+  } catch (error) {
+    mapMongoError(error);
+  }
 }
 
-export async function updateEvent(id: string, patch: EventUpdateRequest): Promise<EventResponseDto> {
+export async function updateEvent(
+  id: string,
+  patch: EventUpdateRequest,
+): Promise<EventResponseDto> {
+  let res: EventResponseDto | null;
+
   try {
-    const res = await repo.updateEventById(id, patch);
-    if (!res) throw new NotFoundError("Event not found");
-    return res;
-  } catch (e) { mapMongoError(e); }
+    res = await repo.updateEventById(id, patch);
+  } catch (error) {
+    mapMongoError(error);
+  }
+
+  if (!res) {
+    throw new NotFoundError("Event not found");
+  }
+
+  return res;
 }
 
 export async function deleteEvent(id: string): Promise<boolean> {
+  let ok: boolean;
+
   try {
-    const ok = await repo.deleteEventById(id);
-    if (!ok) throw new NotFoundError("Event not found");
-    return ok;
-  } catch (e) { mapMongoError(e); }
+    ok = await repo.deleteEventById(id);
+  } catch (error) {
+    mapMongoError(error);
+  }
+
+  if (!ok) {
+    throw new NotFoundError("Event not found");
+  }
+
+  return ok;
 }

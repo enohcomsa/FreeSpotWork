@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import crypto from "crypto";
-import { ForbiddenError } from "../services/errors";
 import { XSRF_COOKIE, xsrfCookieOpts } from "./cookies";
+import { ForbiddenError } from "../errors/app-errors";
 
 export const XSRF_HEADER = "X-XSRF-TOKEN";
 
