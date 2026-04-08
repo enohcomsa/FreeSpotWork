@@ -1,5 +1,5 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
-import { Theme } from '@free-spot/enums';
+import { Theme } from '@free-spot-domain/user';
 
 @Injectable({
   providedIn: 'root',

@@ -2,7 +2,8 @@ import { inject } from '@angular/core';
 import { CanActivateFn, Router, UrlTree } from '@angular/router';
 import { map, Observable } from 'rxjs';
 import { AuthService } from './auth.service';
-import { Role } from '@free-spot/enums';
+import { Role } from '@free-spot-domain/user';
+
 
 export const adminGuard: CanActivateFn = (): boolean | UrlTree | Observable<boolean | UrlTree> => {
   const authService = inject(AuthService);

@@ -46,7 +46,7 @@ export class BuildingsCardsHttpService extends BaseService {
     public buildingsCardsGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<BuildingCardDTO>>;
     public buildingsCardsGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<BuildingCardDTO>>>;
     public buildingsCardsGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<BuildingCardDTO>>>;
-    public buildingsCardsGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public buildingsCardsGet(observe: any = 'body', reportProgress = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -75,7 +75,7 @@ export class BuildingsCardsHttpService extends BaseService {
             }
         }
 
-        let localVarPath = `/buildings-cards`;
+        const localVarPath = `/buildings-cards`;
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<Array<BuildingCardDTO>>('get', `${basePath}${localVarPath}`,
             {
@@ -98,7 +98,7 @@ export class BuildingsCardsHttpService extends BaseService {
     public buildingsCardsIdGet(requestParameters: BuildingsCardsIdGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<BuildingCardDTO>;
     public buildingsCardsIdGet(requestParameters: BuildingsCardsIdGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<BuildingCardDTO>>;
     public buildingsCardsIdGet(requestParameters: BuildingsCardsIdGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<BuildingCardDTO>>;
-    public buildingsCardsIdGet(requestParameters: BuildingsCardsIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public buildingsCardsIdGet(requestParameters: BuildingsCardsIdGetRequestParams, observe: any = 'body', reportProgress = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling buildingsCardsIdGet.');
@@ -131,7 +131,7 @@ export class BuildingsCardsHttpService extends BaseService {
             }
         }
 
-        let localVarPath = `/buildings-cards/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        const localVarPath = `/buildings-cards/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<BuildingCardDTO>('get', `${basePath}${localVarPath}`,
             {

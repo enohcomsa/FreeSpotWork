@@ -3,5 +3,6 @@
   "dest": "../../../dist/libs/service/confitm-modal",
   "lib": {
     "entryFile": "src/index.ts"
-  }
+  },
+  "allowedNonPeerDependencies": []
 }

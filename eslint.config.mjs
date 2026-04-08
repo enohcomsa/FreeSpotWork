@@ -11,7 +11,7 @@ const compat = new FlatCompat({
 
 export default [
   {
-    ignores: ['**/dist'],
+    ignores: ['**/dist', '**/libs/_free-spot-client-api/**'],
   },
   { plugins: { '@nx': nxEslintPlugin } },
   {
@@ -24,52 +24,59 @@ export default [
           allow: [],
           depConstraints: [
             {
-              sourceTag: 'scope:app',
+              sourceTag: 'type:app',
               onlyDependOnLibsWithTags: [
-                'scope:lib',
-                'scope:service',
-                'scope:http-service',
-                'scope:ui',
-                'scope:util',
-                'scope:model',
+                'type:page',
+                'type:presentation',
+                'type:service',
+                'type:http',
+                'type:ui',
+                'type:domain',
+                'type:shared',
+                'type:util',
+                'type:api-client',
               ],
             },
             {
-              sourceTag: 'scope:lib',
+              sourceTag: 'type:page',
               onlyDependOnLibsWithTags: [
-                'scope:module',
-                'scope:service',
-                'scope:http-service',
-                'scope:ui',
-                'scope:util',
-                'scope:model',
+                'type:presentation',
+                'type:service',
+                'type:ui',
+                'type:domain',
+                'type:shared',
+                'type:util',
               ],
             },
             {
-              sourceTag: 'scope:module',
-              onlyDependOnLibsWithTags: ['scope:service', 'scope:ui', 'scope:util', 'scope:model'],
+              sourceTag: 'type:presentation',
+              onlyDependOnLibsWithTags: ['type:domain'],
             },
             {
-              sourceTag: 'scope:service',
-              onlyDependOnLibsWithTags: ['scope:http-service', 'scope:util', 'scope:model'],
+              sourceTag: 'type:service',
+              onlyDependOnLibsWithTags: ['type:http', 'type:domain', 'type:shared', 'type:util', 'type:presentation'],
             },
             {
-              sourceTag: 'scope:http-service',
-              onlyDependOnLibsWithTags: ['scope:api-client', 'scope:model'],
+              sourceTag: 'type:http',
+              onlyDependOnLibsWithTags: ['type:http', 'type:shared', 'type:util', 'type:api-client', 'type:presentation', 'type:domain'],
             },
             {
-              sourceTag: 'scope:ui',
-              onlyDependOnLibsWithTags: ['scope:module', 'scope:service', 'scope:ui', 'scope:util', 'scope:model'],
+              sourceTag: 'type:ui',
+              onlyDependOnLibsWithTags: ['type:shared', 'type:util', 'type:domain', 'type:service', 'type:presentation'],
             },
             {
-              sourceTag: 'scope:util',
-              onlyDependOnLibsWithTags: ['scope:util', 'scope:model'],
+              sourceTag: 'type:domain',
+              onlyDependOnLibsWithTags: ['type:domain', 'type:shared', 'type:util'],
             },
             {
-              sourceTag: 'scope:model',
-              onlyDependOnLibsWithTags: ['scope:model', 'scope:api-client'],
+              sourceTag: 'type:shared',
+              onlyDependOnLibsWithTags: ['type:util'],
             },
-          ],
+            {
+              sourceTag: 'type:util',
+              onlyDependOnLibsWithTags: ['type:util'],
+            },
+          ]
         },
       ],
     },

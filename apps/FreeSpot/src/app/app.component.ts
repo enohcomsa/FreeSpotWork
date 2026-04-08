@@ -2,9 +2,9 @@ import { Component, DestroyRef, inject, OnInit, DOCUMENT } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { LanguageService } from './translate/language.service';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
-import { Language, Theme } from '@free-spot/enums';
 import { TranslateService } from '@ngx-translate/core';
 import { ThemeService } from './theme/theme.service';
+import { Language, Theme } from '@free-spot-domain/user';
 
 
 @Component({

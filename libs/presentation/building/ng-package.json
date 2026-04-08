@@ -3,5 +3,9 @@
   "dest": "../../../dist/libs/presentation/building",
   "lib": {
     "entryFile": "src/index.ts"
-  }
+  },
+  "allowedNonPeerDependencies": [
+    "@free-spot-domain/building",
+    "@free-spot-domain/floor"
+  ]
 }

@@ -1,6 +1,5 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
-import { Language } from '@free-spot/enums';
-
+import { Language } from '@free-spot-domain/user';
 @Injectable({
   providedIn: 'root',
 })

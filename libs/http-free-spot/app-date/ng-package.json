@@ -3,5 +3,6 @@
   "dest": "../../../dist/libs/http-free-spot/app-date",
   "lib": {
     "entryFile": "src/index.ts"
-  }
+  },
+  "allowedNonPeerDependencies": []
 }

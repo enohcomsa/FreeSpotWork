@@ -9,9 +9,8 @@ import { SubjectService } from '@free-spot-service/subject';
 import { SubjectItem } from '@free-spot-domain/subject';
 import { Faculty, UpdateFacultyCmd } from '@free-spot-domain/faculty';
 import { AdminFacultyService } from '@free-spot-service/faculty';
-import { CreateProgramCmd, Program, UpdateProgramCmd } from '@free-spot-domain/program';
+import { CreateProgramCmd, DegreeType, Program, UpdateProgramCmd } from '@free-spot-domain/program';
 import { ProgramService } from '@free-spot-service/program';
-import { CohortTypeDTO, DegreeDTO } from '@free-spot/api-client';
 import { AbstractControl, FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormErrorMessage } from '@free-spot/util';
 import { take } from 'rxjs';
@@ -23,7 +22,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { ProgramYearService } from '@free-spot-service/program-year';
 import { CreateProgramYearCmd, ProgramYear, UpdateProgramYearCmd } from '@free-spot-domain/program-year';
 import { CohortService } from '@free-spot-service/cohort';
-import { Cohort, CreateCohortCmd } from '@free-spot-domain/cohort';
+import { Cohort, CohortType, CreateCohortCmd } from '@free-spot-domain/cohort';
 
 @Component({
   selector: 'free-spot-faculty',
@@ -66,11 +65,11 @@ export class FacultyComponent implements OnInit {
   addingProgram = false;
   editingProgram = false;
   editingProgramId: string | null = null;
-  degreeOptions = [DegreeDTO.LIC, DegreeDTO.MASTER, DegreeDTO.DOCT];
+  degreeOptions = [DegreeType.LIC, DegreeType.MASTER, DegreeType.DOCT];
 
   addProgramFormGroup = this._formBuilder.nonNullable.group({
     name: ['', [Validators.required, Validators.minLength(3)]],
-    degree: [DegreeDTO.LIC, Validators.required],
+    degree: [DegreeType.LIC, Validators.required],
   });
 
   addingYear = false;
@@ -101,7 +100,7 @@ export class FacultyComponent implements OnInit {
   }
 
   onAddingProgram(): void {
-    this.addProgramFormGroup.reset({ name: '', degree: DegreeDTO.LIC });
+    this.addProgramFormGroup.reset({ name: '', degree: DegreeType.LIC });
     this.editingProgram = false;
     this.editingProgramId = null;
     this.addingProgram = true;
@@ -129,7 +128,7 @@ export class FacultyComponent implements OnInit {
 
     this.addProgramFormGroup.patchValue({
       name: programToEdit.name,
-      degree: programToEdit.degree ?? DegreeDTO.LIC
+      degree: programToEdit.degree ?? DegreeType.LIC
     });
 
     this.addingProgram = true;
@@ -246,7 +245,7 @@ export class FacultyComponent implements OnInit {
       const addedGroup: string | undefined = newNames.difference(existingNames).values().next().value;
       if (addedGroup) {
         const newCohort: CreateCohortCmd = {
-          type: CohortTypeDTO.GROUP,
+          type: CohortType.GROUP,
           programYearId: yearId,
           name: addedGroup,
         }

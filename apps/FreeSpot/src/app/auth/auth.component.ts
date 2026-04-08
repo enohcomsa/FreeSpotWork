@@ -19,9 +19,9 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { FormErrorMessage } from '@free-spot/util';
 import { ThemeService } from '../theme/theme.service';
-import { Theme } from '@free-spot/enums';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
+import { Theme } from '@free-spot-domain/user';
 
 @Component({
   selector: 'free-spot-app-auth',

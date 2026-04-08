@@ -3,5 +3,14 @@
   "dest": "../../../dist/libs/pages/schedule",
   "lib": {
     "entryFile": "src/index.ts"
-  }
+  },
+  "allowedNonPeerDependencies": [
+    "@free-spot-domain/timetable-activity",
+    "@free-spot-presentation/timetable-activity-card",
+    "@free-spot-service/auth",
+    "@free-spot-service/room",
+    "@free-spot-service/subject",
+    "@free-spot-service/timetable-activity",
+    "@free-spot/ui"
+  ]
 }

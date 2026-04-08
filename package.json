@@ -2,6 +2,11 @@
   "name": "@angular-monorepo/source",
   "version": "0.0.0",
   "license": "MIT",
+  "workspaces": [
+    "libs/*",
+    "libs/*/*",
+    "libs/*/*/*"
+  ],
   "scripts": {
     "start": "nx serve FreeSpot",
     "start:backend": "nx serve freespot-backend",
@@ -58,7 +63,7 @@
     "@nx/eslint-plugin": "^21.5.3",
     "@nx/express": "^21.5.3",
     "@nx/jest": "^21.5.3",
-    "@nx/js": "^21.5.3",
+    "@nx/js": "21.6.10",
     "@nx/node": "^21.5.3",
     "@nx/web": "^21.5.3",
     "@nx/webpack": "^21.5.3",
@@ -77,7 +82,7 @@
     "@typescript-eslint/eslint-plugin": "^8.44.1",
     "@typescript-eslint/parser": "^8.44.1",
     "@typescript-eslint/utils": "^8.40.0",
-    "angular-eslint": "^20.2.0",
+    "angular-eslint": "^20.3.0",
     "autoprefixer": "^10.4.0",
     "cypress": "^14.4.0",
     "eslint": "^9.28.0",

@@ -24,7 +24,6 @@ import { BuildingService } from '@free-spot-service/building';
 import { BuildingCardService } from '@free-spot-service/building-card';
 import { AdminFacultyService } from '@free-spot-service/faculty';
 import { UserService } from '@free-spot-service/user';
-import { Role } from '@free-spot/enums';
 import { ConfirmModalService } from '@free-spot-service/confirm-modal';
 import { FormErrorMessage } from '@free-spot/util';
 import { AdminEventService } from '@free-spot-service/event';
@@ -40,9 +39,8 @@ import { Floor } from '@free-spot-domain/floor';
 import { AdminFloorService } from '@free-spot-service/floor';
 import { Faculty } from '@free-spot-domain/faculty';
 import { Room } from '@free-spot-domain/room';
-import { CreateSpecialEventCmd, SpecialEvent, UpdateSpecialEventCmd } from '@free-spot-domain/event';
-import { EventTypeDTO } from '@free-spot/api-client';
-import { User } from '@free-spot-domain/user';
+import { CreateSpecialEventCmd, EventType, SpecialEvent, UpdateSpecialEventCmd } from '@free-spot-domain/event';
+import { Role, User } from '@free-spot-domain/user';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatIconModule } from '@angular/material/icon';
@@ -297,7 +295,7 @@ export class AdminComponent implements OnInit, OnDestroy {
     eventDate.setHours(this.addEventFormGroup.controls['startHour'].value, 0, 0, 0);
 
     const newSpecialEvent: CreateSpecialEventCmd = {
-      type: EventTypeDTO.SPECIAL,
+      type: EventType.SPECIAL,
       name: this.addEventFormGroup.controls['name'].value,
       date: eventDate.toISOString(),
       startHour: this.addEventFormGroup.controls['startHour'].value,
@@ -335,7 +333,7 @@ export class AdminComponent implements OnInit, OnDestroy {
     eventDate.setHours(this.addEventFormGroup.controls['startHour'].value, 0, 0, 0);
 
     const updatedSpecialEvent: UpdateSpecialEventCmd = {
-      type: EventTypeDTO.SPECIAL,
+      type: EventType.SPECIAL,
       name: this.addEventFormGroup.controls['name'].value,
       date: eventDate.toISOString(),
       startHour: this.addEventFormGroup.controls['startHour'].value,

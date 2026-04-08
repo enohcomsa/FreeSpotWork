@@ -1,9 +1,8 @@
 {
   "name": "@free-spot-presentation/room",
   "version": "0.0.1",
-  "peerDependencies": {
-    "@angular/common": "^20.0.0",
-    "@angular/core": "^20.0.0"
-  },
-  "sideEffects": false
+  "sideEffects": false,
+  "dependencies": {
+    "@free-spot-domain/room": "0.0.1"
+  }
 }

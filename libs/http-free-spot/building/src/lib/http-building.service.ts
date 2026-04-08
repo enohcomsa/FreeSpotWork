@@ -1,7 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { BuildingsHttpService, BuildingResponseDTO, BuildingIdParamDTO } from '@free-spot/api-client';
-import { Building, dtoToDomain, toCreateDTO, toUpdateDTO, CreateBuildingCmd, UpdateBuildingCmd } from '@free-spot-domain/building';
+import { Building, CreateBuildingCmd, UpdateBuildingCmd } from '@free-spot-domain/building';
 import { map, Observable } from 'rxjs';
+import { dtoToDomain, toCreateDTO, toUpdateDTO } from './mappers/building.dto.mapper';
 
 @Injectable({ providedIn: 'root' })
 export class HttpBuildingService {

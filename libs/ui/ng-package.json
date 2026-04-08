@@ -3,5 +3,23 @@
   "dest": "../../dist/libs/ui",
   "lib": {
     "entryFile": "src/index.ts"
-  }
+  },
+  "allowedNonPeerDependencies": [
+    "@free-spot-domain/booking",
+    "@free-spot-domain/building",
+    "@free-spot-domain/floor",
+    "@free-spot-domain/room",
+    "@free-spot-domain/subject",
+    "@free-spot-domain/timetable-activity",
+    "@free-spot-presentation/timetable-activity-card",
+    "@free-spot-service/app-date",
+    "@free-spot-service/booking",
+    "@free-spot-service/building",
+    "@free-spot-service/confirm-modal",
+    "@free-spot-service/floor",
+    "@free-spot-service/room",
+    "@free-spot-service/subject",
+    "@free-spot-service/timetable-activity",
+    "@free-spot/util"
+  ]
 }

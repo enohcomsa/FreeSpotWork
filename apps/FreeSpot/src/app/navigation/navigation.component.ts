@@ -4,7 +4,6 @@ import { RouterModule } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
 import { MatDividerModule } from '@angular/material/divider';
-import { Language, Role, Theme } from '@free-spot/enums';
 import { LoadingComponent } from '../loading/loading.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
@@ -15,7 +14,7 @@ import { ThemeService } from '../theme/theme.service';
 import { AuthService } from '@free-spot-service/auth';
 import { HttpUserService } from '@http-free-spot/user';
 import { take } from 'rxjs';
-import { UpdateMyPreferencesCmd } from '@free-spot-domain/user';
+import { Language, Role, Theme, UpdateMyPreferencesCmd } from '@free-spot-domain/user';
 import { toObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter } from 'rxjs';
 

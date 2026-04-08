@@ -63,7 +63,7 @@ export class FacultiesHttpService extends BaseService {
     public facultiesGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<FacultyResponseDTO>>;
     public facultiesGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<FacultyResponseDTO>>>;
     public facultiesGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<FacultyResponseDTO>>>;
-    public facultiesGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public facultiesGet(observe: any = 'body', reportProgress = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -92,7 +92,7 @@ export class FacultiesHttpService extends BaseService {
             }
         }
 
-        let localVarPath = `/faculties`;
+        const localVarPath = `/faculties`;
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<Array<FacultyResponseDTO>>('get', `${basePath}${localVarPath}`,
             {
@@ -115,7 +115,7 @@ export class FacultiesHttpService extends BaseService {
     public facultiesIdDelete(requestParameters: FacultiesIdDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any>;
     public facultiesIdDelete(requestParameters: FacultiesIdDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
     public facultiesIdDelete(requestParameters: FacultiesIdDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
-    public facultiesIdDelete(requestParameters: FacultiesIdDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public facultiesIdDelete(requestParameters: FacultiesIdDeleteRequestParams, observe: any = 'body', reportProgress = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
         const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling facultiesIdDelete.');
@@ -147,7 +147,7 @@ export class FacultiesHttpService extends BaseService {
             }
         }
 
-        let localVarPath = `/faculties/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        const localVarPath = `/faculties/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<any>('delete', `${basePath}${localVarPath}`,
             {
@@ -170,7 +170,7 @@ export class FacultiesHttpService extends BaseService {
     public facultiesIdGet(requestParameters: FacultiesIdGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<FacultyResponseDTO>;
     public facultiesIdGet(requestParameters: FacultiesIdGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<FacultyResponseDTO>>;
     public facultiesIdGet(requestParameters: FacultiesIdGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<FacultyResponseDTO>>;
-    public facultiesIdGet(requestParameters: FacultiesIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public facultiesIdGet(requestParameters: FacultiesIdGetRequestParams, observe: any = 'body', reportProgress = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling facultiesIdGet.');
@@ -203,7 +203,7 @@ export class FacultiesHttpService extends BaseService {
             }
         }
 
-        let localVarPath = `/faculties/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        const localVarPath = `/faculties/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<FacultyResponseDTO>('get', `${basePath}${localVarPath}`,
             {
@@ -226,7 +226,7 @@ export class FacultiesHttpService extends BaseService {
     public facultiesIdPatch(requestParameters: FacultiesIdPatchRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<FacultyResponseDTO>;
     public facultiesIdPatch(requestParameters: FacultiesIdPatchRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<FacultyResponseDTO>>;
     public facultiesIdPatch(requestParameters: FacultiesIdPatchRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<FacultyResponseDTO>>;
-    public facultiesIdPatch(requestParameters: FacultiesIdPatchRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public facultiesIdPatch(requestParameters: FacultiesIdPatchRequestParams, observe: any = 'body', reportProgress = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling facultiesIdPatch.');
@@ -269,7 +269,7 @@ export class FacultiesHttpService extends BaseService {
             }
         }
 
-        let localVarPath = `/faculties/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        const localVarPath = `/faculties/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<FacultyResponseDTO>('patch', `${basePath}${localVarPath}`,
             {
@@ -293,7 +293,7 @@ export class FacultiesHttpService extends BaseService {
     public facultiesPost(requestParameters?: FacultiesPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<FacultyResponseDTO>;
     public facultiesPost(requestParameters?: FacultiesPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<FacultyResponseDTO>>;
     public facultiesPost(requestParameters?: FacultiesPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<FacultyResponseDTO>>;
-    public facultiesPost(requestParameters?: FacultiesPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public facultiesPost(requestParameters?: FacultiesPostRequestParams, observe: any = 'body', reportProgress = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         const facultyCreateDTO = requestParameters?.facultyCreateDTO;
 
         let localVarHeaders = this.defaultHeaders;
@@ -332,7 +332,7 @@ export class FacultiesHttpService extends BaseService {
             }
         }
 
-        let localVarPath = `/faculties`;
+        const localVarPath = `/faculties`;
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<FacultyResponseDTO>('post', `${basePath}${localVarPath}`,
             {

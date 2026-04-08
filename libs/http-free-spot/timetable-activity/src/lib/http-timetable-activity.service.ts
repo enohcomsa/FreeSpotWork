@@ -1,7 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { TimetableActivitiesHttpService, TimetableActivityIdParamDTO, TimetableActivityResponseDTO } from "@free-spot/api-client";
 import { map, Observable } from 'rxjs';
-import { CreateTimetableActivityCmd, dtoToDomain, TimetableActivity, toCreateDTO, toUpdateDTO, UpdateTimetableActivityCmd } from "@free-spot-domain/timetable-activity";
+import { CreateTimetableActivityCmd, TimetableActivity, UpdateTimetableActivityCmd } from "@free-spot-domain/timetable-activity";
+import { dtoToDomain, toCreateDTO, toUpdateDTO } from './mappers/timetable-activity.dto.mapper';
 
 @Injectable({
   providedIn: 'root'

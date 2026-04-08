@@ -1,4 +1,6 @@
-import { WeekParity, ActivityType, WeekDay } from "@free-spot/enums";
+import { ActivityType } from "./activity-type.enum";
+import { WeekDay } from "./week-day.enum";
+import { WeekParity } from "./week-parity.enum";
 
 export type CreateTimetableActivityCmd = {
   roomId: string;

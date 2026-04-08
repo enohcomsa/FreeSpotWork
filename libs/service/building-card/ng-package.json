@@ -3,5 +3,9 @@
   "dest": "../../../dist/libs/service/building-card",
   "lib": {
     "entryFile": "src/index.ts"
-  }
+  },
+  "allowedNonPeerDependencies": [
+    "@free-spot-presentation/building-card",
+    "@http-free-spot/building-card"
+  ]
 }

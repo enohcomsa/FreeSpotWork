@@ -7,7 +7,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { Booking } from '@free-spot-domain/booking';
-import { ActivityType } from '@free-spot/enums';
 import { SubjectService } from '@free-spot-service/subject';
 import { AdminRoomService } from '@free-spot-service/room';
 import { BuildingService } from '@free-spot-service/building';
@@ -18,7 +17,7 @@ import { SubjectItem } from '@free-spot-domain/subject';
 import { Room } from '@free-spot-domain/room';
 import { Building } from '@free-spot-domain/building';
 import { Floor } from '@free-spot-domain/floor';
-import { TimetableActivity } from '@free-spot-domain/timetable-activity';
+import { ActivityType, TimetableActivity } from '@free-spot-domain/timetable-activity';
 import { SpecialEvent } from '@free-spot-domain/event';
 
 @Component({
@@ -121,7 +120,7 @@ export class BookedSpotComponent implements OnInit {
   });
 
   ngOnInit(): void {
-      this._eventService.init();
+    this._eventService.init();
   }
 
   selectBooking(): void {

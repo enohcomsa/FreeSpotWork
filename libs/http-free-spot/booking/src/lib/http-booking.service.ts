@@ -1,12 +1,9 @@
 import { inject, Injectable } from '@angular/core';
+import { Booking, RescheduleBookingCmd } from '@free-spot-domain/booking';
 import { BookingsHttpService, BookingCreateDTO, BookingResponseDTO } from '@free-spot/api-client';
-import {
-  Booking,
-  dtoToDomain,
-  RescheduleBookingCmd,
-  toRescheduleUpdateDTO,
-} from '@free-spot-domain/booking';
+import { dtoToDomain } from './mappers/booking.dto.mapper';
 import { map, Observable } from 'rxjs';
+import { toRescheduleUpdateDTO } from './mappers/booking.dto.mapper';
 
 @Injectable({
   providedIn: 'root',

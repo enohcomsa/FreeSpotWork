@@ -1,7 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { FloorsHttpService, FloorResponseDTO, FloorIdParamDTO } from '@free-spot/api-client';
-import { CreateFloorCmd, dtoToDomain, Floor, toCreateDTO, toUpdateDTO, UpdateFloorCmd } from '@free-spot-domain/floor'
+import { Floor, CreateFloorCmd, UpdateFloorCmd } from '@free-spot-domain/floor';
+import { dtoToDomain, toCreateDTO, toUpdateDTO } from './mappers/floor.dto.mapper';
 
 
 @Injectable({

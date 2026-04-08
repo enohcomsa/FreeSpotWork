@@ -5,21 +5,20 @@ import { AbstractControl, FormBuilder, FormsModule, ReactiveFormsModule, Validat
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { filter, Subscription, take } from 'rxjs';
+import { filter, Subscription, switchMap, take } from 'rxjs';
 
 import { AdminFacultyService } from '@free-spot-service/faculty';
 import { ProgramYearService } from '@free-spot-service/program-year';
 import { ProgramService } from '@free-spot-service/program';
 import { CohortService } from '@free-spot-service/cohort';
 import { AuthService } from '@free-spot-service/auth';
-import { HttpUserService } from '@http-free-spot/user';
-
 import { FormErrorMessage } from '@free-spot/util';
 import { Faculty } from '@free-spot-domain/faculty';
 import { ProgramYear } from '@free-spot-domain/program-year';
 import { Program } from '@free-spot-domain/program';
 import { Cohort } from '@free-spot-domain/cohort';
 import { UpdateMyProfileCmd } from '@free-spot-domain/user';
+import { UserService } from '@free-spot-service/user';
 
 @Component({
   selector: 'free-spot-user-setup-dialog',
@@ -43,7 +42,7 @@ export class UserSetupDialogComponent implements OnInit, OnDestroy {
   private _adminProgramYearService = inject(ProgramYearService);
   private _adminProgramService = inject(ProgramService);
   private _adminCohortService = inject(CohortService);
-  private _httpUserService = inject(HttpUserService);
+  private _userService = inject(UserService);
   private _authService = inject(AuthService);
   private _formErrorMessage = inject(FormErrorMessage);
 
@@ -227,20 +226,22 @@ export class UserSetupDialogComponent implements OnInit, OnDestroy {
 
     this.loadingSig.set(true);
 
-    this._httpUserService
+    this._userService
       .updateMyProfile$(input)
-      .pipe(take(1))
+      .pipe(
+        switchMap(() => this._authService.loadMe()),
+        take(1)
+      )
       .subscribe({
         next: () => {
-          this._authService.loadMe().pipe(take(1)).subscribe(() => {
-            this.loadingSig.set(false);
-            this._dialogRef.close(true);
-          });
+          this.loadingSig.set(false);
+          this._dialogRef.close(true);
         },
         error: (err: unknown) => {
           console.error(err);
           this.loadingSig.set(false);
         },
       });
+
   }
 }

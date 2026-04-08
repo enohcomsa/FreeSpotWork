@@ -1,7 +1,7 @@
-import { CohortTypeDTO } from '@free-spot/api-client';
+import { CohortType } from "./cohort-type.enum";
 
 export interface Cohort {
-  type: CohortTypeDTO;
+  type: CohortType;
   programYearId: string;
   name: string;
   parentGroupId?: string | null;

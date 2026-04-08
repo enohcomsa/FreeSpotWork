@@ -3,5 +3,6 @@
   "dest": "../../../dist/libs/domain/cohort",
   "lib": {
     "entryFile": "src/index.ts"
-  }
+  },
+  "allowedNonPeerDependencies": []
 }

@@ -3,5 +3,6 @@
   "dest": "../../../dist/libs/domain/room",
   "lib": {
     "entryFile": "src/index.ts"
-  }
+  },
+  "allowedNonPeerDependencies": []
 }

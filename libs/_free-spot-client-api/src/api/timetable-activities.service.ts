@@ -63,7 +63,7 @@ export class TimetableActivitiesHttpService extends BaseService {
     public timetableActivitiesGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<TimetableActivityResponseDTO>>;
     public timetableActivitiesGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<TimetableActivityResponseDTO>>>;
     public timetableActivitiesGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<TimetableActivityResponseDTO>>>;
-    public timetableActivitiesGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public timetableActivitiesGet(observe: any = 'body', reportProgress = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -92,7 +92,7 @@ export class TimetableActivitiesHttpService extends BaseService {
             }
         }
 
-        let localVarPath = `/timetable-activities`;
+        const localVarPath = `/timetable-activities`;
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<Array<TimetableActivityResponseDTO>>('get', `${basePath}${localVarPath}`,
             {
@@ -115,7 +115,7 @@ export class TimetableActivitiesHttpService extends BaseService {
     public timetableActivitiesIdDelete(requestParameters: TimetableActivitiesIdDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any>;
     public timetableActivitiesIdDelete(requestParameters: TimetableActivitiesIdDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
     public timetableActivitiesIdDelete(requestParameters: TimetableActivitiesIdDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
-    public timetableActivitiesIdDelete(requestParameters: TimetableActivitiesIdDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public timetableActivitiesIdDelete(requestParameters: TimetableActivitiesIdDeleteRequestParams, observe: any = 'body', reportProgress = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
         const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling timetableActivitiesIdDelete.');
@@ -147,7 +147,7 @@ export class TimetableActivitiesHttpService extends BaseService {
             }
         }
 
-        let localVarPath = `/timetable-activities/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        const localVarPath = `/timetable-activities/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<any>('delete', `${basePath}${localVarPath}`,
             {
@@ -170,7 +170,7 @@ export class TimetableActivitiesHttpService extends BaseService {
     public timetableActivitiesIdGet(requestParameters: TimetableActivitiesIdGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<TimetableActivityResponseDTO>;
     public timetableActivitiesIdGet(requestParameters: TimetableActivitiesIdGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<TimetableActivityResponseDTO>>;
     public timetableActivitiesIdGet(requestParameters: TimetableActivitiesIdGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<TimetableActivityResponseDTO>>;
-    public timetableActivitiesIdGet(requestParameters: TimetableActivitiesIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public timetableActivitiesIdGet(requestParameters: TimetableActivitiesIdGetRequestParams, observe: any = 'body', reportProgress = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling timetableActivitiesIdGet.');
@@ -203,7 +203,7 @@ export class TimetableActivitiesHttpService extends BaseService {
             }
         }
 
-        let localVarPath = `/timetable-activities/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        const localVarPath = `/timetable-activities/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<TimetableActivityResponseDTO>('get', `${basePath}${localVarPath}`,
             {
@@ -226,7 +226,7 @@ export class TimetableActivitiesHttpService extends BaseService {
     public timetableActivitiesIdPatch(requestParameters: TimetableActivitiesIdPatchRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<TimetableActivityResponseDTO>;
     public timetableActivitiesIdPatch(requestParameters: TimetableActivitiesIdPatchRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<TimetableActivityResponseDTO>>;
     public timetableActivitiesIdPatch(requestParameters: TimetableActivitiesIdPatchRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<TimetableActivityResponseDTO>>;
-    public timetableActivitiesIdPatch(requestParameters: TimetableActivitiesIdPatchRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public timetableActivitiesIdPatch(requestParameters: TimetableActivitiesIdPatchRequestParams, observe: any = 'body', reportProgress = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling timetableActivitiesIdPatch.');
@@ -269,7 +269,7 @@ export class TimetableActivitiesHttpService extends BaseService {
             }
         }
 
-        let localVarPath = `/timetable-activities/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        const localVarPath = `/timetable-activities/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<TimetableActivityResponseDTO>('patch', `${basePath}${localVarPath}`,
             {
@@ -293,7 +293,7 @@ export class TimetableActivitiesHttpService extends BaseService {
     public timetableActivitiesPost(requestParameters?: TimetableActivitiesPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<TimetableActivityResponseDTO>;
     public timetableActivitiesPost(requestParameters?: TimetableActivitiesPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<TimetableActivityResponseDTO>>;
     public timetableActivitiesPost(requestParameters?: TimetableActivitiesPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<TimetableActivityResponseDTO>>;
-    public timetableActivitiesPost(requestParameters?: TimetableActivitiesPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public timetableActivitiesPost(requestParameters?: TimetableActivitiesPostRequestParams, observe: any = 'body', reportProgress = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         const timetableActivityCreateDTO = requestParameters?.timetableActivityCreateDTO;
 
         let localVarHeaders = this.defaultHeaders;
@@ -332,7 +332,7 @@ export class TimetableActivitiesHttpService extends BaseService {
             }
         }
 
-        let localVarPath = `/timetable-activities`;
+        const localVarPath = `/timetable-activities`;
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<TimetableActivityResponseDTO>('post', `${basePath}${localVarPath}`,
             {

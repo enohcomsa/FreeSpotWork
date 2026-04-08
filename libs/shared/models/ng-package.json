@@ -3,5 +3,6 @@
   "dest": "../../../dist/libs/shared/models",
   "lib": {
     "entryFile": "src/index.ts"
-  }
+  },
+  "allowedNonPeerDependencies": []
 }

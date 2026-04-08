@@ -1,7 +1,7 @@
-import { EventTypeDTO } from "@free-spot/api-client";
+import { EventType } from "./event-type.enum";
 
 export type CreateSpecialEventCmd = {
-  type?: EventTypeDTO;
+  type?: EventType;
   name: string;
   date: string | null;
   startHour: number;

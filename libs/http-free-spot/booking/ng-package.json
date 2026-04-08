@@ -3,5 +3,10 @@
   "dest": "../../../dist/libs/http-free-spot/booking",
   "lib": {
     "entryFile": "src/index.ts"
-  }
+  },
+  "allowedNonPeerDependencies": [
+    "@free-spot-domain/booking",
+    "@free-spot/api-client",
+    "@http-free-spot/timetable-activity"
+  ]
 }

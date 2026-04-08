@@ -1,7 +1,8 @@
 import { inject, Injectable } from '@angular/core';
+import { BuildingCardVM } from '@free-spot-presentation/building-card';
 import { BuildingCardIdParamDTO, BuildingsCardResponseDTO, BuildingsCardsHttpService } from "@free-spot/api-client";
 import { map, Observable } from 'rxjs';
-import { BuildingCardVM, toBuildingCardVM } from '@free-spot-presentation/building-card';
+import { toBuildingCardVM } from './mappers/building-card.vm.mapper';
 
 @Injectable({
   providedIn: 'root'

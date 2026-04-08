@@ -3,5 +3,10 @@
   "dest": "../../../dist/libs/service/building",
   "lib": {
     "entryFile": "src/index.ts"
-  }
+  },
+  "allowedNonPeerDependencies": [
+    "@free-spot-domain/building",
+    "@free-spot/util",
+    "@http-free-spot/building"
+  ]
 }

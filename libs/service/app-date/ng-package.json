@@ -3,5 +3,9 @@
   "dest": "../../../dist/libs/service/app-date",
   "lib": {
     "entryFile": "src/index.ts"
-  }
+  },
+  "allowedNonPeerDependencies": [
+    "@free-spot-domain/timetable-activity",
+    "@free-spot/models"
+  ]
 }

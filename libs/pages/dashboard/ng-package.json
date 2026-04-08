@@ -3,5 +3,33 @@
   "dest": "../../../dist/libs/pages/dashboard",
   "lib": {
     "entryFile": "src/index.ts"
-  }
+  },
+  "allowedNonPeerDependencies": [
+    "@free-spot-domain/building",
+    "@free-spot-domain/cohort",
+    "@free-spot-domain/event",
+    "@free-spot-domain/faculty",
+    "@free-spot-domain/floor",
+    "@free-spot-domain/program",
+    "@free-spot-domain/program-year",
+    "@free-spot-domain/room",
+    "@free-spot-domain/user",
+    "@free-spot-presentation/building-card",
+    "@free-spot-service/app-date",
+    "@free-spot-service/auth",
+    "@free-spot-service/booking",
+    "@free-spot-service/building",
+    "@free-spot-service/building-card",
+    "@free-spot-service/cohort",
+    "@free-spot-service/event",
+    "@free-spot-service/faculty",
+    "@free-spot-service/floor",
+    "@free-spot-service/program",
+    "@free-spot-service/program-year",
+    "@free-spot-service/room",
+    "@free-spot-service/user",
+    "@free-spot/models",
+    "@free-spot/ui",
+    "@free-spot/util"
+  ]
 }

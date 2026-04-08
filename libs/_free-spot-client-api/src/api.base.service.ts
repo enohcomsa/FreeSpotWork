@@ -37,7 +37,7 @@ export class BaseService {
         return consumes.indexOf('multipart/form-data') !== -1;
     }
 
-    protected addToHttpParams(httpParams: HttpParams, value: any, key?: string, isDeep: boolean = false): HttpParams {
+    protected addToHttpParams(httpParams: HttpParams, value: any, key?: string, isDeep = false): HttpParams {
         // If the value is an object (but not a Date), recursively add its keys.
         if (typeof value === 'object' && !(value instanceof Date)) {
             return this.addToHttpParamsRecursive(httpParams, value, isDeep ? key : undefined, isDeep);
@@ -45,7 +45,7 @@ export class BaseService {
         return this.addToHttpParamsRecursive(httpParams, value, key);
     }
 
-    protected addToHttpParamsRecursive(httpParams: HttpParams, value?: any, key?: string, isDeep: boolean = false): HttpParams {
+    protected addToHttpParamsRecursive(httpParams: HttpParams, value?: any, key?: string, isDeep = false): HttpParams {
         if (value === null || value === undefined) {
             return httpParams;
         }

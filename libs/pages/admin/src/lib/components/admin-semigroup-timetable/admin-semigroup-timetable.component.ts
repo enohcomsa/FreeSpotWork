@@ -13,7 +13,6 @@ import {
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AdminRoomService } from '@free-spot-service/room';
 import { debounceTime } from 'rxjs';
-import { ActivityType, WeekDay } from '@free-spot/enums';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
@@ -26,7 +25,7 @@ import { UserService } from '@free-spot-service/user';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormErrorMessage } from '@free-spot/util';
 import { ConfirmModalService } from '@free-spot-service/confirm-modal';
-import { TimetableActivity } from '@free-spot-domain/timetable-activity';
+import { ActivityType, TimetableActivity, WeekDay } from '@free-spot-domain/timetable-activity';
 import { AdminTimetableActivityService } from '@free-spot-service/timetable-activity';
 import { SubjectService } from '@free-spot-service/subject';
 
@@ -59,7 +58,6 @@ export class AdminSemisemiGroupTimetableComponent implements OnInit {
   private _adminSubjectService: SubjectService = inject(SubjectService);
   private _adminTimetableActivityService: AdminTimetableActivityService = inject(AdminTimetableActivityService);
 
-  // userListSig: Signal<FreeSpotUser[]> = this._userService.userListSig;
   semiGroupIdSig = input.required<string>();
   subjectListSig = input.required<string[]>();
   foundActivityListSig: WritableSignal<TimetableActivity[]> = signal([]);

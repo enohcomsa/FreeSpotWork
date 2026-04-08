@@ -3,5 +3,6 @@
   "dest": "../../dist/libs/_free-spot-client-api",
   "lib": {
     "entryFile": "src/index.ts"
-  }
+  },
+  "allowedNonPeerDependencies": []
 }

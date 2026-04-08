@@ -4,9 +4,8 @@ import { AdminTimetableActivityService } from '@free-spot-service/timetable-acti
 import { AdminRoomService } from '@free-spot-service/room';
 import { SubjectService } from '@free-spot-service/subject';
 import { AuthService } from '@free-spot-service/auth';
-import { WeekDay } from '@free-spot/enums';
 import { TimetableActivityCardVM } from '@free-spot-presentation/timetable-activity-card';
-import { TimetableActivity } from '@free-spot-domain/timetable-activity';
+import { TimetableActivity, WeekDay } from '@free-spot-domain/timetable-activity';
 
 @Component({
   selector: 'free-spot-schedule',

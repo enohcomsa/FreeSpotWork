@@ -2,10 +2,9 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 import { MatListModule } from '@angular/material/list';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatCardModule } from '@angular/material/card';
-import { ActivityType, WeekDay, WeekParity } from '@free-spot/enums';
 import { TranslateModule } from '@ngx-translate/core';
-import { TimetableDayItem } from '@free-spot/models';
-import { TimetableActivityCardVM } from '@free-spot-presentation/timetable-activity-card';
+import { TimetableActivityCardVM, TimetableDayItem } from '@free-spot-presentation/timetable-activity-card';
+import { WeekParity, ActivityType, WeekDay } from '@free-spot-domain/timetable-activity';
 
 @Component({
   selector: 'free-spot-timetable-item',

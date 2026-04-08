@@ -3,5 +3,10 @@
   "dest": "../../../dist/libs/service/auth",
   "lib": {
     "entryFile": "src/index.ts"
-  }
+  },
+  "allowedNonPeerDependencies": [
+    "@free-spot-domain/auth",
+    "@free-spot-domain/user",
+    "@http-free-spot/auth"
+  ]
 }
