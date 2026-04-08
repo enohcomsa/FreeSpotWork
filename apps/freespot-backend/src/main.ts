@@ -38,7 +38,14 @@ async function bootstrap() {
     next();
   });
 
-  const allowedOrigins = ["http://localhost:4200", "https://free-spot.vercel.app", "https://freespotwork.onrender.com"];
+  const allowedOrigins = [
+    "http://localhost:4200",
+    "https://free-spot.vercel.app",
+    "https://freespotwork.onrender.com",
+    "https://shimmering-frangollo-07e558.netlify.app",
+    "https://free-spot-work.vercel.app"
+  ];
+
   app.use(
     cors({
       origin: (origin, callback) => {
