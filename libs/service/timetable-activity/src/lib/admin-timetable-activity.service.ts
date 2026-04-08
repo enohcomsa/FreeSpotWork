@@ -41,7 +41,6 @@ export class AdminTimetableActivityService {
 
   addCohortToActivity(cohortId: string, timetableActivityId: string): void {
     const activity: TimetableActivity = this.getSignalById(timetableActivityId)();
-    console.log(activity);
 
     const updatedCohortIds = [...activity.cohortIds, cohortId];
 
