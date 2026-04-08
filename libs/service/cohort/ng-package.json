@@ -3,5 +3,10 @@
   "dest": "../../../dist/libs/service/cohort",
   "lib": {
     "entryFile": "src/index.ts"
-  }
+  },
+  "allowedNonPeerDependencies": [
+    "@free-spot-domain/cohort",
+    "@free-spot/util",
+    "@http-free-spot/cohort"
+  ]
 }

@@ -3,5 +3,9 @@
   "dest": "../../../dist/libs/http-free-spot/cohort",
   "lib": {
     "entryFile": "src/index.ts"
-  }
+  },
+  "allowedNonPeerDependencies": [
+    "@free-spot-domain/cohort",
+    "@free-spot/api-client"
+  ]
 }

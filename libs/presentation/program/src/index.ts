@@ -1,1 +1,2 @@
-export * from './lib/program-presentation/program-presentation';
+export * from './lib/program.vm';
+export * from './lib/program.vm.mapper';

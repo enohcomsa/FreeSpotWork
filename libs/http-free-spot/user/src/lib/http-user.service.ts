@@ -7,15 +7,12 @@ import {
 } from '@free-spot/api-client';
 import { map, Observable } from 'rxjs';
 import {
-  dtoToDomain,
-  toMyPreferencesUpdateDTO,
-  toMyProfileUpdateDTO,
-  toUpdateUserDTO,
   UpdateMyPreferencesCmd,
   UpdateMyProfileCmd,
   UpdateUserCmd,
   User,
 } from '@free-spot-domain/user';
+import { dtoToDomain, toMyProfileUpdateDTO, toMyPreferencesUpdateDTO, toUpdateUserDTO } from './mappers/user.dto.mapper';
 
 @Injectable({
   providedIn: 'root'

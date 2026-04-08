@@ -1,4 +1,5 @@
-import { ActivityType } from '@free-spot/enums';
+import { ActivityType } from "@free-spot-domain/timetable-activity";
+
 
 export interface CurrentBookingForReschedule {
   id: string;

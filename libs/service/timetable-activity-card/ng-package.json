@@ -3,5 +3,9 @@
   "dest": "../../../dist/libs/service/timetable-activity-card",
   "lib": {
     "entryFile": "src/index.ts"
-  }
+  },
+  "allowedNonPeerDependencies": [
+    "@free-spot-presentation/timetable-activity-card",
+    "@http-free-spot/timetable-activity-card"
+  ]
 }

@@ -11,22 +11,15 @@ import {
   tap,
   throwError,
 } from 'rxjs';
-import {
-  AuthHttpService,
-  AuthOkResponseDTO,
-  LoginRequestDTO,
-  MeResponseDTO,
-  RefreshResponseDTO,
-  SignupRequestDTO,
-} from '@free-spot/api-client';
-import { authDtoToDomain, User } from '@free-spot-domain/user';
-import { Role } from '@free-spot/enums';
+import { AuthOk, LoginCmd, RefreshSessionResult, SignupCmd } from '@free-spot-domain/auth';
+import { Role, User } from '@free-spot-domain/user';
+import { HttpAuthService } from '@http-free-spot/auth';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private readonly _authHttp = inject(AuthHttpService);
+  private readonly _authHttp = inject(HttpAuthService);
   private readonly _router = inject(Router);
 
   private readonly _user = signal<User | null>(null);
@@ -34,7 +27,7 @@ export class AuthService {
   private readonly _initialized = signal(false);
   private readonly _loadingMe = signal(false);
 
-  private _loadMeInFlight$: Observable<MeResponseDTO | null> | null = null;
+  private _loadMeInFlight$: Observable<User | null> | null = null;
   private _refreshSessionInFlight$: Observable<void> | null = null;
 
   readonly userSignal$ = this._user.asReadonly();
@@ -45,19 +38,19 @@ export class AuthService {
   readonly isAuthenticated = computed(() => !!this._user());
   readonly isAdmin = computed(() => this._user()?.role === Role.ADMIN);
 
-  login(payload: LoginRequestDTO): Observable<MeResponseDTO | null> {
-    return this._authHttp.authLogin({ loginRequestDTO: payload }).pipe(
-      tap((response: AuthOkResponseDTO) => {
-        this.setXsrfToken(response.xsrfToken ?? null);
+  login(payload: LoginCmd): Observable<User | null> {
+    return this._authHttp.login$(payload).pipe(
+      tap((response: AuthOk) => {
+        this.setXsrfToken(response.xsrfToken);
       }),
       switchMap(() => this.loadMe()),
     );
   }
 
-  signup(payload: SignupRequestDTO): Observable<MeResponseDTO | null> {
-    return this._authHttp.authSignup({ signupRequestDTO: payload }).pipe(
-      tap((response: AuthOkResponseDTO) => {
-        this.setXsrfToken(response.xsrfToken ?? null);
+  signup(payload: SignupCmd): Observable<User | null> {
+    return this._authHttp.signup$(payload).pipe(
+      tap((response: AuthOk) => {
+        this.setXsrfToken(response.xsrfToken);
       }),
       switchMap(() => this.loadMe()),
     );
@@ -69,7 +62,7 @@ export class AuthService {
   }
 
   logout(): void {
-    this._authHttp.authLogout({ body: {} }).subscribe({
+    this._authHttp.logout$().subscribe({
       next: () => {
         this.clearSession();
         void this._router.navigate(['/auth']);
@@ -81,16 +74,17 @@ export class AuthService {
     });
   }
 
-  loadMe(): Observable<MeResponseDTO | null> {
+  loadMe(): Observable<User | null> {
     if (this._loadMeInFlight$) {
       return this._loadMeInFlight$;
     }
 
     this._loadingMe.set(true);
 
-    this._loadMeInFlight$ = this._authHttp.authMe().pipe(
-      tap((response: MeResponseDTO) => {
-        this._setUserFromResponse(response);
+    this._loadMeInFlight$ = this._authHttp.me$().pipe(
+      tap((user: User) => {
+        this._user.set(user);
+        this._initialized.set(true);
       }),
       catchError(() => {
         this.clearSession();
@@ -111,13 +105,13 @@ export class AuthService {
       return this._refreshSessionInFlight$;
     }
 
-    this._refreshSessionInFlight$ = this._authHttp.authRefresh({ body: {} }).pipe(
-      tap((response: RefreshResponseDTO) => {
-        this.setXsrfToken(response.xsrfToken ?? null);
+    this._refreshSessionInFlight$ = this._authHttp.refresh$().pipe(
+      tap((response: RefreshSessionResult) => {
+        this.setXsrfToken(response.xsrfToken);
       }),
       switchMap(() => this.loadMe()),
       map(() => void 0),
-      catchError((error) => {
+      catchError((error: unknown) => {
         this.clearSession();
         return throwError(() => error);
       }),
@@ -137,16 +131,6 @@ export class AuthService {
   clearSession(): void {
     this._user.set(null);
     this._xsrfToken.set(null);
-    this._initialized.set(true);
-  }
-
-  private _setUserFromResponse(response: MeResponseDTO | AuthOkResponseDTO): void {
-    if (!response.user?.id || !response.user.email || !response.user.role) {
-      this.clearSession();
-      return;
-    }
-
-    this._user.set(authDtoToDomain(response.user));
     this._initialized.set(true);
   }
 }

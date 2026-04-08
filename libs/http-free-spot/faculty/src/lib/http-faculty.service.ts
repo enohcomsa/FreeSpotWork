@@ -1,8 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { FacultiesHttpService, FacultyIdParamDTO, FacultyResponseDTO } from '@free-spot/api-client';
 import { map, Observable } from 'rxjs';
-import { dtoToDomain, toCreateDTO, toUpdateDTO } from '@free-spot-domain/faculty';
 import { Faculty, CreateFacultyCmd, UpdateFacultyCmd } from '@free-spot-domain/faculty';
+import { dtoToDomain, toCreateDTO, toUpdateDTO } from './mappers/faculty.dto.mapper';
 
 @Injectable({
   providedIn: 'root',

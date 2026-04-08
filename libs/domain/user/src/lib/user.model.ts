@@ -1,4 +1,6 @@
-import { Role, Language, Theme } from '@free-spot/enums';
+import { Language } from "./language.enum";
+import { Role } from "./role.enum";
+import { Theme } from "./theme.enum";
 
 export interface User {
   id: string;

@@ -7,7 +7,6 @@ import { FormsModule } from '@angular/forms';
 import { BuildingService } from '@free-spot-service/building';
 import { AdminGroupTimetableComponent } from '../admin-group-timetable/admin-group-timetable.component';
 import { AdminRoomService } from '@free-spot-service/room';
-import { WeekDay } from '@free-spot/enums';
 import { AdminSemisemiGroupTimetableComponent } from '../admin-semigroup-timetable/admin-semigroup-timetable.component';
 import { AppDateService } from '@free-spot-service/app-date';
 import { UserService } from '@free-spot-service/user';
@@ -15,12 +14,11 @@ import { BookingService } from '@free-spot-service/booking';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ConfirmModalService } from '@free-spot-service/confirm-modal';
 import { CohortService } from '@free-spot-service/cohort';
-import { Cohort, CreateCohortCmd } from '@free-spot-domain/cohort';
-import { CohortTypeDTO } from '@free-spot/api-client';
+import { Cohort, CohortType, CreateCohortCmd } from '@free-spot-domain/cohort';
 import { AdminTimetableActivityService } from '@free-spot-service/timetable-activity';
 import { ProgramYearService } from '@free-spot-service/program-year';
 import { ProgramService } from '@free-spot-service/program';
-import { TimetableActivity } from '@free-spot-domain/timetable-activity';
+import { TimetableActivity, WeekDay } from '@free-spot-domain/timetable-activity';
 import { TimetableActivityCardVM } from '@free-spot-presentation/timetable-activity-card';
 import { SubjectService } from '@free-spot-service/subject';
 import { User } from '@free-spot-domain/user';
@@ -225,14 +223,14 @@ export class GroupComponent implements OnInit {
             this._adminTimetableActivityService.removeCohortFromAllActivities(this.groupIdSig());
 
             const newSemigroup1: CreateCohortCmd = {
-              type: CohortTypeDTO.SEMIGROUP,
+              type: CohortType.SEMIGROUP,
               programYearId: this.groupSig().programYearId,
               name: `${this.groupSig().name} sg1`,
               parentGroupId: this.groupIdSig()
             };
 
             const newSemigroup2: CreateCohortCmd = {
-              type: CohortTypeDTO.SEMIGROUP,
+              type: CohortType.SEMIGROUP,
               programYearId: this.groupSig().programYearId,
               name: `${this.groupSig().name} sg2`,
               parentGroupId: this.groupIdSig()

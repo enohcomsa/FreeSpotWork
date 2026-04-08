@@ -5,7 +5,7 @@
   "prefix": "free-spot",
   "projectType": "library",
   "tags": [
-    "scope:http-service"
+    "type:service"
   ],
   "targets": {
     "build": {

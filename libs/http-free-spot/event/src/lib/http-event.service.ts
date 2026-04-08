@@ -1,8 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import { EventsHttpService } from '@free-spot/api-client';
 import { map, Observable } from 'rxjs';
-import { dtoToDomain, toCreateDTO, toUpdateDTO, SpecialEvent, CreateSpecialEventCmd, UpdateSpecialEventCmd } from '@free-spot-domain/event';
 import { EventResponseDTO, EventIdParamDTO } from '@free-spot/api-client';
+import { SpecialEvent, CreateSpecialEventCmd, UpdateSpecialEventCmd } from '@free-spot-domain/event';
+import { dtoToDomain, toCreateDTO, toUpdateDTO } from './mappers/event.dto.mapper';
 
 @Injectable({
   providedIn: 'root',

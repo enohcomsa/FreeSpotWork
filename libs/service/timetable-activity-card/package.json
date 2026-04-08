@@ -1,9 +1,13 @@
 {
   "name": "@free-spot-service/timetable-activity-card",
   "version": "0.0.1",
+  "sideEffects": false,
   "peerDependencies": {
-    "@angular/common": "^20.0.0",
-    "@angular/core": "^20.0.0"
+    "@angular/core": "20.0.0",
+    "rxjs": "^7.8.2"
   },
-  "sideEffects": false
+  "dependencies": {
+    "@free-spot-presentation/timetable-activity-card": "0.0.1",
+    "@http-free-spot/timetable-activity-card": "0.0.1"
+  }
 }

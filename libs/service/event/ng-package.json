@@ -3,5 +3,10 @@
   "dest": "../../../dist/libs/service/event",
   "lib": {
     "entryFile": "src/index.ts"
-  }
+  },
+  "allowedNonPeerDependencies": [
+    "@free-spot-domain/event",
+    "@free-spot/util",
+    "@http-free-spot/event"
+  ]
 }

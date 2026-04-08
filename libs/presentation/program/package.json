@@ -1,9 +1,8 @@
 {
   "name": "@free-spot-presentation/program",
   "version": "0.0.1",
-  "peerDependencies": {
-    "@angular/common": "^20.0.0",
-    "@angular/core": "^20.0.0"
-  },
-  "sideEffects": false
+  "sideEffects": false,
+  "dependencies": {
+    "@free-spot-domain/program": "0.0.1"
+  }
 }

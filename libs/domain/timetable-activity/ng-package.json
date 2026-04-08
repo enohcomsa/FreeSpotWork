@@ -3,5 +3,6 @@
   "dest": "../../../dist/libs/domain/timetable-activity",
   "lib": {
     "entryFile": "src/index.ts"
-  }
+  },
+  "allowedNonPeerDependencies": []
 }

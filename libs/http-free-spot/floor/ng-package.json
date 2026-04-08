@@ -3,5 +3,9 @@
   "dest": "../../../dist/libs/http-free-spot/floor",
   "lib": {
     "entryFile": "src/index.ts"
-  }
+  },
+  "allowedNonPeerDependencies": [
+    "@free-spot-domain/floor",
+    "@free-spot/api-client"
+  ]
 }

@@ -14,20 +14,20 @@ export const appRoutes: Route[] = [
     children: [
       {
         path: 'dashboard',
-        loadChildren: () => import('@free-spot/dashboard').then(),
+        loadChildren: () => import('@free-spot/dashboard')
       },
       {
         path: 'schedule',
-        loadChildren: () => import('@free-spot/schedule').then(),
+        loadChildren: () => import('@free-spot/schedule')
       },
       {
         path: 'my-bookings',
-        loadChildren: () => import('@free-spot/my-bookings').then(),
+        loadChildren: () => import('@free-spot/my-bookings')
       },
       {
         path: 'admin',
         canActivate: [adminGuard],
-        loadChildren: () => import('@free-spot/admin').then(),
+        loadChildren: () => import('@free-spot/admin')
       },
       {
         path: '',

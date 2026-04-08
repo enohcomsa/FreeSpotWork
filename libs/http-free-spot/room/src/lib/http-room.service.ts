@@ -1,7 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { RoomIdParamDTO, RoomResponseDTO, RoomsHttpService } from '@free-spot/api-client';
-import { CreateRoomCmd, UpdateRoomCmd, dtoToDomain, toCreateDTO, toUpdateDTO, Room } from '@free-spot-domain/room';
+import { Room, CreateRoomCmd, UpdateRoomCmd } from '@free-spot-domain/room';
+import { dtoToDomain, toCreateDTO, toUpdateDTO } from './mappers/room.dto.mapper';
 
 @Injectable({
   providedIn: 'root',

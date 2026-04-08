@@ -69,7 +69,7 @@ export class UsersHttpService extends BaseService {
     public usersGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<UserResponseDTO>>;
     public usersGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<UserResponseDTO>>>;
     public usersGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<UserResponseDTO>>>;
-    public usersGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public usersGet(observe: any = 'body', reportProgress = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -98,7 +98,7 @@ export class UsersHttpService extends BaseService {
             }
         }
 
-        let localVarPath = `/users`;
+        const localVarPath = `/users`;
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<Array<UserResponseDTO>>('get', `${basePath}${localVarPath}`,
             {
@@ -121,7 +121,7 @@ export class UsersHttpService extends BaseService {
     public usersIdDelete(requestParameters: UsersIdDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any>;
     public usersIdDelete(requestParameters: UsersIdDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
     public usersIdDelete(requestParameters: UsersIdDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
-    public usersIdDelete(requestParameters: UsersIdDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public usersIdDelete(requestParameters: UsersIdDeleteRequestParams, observe: any = 'body', reportProgress = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
         const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling usersIdDelete.');
@@ -153,7 +153,7 @@ export class UsersHttpService extends BaseService {
             }
         }
 
-        let localVarPath = `/users/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        const localVarPath = `/users/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<any>('delete', `${basePath}${localVarPath}`,
             {
@@ -176,7 +176,7 @@ export class UsersHttpService extends BaseService {
     public usersIdGet(requestParameters: UsersIdGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<UserResponseDTO>;
     public usersIdGet(requestParameters: UsersIdGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<UserResponseDTO>>;
     public usersIdGet(requestParameters: UsersIdGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<UserResponseDTO>>;
-    public usersIdGet(requestParameters: UsersIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public usersIdGet(requestParameters: UsersIdGetRequestParams, observe: any = 'body', reportProgress = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling usersIdGet.');
@@ -209,7 +209,7 @@ export class UsersHttpService extends BaseService {
             }
         }
 
-        let localVarPath = `/users/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        const localVarPath = `/users/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<UserResponseDTO>('get', `${basePath}${localVarPath}`,
             {
@@ -232,7 +232,7 @@ export class UsersHttpService extends BaseService {
     public usersIdPatch(requestParameters: UsersIdPatchRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<UserResponseDTO>;
     public usersIdPatch(requestParameters: UsersIdPatchRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<UserResponseDTO>>;
     public usersIdPatch(requestParameters: UsersIdPatchRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<UserResponseDTO>>;
-    public usersIdPatch(requestParameters: UsersIdPatchRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public usersIdPatch(requestParameters: UsersIdPatchRequestParams, observe: any = 'body', reportProgress = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling usersIdPatch.');
@@ -275,7 +275,7 @@ export class UsersHttpService extends BaseService {
             }
         }
 
-        let localVarPath = `/users/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        const localVarPath = `/users/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<UserResponseDTO>('patch', `${basePath}${localVarPath}`,
             {
@@ -299,7 +299,7 @@ export class UsersHttpService extends BaseService {
     public usersMePreferencesPatch(requestParameters?: UsersMePreferencesPatchRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<UserResponseDTO>;
     public usersMePreferencesPatch(requestParameters?: UsersMePreferencesPatchRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<UserResponseDTO>>;
     public usersMePreferencesPatch(requestParameters?: UsersMePreferencesPatchRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<UserResponseDTO>>;
-    public usersMePreferencesPatch(requestParameters?: UsersMePreferencesPatchRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public usersMePreferencesPatch(requestParameters?: UsersMePreferencesPatchRequestParams, observe: any = 'body', reportProgress = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         const userMePreferencesUpdateDTO = requestParameters?.userMePreferencesUpdateDTO;
 
         let localVarHeaders = this.defaultHeaders;
@@ -338,7 +338,7 @@ export class UsersHttpService extends BaseService {
             }
         }
 
-        let localVarPath = `/users/me/preferences`;
+        const localVarPath = `/users/me/preferences`;
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<UserResponseDTO>('patch', `${basePath}${localVarPath}`,
             {
@@ -362,7 +362,7 @@ export class UsersHttpService extends BaseService {
     public usersMeProfilePatch(requestParameters?: UsersMeProfilePatchRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<UserResponseDTO>;
     public usersMeProfilePatch(requestParameters?: UsersMeProfilePatchRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<UserResponseDTO>>;
     public usersMeProfilePatch(requestParameters?: UsersMeProfilePatchRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<UserResponseDTO>>;
-    public usersMeProfilePatch(requestParameters?: UsersMeProfilePatchRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public usersMeProfilePatch(requestParameters?: UsersMeProfilePatchRequestParams, observe: any = 'body', reportProgress = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         const userMeProfileUpdateDTO = requestParameters?.userMeProfileUpdateDTO;
 
         let localVarHeaders = this.defaultHeaders;
@@ -401,7 +401,7 @@ export class UsersHttpService extends BaseService {
             }
         }
 
-        let localVarPath = `/users/me/profile`;
+        const localVarPath = `/users/me/profile`;
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<UserResponseDTO>('patch', `${basePath}${localVarPath}`,
             {

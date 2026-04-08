@@ -1,9 +1,9 @@
-import { DegreeDTO } from '@free-spot/api-client';
+import { DegreeType } from "./degree-type.enum";
 
 export type CreateProgramCmd = {
   facultyId: string,
   name: string,
-  degree: DegreeDTO,
+  degree: DegreeType,
   active: boolean,
 };
 

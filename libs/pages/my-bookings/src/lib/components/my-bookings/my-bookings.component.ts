@@ -13,7 +13,7 @@ import { AdminTimetableActivityService } from '@free-spot-service/timetable-acti
 import { AdminRoomService } from '@free-spot-service/room';
 import { BuildingService } from '@free-spot-service/building';
 import { AdminFloorService } from '@free-spot-service/floor';
-import { ActivityType } from '@free-spot/enums';
+import { ActivityType } from '@free-spot-domain/timetable-activity';
 
 @Component({
   selector: 'free-spot-my-bookings',

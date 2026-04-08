@@ -3,5 +3,9 @@
   "dest": "../../../dist/libs/http-free-spot/room",
   "lib": {
     "entryFile": "src/index.ts"
-  }
+  },
+  "allowedNonPeerDependencies": [
+    "@free-spot-domain/room",
+    "@free-spot/api-client"
+  ]
 }

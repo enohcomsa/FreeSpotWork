@@ -1,5 +1,5 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
-import { WeekDay } from '@free-spot/enums';
+import { WeekDay } from '@free-spot-domain/timetable-activity';
 import { FreeSpotDate } from '@free-spot/models';
 import { of, take } from 'rxjs';
 

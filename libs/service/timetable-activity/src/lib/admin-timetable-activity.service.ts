@@ -1,10 +1,9 @@
 import { computed, DestroyRef, inject, Injectable, Signal, signal, WritableSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { CreateTimetableActivityCmd, TimetableActivity, UpdateTimetableActivityCmd } from '@free-spot-domain/timetable-activity';
+import { ActivityType, CreateTimetableActivityCmd, TimetableActivity, UpdateTimetableActivityCmd, WeekDay } from '@free-spot-domain/timetable-activity';
 import { HttpTimetableActivityService } from '@http-free-spot/timetable-activity';
 import { Observable, take } from 'rxjs';
 import { SignalArrayUtil } from '@free-spot/util';
-import { ActivityType, WeekDay } from '@free-spot/enums';
 
 @Injectable({
   providedIn: 'root'

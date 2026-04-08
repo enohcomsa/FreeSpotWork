@@ -3,5 +3,9 @@
   "dest": "../../../dist/libs/http-free-spot/timetable-activity",
   "lib": {
     "entryFile": "src/index.ts"
-  }
+  },
+  "allowedNonPeerDependencies": [
+    "@free-spot-domain/timetable-activity",
+    "@free-spot/api-client"
+  ]
 }

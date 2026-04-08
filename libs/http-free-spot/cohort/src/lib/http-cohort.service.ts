@@ -1,7 +1,8 @@
 import { inject, Injectable } from '@angular/core';
-import { Cohort, CreateCohortCmd, dtoToDomain, toCreateDTO, toUpdateDTO, UpdateCohortCmd } from '@free-spot-domain/cohort';
+import { Cohort, CreateCohortCmd, UpdateCohortCmd } from '@free-spot-domain/cohort';
 import { CohortIdParamDTO, CohortResponseDTO, CohortsHttpService } from '@free-spot/api-client';
 import { map, Observable } from 'rxjs';
+import { dtoToDomain, toCreateDTO, toUpdateDTO } from './mappers/cohort.dto.mapper';
 
 @Injectable({
   providedIn: 'root'

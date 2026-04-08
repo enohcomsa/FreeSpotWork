@@ -3,5 +3,6 @@
   "dest": "../../../dist/libs/presentation/building-card",
   "lib": {
     "entryFile": "src/index.ts"
-  }
+  },
+  "allowedNonPeerDependencies": []
 }

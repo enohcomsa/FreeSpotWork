@@ -1,10 +1,9 @@
 import { computed, DestroyRef, inject, Injectable, signal, Signal, WritableSignal } from '@angular/core';
-import { Cohort, CreateCohortCmd, UpdateCohortCmd } from '@free-spot-domain/cohort';
+import { Cohort, CohortType, CreateCohortCmd, UpdateCohortCmd } from '@free-spot-domain/cohort';
 import { HttpCohortService } from '@http-free-spot/cohort';
 import { take, Observable } from 'rxjs';
 import { SignalArrayUtil } from '@free-spot/util';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { CohortTypeDTO } from '@free-spot/api-client';
 
 @Injectable({
   providedIn: 'root'
@@ -50,7 +49,7 @@ export class CohortService {
   }
 
   selectGroupsByProgramYearId(programYearId: string): Signal<Cohort[]> {
-    return computed(() => this.cohortListSig().filter((cohort: Cohort) => cohort.programYearId === programYearId && cohort.type === CohortTypeDTO.GROUP));
+    return computed(() => this.cohortListSig().filter((cohort: Cohort) => cohort.programYearId === programYearId && cohort.type === CohortType.GROUP));
   }
 
   selectSemigroupByparentGroupId(parentGroupId: string): Signal<Cohort[]> {

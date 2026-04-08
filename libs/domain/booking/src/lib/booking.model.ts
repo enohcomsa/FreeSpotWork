@@ -1,4 +1,6 @@
-import { ActivityType, BookingStatus } from '@free-spot/enums';
+import { ActivityType } from "@free-spot-domain/timetable-activity";
+import { BookingStatus } from "./booking-status.enum";
+
 
 export interface Booking {
   id: string;

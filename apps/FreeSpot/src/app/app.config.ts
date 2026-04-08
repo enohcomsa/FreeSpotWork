@@ -6,10 +6,11 @@ import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common
 import { loadingInterceptor } from './interceptors/loading.interceptor';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { Language } from '@free-spot/enums';
 import { provideToastr } from 'ngx-toastr';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { provideAuthApi, authInterceptor, refreshInterceptor } from '@free-spot-service/auth';
+import { authInterceptor, refreshInterceptor } from '@free-spot-service/auth';
+import { Language } from '@free-spot-domain/user';
+import { provideAuthApi } from '@http-free-spot/auth';
 
 export const appConfig: ApplicationConfig = {
   providers: [

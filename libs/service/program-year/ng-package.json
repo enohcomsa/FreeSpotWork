@@ -3,5 +3,10 @@
   "dest": "../../../dist/libs/service/program-year",
   "lib": {
     "entryFile": "src/index.ts"
-  }
+  },
+  "allowedNonPeerDependencies": [
+    "@free-spot-domain/program-year",
+    "@free-spot/util",
+    "@http-free-spot/program-year"
+  ]
 }

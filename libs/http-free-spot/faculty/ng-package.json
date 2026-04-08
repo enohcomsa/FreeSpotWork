@@ -3,5 +3,9 @@
   "dest": "../../../dist/libs/http-free-spot/faculty",
   "lib": {
     "entryFile": "src/index.ts"
-  }
+  },
+  "allowedNonPeerDependencies": [
+    "@free-spot-domain/faculty",
+    "@free-spot/api-client"
+  ]
 }

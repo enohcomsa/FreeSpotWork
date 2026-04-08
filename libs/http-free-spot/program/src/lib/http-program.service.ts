@@ -1,7 +1,8 @@
 import { inject, Injectable } from '@angular/core'
-import { CreateProgramCmd, dtoToDomain, Program, toCreateDTO, toUpdateDTO, UpdateProgramCmd } from '@free-spot-domain/program';
+import { Program, CreateProgramCmd, UpdateProgramCmd } from '@free-spot-domain/program';
 import { ProgramIdParamDTO, ProgramResponseDTO, ProgramsHttpService } from '@free-spot/api-client';
 import { map, Observable } from 'rxjs';
+import { dtoToDomain, toCreateDTO, toUpdateDTO } from './mappers/degree.dto.mapper';
 
 @Injectable({
   providedIn: 'root'

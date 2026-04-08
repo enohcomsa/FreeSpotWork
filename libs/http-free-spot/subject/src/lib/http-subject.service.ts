@@ -1,7 +1,8 @@
 import { inject, Injectable } from '@angular/core';
+import { SubjectItem, CreateSubjectItemCmd, UpdateSubjectItemCmd } from '@free-spot-domain/subject';
 import { SubjectIdParamDTO, SubjectResponseDTO, SubjectsHttpService } from '@free-spot/api-client';
 import { map, Observable } from 'rxjs';
-import { CreateSubjectItemCmd, dtoToDomain, SubjectItem, toCreateDTO, toUpdateDTO, UpdateSubjectItemCmd } from '@free-spot-domain/subject';
+import { dtoToDomain, toCreateDTO, toUpdateDTO } from './mappers/subject.dto.mapper';
 
 
 @Injectable({

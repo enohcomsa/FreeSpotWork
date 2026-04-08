@@ -1,6 +1,4 @@
-import { WeekParity, ActivityType, WeekDay } from "@free-spot/enums";
-
-
+import { WeekDay, WeekParity, ActivityType } from '@free-spot-domain/timetable-activity';
 export interface TimetableActivityCardVM {
   id: string,
   weekDay: WeekDay,

@@ -1,9 +1,9 @@
-import { DegreeDTO } from '@free-spot/api-client';
+import { DegreeType } from '@free-spot-domain/program';
 
 export interface ProgramVM {
   id: string,
   facultyId: string,
   name: string,
-  degree: DegreeDTO,
+  degree: DegreeType,
   active: boolean,
 };

@@ -6,9 +6,8 @@ import { SubjectService } from '@free-spot-service/subject';
 import { UpdateRoomCmd } from '@free-spot-domain/room';
 import { SubjectItem } from '@free-spot-domain/subject';
 import { TimetableActivityCardVM } from '@free-spot-presentation/timetable-activity-card';
-import { WeekDay } from '@free-spot/enums';
 import { AdminTimetableActivityService } from '@free-spot-service/timetable-activity';
-import { TimetableActivity } from '@free-spot-domain/timetable-activity';
+import { TimetableActivity, WeekDay } from '@free-spot-domain/timetable-activity';
 
 @Component({
   selector: 'free-spot-admin-room-detail',

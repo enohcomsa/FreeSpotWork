@@ -3,5 +3,10 @@
   "dest": "../../../dist/libs/service/timetable-activity",
   "lib": {
     "entryFile": "src/index.ts"
-  }
+  },
+  "allowedNonPeerDependencies": [
+    "@free-spot-domain/timetable-activity",
+    "@free-spot/util",
+    "@http-free-spot/timetable-activity"
+  ]
 }

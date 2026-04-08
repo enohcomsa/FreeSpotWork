@@ -9,7 +9,6 @@ import {
   signal,
   WritableSignal,
 } from '@angular/core';
-import { ActivityType, WeekDay } from '@free-spot/enums';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
@@ -26,7 +25,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { ConfirmModalService } from '@free-spot-service/confirm-modal';
 import { FormErrorMessage } from '@free-spot/util';
 import { AdminTimetableActivityService } from '@free-spot-service/timetable-activity';
-import { TimetableActivity } from '@free-spot-domain/timetable-activity';
+import { ActivityType, TimetableActivity, WeekDay } from '@free-spot-domain/timetable-activity';
 import { SubjectService } from '@free-spot-service/subject';
 
 @Component({
@@ -60,7 +59,6 @@ export class AdminGroupTimetableComponent implements OnInit {
 
 
   protected groupTimetableActivityListSig: Signal<TimetableActivity[]> = computed(() => this._adminTimetableActivityService.selectTimetableActivityListSignalByCohortId(this.groupIdSig())());
-  // userListSig: Signal<FreeSpotUser[]> = this._userService.userListSig;
   groupIdSig = input.required<string>();
   subjectListSig = input.required<string[]>();
   foundActivityListSig: WritableSignal<TimetableActivity[]> = signal([]);

@@ -3,8 +3,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Booking, RescheduleBookingCmd } from '@free-spot-domain/booking';
 import { HttpBookingService } from '@http-free-spot/booking';
 import { SignalArrayUtil } from '@free-spot/util';
-import { ActivityType } from '@free-spot/enums';
 import { Observable, take } from 'rxjs';
+import { ActivityType } from '@free-spot-domain/timetable-activity';
 
 @Injectable({
   providedIn: 'root',
