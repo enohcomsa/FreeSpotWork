@@ -1,4 +1,4 @@
-import { CreateTimetableActivityCmd, TimetableActivity, UpdateTimetableActivityCmd } from "@free-spot-domain/timetable-activity";
+import { CreateTimetableActivityCmd, TimetableActivity, UpdateTimetableActivityCmd } from "@frontend/freespot/schedule/domain";
 import { TimetableActivityCreateDTO, TimetableActivityResponseDTO, TimetableActivityUpdateDTO } from "@free-spot/api-client";
 import { dtoToWeekDay, WeekDayToDto as weekDayToDto } from "./week-day.dto.mapper";
 import { ActivityTypeToDto as activityTypeToDto, dtoToActivityType } from "./activity-type.dto.mapper";

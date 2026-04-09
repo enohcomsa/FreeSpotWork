@@ -1,4 +1,4 @@
-import { WeekDay } from "@free-spot-domain/timetable-activity";
+import { WeekDay } from "@frontend/freespot/schedule/domain";
 import { WeekDayDTO } from "@free-spot/api-client";
 
 export const dtoToWeekDay = (dto: WeekDayDTO): WeekDay => dto as unknown as WeekDay;

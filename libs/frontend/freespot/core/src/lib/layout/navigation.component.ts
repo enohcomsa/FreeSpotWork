@@ -8,7 +8,7 @@ import { LoadingComponent } from '../loading/loading.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
-import { LanguageService } from '../translate/language.service';
+import { LanguageService } from '../i18n/language.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { ThemeService } from '../theme/theme.service';
 import { AuthService } from '@free-spot-service/auth';

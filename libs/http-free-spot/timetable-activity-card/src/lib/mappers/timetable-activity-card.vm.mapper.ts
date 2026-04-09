@@ -1,4 +1,4 @@
-import { TimetableActivityCardVM } from '@free-spot-presentation/timetable-activity-card';
+import { TimetableActivityCardVM } from '@frontend/freespot/schedule/ui';
 import { TimetableActivityCardDTO } from '@free-spot/api-client';
 import { dtoToWeekDay, dtoToWeekParity, dtoToActivityType } from '@http-free-spot/timetable-activity';
 

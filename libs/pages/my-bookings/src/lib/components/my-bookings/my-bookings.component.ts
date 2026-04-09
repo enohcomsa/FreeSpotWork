@@ -9,11 +9,11 @@ import { Booking } from '@free-spot-domain/booking';
 import { BookingService } from '@free-spot-service/booking';
 import { ConfirmModalService } from '@free-spot-service/confirm-modal';
 import { SubjectService } from '@free-spot-service/subject';
-import { AdminTimetableActivityService } from '@free-spot-service/timetable-activity';
+import { AdminTimetableActivityService } from '@frontend/freespot/schedule/data-access';
 import { AdminRoomService } from '@free-spot-service/room';
 import { BuildingService } from '@free-spot-service/building';
 import { AdminFloorService } from '@free-spot-service/floor';
-import { ActivityType } from '@free-spot-domain/timetable-activity';
+import { ActivityType } from '@frontend/freespot/schedule/domain';
 
 @Component({
   selector: 'free-spot-my-bookings',

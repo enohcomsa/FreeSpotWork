@@ -1,0 +1,16 @@
+{
+  "name": "@frontend/freespot/core",
+  "version": "0.0.1",
+  "sideEffects": false,
+  "peerDependencies": {
+    "@angular/common": "20.0.0",
+    "@angular/core": "20.0.0",
+    "@angular/router": "20.0.0",
+    "@angular/forms": "20.0.0",
+    "rxjs": "^7.8.2"
+  },
+  "dependencies": {
+    "@ngx-translate/core": "^16.0.4",
+    "ngx-toastr": "^19.0.0"
+  }
+}

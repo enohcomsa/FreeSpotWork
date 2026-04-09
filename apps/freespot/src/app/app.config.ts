@@ -3,7 +3,7 @@ import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { appRoutes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
-import { loadingInterceptor } from './interceptors/loading.interceptor';
+import { loadingInterceptor } from '@frontend/freespot/core';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { provideToastr } from 'ngx-toastr';

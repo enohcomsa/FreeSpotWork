@@ -21,10 +21,10 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { BookingItemComponent } from '../booking-item/booking-item.component';
 import { Booking } from '@free-spot-domain/booking';
-import { TimetableActivity } from '@free-spot-domain/timetable-activity';
+import { TimetableActivity } from '@frontend/freespot/schedule/domain';
 
 import { BookingService, AvailabilityService } from '@free-spot-service/booking';
-import { AdminTimetableActivityService } from '@free-spot-service/timetable-activity';
+import { AdminTimetableActivityService } from '@frontend/freespot/schedule/data-access';
 import { SubjectService } from '@free-spot-service/subject';
 import { FormErrorMessage } from '@free-spot/util';
 

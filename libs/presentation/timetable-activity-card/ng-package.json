@@ -5,6 +5,6 @@
     "entryFile": "src/index.ts"
   },
   "allowedNonPeerDependencies": [
-    "@free-spot-domain/timetable-activity"
+    "@frontend/freespot/schedule/domain"
   ]
 }

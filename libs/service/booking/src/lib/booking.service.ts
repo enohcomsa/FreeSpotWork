@@ -4,7 +4,7 @@ import { Booking, RescheduleBookingCmd } from '@free-spot-domain/booking';
 import { HttpBookingService } from '@http-free-spot/booking';
 import { SignalArrayUtil } from '@free-spot/util';
 import { Observable, take } from 'rxjs';
-import { ActivityType } from '@free-spot-domain/timetable-activity';
+import { ActivityType } from '@frontend/freespot/schedule/domain';
 
 @Injectable({
   providedIn: 'root',

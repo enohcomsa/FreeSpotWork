@@ -11,13 +11,13 @@ import { SubjectService } from '@free-spot-service/subject';
 import { AdminRoomService } from '@free-spot-service/room';
 import { BuildingService } from '@free-spot-service/building';
 import { AdminFloorService } from '@free-spot-service/floor';
-import { AdminTimetableActivityService } from '@free-spot-service/timetable-activity';
+import { AdminTimetableActivityService } from '@frontend/freespot/schedule/data-access';
 import { AdminEventService } from '@free-spot-service/event';
 import { SubjectItem } from '@free-spot-domain/subject';
 import { Room } from '@free-spot-domain/room';
 import { Building } from '@free-spot-domain/building';
 import { Floor } from '@free-spot-domain/floor';
-import { ActivityType, TimetableActivity } from '@free-spot-domain/timetable-activity';
+import { ActivityType, TimetableActivity } from '@frontend/freespot/schedule/domain';
 import { SpecialEvent } from '@free-spot-domain/event';
 
 @Component({

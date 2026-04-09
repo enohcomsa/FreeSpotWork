@@ -1,4 +1,4 @@
-import { ActivityType } from "@free-spot-domain/timetable-activity";
+import { ActivityType } from "@frontend/freespot/schedule/domain";
 
 
 export interface CurrentBookingForReschedule {

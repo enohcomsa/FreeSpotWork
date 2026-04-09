@@ -15,11 +15,11 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { ConfirmModalService } from '@free-spot-service/confirm-modal';
 import { CohortService } from '@free-spot-service/cohort';
 import { Cohort, CohortType, CreateCohortCmd } from '@free-spot-domain/cohort';
-import { AdminTimetableActivityService } from '@free-spot-service/timetable-activity';
+import { AdminTimetableActivityService } from '@frontend/freespot/schedule/data-access';
 import { ProgramYearService } from '@free-spot-service/program-year';
 import { ProgramService } from '@free-spot-service/program';
-import { TimetableActivity, WeekDay } from '@free-spot-domain/timetable-activity';
-import { TimetableActivityCardVM } from '@free-spot-presentation/timetable-activity-card';
+import { TimetableActivity, WeekDay } from '@frontend/freespot/schedule/domain';
+import { TimetableActivityCardVM } from '@frontend/freespot/schedule/ui';
 import { SubjectService } from '@free-spot-service/subject';
 import { User } from '@free-spot-domain/user';
 

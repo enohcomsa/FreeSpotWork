@@ -1,5 +1,5 @@
 import { computed, inject, Injectable, signal, Signal, WritableSignal } from '@angular/core';
-import { TimetableActivityCardVM } from '@free-spot-presentation/timetable-activity-card';
+import { TimetableActivityCardVM } from '@frontend/freespot/schedule/ui';
 import { HttpTimetableActivityCardService } from "@http-free-spot/timetable-activity-card";
 import { Observable, take } from 'rxjs';
 

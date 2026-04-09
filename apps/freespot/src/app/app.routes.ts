@@ -5,12 +5,12 @@ export const appRoutes: Route[] = [
   {
     path: 'auth',
     canActivate: [guestGuard],
-    loadComponent: () => import('./auth/auth.component').then((m) => m.default),
+    loadComponent: () => import('@frontend/freespot/core').then((m) => m.AuthComponent),
   },
   {
     path: '',
     canActivate: [authGuard],
-    loadComponent: () => import('./navigation/navigation.component').then((m) => m.default),
+    loadComponent: () => import('@frontend/freespot/core').then((m) => m.NavigationComponent),
     children: [
       {
         path: 'dashboard',
@@ -18,7 +18,7 @@ export const appRoutes: Route[] = [
       },
       {
         path: 'schedule',
-        loadChildren: () => import('@free-spot/schedule'),
+        loadChildren: () => import('@frontend/freespot/schedule/feature-schedule'),
       },
       {
         path: 'my-bookings',

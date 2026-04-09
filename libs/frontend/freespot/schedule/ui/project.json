@@ -1,0 +1,38 @@
+{
+  "name": "freespot-schedule-ui",
+  "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/frontend/freespot/schedule/ui/src",
+  "prefix": "lib",
+  "projectType": "library",
+  "tags": ["platform:frontend", "scope:freespot", "type:ui"],
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:package",
+      "outputs": ["{workspaceRoot}/dist/{projectRoot}"],
+      "options": {
+        "project": "libs/frontend/freespot/schedule/ui/ng-package.json",
+        "tsConfig": "libs/frontend/freespot/schedule/ui/tsconfig.lib.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "libs/frontend/freespot/schedule/ui/tsconfig.lib.json"
+        },
+        "development": {
+          "tsConfig": "libs/frontend/freespot/schedule/ui/tsconfig.lib.json"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "libs/frontend/freespot/schedule/ui/jest.config.ts",
+        "tsConfig": "libs/frontend/freespot/schedule/ui/tsconfig.spec.json"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

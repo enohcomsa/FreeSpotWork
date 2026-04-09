@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, inject, OnInit, Signal } from '@angular/core';
 import { TimetableItemComponent } from '@free-spot/ui';
-import { AdminTimetableActivityService } from '@free-spot-service/timetable-activity';
+import { AdminTimetableActivityService } from '@frontend/freespot/schedule/data-access';
 import { AdminRoomService } from '@free-spot-service/room';
 import { SubjectService } from '@free-spot-service/subject';
 import { AuthService } from '@free-spot-service/auth';
-import { TimetableActivityCardVM } from '@free-spot-presentation/timetable-activity-card';
-import { TimetableActivity, WeekDay } from '@free-spot-domain/timetable-activity';
+import { TimetableActivityCardVM } from '@frontend/freespot/schedule/ui';
+import { TimetableActivity, WeekDay } from '@frontend/freespot/schedule/domain';
 
 @Component({
   selector: 'free-spot-schedule',

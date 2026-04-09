@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { TimetableActivityCardIdParamDTO, TimetableActivityCardResponseDTO, TimetableActivityCardsHttpService } from "@free-spot/api-client";
 import { map, Observable } from 'rxjs';
-import { TimetableActivityCardVM } from '@free-spot-presentation/timetable-activity-card';
+import { TimetableActivityCardVM } from '@frontend/freespot/schedule/ui';
 import { toTimetableActivityCardVM } from './mappers/timetable-activity-card.vm.mapper';
 
 @Injectable({

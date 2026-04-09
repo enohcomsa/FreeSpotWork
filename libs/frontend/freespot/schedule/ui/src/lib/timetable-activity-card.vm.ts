@@ -1,4 +1,4 @@
-import { WeekDay, WeekParity, ActivityType } from '@free-spot-domain/timetable-activity';
+import { WeekDay, WeekParity, ActivityType } from '@frontend/freespot/schedule/domain';
 export interface TimetableActivityCardVM {
   id: string,
   weekDay: WeekDay,
