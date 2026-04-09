@@ -1,14 +1,10 @@
 {
-  "name": "FreeSpot-e2e",
+  "name": "freespot-e2e",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
-  "sourceRoot": "apps/FreeSpot-e2e/src",
-  "tags": [
-    "type:app"
-  ],
-  "implicitDependencies": [
-    "FreeSpot"
-  ],
-  "// targets": "to see all targets run: nx show project FreeSpot-e2e --web",
+  "sourceRoot": "apps/freespot-e2e/src",
+  "tags": ["type:app"],
+  "implicitDependencies": ["FreeSpot"],
+  "// targets": "to see all targets run: nx show project freespot-e2e --web",
   "targets": {}
 }

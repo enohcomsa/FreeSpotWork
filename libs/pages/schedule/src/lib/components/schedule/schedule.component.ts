@@ -30,7 +30,6 @@ export class ScheduleComponent implements OnInit {
 
   readonly activeCohortIdSig = computed(() => {
     const user = this._authService.userSignal$();
-    console.log(user);
 
     if (!user) return null;
 

@@ -7,10 +7,10 @@ export default defineConfig({
     ...nxE2EPreset(__filename, {
       cypressDir: 'src',
       webServerCommands: {
-        default: 'nx run FreeSpot:serve:development',
-        production: 'nx run FreeSpot:serve:production',
+        default: 'nx run freespot:serve:development',
+        production: 'nx run freespot:serve:production',
       },
-      ciWebServerCommand: 'nx run FreeSpot:serve-static',
+      ciWebServerCommand: 'nx run freespot:serve-static',
     }),
     baseUrl: 'http://localhost:4200',
   },

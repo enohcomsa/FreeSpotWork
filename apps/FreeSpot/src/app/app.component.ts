@@ -6,9 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ThemeService } from './theme/theme.service';
 import { Language, Theme } from '@free-spot-domain/user';
 
-
 @Component({
-
   imports: [RouterModule],
   selector: 'free-spot-app-root',
   template: '<router-outlet></router-outlet>',
@@ -38,4 +36,3 @@ export class AppComponent implements OnInit {
     });
   }
 }
-

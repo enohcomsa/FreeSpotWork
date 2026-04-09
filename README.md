@@ -12,11 +12,11 @@ comes with a LSP for Vim users.
 
 ## Start the application
 
-Run `npx nx serve FreeSpot` to start the development server. Happy coding!
+Run `npx nx serve freespot` to start the development server. Happy coding!
 
 ## Build for production
 
-Run `npx nx build FreeSpot` to build the application. The build artifacts are stored in the output directory (e.g. `dist/` or `build/`), ready to be deployed.
+Run `npx nx build freespot` to build the application. The build artifacts are stored in the output directory (e.g. `dist/` or `build/`), ready to be deployed.
 
 ## Running tasks
 
@@ -61,7 +61,7 @@ It will show tasks that you can run with Nx.
 - [Subscribe to the Nx Youtube Channel](https://www.youtube.com/@nxdevtools)
 - [Follow us on Twitter](https://twitter.com/nxdevtools)
 
-# FreeSpot
+# freespot
 
 ### Generate lib
 
@@ -71,11 +71,9 @@ run `npx nx generate @nx/angular:library --name=LIB_NAME --buildable=true --dire
 
 ### Netifly:
 
-- [Netifly permalink](https://66bfb48cd9e6aca3d27390a3--free-spot.netlify.app/auth)
-- [Netifly production deploy](https://main--free-spot.netlify.app/)
+- [Netifly production deploy](https://shimmering-frangollo-07e558.netlify.app/)
 
 ### Vercel
 
-- [Vercel permalink](https://free-spot-3kwve4nn2-enoh22s-projects.vercel.app/auth)
-- [Vercel production deploy](https://free-spot.vercel.app/auth)
+- [Vercel production deploy](https://free-spot-work.vercel.app/)
 
