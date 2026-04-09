@@ -17,13 +17,7 @@ export const appConfig: ApplicationConfig = {
     provideZonelessChangeDetection(),
     provideRouter(appRoutes, withComponentInputBinding()),
     provideAnimationsAsync(),
-    provideHttpClient(
-      withInterceptors([
-        loadingInterceptor,
-        authInterceptor,
-        refreshInterceptor,
-      ]),
-    ),
+    provideHttpClient(withInterceptors([loadingInterceptor, authInterceptor, refreshInterceptor])),
     provideAnimations(),
     provideToastr(),
     importProvidersFrom(

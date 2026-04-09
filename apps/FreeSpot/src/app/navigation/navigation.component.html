@@ -1,4 +1,4 @@
-<mat-toolbar class="free-spot-toolbar stikky z-2 top-0 z-20 w-[110%]">
+<mat-toolbar class="free-spot-toolbar stikky top-0 z-2 z-20 w-[110%]">
   <nav class="flex grow items-center justify-between py-2">
     <div class="-ml-6 h-44 w-44 sm:h-48 sm:w-48">
       <img
@@ -76,7 +76,7 @@
     [ngClass]="{ hidden: !opened }"
   >
     <div class="mb-4 flex h-16 items-center">
-      <div class="-ml-6 -mt-2 h-44 w-44 sm:mt-0 sm:h-48 sm:w-48">
+      <div class="-mt-2 -ml-6 h-44 w-44 sm:mt-0 sm:h-48 sm:w-48">
         <img
           routerLink="dashboard"
           (click)="opened = false"
@@ -163,16 +163,10 @@
   <button mat-menu-item>
     <mat-icon>language</mat-icon>
     <span class="flex justify-around gap-4 text-base">
-      <span
-        [ngClass]="{ 'lang-color': currentUserSig()?.preferredLanguage === LANG.EN }"
-        (click)="onLangChange(LANG.EN)"
-      >
+      <span [ngClass]="{ 'lang-color': currentUserSig()?.preferredLanguage === LANG.EN }" (click)="onLangChange(LANG.EN)">
         EN
       </span>
-      <span
-        [ngClass]="{ 'lang-color': currentUserSig()?.preferredLanguage === LANG.RO }"
-        (click)="onLangChange(LANG.RO)"
-      >
+      <span [ngClass]="{ 'lang-color': currentUserSig()?.preferredLanguage === LANG.RO }" (click)="onLangChange(LANG.RO)">
         RO
       </span>
     </span>

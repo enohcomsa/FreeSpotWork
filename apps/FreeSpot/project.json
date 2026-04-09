@@ -3,35 +3,27 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "prefix": "free-spot",
-  "sourceRoot": "apps/FreeSpot/src",
-  "tags": [
-    "type:app"
-  ],
+  "sourceRoot": "apps/freespot/src",
+  "tags": ["type:app"],
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:application",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/apps/FreeSpot",
-        "index": "apps/FreeSpot/src/index.html",
-        "browser": "apps/FreeSpot/src/main.ts",
-        "tsConfig": "apps/FreeSpot/tsconfig.app.json",
+        "outputPath": "dist/apps/freespot",
+        "index": "apps/freespot/src/index.html",
+        "browser": "apps/freespot/src/main.ts",
+        "tsConfig": "apps/freespot/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": [
           {
             "glob": "**/*",
-            "input": "apps/FreeSpot/public"
+            "input": "apps/freespot/public"
           }
         ],
-        "styles": [
-          "apps/FreeSpot/src/styles.scss"
-        ],
+        "styles": ["apps/freespot/src/styles.scss"],
         "stylePreprocessorOptions": {
-          "includePaths": [
-            "node_modules/"
-          ]
+          "includePaths": ["node_modules/"]
         },
         "scripts": []
       },
@@ -82,11 +74,9 @@
     },
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": [
-        "{workspaceRoot}/coverage/{projectRoot}"
-      ],
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "apps/FreeSpot/jest.config.ts"
+        "jestConfig": "apps/freespot/jest.config.ts"
       }
     },
     "serve-static": {
@@ -94,7 +84,7 @@
       "options": {
         "buildTarget": "FreeSpot:build",
         "port": 4200,
-        "staticFilePath": "dist/apps/FreeSpot/browser",
+        "staticFilePath": "dist/apps/freespot/browser",
         "spa": true
       }
     }
