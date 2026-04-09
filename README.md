@@ -12,11 +12,11 @@ comes with a LSP for Vim users.
 
 ## Start the application
 
-Run `npx nx serve FreeSpot` to start the development server. Happy coding!
+Run `npx nx serve freespot` to start the development server. Happy coding!
 
 ## Build for production
 
-Run `npx nx build FreeSpot` to build the application. The build artifacts are stored in the output directory (e.g. `dist/` or `build/`), ready to be deployed.
+Run `npx nx build freespot` to build the application. The build artifacts are stored in the output directory (e.g. `dist/` or `build/`), ready to be deployed.
 
 ## Running tasks
 
@@ -61,7 +61,7 @@ It will show tasks that you can run with Nx.
 - [Subscribe to the Nx Youtube Channel](https://www.youtube.com/@nxdevtools)
 - [Follow us on Twitter](https://twitter.com/nxdevtools)
 
-# FreeSpot
+# freespot
 
 ### Generate lib
 

@@ -1,5 +1,5 @@
 export default {
-  displayName: 'FreeSpot',
+  displayName: 'freespot',
   preset: '../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   coverageDirectory: '../../coverage/apps/freespot',
