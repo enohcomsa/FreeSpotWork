@@ -2,7 +2,7 @@
   "name": "freespot-schedule-ui",
   "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/frontend/freespot/schedule/ui/src",
-  "prefix": "lib",
+  "prefix": "free-spot",
   "projectType": "library",
   "tags": ["platform:frontend", "scope:freespot", "type:ui"],
   "targets": {

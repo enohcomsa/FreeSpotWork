@@ -65,7 +65,7 @@ It will show tasks that you can run with Nx.
 
 ### Generate lib
 
-run `npx nx generate @nx/angular:library --name=LIB_NAME --buildable=true --directory=libs/pages/LIB_NAME --publishable=true --routing=true --changeDetection=OnPush --compilationMode=full --flat=true --importPath=@free-spot/LIB_NAME --prefix=free-spot --projectNameAndRootFormat=as-provided --selector=free-spot-LIB_NAME --simpleName=true --skipModule=true --skipTests=true --style=sass --tags=scope:lib --no-interactive`
+`npx nx generate @nx/angular:library --directory=libs/frontend/freespot/my-bookings/data-access --buildable=true --name=freespot-my-bookings-data-access --publishable=true --changeDetection=OnPush --compilationMode=full --flat=true --importPath=@free-spot/my-bookings/data-access --prefix=free-spot --skipModule=true --skipTests=true --style=scss --tags=platform:frontend,scope:freespot,type:data-access --no-interactive`
 
 # Deploy urls:
 

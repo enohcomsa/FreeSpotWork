@@ -2,7 +2,7 @@
   "name": "freespot-schedule-domain",
   "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/frontend/freespot/schedule/domain/src",
-  "prefix": "lib",
+  "prefix": "free-spot",
   "projectType": "library",
   "tags": ["platform:frontend", "scope:freespot", "type:domain"],
   "targets": {

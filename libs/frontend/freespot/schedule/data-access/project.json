@@ -2,7 +2,7 @@
   "name": "freespot-schedule-data-access",
   "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/frontend/freespot/schedule/data-access/src",
-  "prefix": "lib",
+  "prefix": "free-spot",
   "projectType": "library",
   "tags": ["platform:frontend", "scope:freespot", "type:data-access"],
   "targets": {
