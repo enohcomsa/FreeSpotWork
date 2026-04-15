@@ -2,7 +2,7 @@
   "name": "freespot-my-bookings-domain",
   "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/frontend/freespot/my-bookings/domain/src",
-  "prefix": "free-spot",
+  "prefix": "freespot",
   "projectType": "library",
   "release": {
     "version": {

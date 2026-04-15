@@ -1,5 +1,5 @@
 {
-  "name": "@free-spot/my-bookings/data-access",
+  "name": "@freespot/my-bookings/data-access",
   "version": "0.0.1",
   "peerDependencies": {
     "@angular/common": "^20.0.0",

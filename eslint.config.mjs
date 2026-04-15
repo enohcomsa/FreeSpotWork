@@ -24,57 +24,69 @@ export default [
           allow: [],
           depConstraints: [
             {
+              sourceTag: 'platform:frontend',
+              notDependOnLibsWithTags: ['platform:backend'],
+            },
+            {
+              sourceTag: 'platform:backend',
+              notDependOnLibsWithTags: ['platform:frontend'],
+            },
+
+            {
+              sourceTag: 'scope:freespot',
+              onlyDependOnLibsWithTags: ['scope:freespot', 'scope:shared', 'scope:core', 'scope:api'],
+              notDependOnLibsWithTags: ['scope:meal-plan'],
+            },
+            {
+              sourceTag: 'scope:meal-plan',
+              onlyDependOnLibsWithTags: ['scope:meal-plan', 'scope:shared', 'scope:core', 'scope:api'],
+              notDependOnLibsWithTags: ['scope:freespot'],
+            },
+            {
+              sourceTag: 'scope:core',
+              onlyDependOnLibsWithTags: ['scope:core', 'scope:shared', 'scope:api'],
+            },
+            {
+              sourceTag: 'scope:shared',
+              onlyDependOnLibsWithTags: ['scope:shared', 'scope:api'],
+            },
+            {
+              sourceTag: 'scope:api',
+              onlyDependOnLibsWithTags: ['scope:api', 'scope:shared'],
+            },
+
+            {
               sourceTag: 'type:app',
-              onlyDependOnLibsWithTags: [
-                'type:page',
-                'type:presentation',
-                'type:service',
-                'type:http',
-                'type:ui',
-                'type:domain',
-                'type:shared',
-                'type:util',
-                'type:api-client',
-              ],
+              onlyDependOnLibsWithTags: ['type:feature', 'type:ui', 'type:util', 'type:infra', 'type:generated'],
             },
             {
-              sourceTag: 'type:page',
-              onlyDependOnLibsWithTags: [
-                'type:presentation',
-                'type:service',
-                'type:ui',
-                'type:domain',
-                'type:shared',
-                'type:util',
-              ],
+              sourceTag: 'type:feature',
+              onlyDependOnLibsWithTags: ['type:data-access', 'type:domain', 'type:ui', 'type:util', 'type:infra', 'type:generated'],
             },
             {
-              sourceTag: 'type:presentation',
-              onlyDependOnLibsWithTags: ['type:domain'],
-            },
-            {
-              sourceTag: 'type:service',
-              onlyDependOnLibsWithTags: ['type:http', 'type:domain', 'type:shared', 'type:util', 'type:presentation'],
-            },
-            {
-              sourceTag: 'type:http',
-              onlyDependOnLibsWithTags: ['type:http', 'type:shared', 'type:util', 'type:api-client', 'type:presentation', 'type:domain'],
-            },
-            {
-              sourceTag: 'type:ui',
-              onlyDependOnLibsWithTags: ['type:shared', 'type:util', 'type:domain', 'type:service', 'type:presentation'],
+              sourceTag: 'type:data-access',
+              onlyDependOnLibsWithTags: ['type:data-access', 'type:domain', 'type:util', 'type:infra', 'type:generated'],
             },
             {
               sourceTag: 'type:domain',
-              onlyDependOnLibsWithTags: ['type:domain', 'type:shared', 'type:util'],
+              onlyDependOnLibsWithTags: ['type:domain', 'type:util', 'type:generated'],
             },
             {
-              sourceTag: 'type:shared',
-              onlyDependOnLibsWithTags: ['type:util'],
+              sourceTag: 'type:ui',
+              onlyDependOnLibsWithTags: ['type:ui', 'type:domain', 'type:util', 'type:generated'],
+              notDependOnLibsWithTags: ['type:data-access'],
             },
             {
               sourceTag: 'type:util',
               onlyDependOnLibsWithTags: ['type:util'],
+            },
+            {
+              sourceTag: 'type:generated',
+              onlyDependOnLibsWithTags: ['type:generated', 'type:util'],
+            },
+            {
+              sourceTag: 'type:infra',
+              onlyDependOnLibsWithTags: ['type:infra', 'type:util', 'type:domain', 'type:generated'],
             },
           ]
         },
