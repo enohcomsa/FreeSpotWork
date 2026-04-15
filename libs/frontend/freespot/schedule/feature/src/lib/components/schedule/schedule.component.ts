@@ -20,13 +20,7 @@ export class ScheduleComponent implements OnInit {
   private readonly _roomService = inject(AdminRoomService);
   private readonly _subjectService = inject(SubjectService);
 
-  readonly workWeek: WeekDay[] = [
-    WeekDay.MONDAY,
-    WeekDay.TUESDAY,
-    WeekDay.WEDNESDAY,
-    WeekDay.THURSDAY,
-    WeekDay.FRIDAY,
-  ];
+  readonly workWeek: WeekDay[] = [WeekDay.MONDAY, WeekDay.TUESDAY, WeekDay.WEDNESDAY, WeekDay.THURSDAY, WeekDay.FRIDAY];
 
   readonly activeCohortIdSig = computed(() => {
     const user = this._authService.userSignal$();
@@ -57,9 +51,7 @@ export class ScheduleComponent implements OnInit {
     subjectItemShortName: this._subjectService.getSignalById(timetableActivity.subjectId)()?.shortName ?? '',
   });
 
-  readonly timetableCardVMListSig = computed(() =>
-    this.timetableActivityListSig().map(this._toCardVM)
-  );
+  readonly timetableCardVMListSig = computed(() => this.timetableActivityListSig().map(this._toCardVM));
 
   readonly timetablePerDay = computed(() => {
     const allTimetableActivities: TimetableActivityCardVM[] = this.timetableCardVMListSig();
@@ -67,7 +59,7 @@ export class ScheduleComponent implements OnInit {
     return this.workWeek.map((day: WeekDay) => ({
       day,
       activities: allTimetableActivities.filter(
-        (timetableActivity: TimetableActivityCardVM) => timetableActivity.weekDay === day
+        (timetableActivity: TimetableActivityCardVM) => timetableActivity.weekDay === day,
       ),
     }));
   });

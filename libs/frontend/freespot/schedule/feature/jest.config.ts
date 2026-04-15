@@ -2,7 +2,7 @@ export default {
   displayName: 'feature-schedule',
   preset: '../../../../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  coverageDirectory: '../../../../../coverage/libs/frontend/freespot/schedule/feature-schedule',
+  coverageDirectory: '../../../../../coverage/libs/frontend/freespot/schedule/feature',
   transform: {
     '^.+\\.(ts|mjs|js|html)$': [
       'jest-preset-angular',
