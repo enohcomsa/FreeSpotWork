@@ -21,7 +21,7 @@
         </mat-autocomplete>
       </mat-form-field>
 
-      <button mat-flat-button type="submit" [disabled]="form.invalid"
+      <button mat-flat-button type="submit" [disabled]="!canSearch()"
         class="w-full md:w-auto md:min-w-[140px]! md:mb-7">
         {{ 'DINAMIC_FORM.SEARCH' | translate }}
       </button>

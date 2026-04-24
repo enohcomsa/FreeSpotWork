@@ -12,7 +12,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -47,12 +47,17 @@ export class ActivityReschedulingComponent implements OnInit, OnChanges {
 
   readonly selectedBookingId = input<string | null>(null);
   readonly rescheduled = output<void>();
-
+  readonly autocompleteOptionSelected = signal(false);
   readonly searchActive = signal(false);
+
   readonly bookingQuery = signal('');
 
   readonly form = this.fb.group({
-    bookingQuery: ['', Validators.required],
+    bookingQuery: [''],
+  });
+
+  readonly canSearch = computed(() => {
+    return this.autocompleteOptionSelected() && !this.searchActive();
   });
 
   readonly bookingOptions = this.store.reschedulableBookings;
@@ -105,6 +110,7 @@ export class ActivityReschedulingComponent implements OnInit, OnChanges {
   };
 
   onBookingSelected(event: MatAutocompleteSelectedEvent): void {
+    this.autocompleteOptionSelected.set(true);
     const bookingId = event.option.value as string;
     const booking = this.bookingOptions().find((item) => item.id === bookingId);
 
@@ -134,6 +140,7 @@ export class ActivityReschedulingComponent implements OnInit, OnChanges {
         }
 
         this.searchActive.set(false);
+        this.autocompleteOptionSelected.set(false);
         this.bookingQuery.set('');
         this.form.patchValue({ bookingQuery: '' });
         this.rescheduled.emit();
