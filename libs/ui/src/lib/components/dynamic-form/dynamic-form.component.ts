@@ -60,7 +60,7 @@ export class DynamicFormComponent implements OnInit {
   bookingListSig = this._bookingService.bookingListSig;
   selectedBookingIdSig = this._bookingService.selectedBookingIdSig;
   selectedBookingSig = this._bookingService.selectedBookingSig;
-  loadingSig = this._availabilityService.loadingSig;
+
   rescheduleOptionsSig = this._availabilityService.rescheduleOptionsSig;
 
   futureReschedulableBookingListSig: Signal<Booking[]> = computed(() => {

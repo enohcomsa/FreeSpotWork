@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, output, signal } from '@angular/core';
 import { MatChipsModule } from '@angular/material/chips';
 import { TranslateModule } from '@ngx-translate/core';
 import { ActivityBookingsStore } from '@free-spot/activity-bookings/data-access';
@@ -14,6 +14,8 @@ import { ActivityType } from '@frontend/freespot/schedule/domain';
 })
 export class MyActivityBookingsComponent implements OnInit {
   private readonly store = inject(ActivityBookingsStore);
+
+  readonly bookingSelected = output<string>();
 
   readonly ACTIVITY_TYPE = ActivityType;
 
@@ -37,7 +39,16 @@ export class MyActivityBookingsComponent implements OnInit {
     this.store.load();
   }
 
+  refresh(): void {
+    this.store.refresh();
+  }
+
   setFilter(type: ActivityType | null): void {
     this.filter.set(type);
+  }
+
+  selectBooking(id: string): void {
+
+    this.bookingSelected.emit(id);
   }
 }

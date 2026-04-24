@@ -1,4 +1,12 @@
 <div class="container">
-  <free-spot-my-activity-bookings></free-spot-my-activity-bookings>
+  <free-spot-activity-rescheduling
+    [selectedBookingId]="selectedBookingId()"
+    (rescheduled)="onRescheduled()"
+  ></free-spot-activity-rescheduling>
+
+  <free-spot-my-activity-bookings
+    (bookingSelected)="onBookingSelected($event)"
+  ></free-spot-my-activity-bookings>
+
   <free-spot-my-events></free-spot-my-events>
 </div>
