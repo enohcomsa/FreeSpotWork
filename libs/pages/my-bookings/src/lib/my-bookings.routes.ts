@@ -6,10 +6,9 @@ export const myBookingsRoutes: Route[] = [
     children: [
       {
         path: '',
-        // canActivate:[]
         loadComponent: async () => {
-          const mod = await import('./components/my-bookings/my-bookings.component');
-          return mod.MyBookingsComponent;
+          const mod = await import('@free-spot/activity-bookings/feature');
+          return mod.MyActivityBookingsComponent;
         },
       },
       { path: '**', redirectTo: '/' },

@@ -1,0 +1,33 @@
+<h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">
+  {{ 'BOOKINGS_PAGE.MY_BOOKINGS' | translate }}
+</h1>
+
+<mat-chip-listbox class="mb-4">
+  <mat-chip-option selected (click)="setFilter(null)">
+    {{ 'BOOKINGS_PAGE.ALL' | translate }}
+  </mat-chip-option>
+
+  <mat-chip-option (click)="setFilter(ACTIVITY_TYPE.LABORATORY)">
+    {{ 'BOOKINGS_PAGE.LABORATORY' | translate }}
+  </mat-chip-option>
+
+  <mat-chip-option (click)="setFilter(ACTIVITY_TYPE.COURSE)">
+    {{ 'BOOKINGS_PAGE.COURSE' | translate }}
+  </mat-chip-option>
+
+  <mat-chip-option (click)="setFilter(ACTIVITY_TYPE.PROJECT)">
+    {{ 'BOOKINGS_PAGE.PROJECT' | translate }}
+  </mat-chip-option>
+
+  <mat-chip-option (click)="setFilter(ACTIVITY_TYPE.SEMINAR)">
+    {{ 'BOOKINGS_PAGE.SEMINARY' | translate }}
+  </mat-chip-option>
+</mat-chip-listbox>
+
+<div class="grid grid-cols-1 gap-8 pb-4 md:grid-cols-2 xl:grid-cols-3">
+  @for (booking of bookings(); track booking.id) {
+   <free-spot-activity-booking-card [vm]="booking"></free-spot-activity-booking-card>
+  } @empty {
+    <h3>{{ 'BOOKINGS_PAGE.NO_BOOKINGS_MSG' | translate }}</h3>
+  }
+</div>
