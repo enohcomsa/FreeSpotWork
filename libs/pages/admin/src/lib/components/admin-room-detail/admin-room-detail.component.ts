@@ -5,9 +5,9 @@ import { AdminRoomService } from '@free-spot-service/room';
 import { SubjectService } from '@free-spot-service/subject';
 import { UpdateRoomCmd } from '@free-spot-domain/room';
 import { SubjectItem } from '@free-spot-domain/subject';
-import { TimetableActivityCardVM } from '@frontend/freespot/schedule/ui';
-import { AdminTimetableActivityService } from '@frontend/freespot/schedule/data-access';
-import { TimetableActivity, WeekDay } from '@frontend/freespot/schedule/domain';
+import { TimetableActivityCardVM } from '@free-spot/academic-schedule/ui';
+import { AdminTimetableActivityService } from '@free-spot-service/timetable-activity';
+import { TimetableActivity, WeekDay } from '@free-spot/academic-schedule/domain';
 
 @Component({
   selector: 'free-spot-admin-room-detail',

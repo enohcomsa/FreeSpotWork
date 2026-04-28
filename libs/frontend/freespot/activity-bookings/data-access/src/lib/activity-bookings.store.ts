@@ -2,10 +2,10 @@ import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpBookingService } from '@http-free-spot/booking';
 import { Booking } from '@free-spot-domain/booking';
-import { ActivityType, TimetableActivity } from '@frontend/freespot/schedule/domain';
+import { ActivityType, TimetableActivity } from '@free-spot/academic-schedule/domain';
 import { take } from 'rxjs';
 import { SubjectService } from '@free-spot-service/subject';
-import { AdminTimetableActivityService } from '@frontend/freespot/schedule/data-access';
+import { AdminTimetableActivityService } from '@free-spot-service/timetable-activity';
 import { AdminRoomService } from '@free-spot-service/room';
 import { BuildingService } from '@free-spot-service/building';
 import { AdminFloorService } from '@free-spot-service/floor';

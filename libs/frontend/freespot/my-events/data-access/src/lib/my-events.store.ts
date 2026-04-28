@@ -2,7 +2,7 @@ import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { take } from 'rxjs';
 import { Booking } from '@free-spot-domain/booking';
-import { ActivityType } from '@frontend/freespot/schedule/domain';
+import { ActivityType } from '@free-spot/academic-schedule/domain';
 import { HttpBookingService } from '@http-free-spot/booking';
 import { AdminEventService } from '@free-spot-service/event';
 import { BuildingService } from '@free-spot-service/building';

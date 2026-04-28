@@ -11,12 +11,12 @@ import { AdminFacultyService } from '@free-spot-service/faculty';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ConfirmModalService } from '@free-spot-service/confirm-modal';
 import { FormErrorMessage } from '@free-spot/util';
-import { ActivityType, CreateTimetableActivityCmd, TimetableActivity, WeekDay, WeekParity } from '@frontend/freespot/schedule/domain';
+import { ActivityType, CreateTimetableActivityCmd, TimetableActivity, WeekDay, WeekParity } from '@free-spot/academic-schedule/domain';
 import { Room } from '@free-spot-domain/room';
 import { AdminRoomService } from '@free-spot-service/room';
 import { SubjectItem } from '@free-spot-domain/subject';
-import { TimetableActivityCardVM } from '@frontend/freespot/schedule/ui';
-import { AdminTimetableActivityService } from '@frontend/freespot/schedule/data-access';
+import { TimetableActivityCardVM } from '@free-spot/academic-schedule/ui';
+import { AdminTimetableActivityService } from '@free-spot-service/timetable-activity';
 
 @Component({
   selector: 'free-spot-admin-room-timetable-item',

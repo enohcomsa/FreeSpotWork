@@ -1,0 +1,38 @@
+{
+  "name": "freespot-academic-schedule-feature",
+  "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/frontend/freespot/academic-schedule/feature/src",
+  "prefix": "free-spot",
+  "projectType": "library",
+  "tags": ["platform:frontend", "scope:freespot", "type:feature"],
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:package",
+      "outputs": ["{workspaceRoot}/dist/{projectRoot}"],
+      "options": {
+        "project": "libs/frontend/freespot/academic-schedule/feature/ng-package.json",
+        "tsConfig": "libs/frontend/freespot/academic-schedule/feature/tsconfig.lib.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "libs/frontend/freespot/academic-schedule/feature/tsconfig.lib.json"
+        },
+        "development": {
+          "tsConfig": "libs/frontend/freespot/academic-schedule/feature/tsconfig.lib.json"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "libs/frontend/freespot/academic-schedule/feature/jest.config.ts",
+        "tsConfig": "libs/frontend/freespot/academic-schedule/feature/tsconfig.spec.json"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

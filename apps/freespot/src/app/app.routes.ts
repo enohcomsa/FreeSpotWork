@@ -18,7 +18,7 @@ export const appRoutes: Route[] = [
       },
       {
         path: 'schedule',
-        loadChildren: () => import('@frontend/freespot/schedule/feature-schedule'),
+        loadChildren: () => import('@free-spot/academic-schedule/feature'),
       },
       {
         path: 'my-bookings',

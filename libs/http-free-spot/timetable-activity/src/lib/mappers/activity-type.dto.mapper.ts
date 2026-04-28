@@ -1,4 +1,4 @@
-import { ActivityType } from "@frontend/freespot/schedule/domain";
+import { ActivityType } from "@free-spot/academic-schedule/domain";
 import { ActivityTypeDTO } from "@free-spot/api-client";
 
 export const dtoToActivityType = (dto: ActivityTypeDTO): ActivityType => dto as unknown as ActivityType;

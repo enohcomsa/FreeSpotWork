@@ -3,7 +3,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { TranslateModule } from '@ngx-translate/core';
 import { ActivityBookingsStore } from '@free-spot/activity-bookings/data-access';
 import { ActivityBookingCardComponent } from '@free-spot/activity-bookings/ui';
-import { ActivityType } from '@frontend/freespot/schedule/domain';
+import { ActivityType } from '@free-spot/academic-schedule/domain';
 
 @Component({
   selector: 'free-spot-my-activity-bookings',

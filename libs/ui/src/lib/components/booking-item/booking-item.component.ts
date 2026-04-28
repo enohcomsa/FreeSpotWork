@@ -16,7 +16,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 import { take } from 'rxjs';
 
-import { TimetableActivity } from '@frontend/freespot/schedule/domain';
+import { TimetableActivity } from '@free-spot/academic-schedule/domain';
 import { BookingService } from '@free-spot-service/booking';
 import { ConfirmModalService } from '@free-spot-service/confirm-modal';
 import { AdminRoomService } from '@free-spot-service/room';
