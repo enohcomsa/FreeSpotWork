@@ -13,8 +13,8 @@ export const appRoutes: Route[] = [
     loadComponent: () => import('@frontend/freespot/core').then((m) => m.NavigationComponent),
     children: [
       {
-        path: 'dashboard',
-        loadChildren: () => import('@free-spot/dashboard'),
+        path: 'home',
+        loadChildren: () => import('@free-spot/home/feature'),
       },
       {
         path: 'schedule',
@@ -22,7 +22,7 @@ export const appRoutes: Route[] = [
       },
       {
         path: 'my-bookings',
-        loadChildren: () => import('@free-spot/my-bookings'),
+        loadChildren: () => import('@free-spot/my-bookings/feature'),
       },
       {
         path: 'admin',
@@ -32,11 +32,11 @@ export const appRoutes: Route[] = [
       {
         path: '',
         pathMatch: 'full',
-        redirectTo: 'dashboard',
+        redirectTo: 'home',
       },
       {
         path: '**',
-        redirectTo: 'dashboard',
+        redirectTo: 'home',
       },
     ],
   },

@@ -106,7 +106,7 @@ export class AuthComponent {
         })
         .subscribe({
           next: () => {
-            this._router.navigate(['/dashboard']);
+            this._router.navigate(['/home']);
           },
           error: (error) => this._handleError(error),
         });
@@ -119,7 +119,7 @@ export class AuthComponent {
         })
         .subscribe({
           next: () => {
-            this._router.navigate(['/dashboard']);
+            this._router.navigate(['/home']);
           },
           error: (error) => this._handleError(error),
         });

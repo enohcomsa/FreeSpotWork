@@ -1,1 +1,2 @@
-export * from './lib/freespot-university-map-feature/freespot-university-map-feature';
+export { UniversityMapComponent } from './lib/university-map/university-map.component'
+export { FloorDetailsComponent } from './lib/floor-details/floor-details.component';

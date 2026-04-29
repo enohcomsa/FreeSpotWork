@@ -11,7 +11,6 @@ export const scheduleRoutes: Route[] = [
           return mod.AcademicScheduleComponent;
         },
       },
-      { path: '**', redirectTo: '/' },
     ],
   },
 ];

@@ -1,1 +1,1 @@
-export { MyBookings } from './lib/my-bookings/my-bookings';
+export { myBookingsRoutes as default } from './lib/my-bookings.routes';

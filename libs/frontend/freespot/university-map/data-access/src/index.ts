@@ -1,1 +1,1 @@
-export * from './lib/freespot-university-map-data-access/freespot-university-map-data-access';
+export { UniversityMapStore } from './lib/university-map.store'

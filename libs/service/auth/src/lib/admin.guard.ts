@@ -14,14 +14,14 @@ export const adminGuard: CanActivateFn = (): boolean | UrlTree | Observable<bool
   }
 
   if (authService.initializedSignal$()) {
-    return router.createUrlTree(['/dashboard']);
+    return router.createUrlTree(['/home']);
   }
 
   return authService.loadMe().pipe(
     map(() => {
       return authService.userSignal$()?.role === Role.ADMIN
         ? true
-        : router.createUrlTree(['/dashboard']);
+        : router.createUrlTree(['/home']);
     }),
   );
 };

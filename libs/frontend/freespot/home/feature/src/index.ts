@@ -1,1 +1,1 @@
-export { HomeComponent } from './lib/home/home.component'
+export { homeRoutes as default } from './lib/home.routes';

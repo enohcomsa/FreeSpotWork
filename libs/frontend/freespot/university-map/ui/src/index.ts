@@ -1,1 +1,2 @@
-export * from './lib/freespot-university-map-ui/freespot-university-map-ui';
+export { BuildingCardComponent } from './lib/building-card/building-card.component';
+export { RoomCardComponent } from './lib/room-card/room-card.component';

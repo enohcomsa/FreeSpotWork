@@ -2,7 +2,7 @@
   <nav class="flex grow items-center justify-between py-2">
     <div class="-ml-6 h-44 w-44 sm:h-48 sm:w-48">
       <img
-        routerLink="dashboard"
+        routerLink="home"
         class="logo h-44 w-44 cursor-pointer sm:h-48 sm:w-48"
         src="images/logo_transparent.png"
         alt="Free Spot logo"
@@ -13,10 +13,10 @@
       <a
         mat-flat-button
         class="!hidden !text-sm !tracking-tight md:!flex lg:!text-base"
-        routerLink="/dashboard"
+        routerLink="/home"
         routerLinkActive="free-spot-toolbar-active-link"
       >
-        {{ 'NAV.DASHBOARD' | translate }}
+        {{ 'NAV.home' | translate }}
       </a>
 
       <a
@@ -78,7 +78,7 @@
     <div class="mb-4 flex h-16 items-center">
       <div class="-mt-2 -ml-6 h-44 w-44 sm:mt-0 sm:h-48 sm:w-48">
         <img
-          routerLink="dashboard"
+          routerLink="home"
           (click)="opened = false"
           class="logo h-44 w-44 cursor-pointer sm:h-48 sm:w-48"
           src="images/logo_transparent.png"
@@ -108,11 +108,11 @@
       <a
         mat-flat-button
         class="w-full !py-6"
-        routerLink="/dashboard"
+        routerLink="/home"
         routerLinkActive="free-spot-toolbar-active-link"
         (click)="opened = false"
       >
-        <span class="py-4 text-xl tracking-wide">{{ 'NAV.DASHBOARD' | translate }}</span>
+        <span class="py-4 text-xl tracking-wide">{{ 'NAV.home' | translate }}</span>
       </a>
 
       <a

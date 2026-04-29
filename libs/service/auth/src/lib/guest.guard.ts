@@ -8,7 +8,7 @@ export const guestGuard: CanActivateFn = (): boolean | UrlTree | Observable<bool
   const router = inject(Router);
 
   if (authService.isAuthenticated()) {
-    return router.createUrlTree(['/dashboard']);
+    return router.createUrlTree(['/home']);
   }
 
   if (authService.initializedSignal$()) {
@@ -17,7 +17,7 @@ export const guestGuard: CanActivateFn = (): boolean | UrlTree | Observable<bool
 
   return authService.loadMe().pipe(
     map(() => {
-      return authService.isAuthenticated() ? router.createUrlTree(['/dashboard']) : true;
+      return authService.isAuthenticated() ? router.createUrlTree(['/home']) : true;
     }),
   );
 };
