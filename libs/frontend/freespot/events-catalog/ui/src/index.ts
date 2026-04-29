@@ -1,1 +1,1 @@
-export * from './lib/freespot-events-catalog-ui/freespot-events-catalog-ui';
+export { EventCardComponent } from './lib/event-card/event-card.component';

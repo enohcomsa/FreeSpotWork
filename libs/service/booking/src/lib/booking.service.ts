@@ -45,6 +45,10 @@ export class BookingService {
     }
   }
 
+  refresh(): void {
+    this.loadMyBookings();
+  }
+
   loadMyBookings(): void {
     this._loadingSig.set(true);
     this._errorSig.set(null);

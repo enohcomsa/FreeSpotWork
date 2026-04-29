@@ -7,8 +7,8 @@ export const dashboardRoutes: Route[] = [
       {
         path: '',
         loadComponent: async () => {
-          const mod = await import('./components/dashboard/dashboard.component');
-          return mod.DashboardComponent;
+          const mod = await import('@free-spot/home/feature');
+          return mod.HomeComponent;
         },
       },
       {

@@ -26,7 +26,7 @@ export default [
         'error',
         {
           type: 'attribute',
-          prefix: 'freespot',
+          prefix: 'free-spot',
           style: 'camelCase',
         },
       ],
@@ -34,7 +34,7 @@ export default [
         'error',
         {
           type: 'element',
-          prefix: 'freespot',
+          prefix: 'free-spot',
           style: 'kebab-case',
         },
       ],
