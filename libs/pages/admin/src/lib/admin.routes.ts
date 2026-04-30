@@ -21,21 +21,21 @@ export const adminRoutes: Route[] = [
       {
         path: 'building/:buildingIdSig',
         loadComponent: async () => {
-          const mod = await import('./components/admin-building-detail/admin-building-detail.component');
+          const mod = await import('@free-spot/admin-university-map/feature');
           return mod.AdminBuildingDetailComponent;
         },
       },
       {
         path: 'building/:buildingIdSig/:floorIdSig',
         loadComponent: async () => {
-          const mod = await import('./components/admin-floor-detail/admin-floor-detail.component');
+          const mod = await import('@free-spot/admin-university-map/feature');
           return mod.AdminFloorDetailComponent;
         },
       },
       {
         path: 'building/:buildingIdSig/:floorIdSig/:roomIdSig',
         loadComponent: async () => {
-          const mod = await import('./components/admin-room-detail/admin-room-detail.component');
+          const mod = await import('@free-spot/admin-university-map/feature');
           return mod.AdminRoomDetailComponent;
         },
       },

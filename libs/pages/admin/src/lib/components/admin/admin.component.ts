@@ -1,49 +1,49 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
   ElementRef,
+  Signal,
+  WritableSignal,
+  computed,
   inject,
   OnDestroy,
   OnInit,
-  Signal,
   signal,
   viewChild,
-  WritableSignal,
 } from '@angular/core';
-import { FacultyComponent } from '../faculty/faculty.component';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { AddItemCardComponent } from '@free-spot/ui';
-import { AdminBuildingCardComponent } from '../admin-building-card/admin-building-card.component';
-import { AdminEventCardComponent } from '../admin-event-card/admin-event-card.component';
-import { AbstractControl, FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
-import { BuildingService } from '@free-spot-service/building';
-import { BuildingCardService } from '@free-spot-service/building-card';
-import { AdminFacultyService } from '@free-spot-service/faculty';
-import { UserService } from '@free-spot-service/user';
-import { ConfirmModalService } from '@free-spot-service/confirm-modal';
-import { FormErrorMessage } from '@free-spot/util';
-import { AdminEventService } from '@free-spot-service/event';
+import { MatChipsModule } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
+import { AbstractControl, FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { filter, Subscription } from 'rxjs';
-import { AdminRoomService } from '@free-spot-service/room';
-import { BookingService } from '@free-spot-service/booking';
-import { Building, CreateBuildingCmd, UpdateBuildingCmd } from '@free-spot-domain/building';
-import { BuildingCardVM } from '@free-spot-presentation/building-card';
-import { Floor } from '@free-spot-domain/floor';
-import { AdminFloorService } from '@free-spot-service/floor';
+
 import { Faculty } from '@free-spot-domain/faculty';
 import { Room } from '@free-spot-domain/room';
 import { CreateSpecialEventCmd, EventType, SpecialEvent, UpdateSpecialEventCmd } from '@free-spot-domain/event';
 import { Role, User } from '@free-spot-domain/user';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { MatIconModule } from '@angular/material/icon';
+import { Building } from '@free-spot-domain/building';
+
+import { AddItemCardComponent } from '@free-spot/ui';
+import { FormErrorMessage } from '@free-spot/util';
+
+import { BuildingService } from '@free-spot-service/building';
+import { AdminFacultyService } from '@free-spot-service/faculty';
+import { UserService } from '@free-spot-service/user';
+import { ConfirmModalService } from '@free-spot-service/confirm-modal';
+import { AdminEventService } from '@free-spot-service/event';
+import { AdminRoomService } from '@free-spot-service/room';
+import { BookingService } from '@free-spot-service/booking';
+
+import { AdminUniversityMapComponent } from '@free-spot/admin-university-map/feature';
+import { AdminEventCardComponent } from '../admin-event-card/admin-event-card.component';
+import { FacultyComponent } from '../faculty/faculty.component';
 
 @Component({
   selector: 'free-spot-admin',
@@ -56,7 +56,6 @@ import { MatIconModule } from '@angular/material/icon';
     MatButtonModule,
     FacultyComponent,
     MatExpansionModule,
-    AdminBuildingCardComponent,
     AdminEventCardComponent,
     AddItemCardComponent,
     MatDatepickerModule,
@@ -64,6 +63,7 @@ import { MatIconModule } from '@angular/material/icon';
     MatChipsModule,
     MatAutocompleteModule,
     MatIconModule,
+    AdminUniversityMapComponent,
   ],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.sass',
@@ -73,23 +73,18 @@ export class AdminComponent implements OnInit, OnDestroy {
   private _formBuilder: FormBuilder = inject(FormBuilder);
   private _adminFacultyService: AdminFacultyService = inject(AdminFacultyService);
   private _adminBuildingService: BuildingService = inject(BuildingService);
-  private _adminBuildingCardService: BuildingCardService = inject(BuildingCardService);
   private _userService: UserService = inject(UserService);
   private _confirmService: ConfirmModalService = inject(ConfirmModalService);
   private _formErrorMessage: FormErrorMessage = inject(FormErrorMessage);
   private _adminEventService: AdminEventService = inject(AdminEventService);
   private _adminRoomService: AdminRoomService = inject(AdminRoomService);
   private _bookingService: BookingService = inject(BookingService);
-  private _adminFloorService: AdminFloorService = inject(AdminFloorService);
 
-  editBuilding = viewChild<ElementRef>('editBuilding');
   editEvent = viewChild<ElementRef>('editEvent');
 
   readonly facultyListSig: Signal<Faculty[]> = this._adminFacultyService.facultyListSig;
   readonly buildingListSig: Signal<Building[]> = this._adminBuildingService.buildingListSig;
   readonly eventListSig: Signal<SpecialEvent[]> = this._adminEventService.eventListSig;
-  readonly floorListSig: Signal<Floor[]> = this._adminFloorService.floorListSig;
-  readonly buildingCardVMs: Signal<BuildingCardVM[]> = this._adminBuildingCardService.buildingCardListSig;
 
   readonly userListSig: Signal<User[]> = this._userService.userListSig;
   readonly adminUserListSig: Signal<User[]> = computed(() =>
@@ -100,16 +95,8 @@ export class AdminComponent implements OnInit, OnDestroy {
   );
   readonly foundMemberUserListSig: WritableSignal<User[]> = signal([]);
 
-  buildingSig: WritableSignal<BuildingCardVM> = signal({} as BuildingCardVM);
   specialEventSig: WritableSignal<SpecialEvent> = signal({} as SpecialEvent);
   subscriptionList: Subscription[] = [];
-
-  addingBuilding = false;
-  editingBuilding = false;
-  addBuildingFormGroup = this._formBuilder.nonNullable.group({
-    name: ['', [Validators.required, Validators.minLength(3)]],
-    adress: ['', [Validators.required, Validators.minLength(3)]],
-  });
 
   addAdminFormGroup = this._formBuilder.group({
     user: [null as User | string | null, [Validators.required]],
@@ -130,7 +117,6 @@ export class AdminComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this._adminBuildingService.init();
-    this._adminBuildingCardService.init();
     this._adminFacultyService.init();
     this._userService.init();
     this._adminEventService.init();
@@ -145,7 +131,7 @@ export class AdminComponent implements OnInit, OnDestroy {
           if (!this.editingEvent) {
             this.addEventFormGroup.controls['room'].reset();
           }
-        }),
+        })
     );
 
     this.subscriptionList.push(
@@ -163,12 +149,10 @@ export class AdminComponent implements OnInit, OnDestroy {
 
         this.foundMemberUserListSig.set(
           this.memberUserListSig().filter((user: User) =>
-            `${user.firstName ?? ''} ${user.familyName ?? ''} ${user.email}`
-              .toLowerCase()
-              .includes(query)
+            `${user.firstName ?? ''} ${user.familyName ?? ''} ${user.email}`.toLowerCase().includes(query)
           )
         );
-      }),
+      })
     );
 
     this.foundMemberUserListSig.set(this.memberUserListSig());
@@ -220,6 +204,7 @@ export class AdminComponent implements OnInit, OnDestroy {
         }
       });
   }
+
   onRemoveAdmin(userId: string): void {
     const user = this.adminUserListSig().find((item: User) => item.id === userId);
     const label = user ? this.getUserDisplayName(user) : 'this user';
@@ -233,54 +218,6 @@ export class AdminComponent implements OnInit, OnDestroy {
           this.foundMemberUserListSig.set(this.memberUserListSig());
         }
       });
-  }
-
-  onAddingBuilding(): void {
-    this.addBuildingFormGroup.reset();
-    this.addingBuilding = true;
-    this.editingBuilding = false;
-    this.editBuilding()?.nativeElement.scrollIntoView({ block: 'center', behavior: 'smooth' });
-  }
-
-  onAddBuilding(): void {
-    const newBuilding: CreateBuildingCmd = {
-      name: this.addBuildingFormGroup.controls['name'].value,
-      address: this.addBuildingFormGroup.controls['adress'].value,
-    };
-    this._adminBuildingService.create(newBuilding);
-    this.addingBuilding = false;
-    this.editingBuilding = false;
-  }
-
-  onEditingBuildingVM(vm: BuildingCardVM): void {
-    this.editingBuilding = true;
-    this.addBuildingFormGroup.setValue({ name: vm.name, adress: vm.address });
-    this.buildingSig.set(vm);
-    this.editBuilding()?.nativeElement.scrollIntoView({ block: 'center', behavior: 'smooth' });
-  }
-
-  onEditBuilding(): void {
-    const updatedBuilding: UpdateBuildingCmd = {
-      ...this.buildingSig(),
-      name: this.addBuildingFormGroup.controls['name'].value,
-      address: this.addBuildingFormGroup.controls['adress'].value,
-    };
-    this._adminBuildingService.update(this.buildingSig().id, updatedBuilding);
-    this.addBuildingFormGroup.reset();
-    this.addingBuilding = false;
-    this.editingBuilding = false;
-  }
-
-  onDeleteBuildingVM(vm: BuildingCardVM): void {
-    this._confirmService
-      .openConfirmDialog('Are you sure you want to delete this building?')
-      .afterClosed()
-      .subscribe((ok) => {
-        if (ok) this._adminBuildingService.remove(vm.id);
-      });
-
-    this.addingBuilding = false;
-    this.editingBuilding = false;
   }
 
   onAddingEvent(): void {
@@ -321,7 +258,7 @@ export class AdminComponent implements OnInit, OnDestroy {
     });
 
     this.addEventFormGroup.controls['room'].setValue(
-      this.foundRoomListSig().filter((room: Room) => room.id === eventToEdit.roomId)[0],
+      this.foundRoomListSig().filter((room: Room) => room.id === eventToEdit.roomId)[0]
     );
 
     this.specialEventSig.set(eventToEdit);
