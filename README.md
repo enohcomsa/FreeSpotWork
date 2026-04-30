@@ -65,7 +65,7 @@ It will show tasks that you can run with Nx.
 
 ### Generate lib
 
-`npx nx generate @nx/angular:library --directory=libs/frontend/freespot/my-bookings/data-access --buildable=true --name=freespot-my-bookings-data-access --publishable=true --changeDetection=OnPush --compilationMode=full --flat=true --importPath=@free-spot/my-bookings/data-access --prefix=free-spot --skipModule=true --skipTests=true --style=scss --tags=platform:frontend,scope:freespot,type:data-access --no-interactive`
+`npx nx generate @nx/angular:library --directory=libs/frontend/freespot/my-bookings/data-access  --name=freespot-my-bookings-data-access --publishable=true --changeDetection=OnPush --compilationMode=full --flat=true --importPath=@free-spot/my-bookings/data-access --prefix=free-spot --skipModule=true --skipTests=true --style=scss --tags=platform:frontend,scope:freespot,type:data-access --no-interactive`
 
 # Deploy urls:
 
