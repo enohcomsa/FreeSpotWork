@@ -75,7 +75,6 @@
       "@free-spot/events-catalog/ui": ["libs/frontend/freespot/events-catalog/ui/src/index.ts"],
       "@free-spot/home/feature": ["libs/frontend/freespot/home/feature/src/index.ts"],
       "@free-spot/models": ["libs/shared/models/src/index.ts"],
-      "@free-spot/my-bookings": ["libs/pages/my-bookings/src/index.ts"],
       "@free-spot/my-bookings/feature": ["libs/frontend/freespot/my-bookings/feature/src/index.ts"],
       "@free-spot/my-events/data-access": ["libs/frontend/freespot/my-events/data-access/src/index.ts"],
       "@free-spot/my-events/feature": ["libs/frontend/freespot/my-events/feature/src/index.ts"],
