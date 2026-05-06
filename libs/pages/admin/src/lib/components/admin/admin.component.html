@@ -1,46 +1,5 @@
 <div class="container">
-  <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Admin List</h1>
-
-  <mat-chip-set class="pb-4">
-    @for (admin of adminUserListSig(); track admin.id) {
-    <mat-chip removable="true">
-      <div class="flex gap-2">
-        <p>{{ getUserDisplayName(admin) }}</p>
-        <p>{{ admin.email }}</p>
-      </div>
-      <button matChipRemove (click)="onRemoveAdmin(admin.id)">
-        <mat-icon class="delete-icon">cancel</mat-icon>
-      </button>
-    </mat-chip>
-    } @empty {
-    <mat-chip>No admins added yet</mat-chip>
-    }
-  </mat-chip-set>
-
-  <form [formGroup]="addAdminFormGroup" class="flex flex-col gap-4 pb-4 sm:flex-row sm:items-center"
-    (ngSubmit)="onAddAdmin()">
-    <mat-form-field class="grow">
-      <mat-label>Add admin</mat-label>
-      <input matInput formControlName="user" [matAutocomplete]="autoAdminUser" />
-
-      <mat-autocomplete #autoAdminUser="matAutocomplete" [displayWith]="displayUser">
-        @for (user of foundMemberUserListSig(); track user.id) {
-        <mat-option [value]="user">
-          {{ getUserDisplayName(user) }} | {{ user.email }}
-        </mat-option>
-        } @empty {
-        <mat-option disabled>No users found</mat-option>
-        }
-      </mat-autocomplete>
-
-      <mat-error>{{ displayError(addAdminFormGroup.controls['user']) }}</mat-error>
-    </mat-form-field>
-
-    <button mat-flat-button type="submit" class="sm:mb-5" [disabled]="!addAdminFormGroup.valid">
-      Add admin
-    </button>
-  </form>
-
+  <free-spot-admin-user-access></free-spot-admin-user-access>
   <free-spot-admin-academic-structure></free-spot-admin-academic-structure>
   <free-spot-admin-university-map></free-spot-admin-university-map>
   <free-spot-admin-events></free-spot-admin-events>
