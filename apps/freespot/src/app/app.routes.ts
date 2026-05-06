@@ -27,7 +27,7 @@ export const appRoutes: Route[] = [
       {
         path: 'admin',
         canActivate: [adminGuard],
-        loadChildren: () => import('@free-spot/admin'),
+        loadChildren: () => import('@free-spot/admin/feature'),
       },
       {
         path: '',

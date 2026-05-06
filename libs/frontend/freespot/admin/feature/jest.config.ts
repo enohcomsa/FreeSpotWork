@@ -1,8 +1,8 @@
 export default {
-  displayName: 'admin',
-  preset: '../../../jest.preset.js',
+  displayName: 'freespot-admin-feature',
+  preset: '../../../../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  coverageDirectory: '../../../coverage/libs/pages/admin',
+  coverageDirectory: '../../../../../coverage/libs/frontend/freespot/admin/feature',
   transform: {
     '^.+\\.(ts|mjs|js|html)$': [
       'jest-preset-angular',

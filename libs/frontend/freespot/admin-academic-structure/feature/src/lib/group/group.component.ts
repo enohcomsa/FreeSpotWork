@@ -5,9 +5,7 @@ import { DynamicChipListComponent, TimetableItemComponent } from '@free-spot/ui'
 import { AdminFacultyService } from '@free-spot-service/faculty';
 import { FormsModule } from '@angular/forms';
 import { BuildingService } from '@free-spot-service/building';
-import { AdminGroupTimetableComponent } from '../../../../../../../pages/admin/src/lib/components/admin-group-timetable/admin-group-timetable.component';
 import { AdminRoomService } from '@free-spot-service/room';
-import { AdminSemisemiGroupTimetableComponent } from '../../../../../../../pages/admin/src/lib/components/admin-semigroup-timetable/admin-semigroup-timetable.component';
 import { AppDateService } from '@free-spot-service/app-date';
 import { UserService } from '@free-spot-service/user';
 import { BookingService } from '@free-spot-service/booking';
@@ -22,6 +20,7 @@ import { TimetableActivity, WeekDay } from '@free-spot/academic-schedule/domain'
 import { TimetableActivityCardVM } from '@free-spot/academic-schedule/ui';
 import { SubjectService } from '@free-spot-service/subject';
 import { User } from '@free-spot-domain/user';
+import { AdminGroupTimetableComponent, AdminSemisemiGroupTimetableComponent, } from '@free-spot/admin-timetabling/feature';
 
 @Component({
   selector: 'free-spot-group',

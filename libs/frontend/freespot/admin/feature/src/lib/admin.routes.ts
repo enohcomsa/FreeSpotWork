@@ -7,7 +7,7 @@ export const adminRoutes: Route[] = [
       {
         path: '',
         loadComponent: async () => {
-          const mod = await import('./components/admin/admin.component');
+          const mod = await import('./admin/admin.component');
           return mod.AdminComponent;
         },
       },

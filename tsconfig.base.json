@@ -65,10 +65,7 @@
       "@free-spot/activity-rescheduling/data-access": ["libs/frontend/freespot/activity-rescheduling/data-access/src/index.ts"],
       "@free-spot/activity-rescheduling/feature": ["libs/frontend/freespot/activity-rescheduling/feature/src/index.ts"],
       "@free-spot/activity-rescheduling/ui": ["libs/frontend/freespot/activity-rescheduling/ui/src/index.ts"],
-      "@free-spot/admin": ["libs/pages/admin/src/index.ts"],
-      "@free-spot/admin-academic-structure/data-access": [
-        "libs/frontend/freespot/admin-academic-structure/data-access/src/index.ts"
-      ],
+      "@free-spot/admin-academic-structure/data-access": ["libs/frontend/freespot/admin-academic-structure/data-access/src/index.ts"],
       "@free-spot/admin-academic-structure/domain": ["libs/frontend/freespot/admin-academic-structure/domain/src/index.ts"],
       "@free-spot/admin-academic-structure/feature": ["libs/frontend/freespot/admin-academic-structure/feature/src/index.ts"],
       "@free-spot/admin-academic-structure/ui": ["libs/frontend/freespot/admin-academic-structure/ui/src/index.ts"],
@@ -84,6 +81,7 @@
       "@free-spot/admin-university-map/ui": ["libs/frontend/freespot/admin-university-map/ui/src/index.ts"],
       "@free-spot/admin-user-access/data-access": ["libs/frontend/freespot/admin-user-access/data-access/src/index.ts"],
       "@free-spot/admin-user-access/feature": ["libs/frontend/freespot/admin-user-access/feature/src/index.ts"],
+      "@free-spot/admin/feature": ["libs/frontend/freespot/admin/feature/src/index.ts"],
       "@free-spot/api-client": ["libs/_free-spot-client-api/src/index.ts"],
       "@free-spot/enums": ["libs/shared/enums/src/index.ts"],
       "@free-spot/event-registration/data-access": ["libs/frontend/freespot/event-registration/data-access/src/index.ts"],
