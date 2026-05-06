@@ -1,1 +1,1 @@
-export * from './lib/freespot-admin-events-data-access/freespot-admin-events-data-access';
+export { AdminEventsStore } from './lib/admin-events.store';

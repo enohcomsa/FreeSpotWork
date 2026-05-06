@@ -1,1 +1,1 @@
-export * from './lib/freespot-admin-events-feature/freespot-admin-events-feature';
+export { AdminEventsComponent } from './lib/admin-events/admin-events.component'
