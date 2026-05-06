@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  OnInit,
   Signal,
   WritableSignal,
   inject,
@@ -15,12 +16,11 @@ import { MatInputModule } from '@angular/material/input';
 
 import { CreateBuildingCmd, UpdateBuildingCmd } from '@free-spot-domain/building';
 import { BuildingCardVM } from '@free-spot-presentation/building-card';
-import { BuildingService } from '@free-spot-service/building';
-import { BuildingCardService } from '@free-spot-service/building-card';
 import { ConfirmModalService } from '@free-spot-service/confirm-modal';
 import { AddItemCardComponent } from '@free-spot/ui';
 import { FormErrorMessage } from '@free-spot/util';
 import { AdminBuildingCardComponent } from '@free-spot/admin-university-map/ui';
+import { AdminUniversityMapStore } from '@free-spot/admin-university-map/data-access';
 
 @Component({
   selector: 'free-spot-admin-university-map',
@@ -37,17 +37,15 @@ import { AdminBuildingCardComponent } from '@free-spot/admin-university-map/ui';
   styleUrl: './admin-university-map.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AdminUniversityMapComponent {
+export class AdminUniversityMapComponent implements OnInit {
   private _formBuilder: FormBuilder = inject(FormBuilder);
-  private _adminBuildingService: BuildingService = inject(BuildingService);
-  private _adminBuildingCardService: BuildingCardService = inject(BuildingCardService);
   private _confirmService: ConfirmModalService = inject(ConfirmModalService);
   private _formErrorMessage: FormErrorMessage = inject(FormErrorMessage);
+  private _adminUniversityMapStore = inject(AdminUniversityMapStore);
 
   editBuilding = viewChild<ElementRef>('editBuilding');
 
-  readonly buildingCardVMs: Signal<BuildingCardVM[]> = this._adminBuildingCardService.buildingCardListSig;
-
+  readonly buildingCardVMs: Signal<BuildingCardVM[]> = this._adminUniversityMapStore.buildingCardVMs;
   readonly buildingSig: WritableSignal<BuildingCardVM> = signal({} as BuildingCardVM);
 
   addingBuilding = false;
@@ -58,9 +56,8 @@ export class AdminUniversityMapComponent {
     adress: ['', [Validators.required, Validators.minLength(3)]],
   });
 
-  constructor() {
-    this._adminBuildingService.init();
-    this._adminBuildingCardService.init();
+  ngOnInit(): void {
+    this._adminUniversityMapStore.init();
   }
 
   displayError = (control: AbstractControl | null) => this._formErrorMessage.displayFormErrorMessage(control);
@@ -78,7 +75,7 @@ export class AdminUniversityMapComponent {
       address: this.addBuildingFormGroup.controls['adress'].value,
     };
 
-    this._adminBuildingService.create(newBuilding);
+    this._adminUniversityMapStore.create(newBuilding);
     this.addingBuilding = false;
     this.editingBuilding = false;
   }
@@ -97,7 +94,7 @@ export class AdminUniversityMapComponent {
       address: this.addBuildingFormGroup.controls['adress'].value,
     };
 
-    this._adminBuildingService.update(this.buildingSig().id, updatedBuilding);
+    this._adminUniversityMapStore.update(this.buildingSig().id, updatedBuilding);
     this.addBuildingFormGroup.reset();
     this.addingBuilding = false;
     this.editingBuilding = false;
@@ -109,7 +106,7 @@ export class AdminUniversityMapComponent {
       .afterClosed()
       .subscribe((ok) => {
         if (ok) {
-          this._adminBuildingService.remove(vm.id);
+          this._adminUniversityMapStore.remove(vm.id);
         }
       });
 
