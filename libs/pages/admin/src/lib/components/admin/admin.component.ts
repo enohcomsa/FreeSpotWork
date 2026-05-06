@@ -11,25 +11,22 @@ import {
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
-import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { AbstractControl, FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { Faculty } from '@free-spot-domain/faculty';
 import { Role, User } from '@free-spot-domain/user';
 
 import { FormErrorMessage } from '@free-spot/util';
 
-import { AdminFacultyService } from '@free-spot-service/faculty';
 import { UserService } from '@free-spot-service/user';
 import { ConfirmModalService } from '@free-spot-service/confirm-modal';
 
 import { AdminUniversityMapComponent } from '@free-spot/admin-university-map/feature';
 import { AdminEventsComponent } from '@free-spot/admin-events/feature';
-import { FacultyComponent } from '../faculty/faculty.component';
+import { AdminAcademicStructureComponent } from '@free-spot/admin-academic-structure/feature';
 
 @Component({
   selector: 'free-spot-admin',
@@ -40,13 +37,11 @@ import { FacultyComponent } from '../faculty/faculty.component';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    FacultyComponent,
-    MatExpansionModule,
     MatChipsModule,
     MatAutocompleteModule,
     MatIconModule,
     AdminUniversityMapComponent,
-    AdminEventsComponent,
+    AdminEventsComponent, AdminAcademicStructureComponent,
   ],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.sass',
@@ -54,12 +49,9 @@ import { FacultyComponent } from '../faculty/faculty.component';
 })
 export class AdminComponent implements OnInit {
   private _formBuilder: FormBuilder = inject(FormBuilder);
-  private _adminFacultyService: AdminFacultyService = inject(AdminFacultyService);
   private _userService: UserService = inject(UserService);
   private _confirmService: ConfirmModalService = inject(ConfirmModalService);
   private _formErrorMessage: FormErrorMessage = inject(FormErrorMessage);
-
-  readonly facultyListSig: Signal<Faculty[]> = this._adminFacultyService.facultyListSig;
 
   readonly userListSig: Signal<User[]> = this._userService.userListSig;
   readonly adminUserListSig: Signal<User[]> = computed(() =>
@@ -75,7 +67,6 @@ export class AdminComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this._adminFacultyService.init();
     this._userService.init();
 
     this.addAdminFormGroup.controls['user'].valueChanges.subscribe((value) => {

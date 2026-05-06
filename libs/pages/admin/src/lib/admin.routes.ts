@@ -14,7 +14,7 @@ export const adminRoutes: Route[] = [
       {
         path: 'group/:groupIdSig',
         loadComponent: async () => {
-          const mod = await import('./components/group/group.component');
+          const mod = await import('@free-spot/admin-academic-structure/feature');
           return mod.GroupComponent;
         },
       },
