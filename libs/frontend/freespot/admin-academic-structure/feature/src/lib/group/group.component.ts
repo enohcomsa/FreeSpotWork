@@ -19,7 +19,7 @@ import { ProgramService } from '@free-spot-service/program';
 import { TimetableActivity, WeekDay } from '@free-spot/academic-schedule/domain';
 import { TimetableActivityCardVM } from '@free-spot/academic-schedule/ui';
 import { SubjectService } from '@free-spot-service/subject';
-import { User } from '@free-spot-domain/user';
+import { User } from '@free-spot/core/domain';
 import { AdminGroupTimetableComponent, AdminSemisemiGroupTimetableComponent, } from '@free-spot/admin-timetabling/feature';
 
 @Component({

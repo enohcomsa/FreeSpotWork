@@ -8,11 +8,11 @@ import {
 import { map, Observable } from 'rxjs';
 import {
   UpdateMyPreferencesCmd,
-  UpdateMyProfileCmd,
   UpdateUserCmd,
   User,
-} from '@free-spot-domain/user';
+} from '@free-spot/core/domain';
 import { dtoToDomain, toMyProfileUpdateDTO, toMyPreferencesUpdateDTO, toUpdateUserDTO } from './mappers/user.dto.mapper';
+import { UpdateMyProfileCmd } from "@free-spot/user-setup/domain";
 
 @Injectable({
   providedIn: 'root'

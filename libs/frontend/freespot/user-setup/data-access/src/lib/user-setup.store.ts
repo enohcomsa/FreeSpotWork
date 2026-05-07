@@ -7,13 +7,13 @@ import { AdminFacultyService } from '@free-spot-service/faculty';
 import { ProgramYearService } from '@free-spot-service/program-year';
 import { ProgramService } from '@free-spot-service/program';
 import { CohortService } from '@free-spot-service/cohort';
-import { UserService } from '@free-spot-service/user';
+import { HttpUserSetupService } from './http-user-setup.service';
 
 import { Faculty } from '@free-spot-domain/faculty';
 import { Program } from '@free-spot-domain/program';
 import { ProgramYear } from '@free-spot-domain/program-year';
 import { Cohort } from '@free-spot-domain/cohort';
-import { UpdateMyProfileCmd } from '@free-spot-domain/user';
+import { type UpdateMyProfileCmd } from '@free-spot/user-setup/domain';
 
 @Injectable({ providedIn: 'root' })
 export class UserSetupStore {
@@ -22,14 +22,13 @@ export class UserSetupStore {
   private readonly programYearService = inject(ProgramYearService);
   private readonly programService = inject(ProgramService);
   private readonly cohortService = inject(CohortService);
-  private readonly userService = inject(UserService);
+  private readonly _httpUserSetupService = inject(HttpUserSetupService);
 
   readonly facultyListSig = this.facultyService.facultyListSig;
   readonly foundProgramListSig = signal<Program[]>([]);
   readonly foundYearListSig = signal<ProgramYear[]>([]);
   readonly foundGroupListSig = signal<Cohort[]>([]);
   readonly foundSemigroupListSig = signal<Cohort[]>([]);
-  readonly loadingSig = signal(false);
 
   readonly shouldOpenDialogSig = computed(() => {
     const initialized = this.authService.initializedSignal$();
@@ -135,9 +134,7 @@ export class UserSetupStore {
   }
 
   submit(input: UpdateMyProfileCmd, onSuccess: () => void): void {
-    this.loadingSig.set(true);
-
-    this.userService
+    this._httpUserSetupService
       .updateMyProfile$(input)
       .pipe(
         switchMap(() => this.authService.loadMe()),
@@ -145,11 +142,7 @@ export class UserSetupStore {
       )
       .subscribe({
         next: () => {
-          this.loadingSig.set(false);
           onSuccess();
-        },
-        error: () => {
-          this.loadingSig.set(false);
         },
       });
   }

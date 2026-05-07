@@ -7,7 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 
-import { Role, User } from '@free-spot-domain/user';
+import { Role, User } from '@free-spot/core/domain';
 import { ConfirmModalService } from '@free-spot-service/confirm-modal';
 import { AdminUserAccessStore } from '@free-spot/admin-user-access/data-access';
 import { FormErrorMessage } from '@free-spot/util';

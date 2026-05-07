@@ -1,5 +1,5 @@
 import { Injectable, Signal, inject } from '@angular/core';
-import { Role, User } from '@free-spot-domain/user';
+import { Role, User } from '@free-spot/core/domain';
 import { UserService } from '@free-spot-service/user';
 
 @Injectable({ providedIn: 'root' })

@@ -1,8 +1,9 @@
 import { computed, inject, Injectable, Signal, signal, WritableSignal } from '@angular/core';
 import { catchError, Observable, take, tap, throwError } from 'rxjs';
-import { User, UpdateMyPreferencesCmd, UpdateMyProfileCmd, UpdateUserCmd } from '@free-spot-domain/user';
+import { User, UpdateMyPreferencesCmd, UpdateUserCmd } from '@free-spot/core/domain';
 import { SignalArrayUtil } from '@free-spot/util';
 import { HttpUserService } from '@http-free-spot/user';
+import { UpdateMyProfileCmd } from "@free-spot/user-setup/domain";
 
 @Injectable({
   providedIn: 'root',

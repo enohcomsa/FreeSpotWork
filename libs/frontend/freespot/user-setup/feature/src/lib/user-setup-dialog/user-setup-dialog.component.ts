@@ -14,7 +14,7 @@ import { Faculty } from '@free-spot-domain/faculty';
 import { ProgramYear } from '@free-spot-domain/program-year';
 import { Program } from '@free-spot-domain/program';
 import { Cohort } from '@free-spot-domain/cohort';
-import { UpdateMyProfileCmd } from '@free-spot-domain/user';
+import { type UpdateMyProfileCmd } from '@free-spot/user-setup/domain';
 
 import { UserSetupStore } from '@free-spot/user-setup/data-access';
 
@@ -45,7 +45,6 @@ export class UserSetupDialogComponent implements OnInit, OnDestroy {
   readonly foundYearListSig = this.store.foundYearListSig;
   readonly foundGroupListSig = this.store.foundGroupListSig;
   readonly foundSemigroupListSig = this.store.foundSemigroupListSig;
-  readonly loadingSig = this.store.loadingSig;
 
   readonly setupForm = this.formBuilder.group({
     firstName: ['', [Validators.required, Validators.minLength(2)]],

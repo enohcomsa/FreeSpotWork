@@ -1,9 +1,9 @@
-import { User, UpdateMyProfileCmd, UpdateMyPreferencesCmd, UpdateUserCmd, Language, Theme } from "@free-spot-domain/user";
+import { Language, Theme, type UpdateMyPreferencesCmd, type UpdateUserCmd, type User } from '@free-spot/core/domain';
 import { AuthUserDTO, UserResponseDTO, UserMeProfileUpdateDTO, UserMePreferencesUpdateDTO, UserUpdateDTO } from "@free-spot/api-client";
 import { dtoToRole, roleToDto } from "./role.dto.mapper";
 import { dtoToLanguage, languageToDto } from "./language.dto.mapper";
 import { dtoToTheme, themeToDto } from "./theme.dto.mapper";
-
+import { type UpdateMyProfileCmd } from '@free-spot/user-setup/domain';
 
 export function authDtoToDomain(dto: AuthUserDTO): User {
   return {

@@ -1,6 +1,5 @@
-import { Language } from "./language.enum";
-import { Role } from "./role.enum";
-import { Theme } from "./theme.enum";
+import { Language, Theme } from './user-preferences.model';
+import { Role } from './auth.model';
 
 export interface User {
   id: string;

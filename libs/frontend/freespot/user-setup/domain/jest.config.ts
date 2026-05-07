@@ -1,8 +1,8 @@
 export default {
-  displayName: 'user-domain',
-  preset: '../../../jest.preset.js',
+  displayName: 'freespot-user-setup-domain',
+  preset: '../../../../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  coverageDirectory: '../../../coverage/libs/domain/user',
+  coverageDirectory: '../../../../../coverage/libs/frontend/freespot/user-setup/domain',
   transform: {
     '^.+\\.(ts|mjs|js|html)$': [
       'jest-preset-angular',

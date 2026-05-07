@@ -1,4 +1,4 @@
-import { Theme } from "@free-spot-domain/user";
+import { Theme } from "@free-spot/core/domain";
 import { PreferredThemeDTO } from "@free-spot/api-client";
 
 export const dtoToTheme = (dto: PreferredThemeDTO): Theme => dto as unknown as Theme;
