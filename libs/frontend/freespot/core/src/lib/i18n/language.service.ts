@@ -1,5 +1,5 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
-import { Language } from '../user-preferences/user-preferences.model';
+import { Language } from '@free-spot/core/domain';
 @Injectable({
   providedIn: 'root',
 })

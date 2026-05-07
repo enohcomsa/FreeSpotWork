@@ -8,9 +8,9 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { provideToastr } from 'ngx-toastr';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { authInterceptor, refreshInterceptor } from '@free-spot-service/auth';
-import { Language } from '@free-spot-domain/user';
-import { provideAuthApi } from '@http-free-spot/auth';
+import { authInterceptor, refreshInterceptor } from '@free-spot/core/data-access';
+import { Language } from '@free-spot/core/domain';
+import { provideAuthApi } from '@free-spot/core/data-access';
 
 export const appConfig: ApplicationConfig = {
   providers: [

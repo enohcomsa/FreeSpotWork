@@ -4,7 +4,7 @@ import { LanguageService } from '@free-spot/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { ThemeService } from '@free-spot/core';
-import { Language, Theme } from '@free-spot-domain/user';
+import { Language, Theme } from '@free-spot/core/domain';
 
 @Component({
   imports: [RouterModule],

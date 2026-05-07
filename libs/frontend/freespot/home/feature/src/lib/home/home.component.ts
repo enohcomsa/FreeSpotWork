@@ -8,7 +8,7 @@ import {
 import { EventsCatalogComponent } from '@free-spot/events-catalog/feature';
 import { UniversityMapComponent } from '@free-spot/university-map/feature';
 import { UserSetupFlow } from '@free-spot/user-setup/feature';
-import { AuthService } from '@free-spot/core';
+import { AuthService } from '@free-spot/core/data-access';
 
 @Component({
   selector: 'free-spot-home',

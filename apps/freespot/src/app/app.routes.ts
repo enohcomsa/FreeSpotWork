@@ -1,16 +1,16 @@
 import { Route } from '@angular/router';
-import { adminGuard, authGuard, guestGuard } from '@free-spot-service/auth';
+import { authGuard, guestGuard, adminGuard } from '@free-spot/core/data-access';
 
 export const appRoutes: Route[] = [
   {
     path: 'auth',
     canActivate: [guestGuard],
-    loadComponent: () => import('@free-spot/core').then((m) => m.AuthComponent),
+    loadComponent: () => import('@free-spot/core/feature').then((m) => m.AuthComponent),
   },
   {
     path: '',
     canActivate: [authGuard],
-    loadComponent: () => import('@free-spot/core').then((m) => m.NavigationComponent),
+    loadComponent: () => import('@free-spot/core/feature').then((m) => m.NavigationComponent),
     children: [
       {
         path: 'home',
