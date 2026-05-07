@@ -5,7 +5,7 @@ import {
 } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { catchError, switchMap, throwError } from 'rxjs';
-import { AuthService } from '@free-spot/core/data-access';
+import { AuthService } from './auth.service';
 
 const RETRY_COUNT = new HttpContextToken<number>(() => 0);
 const MAX_RETRIES = 3;
