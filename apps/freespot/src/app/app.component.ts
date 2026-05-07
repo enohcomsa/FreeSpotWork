@@ -1,9 +1,9 @@
 import { Component, DestroyRef, inject, OnInit, DOCUMENT } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { LanguageService } from '@frontend/freespot/core';
+import { LanguageService } from '@free-spot/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
-import { ThemeService } from '@frontend/freespot/core';
+import { ThemeService } from '@free-spot/core';
 import { Language, Theme } from '@free-spot-domain/user';
 
 @Component({

@@ -5,12 +5,12 @@ export const appRoutes: Route[] = [
   {
     path: 'auth',
     canActivate: [guestGuard],
-    loadComponent: () => import('@frontend/freespot/core').then((m) => m.AuthComponent),
+    loadComponent: () => import('@free-spot/core').then((m) => m.AuthComponent),
   },
   {
     path: '',
     canActivate: [authGuard],
-    loadComponent: () => import('@frontend/freespot/core').then((m) => m.NavigationComponent),
+    loadComponent: () => import('@free-spot/core').then((m) => m.NavigationComponent),
     children: [
       {
         path: 'home',

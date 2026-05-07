@@ -65,7 +65,9 @@
       "@free-spot/activity-rescheduling/data-access": ["libs/frontend/freespot/activity-rescheduling/data-access/src/index.ts"],
       "@free-spot/activity-rescheduling/feature": ["libs/frontend/freespot/activity-rescheduling/feature/src/index.ts"],
       "@free-spot/activity-rescheduling/ui": ["libs/frontend/freespot/activity-rescheduling/ui/src/index.ts"],
-      "@free-spot/admin-academic-structure/data-access": ["libs/frontend/freespot/admin-academic-structure/data-access/src/index.ts"],
+      "@free-spot/admin-academic-structure/data-access": [
+        "libs/frontend/freespot/admin-academic-structure/data-access/src/index.ts"
+      ],
       "@free-spot/admin-academic-structure/domain": ["libs/frontend/freespot/admin-academic-structure/domain/src/index.ts"],
       "@free-spot/admin-academic-structure/feature": ["libs/frontend/freespot/admin-academic-structure/feature/src/index.ts"],
       "@free-spot/admin-academic-structure/ui": ["libs/frontend/freespot/admin-academic-structure/ui/src/index.ts"],
@@ -95,6 +97,7 @@
       "@free-spot/my-events/data-access": ["libs/frontend/freespot/my-events/data-access/src/index.ts"],
       "@free-spot/my-events/feature": ["libs/frontend/freespot/my-events/feature/src/index.ts"],
       "@free-spot/my-events/ui": ["libs/frontend/freespot/my-events/ui/src/index.ts"],
+      "@free-spot/shared/domain": ["libs/frontend/freespot/shared/domain/src/index.ts"],
       "@free-spot/ui": ["libs/ui/src/index.ts"],
       "@free-spot/university-map/data-access": ["libs/frontend/freespot/university-map/data-access/src/index.ts"],
       "@free-spot/university-map/domain": ["libs/frontend/freespot/university-map/domain/src/index.ts"],
@@ -103,7 +106,7 @@
       "@free-spot/user-setup/data-access": ["libs/frontend/freespot/user-setup/data-access/src/index.ts"],
       "@free-spot/user-setup/feature": ["libs/frontend/freespot/user-setup/feature/src/index.ts"],
       "@free-spot/util": ["libs/util/src/index.ts"],
-      "@frontend/freespot/core": ["libs/frontend/freespot/core/src/index.ts"],
+      "@free-spot/core": ["libs/frontend/freespot/core/src/index.ts"],
       "@http-free-spot/app-date": ["libs/http-free-spot/app-date/src/index.ts"],
       "@http-free-spot/auth": ["libs/http-free-spot/auth/src/index.ts"],
       "@http-free-spot/booking": ["libs/http-free-spot/booking/src/index.ts"],

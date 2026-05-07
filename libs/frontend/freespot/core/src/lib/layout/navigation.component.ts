@@ -11,12 +11,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { LanguageService } from '../i18n/language.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { ThemeService } from '../theme/theme.service';
-import { AuthService } from '@free-spot-service/auth';
-import { HttpUserService } from '@http-free-spot/user';
-import { take } from 'rxjs';
-import { Language, Role, Theme, UpdateMyPreferencesCmd } from '@free-spot-domain/user';
 import { toObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter } from 'rxjs';
+import { Role } from '../auth/auth.model';
+import { UserPreferencesStore } from '../user-preferences/user-preferences.store';
+import { Language, Theme } from '../user-preferences/user-preferences.model';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'free-spot-navigation',
@@ -40,7 +40,7 @@ export class NavigationComponent {
   private _authService = inject(AuthService);
   private _languageService = inject(LanguageService);
   private _themeService = inject(ThemeService);
-  private _httpUserService = inject(HttpUserService);
+  private _userPreferencesStore = inject(UserPreferencesStore);
 
   opened = false;
   LANG = Language;
@@ -66,44 +66,12 @@ export class NavigationComponent {
 
   onLangChange(lang: Language): void {
     this._languageService.setLang(lang);
-
-    const input: UpdateMyPreferencesCmd = {
-      preferredLanguage: lang,
-      preferredTheme: this.currentUserSig()?.preferredTheme || Theme.DARK,
-    };
-
-    this._httpUserService
-      .updateMyPreferences$(input)
-      .pipe(take(1))
-      .subscribe({
-        next: () => {
-          this._authService.loadMe().pipe(take(1)).subscribe();
-        },
-        error: (err: unknown) => {
-          console.error(err);
-        },
-      });
+    this._userPreferencesStore.updateLanguage(lang, this.currentUserSig()?.preferredTheme);
   }
 
   onThemeChange(theme: Theme): void {
     this._themeService.setTheme(theme);
-
-    const input: UpdateMyPreferencesCmd = {
-      preferredLanguage: this.currentUserSig()?.preferredLanguage || Language.EN,
-      preferredTheme: theme,
-    };
-
-    this._httpUserService
-      .updateMyPreferences$(input)
-      .pipe(take(1))
-      .subscribe({
-        next: () => {
-          this._authService.loadMe().pipe(take(1)).subscribe();
-        },
-        error: (err: unknown) => {
-          console.error(err);
-        },
-      });
+    this._userPreferencesStore.updateTheme(theme, this.currentUserSig()?.preferredLanguage);
   }
 
   logout(): void {

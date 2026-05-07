@@ -1,6 +1,6 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { take } from 'rxjs';
-import { AuthService } from '@free-spot-service/auth';
+import { AuthService } from '@free-spot/core';
 import { SubjectService } from '@free-spot-service/subject';
 import { AdminRoomService } from '@free-spot-service/room';
 import { TimetableActivity, WeekDay } from '@free-spot/academic-schedule/domain';

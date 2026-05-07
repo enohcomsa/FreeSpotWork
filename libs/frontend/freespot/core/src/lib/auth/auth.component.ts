@@ -14,14 +14,14 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '@free-spot-service/auth';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { FormErrorMessage } from '@free-spot/util';
 import { ThemeService } from '../theme/theme.service';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
-import { Theme } from '@free-spot-domain/user';
+import { Theme } from '../user-preferences/user-preferences.model';
+import { AuthService } from './auth.service';
 
 @Component({
   selector: 'free-spot-app-auth',

@@ -2,7 +2,7 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { take } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
-import { AuthService } from '@free-spot-service/auth';
+import { AuthService } from '@free-spot/core';
 import { AdminFacultyService } from '@free-spot-service/faculty';
 import { ProgramYearService } from '@free-spot-service/program-year';
 import { ProgramService } from '@free-spot-service/program';
