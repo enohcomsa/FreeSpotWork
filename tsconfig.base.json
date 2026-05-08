@@ -80,6 +80,7 @@
       "@free-spot/admin-university-map/feature": ["libs/frontend/freespot/admin-university-map/feature/src/index.ts"],
       "@free-spot/admin-university-map/ui": ["libs/frontend/freespot/admin-university-map/ui/src/index.ts"],
       "@free-spot/admin-user-access/data-access": ["libs/frontend/freespot/admin-user-access/data-access/src/index.ts"],
+      "@free-spot/admin-user-access/domain": ["libs/frontend/freespot/admin-user-access/domain/src/index.ts"],
       "@free-spot/admin-user-access/feature": ["libs/frontend/freespot/admin-user-access/feature/src/index.ts"],
       "@free-spot/admin/feature": ["libs/frontend/freespot/admin/feature/src/index.ts"],
       "@free-spot/api-client": ["libs/_free-spot-client-api/src/index.ts"],

@@ -1,22 +1,45 @@
-import { Injectable, Signal, inject } from '@angular/core';
-import { Role, User } from '@free-spot/core/domain';
-import { UserService } from '@free-spot-service/user';
+import { Injectable, inject, signal } from '@angular/core';
+import { Role } from '@free-spot/core/domain';
+import { type AdminUser } from '@free-spot/admin-user-access/domain';
+import { take } from 'rxjs';
+import { HttpAdminUserAccessService } from './http-admin-user-access.service';
 
 @Injectable({ providedIn: 'root' })
 export class AdminUserAccessStore {
-  private _userService = inject(UserService);
+  private readonly _api = inject(HttpAdminUserAccessService);
 
-  readonly userListSig: Signal<User[]> = this._userService.userListSig;
+  private readonly _userListSig = signal<AdminUser[]>([]);
+  readonly userListSig = this._userListSig.asReadonly();
 
   init(): void {
-    this._userService.init();
+    if (this._userListSig().length) {
+      return;
+    }
+
+    this._api
+      .listUsers$()
+      .pipe(take(1))
+      .subscribe((users) => {
+        this._userListSig.set(users);
+      });
   }
 
   makeAdmin(userId: string): void {
-    this._userService.updateUser(userId, { role: Role.ADMIN });
+    this._updateRole(userId, Role.ADMIN);
   }
 
   removeAdmin(userId: string): void {
-    this._userService.updateUser(userId, { role: Role.MEMBER });
+    this._updateRole(userId, Role.MEMBER);
+  }
+
+  private _updateRole(userId: string, role: Role): void {
+    this._api
+      .updateUserRole$(userId, role)
+      .pipe(take(1))
+      .subscribe(() => {
+        this._userListSig.update((users) =>
+          users.map((user) => (user.id === userId ? { ...user, role } : user))
+        );
+      });
   }
 }

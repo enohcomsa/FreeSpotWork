@@ -7,7 +7,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 
-import { Role, User } from '@free-spot/core/domain';
+import { Role } from '@free-spot/core/domain';
+import { type AdminUser } from '@free-spot/admin-user-access/domain';
 import { ConfirmModalService } from '@free-spot/core/ui';
 import { AdminUserAccessStore } from '@free-spot/admin-user-access/data-access';
 import { FormErrorMessage } from '@free-spot/util';
@@ -37,17 +38,17 @@ export class AdminUserAccessComponent implements OnInit {
   private _formErrorMessage: FormErrorMessage = inject(FormErrorMessage);
   private _destroyRef = inject(DestroyRef);
 
-  readonly userListSig: Signal<User[]> = this._store.userListSig;
-  readonly adminUserListSig: Signal<User[]> = computed(() =>
-    this.userListSig().filter((user: User) => user.role === Role.ADMIN)
+readonly userListSig: Signal<AdminUser[]> = this._store.userListSig;
+  readonly adminUserListSig: Signal<AdminUser[]> = computed(() =>
+    this.userListSig().filter((user: AdminUser) => user.role === Role.ADMIN)
   );
-  readonly memberUserListSig: Signal<User[]> = computed(() =>
-    this.userListSig().filter((user: User) => user.role === Role.MEMBER)
+  readonly memberUserListSig: Signal<AdminUser[]> = computed(() =>
+    this.userListSig().filter((user: AdminUser) => user.role === Role.MEMBER)
   );
-  readonly foundMemberUserListSig: WritableSignal<User[]> = signal([]);
+  readonly foundMemberUserListSig: WritableSignal<AdminUser[]> = signal([]);
 
   addAdminFormGroup = this._formBuilder.group({
-    user: [null as User | string | null, [Validators.required]],
+    user: [null as AdminUser | string | null, [Validators.required]],
   });
 
   ngOnInit(): void {
@@ -68,7 +69,7 @@ export class AdminUserAccessComponent implements OnInit {
         const query = value.toLowerCase().trim();
 
         this.foundMemberUserListSig.set(
-          this.memberUserListSig().filter((user: User) =>
+          this.memberUserListSig().filter((user: AdminUser) =>
             `${user.firstName ?? ''} ${user.familyName ?? ''} ${user.email}`.toLowerCase().includes(query)
           )
         );
@@ -79,7 +80,7 @@ export class AdminUserAccessComponent implements OnInit {
 
   displayError = (control: AbstractControl | null) => this._formErrorMessage.displayFormErrorMessage(control);
 
-  displayUser = (user?: User | string | null): string => {
+  displayUser = (user?: AdminUser | string | null): string => {
     if (!user || typeof user === 'string') {
       return typeof user === 'string' ? user : '';
     }
@@ -87,7 +88,7 @@ export class AdminUserAccessComponent implements OnInit {
     return this.getUserDisplayName(user);
   };
 
-  getUserDisplayName(user: User): string {
+  getUserDisplayName(user: AdminUser): string {
     return `${user.firstName ?? ''} ${user.familyName ?? ''}`.trim() || user.email;
   }
 
@@ -113,7 +114,7 @@ export class AdminUserAccessComponent implements OnInit {
   }
 
   onRemoveAdmin(userId: string): void {
-    const user = this.adminUserListSig().find((item: User) => item.id === userId);
+    const user = this.adminUserListSig().find((item: AdminUser) => item.id === userId);
     const label = user ? this.getUserDisplayName(user) : 'this user';
 
     this._confirmService
