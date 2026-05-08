@@ -1,21 +1,19 @@
 import { DestroyRef, Injectable, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { HttpBookingService } from '@http-free-spot/booking';
-import { BookingService } from '@free-spot-service/booking';
 import { ConfirmModalService } from '@free-spot/core/ui';
 import { ToastrService } from 'ngx-toastr';
-import { of, switchMap, take, tap } from 'rxjs';
+import { of, switchMap, take } from 'rxjs';
+import { HttpEventRegistrationService } from './http-event-registration.service';
 
 @Injectable({ providedIn: 'root' })
 export class EventRegistrationStore {
-  private readonly destroyRef = inject(DestroyRef);
-  private readonly confirmService = inject(ConfirmModalService);
-  private readonly toastr = inject(ToastrService);
-  private readonly bookingApi = inject(HttpBookingService);
-  private readonly bookingService = inject(BookingService);
+  private readonly _destroyRef = inject(DestroyRef);
+  private readonly _confirmService = inject(ConfirmModalService);
+  private readonly _toastr = inject(ToastrService);
+  private readonly _api = inject(HttpEventRegistrationService);
 
   register(eventId: string): void {
-    this.confirmService
+    this._confirmService
       .openConfirmDialog('Are you sure you want to register for this event?')
       .afterClosed()
       .pipe(
@@ -25,23 +23,16 @@ export class EventRegistrationStore {
             return of(null);
           }
 
-          return this.bookingApi.createBooking$({ activityId: eventId }).pipe(take(1));
+          return this._api.createBooking$(eventId).pipe(take(1));
         }),
-        tap((booking) => {
-          if (!booking) {
-            return;
-          }
-
-          this.bookingService.refresh();
-        }),
-        takeUntilDestroyed(this.destroyRef)
+        takeUntilDestroyed(this._destroyRef)
       )
       .subscribe((booking) => {
         if (!booking) {
           return;
         }
 
-        this.toastr.success('Successfully registered for event', '', {
+        this._toastr.success('Successfully registered for event', '', {
           closeButton: true,
           progressBar: true,
           timeOut: 5000,

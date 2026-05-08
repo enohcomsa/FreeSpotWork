@@ -90,6 +90,7 @@
       "@free-spot/core/ui": ["libs/frontend/freespot/core/ui/src/index.ts"],
       "@free-spot/enums": ["libs/shared/enums/src/index.ts"],
       "@free-spot/event-registration/data-access": ["libs/frontend/freespot/event-registration/data-access/src/index.ts"],
+      "@free-spot/event-registration/domain": ["libs/frontend/freespot/event-registration/domain/src/index.ts"],
       "@free-spot/events-catalog/data-access": ["libs/frontend/freespot/events-catalog/data-access/src/index.ts"],
       "@free-spot/events-catalog/domain": ["libs/frontend/freespot/events-catalog/domain/src/index.ts"],
       "@free-spot/events-catalog/feature": ["libs/frontend/freespot/events-catalog/feature/src/index.ts"],
