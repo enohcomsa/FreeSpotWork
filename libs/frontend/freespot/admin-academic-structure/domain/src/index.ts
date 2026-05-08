@@ -1,1 +1,15 @@
-export * from './lib/freespot-admin-academic-structure-domain/freespot-admin-academic-structure-domain';
+export {
+  AdminAcademicCohortType,
+  AdminAcademicDegreeType,
+  type AdminCohort,
+  type AdminFaculty,
+  type AdminProgram,
+  type AdminProgramYear,
+  type AdminSubjectItem,
+  type CreateAdminCohortCmd,
+  type CreateAdminProgramCmd,
+  type CreateAdminProgramYearCmd,
+  type UpdateAdminFacultyCmd,
+  type UpdateAdminProgramCmd,
+  type UpdateAdminProgramYearCmd,
+} from './lib/admin-academic-structure.models';

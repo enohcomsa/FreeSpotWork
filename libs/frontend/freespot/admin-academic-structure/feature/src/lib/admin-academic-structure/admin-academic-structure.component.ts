@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, Component, OnInit, Signal, inject } from '@angular/core';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { Faculty } from '@free-spot-domain/faculty';
+
+import { AdminFaculty } from '@free-spot/admin-academic-structure/domain';
 import { AdminAcademicStructureStore } from '@free-spot/admin-academic-structure/data-access';
+
 import { FacultyComponent } from '../faculty/faculty.component';
 
 @Component({
@@ -9,14 +11,14 @@ import { FacultyComponent } from '../faculty/faculty.component';
   imports: [MatExpansionModule, FacultyComponent],
   templateUrl: './admin-academic-structure.component.html',
   styleUrl: './admin-academic-structure.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminAcademicStructureComponent implements OnInit {
-  private _store = inject(AdminAcademicStructureStore);
+  private readonly store = inject(AdminAcademicStructureStore);
 
-  readonly facultyListSig: Signal<Faculty[]> = this._store.facultyListSig;
+  readonly facultyListSig: Signal<AdminFaculty[]> = this.store.facultyListSig;
 
   ngOnInit(): void {
-    this._store.init();
+    this.store.init();
   }
 }

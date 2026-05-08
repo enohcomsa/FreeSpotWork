@@ -1,16 +1,10 @@
-import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, input, OnInit, Signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, input, Signal, viewChild } from '@angular/core';
 import { MatListModule } from '@angular/material/list';
 import { MatDividerModule } from '@angular/material/divider';
 import { AddItemCardComponent, DynamicChipListComponent } from '@free-spot/ui';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ConfirmModalService } from '@free-spot/core/ui';
-import { SubjectService } from '@free-spot-service/subject';
-import { SubjectItem } from '@free-spot-domain/subject';
-import { Faculty, UpdateFacultyCmd } from '@free-spot-domain/faculty';
-import { AdminFacultyService } from '@free-spot-service/faculty';
-import { CreateProgramCmd, DegreeType, Program, UpdateProgramCmd } from '@free-spot-domain/program';
-import { ProgramService } from '@free-spot-service/program';
 import { AbstractControl, FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormErrorMessage } from '@free-spot/util';
 import { take } from 'rxjs';
@@ -19,88 +13,110 @@ import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
-import { ProgramYearService } from '@free-spot-service/program-year';
-import { CreateProgramYearCmd, ProgramYear, UpdateProgramYearCmd } from '@free-spot-domain/program-year';
-import { CohortService } from '@free-spot-service/cohort';
-import { Cohort, CohortType, CreateCohortCmd } from '@free-spot-domain/cohort';
+
+import { AdminAcademicStructureStore } from '@free-spot/admin-academic-structure/data-access';
+import {
+  AdminAcademicCohortType,
+  AdminAcademicDegreeType,
+  AdminCohort,
+  AdminFaculty,
+  AdminProgram,
+  AdminProgramYear,
+  AdminSubjectItem,
+  CreateAdminCohortCmd,
+  CreateAdminProgramCmd,
+  CreateAdminProgramYearCmd,
+  UpdateAdminFacultyCmd,
+  UpdateAdminProgramCmd,
+  UpdateAdminProgramYearCmd,
+} from '@free-spot/admin-academic-structure/domain';
 
 @Component({
   selector: 'free-spot-faculty',
-  imports: [MatListModule, MatDividerModule, DynamicChipListComponent, MatIconModule, MatTooltipModule,
+  imports: [
+    MatListModule,
+    MatDividerModule,
+    DynamicChipListComponent,
+    MatIconModule,
+    MatTooltipModule,
     FormsModule,
     ReactiveFormsModule,
     MatInputModule,
-    MatSelectModule, CommonModule, MatButtonModule, MatChipsModule, AddItemCardComponent],
+    MatSelectModule,
+    CommonModule,
+    MatButtonModule,
+    MatChipsModule,
+    AddItemCardComponent,
+  ],
   templateUrl: './faculty.component.html',
   styleUrl: './faculty.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FacultyComponent implements OnInit {
-  private _formBuilder: FormBuilder = inject(FormBuilder);
-  private _formErrorMessage: FormErrorMessage = inject(FormErrorMessage);
-  private _confirmService: ConfirmModalService = inject(ConfirmModalService);
-  private _adminSubjectService: SubjectService = inject(SubjectService);
-  private _adminFacultyService: AdminFacultyService = inject(AdminFacultyService);
-  private _adminProgramService: ProgramService = inject(ProgramService);
-  private _adminProgramYearService: ProgramYearService = inject(ProgramYearService);
-  private _adminCohortService: CohortService = inject(CohortService);
+export class FacultyComponent {
+  private readonly formBuilder = inject(FormBuilder);
+  private readonly formErrorMessage = inject(FormErrorMessage);
+  private readonly confirmService = inject(ConfirmModalService);
+  private readonly store = inject(AdminAcademicStructureStore);
 
   editProgramRef = viewChild.required<ElementRef>('editProgram');
   editYearRef = viewChild.required<ElementRef>('editYear');
-  facultySig = input.required<Faculty>();
-  subjectListSig: Signal<SubjectItem[]> = this._adminSubjectService.subjectListSig;
-  facultySubjectListSig = computed(() => this.subjectListSig().filter((subject: SubjectItem) => this.facultySig().subjectList.includes(subject.id)));
-  facultyProgramsSig = computed(() => {
-    const faculty = this.facultySig();
-    if (!faculty) return [];
-    return this._adminProgramService.selectProgramsByFacultyId(faculty.id)();
-  });
+
+  facultySig = input.required<AdminFaculty>();
+
+  subjectListSig: Signal<AdminSubjectItem[]> = this.store.subjectListSig;
+
+  facultySubjectListSig = computed(() =>
+    this.subjectListSig().filter((subject) => this.facultySig().subjectList.includes(subject.id)),
+  );
+
+  facultyProgramsSig = computed(() => this.store.selectProgramsByFacultyId(this.facultySig().id)());
+
   facultyProgramYearsSig = computed(() => {
-    const programYearList: ProgramYear[] = [];
-    this.facultyProgramsSig().forEach((program: Program) =>
-      programYearList.push(...this._adminProgramYearService.selectYearByProgramId(program.id)()))
+    const programYearList: AdminProgramYear[] = [];
+
+    this.facultyProgramsSig().forEach((program) => {
+      programYearList.push(...this.store.selectYearsByProgramId(program.id)());
+    });
+
     return programYearList;
   });
 
   addingProgram = false;
   editingProgram = false;
   editingProgramId: string | null = null;
-  degreeOptions = [DegreeType.LIC, DegreeType.MASTER, DegreeType.DOCT];
+  degreeOptions = [
+    AdminAcademicDegreeType.Lic,
+    AdminAcademicDegreeType.Master,
+    AdminAcademicDegreeType.Doct,
+  ];
 
-  addProgramFormGroup = this._formBuilder.nonNullable.group({
+  addProgramFormGroup = this.formBuilder.nonNullable.group({
     name: ['', [Validators.required, Validators.minLength(3)]],
-    degree: [DegreeType.LIC, Validators.required],
+    degree: [AdminAcademicDegreeType.Lic, Validators.required],
   });
 
   addingYear = false;
   editingYear = false;
   editingYearId: string | null = null;
 
-  addYearFormGroup = this._formBuilder.nonNullable.group({
+  addYearFormGroup = this.formBuilder.nonNullable.group({
     label: ['', [Validators.required, Validators.minLength(1)]],
     yearNumber: [1, [Validators.required, Validators.min(1), Validators.max(6)]],
-    programId: ['', Validators.required]
+    programId: ['', Validators.required],
   });
 
-  ngOnInit(): void {
-    this._adminSubjectService.init();
-    this._adminProgramService.init();
-    this._adminProgramYearService.init();
-    this._adminCohortService.init();
+  displayError = (control: AbstractControl | null) => this.formErrorMessage.displayFormErrorMessage(control);
+
+  getProgramById(programId: string): AdminProgram | undefined {
+    return this.store.getProgramById(programId)();
   }
 
-  displayError = (control: AbstractControl | null) => this._formErrorMessage.displayFormErrorMessage(control);
-
-  getProgramById(programId: string): Program {
-    return this._adminProgramService.getSignalById(programId)();
-  }
-
-  getCohortNameListSignalByYearId(yearId: string): Signal<Cohort[]> {
-    return computed(() => this._adminCohortService.selectGroupsByProgramYearId(yearId)());
+  getCohortNameListSignalByYearId(yearId: string): Signal<AdminCohort[]> {
+    return this.store.selectGroupsByProgramYearId(yearId);
   }
 
   onAddingProgram(): void {
-    this.addProgramFormGroup.reset({ name: '', degree: DegreeType.LIC });
+    this.addProgramFormGroup.reset({ name: '', degree: AdminAcademicDegreeType.Lic });
     this.editingProgram = false;
     this.editingProgramId = null;
     this.addingProgram = true;
@@ -108,27 +124,24 @@ export class FacultyComponent implements OnInit {
   }
 
   onAddProgram(): void {
-    const faculty = this.facultySig();
-    if (!faculty?.id) return;
-
-    const newProgram: CreateProgramCmd = {
-      facultyId: faculty.id,
-      name: this.addProgramFormGroup.controls['name'].value,
-      degree: this.addProgramFormGroup.controls['degree'].value,
+    const newProgram: CreateAdminProgramCmd = {
+      facultyId: this.facultySig().id,
+      name: this.addProgramFormGroup.controls.name.value,
+      degree: this.addProgramFormGroup.controls.degree.value,
       active: true,
     };
 
-    this._adminProgramService.create(newProgram);
-    this._resetProgramFormState();
+    this.store.createProgram(newProgram);
+    this.resetProgramFormState();
   }
 
-  onEditingProgram(programToEdit: Program): void {
+  onEditingProgram(programToEdit: AdminProgram): void {
     this.editingProgram = true;
     this.editingProgramId = programToEdit.id;
 
     this.addProgramFormGroup.patchValue({
       name: programToEdit.name,
-      degree: programToEdit.degree ?? DegreeType.LIC
+      degree: programToEdit.degree ?? AdminAcademicDegreeType.Lic,
     });
 
     this.addingProgram = true;
@@ -136,34 +149,30 @@ export class FacultyComponent implements OnInit {
   }
 
   onEditProgram(): void {
-    if (!this.editingProgramId) return;
+    if (!this.editingProgramId) {
+      return;
+    }
 
-    const updatedProgram: UpdateProgramCmd = {
-      name: this.addProgramFormGroup.controls['name'].value,
-      degree: this.addProgramFormGroup.controls['degree'].value,
+    const updatedProgram: UpdateAdminProgramCmd = {
+      name: this.addProgramFormGroup.controls.name.value,
+      degree: this.addProgramFormGroup.controls.degree.value,
     };
 
-    this._adminProgramService.update(this.editingProgramId, updatedProgram);
-    this._resetProgramFormState();
+    this.store.updateProgram(this.editingProgramId, updatedProgram);
+    this.resetProgramFormState();
   }
 
   onDeleteProgram(programIdToDelete: string): void {
-    this._confirmService.openConfirmDialog('Are you sure you want to delete this program?')
+    this.confirmService
+      .openConfirmDialog('Are you sure you want to delete this program?')
       .afterClosed()
       .pipe(take(1))
       .subscribe((result: boolean) => {
         if (result) {
-          this._adminProgramService.remove(programIdToDelete);
-          this._resetProgramFormState();
+          this.store.deleteProgram(programIdToDelete);
+          this.resetProgramFormState();
         }
       });
-  }
-
-  private _resetProgramFormState(): void {
-    this.addProgramFormGroup.reset();
-    this.addingProgram = false;
-    this.editingProgram = false;
-    this.editingProgramId = null;
   }
 
   onAddingYear(): void {
@@ -175,24 +184,24 @@ export class FacultyComponent implements OnInit {
   }
 
   onAddYear(): void {
-    const newProgramYear: CreateProgramYearCmd = {
-      programId: this.addYearFormGroup.controls['programId'].value,
-      label: this.addYearFormGroup.controls['label'].value,
-      yearNumber: this.addYearFormGroup.controls['yearNumber'].value,
+    const newProgramYear: CreateAdminProgramYearCmd = {
+      programId: this.addYearFormGroup.controls.programId.value,
+      label: this.addYearFormGroup.controls.label.value,
+      yearNumber: this.addYearFormGroup.controls.yearNumber.value,
     };
 
-    this._adminProgramYearService.create(newProgramYear);
-    this._resetYearFormState();
+    this.store.createProgramYear(newProgramYear);
+    this.resetYearFormState();
   }
 
-  onEditingYear(programYearToEdit: ProgramYear): void {
+  onEditingYear(programYearToEdit: AdminProgramYear): void {
     this.editingYear = true;
     this.editingYearId = programYearToEdit.id;
 
     this.addYearFormGroup.patchValue({
       programId: programYearToEdit.programId,
       label: programYearToEdit.label,
-      yearNumber: programYearToEdit.yearNumber ?? 1
+      yearNumber: programYearToEdit.yearNumber ?? 1,
     });
 
     this.addingYear = true;
@@ -200,63 +209,75 @@ export class FacultyComponent implements OnInit {
   }
 
   onEditYear(): void {
-    if (!this.editingYearId) return;
-    const updatedYear: UpdateProgramYearCmd = {
-      programId: this.addYearFormGroup.controls['programId'].value,
-      label: this.addYearFormGroup.controls['label'].value,
-      yearNumber: this.addYearFormGroup.controls['yearNumber'].value,
+    if (!this.editingYearId) {
+      return;
     }
 
-    this._adminProgramYearService.update(this.editingYearId, updatedYear);
-    this._resetYearFormState();
+    const updatedYear: UpdateAdminProgramYearCmd = {
+      programId: this.addYearFormGroup.controls.programId.value,
+      label: this.addYearFormGroup.controls.label.value,
+      yearNumber: this.addYearFormGroup.controls.yearNumber.value,
+    };
+
+    this.store.updateProgramYear(this.editingYearId, updatedYear);
+    this.resetYearFormState();
   }
 
   onDeleteYear(programYearIdToDelete: string): void {
-    this._confirmService.openConfirmDialog('Are you sure you want to delete this program?')
+    this.confirmService
+      .openConfirmDialog('Are you sure you want to delete this program?')
       .afterClosed()
       .pipe(take(1))
       .subscribe((result: boolean) => {
         if (result) {
-          this._adminProgramYearService.remove(programYearIdToDelete);
-          this._resetYearFormState();
+          this.store.deleteProgramYear(programYearIdToDelete);
+          this.resetYearFormState();
         }
       });
   }
 
-  private _resetYearFormState(): void {
+  onSubjectListChanged(newSubjectList: AdminSubjectItem[]): void {
+    const updatedFaculty: UpdateAdminFacultyCmd = {
+      subjectList: newSubjectList.map((subject) => subject.id),
+    };
+
+    this.store.updateFaculty(this.facultySig().id, updatedFaculty);
+  }
+
+  onYearGroupListChange(newYearGroupList: AdminCohort[], yearId: string): void {
+    const existingCohorts = this.store.selectGroupsByProgramYearId(yearId)();
+    const existingNames = new Set(existingCohorts.map((cohort) => cohort.name));
+    const newNames = new Set(newYearGroupList.map((cohort) => cohort.name));
+    const addedGroup = newYearGroupList.find((cohort) => !existingNames.has(cohort.name));
+    const removedCohort = existingCohorts.find((cohort) => !newNames.has(cohort.name));
+
+    if (addedGroup) {
+      const newCohort: CreateAdminCohortCmd = {
+        type: AdminAcademicCohortType.Group,
+        programYearId: yearId,
+        name: addedGroup.name,
+      };
+
+      this.store.createCohort(newCohort);
+      return;
+    }
+
+    if (removedCohort) {
+      this.store.deleteCohort(removedCohort.id);
+    }
+  }
+
+  private resetProgramFormState(): void {
+    this.addProgramFormGroup.reset();
+    this.addingProgram = false;
+    this.editingProgram = false;
+    this.editingProgramId = null;
+  }
+
+  private resetYearFormState(): void {
     this.addYearFormGroup.reset();
     this.addingYear = false;
     this.editingYear = false;
     this.editingYearId = null;
-  }
-
-  onSubjectListChanged(newSubjectList: SubjectItem[]): void {
-    const updatedFacluty: UpdateFacultyCmd = {
-      subjectList: newSubjectList.map((subject: SubjectItem) => subject.id)
-    }
-    this._adminFacultyService.update(this.facultySig().id, updatedFacluty);
-  }
-
-  onYearGroupListChange(newYearGroupList: Cohort[], yearId: string): void {
-    const existingCohorts: Cohort[] = this._adminCohortService.selectGroupsByProgramYearId(yearId)();
-    const existingNames = new Set(existingCohorts.map((cohort: Cohort) => cohort.name));
-    const newNames = new Set(newYearGroupList.map((cohort: Cohort) => cohort.name ?? cohort));
-    if (newYearGroupList.length > existingCohorts.length) {
-      const addedGroup: string | undefined = newNames.difference(existingNames).values().next().value;
-      if (addedGroup) {
-        const newCohort: CreateCohortCmd = {
-          type: CohortType.GROUP,
-          programYearId: yearId,
-          name: addedGroup,
-        }
-
-        this._adminCohortService.create(newCohort);
-      }
-    } else if (newYearGroupList.length < existingCohorts.length) {
-      const removedCohort: Cohort | undefined = existingCohorts.find((cohort: Cohort) => !newNames.has(cohort.name));
-      if (removedCohort?.id) {
-        this._adminCohortService.remove(removedCohort.id);
-      }
-    }
   }
 }
