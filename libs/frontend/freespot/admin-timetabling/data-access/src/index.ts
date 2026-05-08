@@ -1,1 +1,1 @@
-export * from './lib/freespot-admin-timetabling-data-access/freespot-admin-timetabling-data-access';
+export { AdminTimetablingStore } from './lib/admin-timetabling.store';

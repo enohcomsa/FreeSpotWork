@@ -74,6 +74,7 @@
       "@free-spot/admin-events/feature": ["libs/frontend/freespot/admin-events/feature/src/index.ts"],
       "@free-spot/admin-events/ui": ["libs/frontend/freespot/admin-events/ui/src/index.ts"],
       "@free-spot/admin-timetabling/data-access": ["libs/frontend/freespot/admin-timetabling/data-access/src/index.ts"],
+      "@free-spot/admin-timetabling/domain": ["libs/frontend/freespot/admin-timetabling/domain/src/index.ts"],
       "@free-spot/admin-timetabling/feature": ["libs/frontend/freespot/admin-timetabling/feature/src/index.ts"],
       "@free-spot/admin-university-map/data-access": ["libs/frontend/freespot/admin-university-map/data-access/src/index.ts"],
       "@free-spot/admin-university-map/domain": ["libs/frontend/freespot/admin-university-map/domain/src/index.ts"],
