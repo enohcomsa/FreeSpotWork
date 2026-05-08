@@ -3,7 +3,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { TranslateModule } from '@ngx-translate/core';
 import { ActivityBookingsStore } from '@free-spot/activity-bookings/data-access';
 import { ActivityBookingCardComponent } from '@free-spot/activity-bookings/ui';
-import { ActivityType } from '@free-spot/academic-schedule/domain';
+import { ActivityBookingActivityType } from '@free-spot/activity-bookings/domain';
 
 @Component({
   selector: 'free-spot-my-activity-bookings',
@@ -17,9 +17,9 @@ export class MyActivityBookingsComponent implements OnInit {
 
   readonly bookingSelected = output<string>();
 
-  readonly ACTIVITY_TYPE = ActivityType;
+  readonly ACTIVITY_TYPE = ActivityBookingActivityType;
 
-  private readonly filter = signal<ActivityType | null>(null);
+  private readonly filter = signal<ActivityBookingActivityType | null>(null);
 
   readonly bookings = computed(() => {
     const currentFilter = this.filter();
@@ -32,9 +32,6 @@ export class MyActivityBookingsComponent implements OnInit {
     return items.filter((booking) => booking.activityType === currentFilter);
   });
 
-  readonly loading = this.store.loading;
-  readonly error = this.store.error;
-
   ngOnInit(): void {
     this.store.load();
   }
@@ -43,12 +40,11 @@ export class MyActivityBookingsComponent implements OnInit {
     this.store.refresh();
   }
 
-  setFilter(type: ActivityType | null): void {
+  setFilter(type: ActivityBookingActivityType | null): void {
     this.filter.set(type);
   }
 
   selectBooking(id: string): void {
-
     this.bookingSelected.emit(id);
   }
 }

@@ -14,7 +14,7 @@
     }
   },
   "tags": [
-    "type:api-client"
+    "type:api-client","scope:freespot"
   ],
   "targets": {
     "lint": {

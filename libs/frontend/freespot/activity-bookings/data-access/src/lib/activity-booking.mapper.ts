@@ -1,19 +1,21 @@
-import { Booking } from '@free-spot-domain/booking';
-import { TimetableActivity } from '@free-spot/academic-schedule/domain';
-import { SubjectItem } from '@free-spot-domain/subject';
-import { Room } from '@free-spot-domain/room';
-import { Building } from '@free-spot-domain/building';
-import { Floor } from '@free-spot-domain/floor';
-import { ActivityBookingVm } from './activity-booking.model';
+import {
+  type ActivityBooking,
+  type ActivityBookingActivity,
+  type ActivityBookingBuilding,
+  type ActivityBookingFloor,
+  type ActivityBookingRoom,
+  type ActivityBookingSubject,
+} from '@free-spot/activity-bookings/domain';
+import { type ActivityBookingCardVm } from '@free-spot/activity-bookings/domain';
 
 export function mapToActivityBookingVm(
-  booking: Booking,
-  activity: TimetableActivity,
-  subject: SubjectItem,
-  room: Room,
-  building: Building,
-  floor: Floor
-): ActivityBookingVm {
+  booking: ActivityBooking,
+  activity: ActivityBookingActivity,
+  subject: ActivityBookingSubject,
+  room: ActivityBookingRoom,
+  building: ActivityBookingBuilding,
+  floor: ActivityBookingFloor
+): ActivityBookingCardVm {
   return {
     id: booking.id,
     activityType: booking.activityType,

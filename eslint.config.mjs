@@ -65,7 +65,7 @@ export default [
             },
             {
               sourceTag: 'type:data-access',
-              onlyDependOnLibsWithTags: ['type:data-access', 'type:domain', 'type:util', 'type:infra', 'type:generated'],
+              onlyDependOnLibsWithTags: ['type:data-access', 'type:domain', 'type:util', 'type:infra', 'type:generated', 'type:api-client'],
             },
             {
               sourceTag: 'type:domain',

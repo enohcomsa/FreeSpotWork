@@ -1,99 +1,77 @@
 import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { HttpBookingService } from '@http-free-spot/booking';
-import { Booking } from '@free-spot-domain/booking';
-import { ActivityType, TimetableActivity } from '@free-spot/academic-schedule/domain';
-import { take } from 'rxjs';
-import { SubjectService } from '@free-spot-service/subject';
-import { AdminTimetableActivityService } from '@free-spot-service/timetable-activity';
-import { AdminRoomService } from '@free-spot-service/room';
-import { BuildingService } from '@free-spot-service/building';
-import { AdminFloorService } from '@free-spot-service/floor';
+import {
+  ActivityBookingActivityType,
+  type ActivityBooking,
+  type ActivityBookingActivity,
+  type ActivityBookingBuilding,
+  type ActivityBookingFloor,
+  type ActivityBookingRoom,
+  type ActivityBookingSubject,
+} from '@free-spot/activity-bookings/domain';
+import { forkJoin, take } from 'rxjs';
 import { mapToActivityBookingVm } from './activity-booking.mapper';
+import { HttpActivityBookingsService } from './http-activity-bookings.service';
 
 @Injectable({ providedIn: 'root' })
 export class ActivityBookingsStore {
-  private readonly api = inject(HttpBookingService);
-  private readonly destroyRef = inject(DestroyRef);
+  private readonly _api = inject(HttpActivityBookingsService);
+  private readonly _destroyRef = inject(DestroyRef);
 
-  private readonly subjectService = inject(SubjectService);
-  private readonly timetableActivityService = inject(AdminTimetableActivityService);
-  private readonly roomService = inject(AdminRoomService);
-  private readonly buildingService = inject(BuildingService);
-  private readonly floorService = inject(AdminFloorService);
-
-  private readonly _bookings = signal<Booking[]>([]);
-  private readonly _loading = signal(false);
-  private readonly _error = signal<string | null>(null);
-
-  readonly loading = this._loading.asReadonly();
-  readonly error = this._error.asReadonly();
+  private readonly _bookings = signal<ActivityBooking[]>([]);
+  private readonly _subjects = signal<ActivityBookingSubject[]>([]);
+  private readonly _activities = signal<ActivityBookingActivity[]>([]);
+  private readonly _rooms = signal<ActivityBookingRoom[]>([]);
+  private readonly _buildings = signal<ActivityBookingBuilding[]>([]);
+  private readonly _floors = signal<ActivityBookingFloor[]>([]);
 
   readonly bookings = computed(() =>
-    this._bookings().filter((booking) => booking.activityType !== ActivityType.SPECIAL_EVENT)
+    this._bookings().filter((booking) => booking.activityType !== ActivityBookingActivityType.SPECIAL_EVENT)
   );
 
   readonly bookingCards = computed(() =>
     this.bookings()
       .map((booking) => {
-        const activity = booking.activityId
-          ? this.timetableActivityService.getSignalById(booking.activityId)()
-          : null;
+        const activity = this._activities().find((item) => item.id === booking.activityId);
 
         if (!activity?.id) {
           return null;
         }
 
-        const subject = activity.subjectId
-          ? this.subjectService.getSignalById(activity.subjectId)()
-          : null;
-
-        const room = activity.roomId
-          ? this.roomService.getSignalById(activity.roomId)()
-          : null;
-
-        const building = room?.buildingId
-          ? this.buildingService.getSignalById(room.buildingId)()
-          : null;
-
-        const floor = room?.floorId
-          ? this.floorService.getSignalById(room.floorId)()
-          : null;
+        const subject = this._subjects().find((item) => item.id === activity.subjectId);
+        const room = this._rooms().find((item) => item.id === activity.roomId);
+        const building = this._buildings().find((item) => item.id === room?.buildingId);
+        const floor = this._floors().find((item) => item.id === room?.floorId);
 
         return mapToActivityBookingVm(
           booking,
-          activity as TimetableActivity,
-          subject ?? ({} as never),
-          room ?? ({} as never),
-          building ?? ({} as never),
-          floor ?? ({} as never)
+          activity,
+          subject ?? ({} as ActivityBookingSubject),
+          room ?? ({} as ActivityBookingRoom),
+          building ?? ({} as ActivityBookingBuilding),
+          floor ?? ({} as ActivityBookingFloor)
         );
       })
       .filter((item) => item !== null)
   );
 
   load(): void {
-    this.subjectService.init();
-    this.timetableActivityService.init();
-    this.roomService.init();
-    this.buildingService.init();
-    this.floorService.init();
-
-    this._loading.set(true);
-    this._error.set(null);
-
-    this.api
-      .listBookings$()
-      .pipe(take(1), takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (bookings) => {
-          this._bookings.set(bookings);
-          this._loading.set(false);
-        },
-        error: () => {
-          this._error.set('Failed to load bookings');
-          this._loading.set(false);
-        },
+    forkJoin({
+      bookings: this._api.listBookings$(),
+      subjects: this._api.listSubjects$(),
+      activities: this._api.listTimetableActivities$(),
+      rooms: this._api.listRooms$(),
+      buildings: this._api.listBuildings$(),
+      floors: this._api.listFloors$(),
+    })
+      .pipe(take(1), takeUntilDestroyed(this._destroyRef))
+      .subscribe(({ bookings, subjects, activities, rooms, buildings, floors }) => {
+        this._bookings.set(bookings);
+        this._subjects.set(subjects);
+        this._activities.set(activities);
+        this._rooms.set(rooms);
+        this._buildings.set(buildings);
+        this._floors.set(floors);
       });
   }
 

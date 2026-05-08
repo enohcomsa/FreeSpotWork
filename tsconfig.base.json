@@ -57,6 +57,7 @@
       "@free-spot/academic-schedule/feature": ["libs/frontend/freespot/academic-schedule/feature/src/index.ts"],
       "@free-spot/academic-schedule/ui": ["libs/frontend/freespot/academic-schedule/ui/src/index.ts"],
       "@free-spot/activity-bookings/data-access": ["libs/frontend/freespot/activity-bookings/data-access/src/index.ts"],
+      "@free-spot/activity-bookings/domain": ["libs/frontend/freespot/activity-bookings/domain/src/index.ts"],
       "@free-spot/activity-bookings/feature": ["libs/frontend/freespot/activity-bookings/feature/src/index.ts"],
       "@free-spot/activity-bookings/ui": ["libs/frontend/freespot/activity-bookings/ui/src/index.ts"],
       "@free-spot/activity-rescheduling/data-access": ["libs/frontend/freespot/activity-rescheduling/data-access/src/index.ts"],
