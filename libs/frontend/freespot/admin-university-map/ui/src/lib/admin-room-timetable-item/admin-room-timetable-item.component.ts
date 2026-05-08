@@ -9,7 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { AdminFacultyService } from '@free-spot-service/faculty';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ConfirmModalService } from '@free-spot-service/confirm-modal';
+import { ConfirmModalService } from '@free-spot/core/ui';
 import { FormErrorMessage } from '@free-spot/util';
 import { ActivityType, CreateTimetableActivityCmd, TimetableActivity, WeekDay, WeekParity } from '@free-spot/academic-schedule/domain';
 import { Room } from '@free-spot-domain/room';

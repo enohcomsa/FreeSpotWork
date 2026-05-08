@@ -10,7 +10,7 @@ import { AppDateService } from '@free-spot-service/app-date';
 import { UserService } from '@free-spot-service/user';
 import { BookingService } from '@free-spot-service/booking';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ConfirmModalService } from '@free-spot-service/confirm-modal';
+import { ConfirmModalService } from '@free-spot/core/ui';
 import { CohortService } from '@free-spot-service/cohort';
 import { Cohort, CohortType, CreateCohortCmd } from '@free-spot-domain/cohort';
 import { AdminTimetableActivityService } from '@free-spot-service/timetable-activity';

@@ -21,7 +21,7 @@ import { AdminRoomService } from '@free-spot-service/room';
 import { AddItemCardComponent } from '@free-spot/ui';
 import { AdminFloorService } from '@free-spot-service/floor';
 import { AppDateService } from '@free-spot-service/app-date';
-import { ConfirmModalService } from '@free-spot-service/confirm-modal';
+import { ConfirmModalService } from '@free-spot/core/ui';
 import { FormErrorMessage } from '@free-spot/util';
 import { RoomCardVM, toRoomCardVM } from '@free-spot-presentation/room';
 import { CreateRoomCmd, Room, UpdateRoomCmd } from '@free-spot-domain/room';

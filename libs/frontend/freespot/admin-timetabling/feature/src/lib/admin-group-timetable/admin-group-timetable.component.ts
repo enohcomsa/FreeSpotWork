@@ -22,7 +22,7 @@ import { debounceTime } from 'rxjs';
 import { BookingService } from '@free-spot-service/booking';
 import { UserService } from '@free-spot-service/user';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ConfirmModalService } from '@free-spot-service/confirm-modal';
+import { ConfirmModalService } from '@free-spot/core/ui';
 import { FormErrorMessage } from '@free-spot/util';
 import { AdminTimetableActivityService } from '@free-spot-service/timetable-activity';
 import { ActivityType, TimetableActivity, WeekDay } from '@free-spot/academic-schedule/domain';

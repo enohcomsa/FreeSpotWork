@@ -40,7 +40,6 @@
       "@free-spot-service/building": ["libs/service/building/src/index.ts"],
       "@free-spot-service/building-card": ["libs/service/building-card/src/index.ts"],
       "@free-spot-service/cohort": ["libs/service/cohort/src/index.ts"],
-      "@free-spot-service/confirm-modal": ["libs/service/confitm-modal/src/index.ts"],
       "@free-spot-service/event": ["libs/service/event/src/index.ts"],
       "@free-spot-service/faculty": ["libs/service/faculty/src/index.ts"],
       "@free-spot-service/floor": ["libs/service/floor/src/index.ts"],
@@ -61,6 +60,7 @@
       "@free-spot/activity-bookings/feature": ["libs/frontend/freespot/activity-bookings/feature/src/index.ts"],
       "@free-spot/activity-bookings/ui": ["libs/frontend/freespot/activity-bookings/ui/src/index.ts"],
       "@free-spot/activity-rescheduling/data-access": ["libs/frontend/freespot/activity-rescheduling/data-access/src/index.ts"],
+      "@free-spot/activity-rescheduling/domain": ["libs/frontend/freespot/activity-rescheduling/domain/src/index.ts"],
       "@free-spot/activity-rescheduling/feature": ["libs/frontend/freespot/activity-rescheduling/feature/src/index.ts"],
       "@free-spot/activity-rescheduling/ui": ["libs/frontend/freespot/activity-rescheduling/ui/src/index.ts"],
       "@free-spot/admin-academic-structure/data-access": [
@@ -87,6 +87,7 @@
       "@free-spot/core/data-access": ["libs/frontend/freespot/core/data-access/src/index.ts"],
       "@free-spot/core/domain": ["libs/frontend/freespot/core/domain/src/index.ts"],
       "@free-spot/core/feature": ["libs/frontend/freespot/core/feature/src/index.ts"],
+      "@free-spot/core/ui": ["libs/frontend/freespot/core/ui/src/index.ts"],
       "@free-spot/enums": ["libs/shared/enums/src/index.ts"],
       "@free-spot/event-registration/data-access": ["libs/frontend/freespot/event-registration/data-access/src/index.ts"],
       "@free-spot/events-catalog/data-access": ["libs/frontend/freespot/events-catalog/data-access/src/index.ts"],

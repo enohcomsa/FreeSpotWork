@@ -2,7 +2,7 @@ import { DestroyRef, Injectable, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpBookingService } from '@http-free-spot/booking';
 import { BookingService } from '@free-spot-service/booking';
-import { ConfirmModalService } from '@free-spot-service/confirm-modal';
+import { ConfirmModalService } from '@free-spot/core/ui';
 import { ToastrService } from 'ngx-toastr';
 import { of, switchMap, take, tap } from 'rxjs';
 

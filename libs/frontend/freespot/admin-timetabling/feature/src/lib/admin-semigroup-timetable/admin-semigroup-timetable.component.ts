@@ -24,7 +24,7 @@ import { BookingService } from '@free-spot-service/booking';
 import { UserService } from '@free-spot-service/user';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormErrorMessage } from '@free-spot/util';
-import { ConfirmModalService } from '@free-spot-service/confirm-modal';
+import { ConfirmModalService } from '@free-spot/core/ui';
 import { ActivityType, TimetableActivity, WeekDay } from '@free-spot/academic-schedule/domain';
 import { AdminTimetableActivityService } from '@free-spot-service/timetable-activity';
 import { SubjectService } from '@free-spot-service/subject';

@@ -19,7 +19,7 @@ import { MatInputModule } from '@angular/material/input';
 import { AddItemCardComponent } from '@free-spot/ui';
 import { BuildingService } from '@free-spot-service/building';
 import { AdminFloorService } from '@free-spot-service/floor';
-import { ConfirmModalService } from '@free-spot-service/confirm-modal';
+import { ConfirmModalService } from '@free-spot/core/ui';
 import { FormErrorMessage } from '@free-spot/util';
 import { CreateFloorCmd, Floor, UpdateFloorCmd } from '@free-spot-domain/floor';
 import { FloorCardVM, toFloorCardVM } from '@free-spot-presentation/floor';

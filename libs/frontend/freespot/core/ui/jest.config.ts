@@ -1,9 +1,8 @@
-/* eslint-disable */
 export default {
-  displayName: 'free-spot-confirm-modal',
-  preset: '../../../jest.preset.js',
+  displayName: 'freespot-core-ui',
+  preset: '../../../../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  coverageDirectory: '../../../coverage/libs/service/confitm-modal',
+  coverageDirectory: '../../../../../coverage/libs/frontend/freespot/core/ui',
   transform: {
     '^.+\\.(ts|mjs|js|html)$': [
       'jest-preset-angular',

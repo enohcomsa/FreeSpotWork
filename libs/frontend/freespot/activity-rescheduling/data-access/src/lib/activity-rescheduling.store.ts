@@ -1,46 +1,44 @@
 import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { switchMap, take, Observable, of } from 'rxjs';
-import { RescheduleOptionsResult } from '@free-spot-domain/booking';
-import { HttpAvailabilityService } from '@http-free-spot/booking';
-import { HttpBookingService } from '@http-free-spot/booking';
-import { Booking } from '@free-spot-domain/booking';
-import { ActivityType } from '@free-spot/academic-schedule/domain';
-import { SubjectService } from '@free-spot-service/subject';
-import { AdminTimetableActivityService } from '@free-spot-service/timetable-activity';
-import { AdminRoomService } from '@free-spot-service/room';
-import { BuildingService } from '@free-spot-service/building';
-import { AdminFloorService } from '@free-spot-service/floor';
-import { ReschedulableBookingVm } from './reschedulable-booking.model';
-import { RescheduleOptionCardVm } from '@free-spot/activity-rescheduling/ui';
-import { ConfirmModalService } from '@free-spot-service/confirm-modal';
+import { forkJoin, Observable, of, switchMap, take } from 'rxjs';
+import {
+  ActivityReschedulingActivityType,
+  type ActivityRescheduleBookingCmd,
+  type ActivityReschedulingActivity,
+  type ActivityReschedulingBooking,
+  type ActivityReschedulingBuilding,
+  type ActivityReschedulingFloor,
+  type ActivityReschedulingOptionsResult,
+  type ActivityReschedulingRoom,
+  type ActivityReschedulingSubject,
+  type ReschedulableBookingVm,
+  type RescheduleOptionCardVm,
+} from '@free-spot/activity-rescheduling/domain';
+import { ConfirmModalService } from '@free-spot/core/ui';
 import { ToastrService } from 'ngx-toastr';
-
-
+import { HttpActivityReschedulingService } from './http-activity-rescheduling.service';
 
 @Injectable({ providedIn: 'root' })
 export class ActivityReschedulingStore {
   private readonly destroyRef = inject(DestroyRef);
   private readonly confirmService = inject(ConfirmModalService);
   private readonly toastr = inject(ToastrService);
-  private readonly availabilityApi = inject(HttpAvailabilityService);
-  private readonly bookingApi = inject(HttpBookingService);
+  private readonly _api = inject(HttpActivityReschedulingService);
 
-  private readonly subjectService = inject(SubjectService);
-  private readonly timetableActivityService = inject(AdminTimetableActivityService);
-  private readonly roomService = inject(AdminRoomService);
-  private readonly buildingService = inject(BuildingService);
-  private readonly floorService = inject(AdminFloorService);
-
-  private readonly _rescheduleOptions = signal<RescheduleOptionsResult | null>(null);
-  readonly rescheduleOptions = this._rescheduleOptions.asReadonly();
-
-  private readonly _bookings = signal<Booking[]>([]);
+  private readonly _subjects = signal<ActivityReschedulingSubject[]>([]);
+  private readonly _activities = signal<ActivityReschedulingActivity[]>([]);
+  private readonly _rooms = signal<ActivityReschedulingRoom[]>([]);
+  private readonly _buildings = signal<ActivityReschedulingBuilding[]>([]);
+  private readonly _floors = signal<ActivityReschedulingFloor[]>([]);
+  private readonly _rescheduleOptions = signal<ActivityReschedulingOptionsResult | null>(null);
+  private readonly _bookings = signal<ActivityReschedulingBooking[]>([]);
   private readonly _selectedBookingId = signal<string | null>(null);
+
+  readonly rescheduleOptions = this._rescheduleOptions.asReadonly();
 
   readonly reschedulableBookings = computed<ReschedulableBookingVm[]>(() =>
     this._bookings()
-      .filter((b) => b.activityType !== ActivityType.SPECIAL_EVENT)
+      .filter((b) => b.activityType !== ActivityReschedulingActivityType.SPECIAL_EVENT)
       // .filter((b) => { //TODO: uncomment after timetable date autoupdate
       //   const activity = this.timetableActivityService.getSignalById(b.activityId)();
       //   if (!activity?.date) return false;
@@ -51,8 +49,10 @@ export class ActivityReschedulingStore {
       //   return start.getTime() > Date.now();
       // })
       .map((b) => {
-        const subject = b.subjectId ? this.subjectService.getSignalById(b.subjectId)() : null;
-        const activity = this.timetableActivityService.getSignalById(b.activityId)();
+        const subject = b.subjectId
+          ? this._subjects().find((item) => item.id === b.subjectId)
+          : null;
+        const activity = this._activities().find((item) => item.id === b.activityId);
 
         const label = [
           b.activityType,
@@ -74,24 +74,13 @@ export class ActivityReschedulingStore {
 
     return result.items
       .map((item) => {
-        const activity = this.timetableActivityService.getSignalById(item.activityId)();
+        const activity = this._activities().find((current) => current.id === item.activityId);
         if (!activity?.id) return null;
 
-        const subject = activity.subjectId
-          ? this.subjectService.getSignalById(activity.subjectId)()
-          : null;
-
-        const room = activity.roomId
-          ? this.roomService.getSignalById(activity.roomId)()
-          : null;
-
-        const building = room?.buildingId
-          ? this.buildingService.getSignalById(room.buildingId)()
-          : null;
-
-        const floor = room?.floorId
-          ? this.floorService.getSignalById(room.floorId)()
-          : null;
+        const subject = this._subjects().find((current) => current.id === activity.subjectId);
+        const room = this._rooms().find((current) => current.id === activity.roomId);
+        const building = this._buildings().find((current) => current.id === room?.buildingId);
+        const floor = this._floors().find((current) => current.id === room?.floorId);
 
         return {
           id: activity.id,
@@ -105,37 +94,39 @@ export class ActivityReschedulingStore {
           freeSpots: item.freeSpots,
         };
       })
-      .filter((x) => x !== null) as RescheduleOptionCardVm[];
+      .filter((item) => item !== null);
   });
 
   load(): void {
-    this.subjectService.init();
-    this.timetableActivityService.init();
-    this.roomService.init();
-    this.buildingService.init();
-    this.floorService.init();
-
-    this.bookingApi
-      .listBookings$()
-      .pipe(take(1))
-      .subscribe((bookings: Booking[]) => {
+    forkJoin({
+      bookings: this._api.listBookings$(),
+      subjects: this._api.listSubjects$(),
+      activities: this._api.listTimetableActivities$(),
+      rooms: this._api.listRooms$(),
+      buildings: this._api.listBuildings$(),
+      floors: this._api.listFloors$(),
+    })
+      .pipe(take(1), takeUntilDestroyed(this.destroyRef))
+      .subscribe(({ bookings, subjects, activities, rooms, buildings, floors }) => {
         this._bookings.set(bookings);
+        this._subjects.set(subjects);
+        this._activities.set(activities);
+        this._rooms.set(rooms);
+        this._buildings.set(buildings);
+        this._floors.set(floors);
       });
   }
 
   selectBooking(id: string | null): void {
     this._selectedBookingId.set(id);
-
-    if (!id) {
-      this._rescheduleOptions.set(null);
-    }
+    if (!id) this._rescheduleOptions.set(null);
   }
 
   loadOptions(): void {
     const id = this._selectedBookingId();
     if (!id) return;
 
-    this.availabilityApi
+    this._api
       .getRescheduleOptions$(id)
       .pipe(take(1))
       .subscribe((result) => {
@@ -157,13 +148,13 @@ export class ActivityReschedulingStore {
       .pipe(
         take(1),
         switchMap((result: boolean) => {
-          if (!result) {
-            return of(false);
-          }
+          if (!result) return of(false);
 
-          return this.bookingApi.rescheduleBooking$(bookingId, { activityId }).pipe(
+          const cmd: ActivityRescheduleBookingCmd = { activityId };
+
+          return this._api.rescheduleBooking$(bookingId, cmd).pipe(
             switchMap(() =>
-              this.bookingApi.listBookings$().pipe(
+              this._api.listBookings$().pipe(
                 take(1),
                 switchMap((bookings) => {
                   this._bookings.set(bookings);

@@ -16,7 +16,7 @@ import { MatInputModule } from '@angular/material/input';
 
 import { CreateBuildingCmd, UpdateBuildingCmd } from '@free-spot-domain/building';
 import { BuildingCardVM } from '@free-spot-presentation/building-card';
-import { ConfirmModalService } from '@free-spot-service/confirm-modal';
+import { ConfirmModalService } from '@free-spot/core/ui';
 import { AddItemCardComponent } from '@free-spot/ui';
 import { FormErrorMessage } from '@free-spot/util';
 import { AdminBuildingCardComponent } from '@free-spot/admin-university-map/ui';

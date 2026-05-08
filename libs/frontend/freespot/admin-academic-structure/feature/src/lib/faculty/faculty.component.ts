@@ -4,7 +4,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { AddItemCardComponent, DynamicChipListComponent } from '@free-spot/ui';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ConfirmModalService } from '@free-spot-service/confirm-modal';
+import { ConfirmModalService } from '@free-spot/core/ui';
 import { SubjectService } from '@free-spot-service/subject';
 import { SubjectItem } from '@free-spot-domain/subject';
 import { Faculty, UpdateFacultyCmd } from '@free-spot-domain/faculty';

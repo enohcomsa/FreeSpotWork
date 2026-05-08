@@ -18,7 +18,7 @@ import { take } from 'rxjs';
 
 import { TimetableActivity } from '@free-spot/academic-schedule/domain';
 import { BookingService } from '@free-spot-service/booking';
-import { ConfirmModalService } from '@free-spot-service/confirm-modal';
+import { ConfirmModalService } from '@free-spot/core/ui';
 import { AdminRoomService } from '@free-spot-service/room';
 import { BuildingService } from '@free-spot-service/building';
 import { AdminFloorService } from '@free-spot-service/floor';
