@@ -1,38 +1,35 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { take } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { take, switchMap } from 'rxjs';
 
 import { AuthService } from '@free-spot/core/data-access';
-import { AdminFacultyService } from '@free-spot-service/faculty';
-import { ProgramYearService } from '@free-spot-service/program-year';
-import { ProgramService } from '@free-spot-service/program';
-import { CohortService } from '@free-spot-service/cohort';
+import {
+  type UpdateMyProfileCmd,
+  type UserSetupCohort,
+  type UserSetupFaculty,
+  type UserSetupProgram,
+  type UserSetupProgramYear,
+} from '@free-spot/user-setup/domain';
 import { HttpUserSetupService } from './http-user-setup.service';
-
-import { Faculty } from '@free-spot-domain/faculty';
-import { Program } from '@free-spot-domain/program';
-import { ProgramYear } from '@free-spot-domain/program-year';
-import { Cohort } from '@free-spot-domain/cohort';
-import { type UpdateMyProfileCmd } from '@free-spot/user-setup/domain';
 
 @Injectable({ providedIn: 'root' })
 export class UserSetupStore {
-  private readonly authService = inject(AuthService);
-  private readonly facultyService = inject(AdminFacultyService);
-  private readonly programYearService = inject(ProgramYearService);
-  private readonly programService = inject(ProgramService);
-  private readonly cohortService = inject(CohortService);
-  private readonly _httpUserSetupService = inject(HttpUserSetupService);
+  private readonly _authService = inject(AuthService);
+  private readonly _api = inject(HttpUserSetupService);
 
-  readonly facultyListSig = this.facultyService.facultyListSig;
-  readonly foundProgramListSig = signal<Program[]>([]);
-  readonly foundYearListSig = signal<ProgramYear[]>([]);
-  readonly foundGroupListSig = signal<Cohort[]>([]);
-  readonly foundSemigroupListSig = signal<Cohort[]>([]);
+  private readonly _facultyListSig = signal<UserSetupFaculty[]>([]);
+  private readonly _programListSig = signal<UserSetupProgram[]>([]);
+  private readonly _programYearListSig = signal<UserSetupProgramYear[]>([]);
+  private readonly _cohortListSig = signal<UserSetupCohort[]>([]);
+
+  readonly facultyListSig = this._facultyListSig.asReadonly();
+  readonly foundProgramListSig = signal<UserSetupProgram[]>([]);
+  readonly foundYearListSig = signal<UserSetupProgramYear[]>([]);
+  readonly foundGroupListSig = signal<UserSetupCohort[]>([]);
+  readonly foundSemigroupListSig = signal<UserSetupCohort[]>([]);
 
   readonly shouldOpenDialogSig = computed(() => {
-    const initialized = this.authService.initializedSignal$();
-    const user = this.authService.userSignal$();
+    const initialized = this._authService.initializedSignal$();
+    const user = this._authService.userSignal$();
 
     if (!initialized || !user) {
       return false;
@@ -49,95 +46,94 @@ export class UserSetupStore {
   });
 
   init(): void {
-    this.facultyService.init();
-    this.programService.init();
-    this.programYearService.init();
-    this.cohortService.init();
+    if (this._facultyListSig().length) {
+      return;
+    }
+
+    this._api
+      .loadSetupData$()
+      .pipe(take(1))
+      .subscribe(({ faculties, programs, programYears, cohorts }) => {
+        this._facultyListSig.set(faculties);
+        this._programListSig.set(programs);
+        this._programYearListSig.set(programYears);
+        this._cohortListSig.set(cohorts);
+      });
   }
 
   getCurrentUser() {
-    return this.authService.userSignal$();
+    return this._authService.userSignal$();
   }
 
-  onFacultySelected(faculty: Faculty): void {
-    this.foundProgramListSig.set(
-      this.programService.selectProgramsByFacultyId(faculty.id)() || []
-    );
+  onFacultySelected(faculty: UserSetupFaculty): void {
+    this.foundProgramListSig.set(this._programListSig().filter((program) => program.facultyId === faculty.id));
     this.foundYearListSig.set([]);
     this.foundGroupListSig.set([]);
     this.foundSemigroupListSig.set([]);
   }
 
-  onProgramSelected(program: Program): void {
-    this.foundYearListSig.set(
-      this.programYearService.selectYearByProgramId(program.id)() || []
-    );
+  onProgramSelected(program: UserSetupProgram): void {
+    this.foundYearListSig.set(this._programYearListSig().filter((year) => year.programId === program.id));
     this.foundGroupListSig.set([]);
     this.foundSemigroupListSig.set([]);
   }
 
-  onProgramYearSelected(programYear: ProgramYear): void {
+  onProgramYearSelected(programYear: UserSetupProgramYear): void {
     this.foundGroupListSig.set(
-      this.cohortService.selectGroupsByProgramYearId(programYear.id)() || []
+      this._cohortListSig().filter((cohort) => cohort.programYearId === programYear.id && !cohort.parentGroupId)
     );
     this.foundSemigroupListSig.set([]);
   }
 
-  onGroupSelected(group: Cohort): void {
-    this.foundSemigroupListSig.set(
-      this.cohortService.selectSemigroupByparentGroupId(group.id)() || []
-    );
+  onGroupSelected(group: UserSetupCohort): void {
+    this.foundSemigroupListSig.set(this._cohortListSig().filter((cohort) => cohort.parentGroupId === group.id));
   }
 
   preloadDependentLists(): void {
-    const currentUser = this.authService.userSignal$();
+    const currentUser = this._authService.userSignal$();
 
     if (!currentUser) {
       return;
     }
 
     if (currentUser.programId) {
-      const program = this.programService.getSignalById(currentUser.programId)();
-      if (program?.id) {
-        this.foundProgramListSig.set(
-          this.programService.selectProgramsByFacultyId(program.facultyId)() || []
-        );
+      const program = this._programListSig().find((item) => item.id === currentUser.programId);
+      if (program) {
+        this.foundProgramListSig.set(this._programListSig().filter((item) => item.facultyId === program.facultyId));
       }
     }
 
     if (currentUser.programYearId) {
-      const year = this.programYearService.getSignalById(currentUser.programYearId)();
-      if (year?.id) {
-        this.foundYearListSig.set(
-          this.programYearService.selectYearByProgramId(year.programId)() || []
-        );
+      const year = this._programYearListSig().find((item) => item.id === currentUser.programYearId);
+      if (year) {
+        this.foundYearListSig.set(this._programYearListSig().filter((item) => item.programId === year.programId));
       }
     }
 
     if (currentUser.groupCohortId) {
-      const group = this.cohortService.getSignalById(currentUser.groupCohortId)();
-      if (group?.id) {
+      const group = this._cohortListSig().find((item) => item.id === currentUser.groupCohortId);
+      if (group) {
         this.foundGroupListSig.set(
-          this.cohortService.selectGroupsByProgramYearId(group.programYearId)() || []
+          this._cohortListSig().filter((item) => item.programYearId === group.programYearId && !item.parentGroupId)
         );
       }
     }
 
     if (currentUser.semigroupCohortId) {
-      const semigroup = this.cohortService.getSignalById(currentUser.semigroupCohortId)();
-      if (semigroup?.id) {
+      const semigroup = this._cohortListSig().find((item) => item.id === currentUser.semigroupCohortId);
+      if (semigroup?.parentGroupId) {
         this.foundSemigroupListSig.set(
-          this.cohortService.selectSemigroupByparentGroupId(semigroup.parentGroupId ?? '')() || []
+          this._cohortListSig().filter((item) => item.parentGroupId === semigroup.parentGroupId)
         );
       }
     }
   }
 
   submit(input: UpdateMyProfileCmd, onSuccess: () => void): void {
-    this._httpUserSetupService
+    this._api
       .updateMyProfile$(input)
       .pipe(
-        switchMap(() => this.authService.loadMe()),
+        switchMap(() => this._authService.loadMe()),
         take(1)
       )
       .subscribe({

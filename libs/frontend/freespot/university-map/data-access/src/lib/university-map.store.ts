@@ -1,42 +1,45 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
+import {
+  type BuildingCardVm,
+  type RoomCardVm,
+  type UniversityMapFloor,
+  type UniversityMapRoom,
+} from '@free-spot/university-map/domain';
 import { take } from 'rxjs';
-import { HttpBuildingCardService } from '@http-free-spot/building-card';
-import { AdminRoomService } from '@free-spot-service/room';
-import { AdminFloorService } from '@free-spot-service/floor';
-import { BuildingCardVm, RoomCardVm } from '@free-spot/university-map/domain';
-import { BuildingCardVM } from '@free-spot-presentation/building-card';
+import { HttpUniversityMapService } from './http-university-map.service';
 
 @Injectable()
 export class UniversityMapStore {
-  private readonly _httpBuildingCardService = inject(HttpBuildingCardService);
-  private readonly _roomService = inject(AdminRoomService);
-  private readonly _floorService = inject(AdminFloorService);
+  private readonly _api = inject(HttpUniversityMapService);
 
   private readonly _buildingCardsSig = signal<BuildingCardVm[]>([]);
+  private readonly _roomsSig = signal<UniversityMapRoom[]>([]);
+  private readonly _floorsSig = signal<UniversityMapFloor[]>([]);
+
   readonly buildingCardsSig = this._buildingCardsSig.asReadonly();
 
   init(): void {
-    this._roomService.init();
-    this._floorService.init();
-
     if (this._buildingCardsSig().length) {
       return;
     }
 
-    this._httpBuildingCardService
-      .listBuildingsCards$()
+    this._api
+      .loadMap$()
       .pipe(take(1))
-      .subscribe((buildingCards: BuildingCardVM[]) => {
+      .subscribe(({ buildings, rooms, floors }) => {
         this._buildingCardsSig.set(
-          buildingCards.map((buildingCard) => ({
-            id: buildingCard.id,
-            name: buildingCard.name,
-            address: buildingCard.address,
-            floors: buildingCard.floors.map((floor) => ({
-              name: floor.name,
-            })),
+          buildings.map((building) => ({
+            ...building,
+            floors: floors
+              .filter((floor) => floor.buildingId === building.id)
+              .map((floor) => ({
+                name: floor.name,
+              })),
           }))
         );
+
+        this._roomsSig.set(rooms);
+        this._floorsSig.set(floors);
       });
   }
 
@@ -45,14 +48,14 @@ export class UniversityMapStore {
   }
 
   getRoomCardVmsByFloorName(floorName: string): RoomCardVm[] {
-    const floor = this._floorService.floorListSig().find((item) => item.name === floorName);
+    const floor = this._floorsSig().find((item) => item.name === floorName);
 
-    if (!floor?.id) {
+    if (!floor) {
       return [];
     }
 
-    return this._roomService
-      .selectRoomsByFloorId(floor.id)()
+    return this._roomsSig()
+      .filter((room) => room.floorId === floor.id)
       .map((room) => ({
         id: room.id,
         name: room.name,

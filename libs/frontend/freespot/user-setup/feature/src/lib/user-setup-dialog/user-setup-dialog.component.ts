@@ -6,16 +6,15 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { filter, Subscription } from 'rxjs';
-
 import { TranslateModule } from '@ngx-translate/core';
 import { FormErrorMessage } from '@free-spot/util';
-
-import { Faculty } from '@free-spot-domain/faculty';
-import { ProgramYear } from '@free-spot-domain/program-year';
-import { Program } from '@free-spot-domain/program';
-import { Cohort } from '@free-spot-domain/cohort';
-import { type UpdateMyProfileCmd } from '@free-spot/user-setup/domain';
-
+import {
+  type UserSetupCohort,
+  type UserSetupFaculty,
+  type UserSetupProgram,
+  type UserSetupProgramYear,
+  type UpdateMyProfileCmd,
+} from '@free-spot/user-setup/domain';
 import { UserSetupStore } from '@free-spot/user-setup/data-access';
 
 @Component({
@@ -49,11 +48,11 @@ export class UserSetupDialogComponent implements OnInit, OnDestroy {
   readonly setupForm = this.formBuilder.group({
     firstName: ['', [Validators.required, Validators.minLength(2)]],
     familyName: ['', [Validators.required, Validators.minLength(2)]],
-    faculty: [null as Faculty | null, [Validators.required]],
-    program: [null as Program | null, [Validators.required]],
-    programYear: [null as ProgramYear | null, [Validators.required]],
-    group: [null as Cohort | null, [Validators.required]],
-    semigroup: [null as Cohort | null],
+    faculty: [null as UserSetupFaculty | null, [Validators.required]],
+    program: [null as UserSetupProgram | null, [Validators.required]],
+    programYear: [null as UserSetupProgramYear | null, [Validators.required]],
+    group: [null as UserSetupCohort | null, [Validators.required]],
+    semigroup: [null as UserSetupCohort | null],
   });
 
   private readonly subscriptions: Subscription[] = [];
@@ -66,7 +65,7 @@ export class UserSetupDialogComponent implements OnInit, OnDestroy {
 
     this.subscriptions.push(
       this.setupForm.controls.faculty.valueChanges
-        .pipe(filter((faculty): faculty is Faculty => !!faculty))
+        .pipe(filter((faculty): faculty is UserSetupFaculty => !!faculty))
         .subscribe((faculty) => {
           this.store.onFacultySelected(faculty);
           this.setupForm.controls.program.reset();
@@ -78,7 +77,7 @@ export class UserSetupDialogComponent implements OnInit, OnDestroy {
 
     this.subscriptions.push(
       this.setupForm.controls.program.valueChanges
-        .pipe(filter((program): program is Program => !!program))
+        .pipe(filter((program): program is UserSetupProgram => !!program))
         .subscribe((program) => {
           this.store.onProgramSelected(program);
           this.setupForm.controls.programYear.reset();
@@ -89,7 +88,7 @@ export class UserSetupDialogComponent implements OnInit, OnDestroy {
 
     this.subscriptions.push(
       this.setupForm.controls.programYear.valueChanges
-        .pipe(filter((year): year is ProgramYear => !!year))
+        .pipe(filter((year): year is UserSetupProgramYear => !!year))
         .subscribe((year) => {
           this.store.onProgramYearSelected(year);
           this.setupForm.controls.group.reset();
@@ -99,7 +98,7 @@ export class UserSetupDialogComponent implements OnInit, OnDestroy {
 
     this.subscriptions.push(
       this.setupForm.controls.group.valueChanges
-        .pipe(filter((group): group is Cohort => !!group))
+        .pipe(filter((group): group is UserSetupCohort => !!group))
         .subscribe((group) => {
           this.store.onGroupSelected(group);
           this.setupForm.controls.semigroup.reset(null);
