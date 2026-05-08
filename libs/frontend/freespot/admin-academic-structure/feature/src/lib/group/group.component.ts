@@ -17,7 +17,7 @@ import { AdminTimetableActivityService } from '@free-spot-service/timetable-acti
 import { ProgramYearService } from '@free-spot-service/program-year';
 import { ProgramService } from '@free-spot-service/program';
 import { TimetableActivity, WeekDay } from '@free-spot/academic-schedule/domain';
-import { TimetableActivityCardVM } from '@free-spot/academic-schedule/ui';
+import { TimetableActivityCardVM } from '@free-spot/academic-schedule/domain';
 import { SubjectService } from '@free-spot-service/subject';
 import { User } from '@free-spot/core/domain';
 import { AdminGroupTimetableComponent, AdminSemisemiGroupTimetableComponent, } from '@free-spot/admin-timetabling/feature';

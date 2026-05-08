@@ -3,8 +3,8 @@ import { MatListModule } from '@angular/material/list';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatCardModule } from '@angular/material/card';
 import { TranslateModule } from '@ngx-translate/core';
-import { TimetableActivityCardVM, TimetableDayItem } from '@free-spot/academic-schedule/ui';
-import { WeekParity, ActivityType, WeekDay } from '@free-spot/academic-schedule/domain';
+import { TimetableDayItem } from '@free-spot/academic-schedule/ui';
+import { TimetableActivityCardVM, WeekParity, ActivityType, WeekDay } from '@free-spot/academic-schedule/domain';
 
 @Component({
   selector: 'free-spot-timetable-item',

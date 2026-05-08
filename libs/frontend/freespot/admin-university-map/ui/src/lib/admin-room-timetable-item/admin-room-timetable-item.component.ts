@@ -15,7 +15,7 @@ import { ActivityType, CreateTimetableActivityCmd, TimetableActivity, WeekDay, W
 import { Room } from '@free-spot-domain/room';
 import { AdminRoomService } from '@free-spot-service/room';
 import { SubjectItem } from '@free-spot-domain/subject';
-import { TimetableActivityCardVM } from '@free-spot/academic-schedule/ui';
+import { TimetableActivityCardVM } from '@free-spot/academic-schedule/domain';
 import { AdminTimetableActivityService } from '@free-spot-service/timetable-activity';
 
 @Component({

@@ -5,7 +5,7 @@ import { AdminRoomService } from '@free-spot-service/room';
 import { SubjectService } from '@free-spot-service/subject';
 import { UpdateRoomCmd } from '@free-spot-domain/room';
 import { SubjectItem } from '@free-spot-domain/subject';
-import { TimetableActivityCardVM } from '@free-spot/academic-schedule/ui';
+import { TimetableActivityCardVM } from '@free-spot/academic-schedule/domain';
 import { AdminTimetableActivityService } from '@free-spot-service/timetable-activity';
 import { TimetableActivity, WeekDay } from '@free-spot/academic-schedule/domain';
 

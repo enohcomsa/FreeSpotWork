@@ -1,4 +1,7 @@
-import { WeekDay, WeekParity, ActivityType } from '@free-spot/academic-schedule/domain';
+import { ActivityType } from './activity-type.enum';
+import { WeekDay } from './week-day.enum';
+import { WeekParity } from './week-parity.enum';
+
 export interface TimetableActivityCardVM {
   id: string;
   weekDay: WeekDay;

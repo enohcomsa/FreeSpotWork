@@ -1,4 +1,4 @@
-import { TimetableActivityCardVM } from './timetable-activity-card.vm';
+import { TimetableActivityCardVM } from '@free-spot/academic-schedule/domain';
 
 export interface TimetableDayItem {
   hourInterval: string;
