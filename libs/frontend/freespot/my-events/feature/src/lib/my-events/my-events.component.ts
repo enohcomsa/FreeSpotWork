@@ -14,8 +14,6 @@ export class MyEventsComponent implements OnInit {
   private readonly store = inject(MyEventsStore);
 
   readonly events = this.store.eventCards;
-  readonly loading = this.store.loading;
-  readonly error = this.store.error;
 
   ngOnInit(): void {
     this.store.load();

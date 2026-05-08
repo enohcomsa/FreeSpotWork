@@ -1,24 +1,26 @@
-import { Booking } from '@free-spot-domain/booking';
-import { SpecialEvent } from '@free-spot-domain/event';
-import { Building } from '@free-spot-domain/building';
-import { Floor } from '@free-spot-domain/floor';
-import { Room } from '@free-spot-domain/room';
-import { MyEventVm } from './my-event.model';
+import {
+  type MyEventCardVm,
+  type MyEventsBooking,
+  type MyEventsBuilding,
+  type MyEventsEvent,
+  type MyEventsFloor,
+  type MyEventsRoom,
+} from '@free-spot/my-events/domain';
 
 export function mapToMyEventVm(
-  booking: Booking,
-  event: SpecialEvent,
-  building: Building,
-  floor: Floor,
-  room: Room
-): MyEventVm {
+  booking: MyEventsBooking,
+  event: MyEventsEvent,
+  building: MyEventsBuilding | null,
+  floor: MyEventsFloor | null,
+  room: MyEventsRoom | null
+): MyEventCardVm {
   return {
     id: booking.id,
-    name: event?.name || '',
-    buildingName: building?.name || '',
-    floorName: floor?.name || '',
-    roomName: room?.name || '',
-    date: event?.date ?? null,
-    startHour: event?.startHour ?? 0,
+    name: event.name,
+    buildingName: building?.name ?? '',
+    floorName: floor?.name ?? '',
+    roomName: room?.name ?? '',
+    date: event.date,
+    startHour: event.startHour,
   };
 }

@@ -1,57 +1,52 @@
 import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { take } from 'rxjs';
-import { Booking } from '@free-spot-domain/booking';
-import { ActivityType } from '@free-spot/academic-schedule/domain';
-import { HttpBookingService } from '@http-free-spot/booking';
-import { AdminEventService } from '@free-spot-service/event';
-import { BuildingService } from '@free-spot-service/building';
-import { AdminRoomService } from '@free-spot-service/room';
-import { AdminFloorService } from '@free-spot-service/floor';
+import {
+  MyEventsActivityType,
+  type MyEventCardVm,
+  type MyEventsBooking,
+  type MyEventsBuilding,
+  type MyEventsEvent,
+  type MyEventsFloor,
+  type MyEventsRoom,
+} from '@free-spot/my-events/domain';
 import { mapToMyEventVm } from './my-event.mapper';
+import { HttpMyEventsService } from './http-my-events.service';
 
 @Injectable({ providedIn: 'root' })
 export class MyEventsStore {
-  private readonly api = inject(HttpBookingService);
-  private readonly destroyRef = inject(DestroyRef);
+  private readonly _api = inject(HttpMyEventsService);
+  private readonly _destroyRef = inject(DestroyRef);
 
-  private readonly eventService = inject(AdminEventService);
-  private readonly buildingService = inject(BuildingService);
-  private readonly roomService = inject(AdminRoomService);
-  private readonly floorService = inject(AdminFloorService);
-
-  private readonly _bookings = signal<Booking[]>([]);
-  private readonly _loading = signal(false);
-  private readonly _error = signal<string | null>(null);
-
-  readonly loading = this._loading.asReadonly();
-  readonly error = this._error.asReadonly();
+  private readonly _bookings = signal<MyEventsBooking[]>([]);
+  private readonly _events = signal<MyEventsEvent[]>([]);
+  private readonly _buildings = signal<MyEventsBuilding[]>([]);
+  private readonly _rooms = signal<MyEventsRoom[]>([]);
+  private readonly _floors = signal<MyEventsFloor[]>([]);
 
   readonly bookings = computed(() =>
-    this._bookings().filter((booking) => booking.activityType === ActivityType.SPECIAL_EVENT)
+    this._bookings().filter((b) => b.activityType === MyEventsActivityType.SPECIAL_EVENT)
   );
 
-  readonly eventCards = computed(() =>
+  readonly eventCards = computed<MyEventCardVm[]>(() =>
     this.bookings()
       .map((booking) => {
         const event = booking.activityId
-          ? this.eventService.getSignalById(booking.activityId)()
+          ? this._events().find((e) => e.id === booking.activityId)
           : null;
 
-        if (!event?.id) {
-          return null;
-        }
+        if (!event) return null;
 
         const room = event.roomId
-          ? this.roomService.getSignalById(event.roomId)()
+          ? this._rooms().find((r) => r.id === event.roomId)
           : null;
 
         const building = event.buildingId
-          ? this.buildingService.getSignalById(event.buildingId)()
+          ? this._buildings().find((b) => b.id === event.buildingId)
           : null;
 
         const floor = room?.floorId
-          ? this.floorService.getSignalById(room.floorId)()
+          ? this._floors().find((f) => f.id === room.floorId)
           : null;
 
         return mapToMyEventVm(
@@ -62,49 +57,28 @@ export class MyEventsStore {
           room ?? ({} as never)
         );
       })
-      .filter((item) => item !== null)
+      .filter((x): x is MyEventCardVm => x !== null)
   );
 
   load(): void {
-    this.eventService.init();
-    this.buildingService.init();
-    this.roomService.init();
-    this.floorService.init();
-
-    this._loading.set(true);
-    this._error.set(null);
-
-    this.api
-      .listBookings$()
-      .pipe(take(1), takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (bookings) => {
-          this._bookings.set(bookings);
-          this._loading.set(false);
-        },
-        error: () => {
-          this._error.set('Failed to load event bookings');
-          this._loading.set(false);
-        },
+    this._api
+      .loadMyEvents$()
+      .pipe(take(1), takeUntilDestroyed(this._destroyRef))
+      .subscribe(({ bookings, events, buildings, rooms, floors }) => {
+        this._bookings.set(bookings);
+        this._events.set(events);
+        this._buildings.set(buildings);
+        this._rooms.set(rooms);
+        this._floors.set(floors);
       });
   }
 
   remove(id: string): void {
-    this._loading.set(true);
-    this._error.set(null);
-
-    this.api
+    this._api
       .deleteBooking$(id)
-      .pipe(take(1), takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: () => {
-          this._bookings.update((items) => items.filter((booking) => booking.id !== id));
-          this._loading.set(false);
-        },
-        error: () => {
-          this._error.set('Failed to delete booking');
-          this._loading.set(false);
-        },
+      .pipe(take(1), takeUntilDestroyed(this._destroyRef))
+      .subscribe(() => {
+        this._bookings.update((items) => items.filter((b) => b.id !== id));
       });
   }
 }
