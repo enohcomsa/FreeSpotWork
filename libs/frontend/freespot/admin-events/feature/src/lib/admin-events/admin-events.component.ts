@@ -19,10 +19,14 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { filter } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-
-import { Building } from '@free-spot-domain/building';
-import { CreateSpecialEventCmd, EventType, SpecialEvent, UpdateSpecialEventCmd } from '@free-spot-domain/event';
-import { Room } from '@free-spot-domain/room';
+import {
+  AdminEventsBuilding,
+  AdminEventsRoom,
+  AdminEventType,
+  AdminSpecialEvent,
+  CreateAdminSpecialEventCmd,
+  UpdateAdminSpecialEventCmd,
+} from '@free-spot/admin-events/domain';
 import { FormErrorMessage } from '@free-spot/util';
 import { AddItemCardComponent } from '@free-spot/ui';
 
@@ -55,13 +59,13 @@ export class AdminEventsComponent implements OnInit {
 
   editEvent = viewChild<ElementRef>('editEvent');
 
-  readonly buildingListSig: Signal<Building[]> = this._adminEventsStore.buildingListSig;
-  readonly eventListSig: Signal<SpecialEvent[]> = this._adminEventsStore.eventListSig;
+  readonly buildingListSig: Signal<AdminEventsBuilding[]> = this._adminEventsStore.buildingListSig;
+  readonly eventListSig: Signal<AdminSpecialEvent[]> = this._adminEventsStore.eventListSig;
 
-  specialEventSig: WritableSignal<SpecialEvent> = signal({} as SpecialEvent);
+  specialEventSig: WritableSignal<AdminSpecialEvent> = signal({} as AdminSpecialEvent);
 
   startHourList: number[] = [8, 10, 12, 14, 16, 18];
-  foundRoomListSig: WritableSignal<Room[]> = signal([]);
+  foundRoomListSig: WritableSignal<AdminEventsRoom[]> = signal([]);
   addingEvent = false;
   editingEvent = false;
 
@@ -70,7 +74,7 @@ export class AdminEventsComponent implements OnInit {
     date: [new Date(), [Validators.required]],
     startHour: [8, [Validators.required]],
     building: [this.buildingListSig()[0], [Validators.required]],
-    room: [{} as Room, [Validators.required]],
+    room: [{} as AdminEventsRoom, [Validators.required]],
     unavailable: [0, [Validators.required]],
   });
 
@@ -79,10 +83,10 @@ export class AdminEventsComponent implements OnInit {
 
     this.addEventFormGroup.controls['building'].valueChanges
       .pipe(
-        filter((building): building is Building => !!building),
+        filter((building): building is AdminEventsBuilding => !!building),
         takeUntilDestroyed(this._destroyRef)
       )
-      .subscribe((building: Building) => {
+      .subscribe((building: AdminEventsBuilding) => {
         this.foundRoomListSig.set(this._adminEventsStore.selectRoomsByBuildingId(building.id)());
         if (!this.editingEvent) {
           this.addEventFormGroup.controls['room'].reset();
@@ -92,11 +96,11 @@ export class AdminEventsComponent implements OnInit {
 
   displayError = (control: AbstractControl | null) => this._formErrorMessage.displayFormErrorMessage(control);
 
-  getBuildingById(buildingId: string): Building {
+  getBuildingById(buildingId: string): AdminEventsBuilding | undefined {
     return this._adminEventsStore.getBuildingById(buildingId)();
   }
 
-  getRoomById(roomId: string): Room {
+  getRoomById(roomId: string): AdminEventsRoom | undefined {
     return this._adminEventsStore.getRoomById(roomId)();
   }
 
@@ -111,8 +115,8 @@ export class AdminEventsComponent implements OnInit {
     const eventDate: Date = this.addEventFormGroup.controls['date'].value;
     eventDate.setHours(this.addEventFormGroup.controls['startHour'].value, 0, 0, 0);
 
-    const newSpecialEvent: CreateSpecialEventCmd = {
-      type: EventType.SPECIAL,
+    const newSpecialEvent: CreateAdminSpecialEventCmd = {
+      type: AdminEventType.Special,
       name: this.addEventFormGroup.controls['name'].value,
       date: eventDate.toISOString(),
       startHour: this.addEventFormGroup.controls['startHour'].value,
@@ -126,19 +130,27 @@ export class AdminEventsComponent implements OnInit {
     this.addingEvent = false;
   }
 
-  onEditingEvent(eventToEdit: SpecialEvent): void {
+  onEditingEvent(eventToEdit: AdminSpecialEvent): void {
+    const building = this._adminEventsStore.getBuildingById(eventToEdit.buildingId)();
+    const room = this._adminEventsStore.getRoomById(eventToEdit.roomId)();
+
+    if (!building || !room) {
+      return;
+    }
+
+
     this.editingEvent = true;
     this.addEventFormGroup.setValue({
       name: eventToEdit.name,
       date: new Date(eventToEdit.date ? new Date(eventToEdit.date) : new Date()),
       startHour: eventToEdit.startHour as number,
-      building: this._adminEventsStore.getBuildingById(eventToEdit.buildingId)(),
-      room: this._adminEventsStore.getRoomById(eventToEdit.roomId)(),
+      building,
+      room,
       unavailable: eventToEdit.reservedSpots as number,
     });
 
     this.addEventFormGroup.controls['room'].setValue(
-      this.foundRoomListSig().filter((room: Room) => room.id === eventToEdit.roomId)[0]
+      this.foundRoomListSig().filter((room: AdminEventsRoom) => room.id === eventToEdit.roomId)[0]
     );
 
     this.specialEventSig.set(eventToEdit);
@@ -149,8 +161,8 @@ export class AdminEventsComponent implements OnInit {
     const eventDate: Date = this.addEventFormGroup.controls['date'].value;
     eventDate.setHours(this.addEventFormGroup.controls['startHour'].value, 0, 0, 0);
 
-    const updatedSpecialEvent: UpdateSpecialEventCmd = {
-      type: EventType.SPECIAL,
+    const updatedSpecialEvent: UpdateAdminSpecialEventCmd = {
+      type: AdminEventType.Special,
       name: this.addEventFormGroup.controls['name'].value,
       date: eventDate.toISOString(),
       startHour: this.addEventFormGroup.controls['startHour'].value,

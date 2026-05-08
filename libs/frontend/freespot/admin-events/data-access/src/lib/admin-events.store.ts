@@ -1,52 +1,63 @@
-import { Injectable, Signal, inject } from '@angular/core';
-import {
-  SpecialEvent,
-  CreateSpecialEventCmd,
-  UpdateSpecialEventCmd,
-} from '@free-spot-domain/event';
-import { Building } from '@free-spot-domain/building';
-import { Room } from '@free-spot-domain/room';
+import { Injectable, Signal, computed, inject, signal } from '@angular/core';
 
-import { AdminEventService } from '@free-spot-service/event';
-import { BuildingService } from '@free-spot-service/building';
-import { AdminRoomService } from '@free-spot-service/room';
+import {
+  AdminEventsBuilding,
+  AdminEventsRoom,
+  AdminSpecialEvent,
+  CreateAdminSpecialEventCmd,
+  UpdateAdminSpecialEventCmd,
+} from '@free-spot/admin-events/domain';
+
+import { HttpAdminEventsService } from './http-admin-events.service';
 
 @Injectable({ providedIn: 'root' })
 export class AdminEventsStore {
-  private _eventService = inject(AdminEventService);
-  private _buildingService = inject(BuildingService);
-  private _roomService = inject(AdminRoomService);
+  private readonly http = inject(HttpAdminEventsService);
 
-  readonly eventListSig: Signal<SpecialEvent[]> = this._eventService.eventListSig;
-  readonly buildingListSig: Signal<Building[]> = this._buildingService.buildingListSig;
+  private readonly eventsSig = signal<AdminSpecialEvent[]>([]);
+  private readonly buildingsSig = signal<AdminEventsBuilding[]>([]);
+  private readonly roomsSig = signal<AdminEventsRoom[]>([]);
+
+  readonly eventListSig: Signal<AdminSpecialEvent[]> = this.eventsSig.asReadonly();
+  readonly buildingListSig: Signal<AdminEventsBuilding[]> = this.buildingsSig.asReadonly();
 
   init() {
-    this._eventService.init();
-    this._buildingService.init();
-    this._roomService.init();
+    this.http.load$().subscribe(({ events, buildings, rooms }) => {
+      this.eventsSig.set(events);
+      this.buildingsSig.set(buildings);
+      this.roomsSig.set(rooms);
+    });
   }
 
   getBuildingById(id: string) {
-    return this._buildingService.getSignalById(id);
+    return computed(() => this.buildingsSig().find((building) => building.id === id));
   }
 
   getRoomById(id: string) {
-    return this._roomService.getSignalById(id);
+    return computed(() => this.roomsSig().find((room) => room.id === id));
   }
 
   selectRoomsByBuildingId(id: string) {
-    return this._roomService.selectRoomsByBuildingId(id);
+    return computed(() => this.roomsSig().filter((room) => room.buildingId === id));
   }
 
-  createEvent(cmd: CreateSpecialEventCmd) {
-    this._eventService.create(cmd);
+  createEvent(cmd: CreateAdminSpecialEventCmd) {
+    this.http.createEvent$(cmd).subscribe((event) => {
+      this.eventsSig.update((events) => [...events, event]);
+    });
   }
 
-  updateEvent(id: string, cmd: UpdateSpecialEventCmd) {
-    this._eventService.update(id, cmd);
+  updateEvent(id: string, cmd: UpdateAdminSpecialEventCmd) {
+    this.http.updateEvent$(id, cmd).subscribe((updatedEvent) => {
+      this.eventsSig.update((events) =>
+        events.map((event) => (event.id === id ? updatedEvent : event)),
+      );
+    });
   }
 
   deleteEvent(id: string) {
-    this._eventService.remove(id);
+    this.http.deleteEvent$(id).subscribe(() => {
+      this.eventsSig.update((events) => events.filter((event) => event.id !== id));
+    });
   }
 }

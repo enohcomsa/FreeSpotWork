@@ -5,26 +5,27 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
-import { SpecialEvent } from '@free-spot-domain/event';
-import { Building } from '@free-spot-domain/building';
-import { Room } from '@free-spot-domain/room';
+
+import {
+  AdminEventsBuilding,
+  AdminEventsRoom,
+  AdminSpecialEvent,
+} from '@free-spot/admin-events/domain';
 
 @Component({
   selector: 'free-spot-admin-event-card',
-
   imports: [CommonModule, MatCardModule, MatDividerModule, MatListModule, MatIconModule, MatButtonModule],
   templateUrl: './admin-event-card.component.html',
   styleUrl: './admin-event-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminEventCardComponent {
-  adminEventSig = input.required<SpecialEvent>();
-  adminEventBuildingSig = input.required<Building>();
-  adminEventRoomSig = input.required<Room>();
+  adminEventSig = input.required<AdminSpecialEvent>();
+  adminEventBuildingSig = input.required<AdminEventsBuilding>();
+  adminEventRoomSig = input.required<AdminEventsRoom>();
   addingEventSig = model.required<boolean>();
-  editEvent = output<SpecialEvent>();
-  deleteEvent = output<SpecialEvent>();
-
+  editEvent = output<AdminSpecialEvent>();
+  deleteEvent = output<AdminSpecialEvent>();
 
   getRoomFreeSpots(): number {
     return this.adminEventRoomSig().totalSpotsNumber - this.adminEventRoomSig().unavailableSpots - this.adminEventSig().reservedSpots;

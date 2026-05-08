@@ -1,1 +1,8 @@
-export * from './lib/freespot-admin-events-domain/freespot-admin-events-domain';
+export {
+  AdminEventType,
+  type AdminEventsBuilding,
+  type AdminEventsRoom,
+  type AdminSpecialEvent,
+  type CreateAdminSpecialEventCmd,
+  type UpdateAdminSpecialEventCmd,
+} from './lib/admin-events.models';
