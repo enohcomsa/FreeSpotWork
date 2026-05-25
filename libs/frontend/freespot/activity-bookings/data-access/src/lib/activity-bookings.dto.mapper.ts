@@ -1,30 +1,44 @@
 import {
-  BookingResponseDTO,
-  BuildingResponseDTO,
-  FloorResponseDTO,
-  RoomResponseDTO,
-  SubjectResponseDTO,
-  TimetableActivityResponseDTO,
+  type ActivityTypeDTO,
+  type BookingResponseDTO,
+  type BookingStatusDTO,
+  type BuildingResponseDTO,
+  type FloorResponseDTO,
+  type RoomResponseDTO,
+  type SubjectResponseDTO,
+  type TimetableActivityResponseDTO,
+  type WeekDayDTO,
+  type WeekParityDTO,
 } from '@free-spot/api-client';
 import {
-  ActivityBookingActivityType,
-  ActivityBookingWeekDay,
-  ActivityBookingWeekParity,
   type ActivityBooking,
   type ActivityBookingActivity,
+  type ActivityBookingActivityType,
   type ActivityBookingBuilding,
   type ActivityBookingFloor,
   type ActivityBookingRoom,
+  type ActivityBookingStatus,
   type ActivityBookingSubject,
-  type BookingStatus,
+  type ActivityBookingWeekDay,
+  type ActivityBookingWeekParity,
 } from '@free-spot/activity-bookings/domain';
 
-
 export function bookingDtoToDomain(dto: BookingResponseDTO): ActivityBooking {
-  if (!dto.id) throw new Error('Booking dto.id is missing');
-  if (!dto.activityId) throw new Error('Booking dto.activityId is missing');
-  if (!dto.userId) throw new Error('Booking dto.userId is missing');
-  if (!dto.createdAt) throw new Error('Booking dto.createdAt is missing');
+  if (!dto.id) {
+    throw new Error('Missing booking id');
+  }
+
+  if (!dto.activityId) {
+    throw new Error('Missing booking activity id');
+  }
+
+  if (!dto.userId) {
+    throw new Error('Missing booking user id');
+  }
+
+  if (!dto.createdAt) {
+    throw new Error('Missing booking created at');
+  }
 
   return {
     id: dto.id,
@@ -36,8 +50,8 @@ export function bookingDtoToDomain(dto: BookingResponseDTO): ActivityBooking {
     groupCohortId: dto.groupCohortId ?? null,
     semigroupCohortId: dto.semigroupCohortId ?? null,
     subjectId: dto.subjectId ?? null,
-    activityType: activityTypeDtoToDomain(dto.activityType),
-    status: bookingStatusDtoToDomain(dto.status),
+    activityType: toActivityType(dto.activityType),
+    status: toBookingStatus(dto.status),
     originalActivityId: dto.originalActivityId ?? null,
     isRescheduled: dto.isRescheduled ?? null,
     rescheduledAt: dto.rescheduledAt ?? null,
@@ -60,12 +74,12 @@ export function timetableActivityDtoToDomain(dto: TimetableActivityResponseDTO):
     roomId: dto.roomId,
     subjectId: dto.subjectId,
     date: dto.date,
-    weekDay: weekDayDtoToDomain(dto.weekDay),
-    activityType: activityTypeDtoToDomain(dto.activityType),
-    cohortIds: dto.cohortIds,
+    weekDay: toWeekDay(dto.weekDay),
+    activityType: toActivityType(dto.activityType),
+    cohortIds: dto.cohortIds ?? [],
     startHour: dto.startHour,
     endHour: dto.endHour,
-    weekParity: weekParityDtoToDomain(dto.weekParity),
+    weekParity: toWeekParity(dto.weekParity),
     capacity: dto.capacity,
     reservedSpots: dto.reservedSpots,
     busySpots: dto.busySpots,
@@ -81,7 +95,7 @@ export function roomDtoToDomain(dto: RoomResponseDTO): ActivityBookingRoom {
     name: dto.name,
     totalSpotsNumber: dto.totalSpotsNumber,
     unavailableSpots: dto.unavailableSpots,
-    subjectList: dto.subjectList,
+    subjectList: dto.subjectList ?? [],
   };
 }
 
@@ -101,66 +115,34 @@ export function floorDtoToDomain(dto: FloorResponseDTO): ActivityBookingFloor {
   };
 }
 
-function activityTypeDtoToDomain(value: string | undefined): ActivityBookingActivityType {
-  switch (value) {
-    case 'LABORATORY':
-      return ActivityBookingActivityType.LABORATORY;
-    case 'COURSE':
-      return ActivityBookingActivityType.COURSE;
-    case 'PROJECT':
-      return ActivityBookingActivityType.PROJECT;
-    case 'SEMINAR':
-      return ActivityBookingActivityType.SEMINAR;
-    case 'SPECIAL_EVENT':
-      return ActivityBookingActivityType.SPECIAL_EVENT;
-    default:
-      return ActivityBookingActivityType.COURSE;
+function toActivityType(value: ActivityTypeDTO | undefined): ActivityBookingActivityType {
+  if (!value) {
+    throw new Error('Missing activity type');
   }
+
+  return value;
 }
 
-function weekDayDtoToDomain(value: string | undefined): ActivityBookingWeekDay {
-  switch (value) {
-    case 'MONDAY':
-      return ActivityBookingWeekDay.MONDAY;
-    case 'TUESDAY':
-      return ActivityBookingWeekDay.TUESDAY;
-    case 'WEDNESDAY':
-      return ActivityBookingWeekDay.WEDNESDAY;
-    case 'THURSDAY':
-      return ActivityBookingWeekDay.THURSDAY;
-    case 'FRIDAY':
-      return ActivityBookingWeekDay.FRIDAY;
-    case 'SATURDAY':
-      return ActivityBookingWeekDay.SATURDAY;
-    case 'SUNDAY':
-      return ActivityBookingWeekDay.SUNDAY;
-    default:
-      return ActivityBookingWeekDay.MONDAY;
+function toWeekDay(value: WeekDayDTO | undefined): ActivityBookingWeekDay {
+  if (!value) {
+    throw new Error('Missing week day');
   }
+
+  return value;
 }
 
-function weekParityDtoToDomain(value: string | undefined): ActivityBookingWeekParity {
-  switch (value) {
-    case 'ODD':
-      return ActivityBookingWeekParity.ODD;
-    case 'EVEN':
-      return ActivityBookingWeekParity.EVEN;
-    case 'BOTH':
-      return ActivityBookingWeekParity.BOTH;
-    default:
-      return ActivityBookingWeekParity.BOTH;
+function toWeekParity(value: WeekParityDTO | undefined): ActivityBookingWeekParity {
+  if (!value) {
+    throw new Error('Missing week parity');
   }
+
+  return value;
 }
 
-function bookingStatusDtoToDomain(value: string | undefined): BookingStatus {
-  switch (value) {
-    case 'CONFIRMED':
-      return 'CONFIRMED';
-    case 'WAITLISTED':
-      return 'WAITLISTED';
-    case 'CANCELLED':
-      return 'CANCELLED';
-    default:
-      return 'WAITLISTED';
+function toBookingStatus(value: BookingStatusDTO | undefined): ActivityBookingStatus {
+  if (!value) {
+    throw new Error('Missing booking status');
   }
+
+  return value;
 }

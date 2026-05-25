@@ -1,17 +1,17 @@
 import { inject, Injectable } from '@angular/core';
 import {
   BookingsHttpService,
-  BookingResponseDTO,
+  type BookingResponseDTO,
   BuildingsHttpService,
-  BuildingResponseDTO,
+  type BuildingResponseDTO,
   FloorsHttpService,
-  FloorResponseDTO,
+  type FloorResponseDTO,
   RoomsHttpService,
-  RoomResponseDTO,
+  type RoomResponseDTO,
   SubjectsHttpService,
-  SubjectResponseDTO,
+  type SubjectResponseDTO,
   TimetableActivitiesHttpService,
-  TimetableActivityResponseDTO,
+  type TimetableActivityResponseDTO,
 } from '@free-spot/api-client';
 import {
   type ActivityBooking,
@@ -21,7 +21,7 @@ import {
   type ActivityBookingRoom,
   type ActivityBookingSubject,
 } from '@free-spot/activity-bookings/domain';
-import { map, Observable } from 'rxjs';
+import { forkJoin, map, Observable } from 'rxjs';
 import {
   bookingDtoToDomain,
   buildingDtoToDomain,
@@ -40,37 +40,55 @@ export class HttpActivityBookingsService {
   private readonly _buildingsApi = inject(BuildingsHttpService);
   private readonly _floorsApi = inject(FloorsHttpService);
 
-  listBookings$(): Observable<ActivityBooking[]> {
+  loadActivityBookingsContext$(): Observable<{
+    bookings: ActivityBooking[];
+    subjects: ActivityBookingSubject[];
+    timetableActivities: ActivityBookingActivity[];
+    rooms: ActivityBookingRoom[];
+    buildings: ActivityBookingBuilding[];
+    floors: ActivityBookingFloor[];
+  }> {
+    return forkJoin({
+      bookings: this.listBookings$(),
+      subjects: this.listSubjects$(),
+      timetableActivities: this.listTimetableActivities$(),
+      rooms: this.listRooms$(),
+      buildings: this.listBuildings$(),
+      floors: this.listFloors$(),
+    });
+  }
+
+  private listBookings$(): Observable<ActivityBooking[]> {
     return this._bookingsApi.bookingsGet().pipe(
       map((dtos: BookingResponseDTO[]) => (dtos ?? []).map(bookingDtoToDomain))
     );
   }
 
-  listSubjects$(): Observable<ActivityBookingSubject[]> {
+  private listSubjects$(): Observable<ActivityBookingSubject[]> {
     return this._subjectsApi.subjectsGet().pipe(
       map((dtos: SubjectResponseDTO[]) => (dtos ?? []).map(subjectDtoToDomain))
     );
   }
 
-  listTimetableActivities$(): Observable<ActivityBookingActivity[]> {
+  private listTimetableActivities$(): Observable<ActivityBookingActivity[]> {
     return this._timetableActivitiesApi.timetableActivitiesGet().pipe(
       map((dtos: TimetableActivityResponseDTO[]) => (dtos ?? []).map(timetableActivityDtoToDomain))
     );
   }
 
-  listRooms$(): Observable<ActivityBookingRoom[]> {
+  private listRooms$(): Observable<ActivityBookingRoom[]> {
     return this._roomsApi.roomsGet().pipe(
       map((dtos: RoomResponseDTO[]) => (dtos ?? []).map(roomDtoToDomain))
     );
   }
 
-  listBuildings$(): Observable<ActivityBookingBuilding[]> {
+  private listBuildings$(): Observable<ActivityBookingBuilding[]> {
     return this._buildingsApi.buildingsGet().pipe(
       map((dtos: BuildingResponseDTO[]) => (dtos ?? []).map(buildingDtoToDomain))
     );
   }
 
-  listFloors$(): Observable<ActivityBookingFloor[]> {
+  private listFloors$(): Observable<ActivityBookingFloor[]> {
     return this._floorsApi.floorsGet().pipe(
       map((dtos: FloorResponseDTO[]) => (dtos ?? []).map(floorDtoToDomain))
     );

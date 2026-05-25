@@ -2,11 +2,11 @@ import {
   type ActivityBooking,
   type ActivityBookingActivity,
   type ActivityBookingBuilding,
+  type ActivityBookingCardVm,
   type ActivityBookingFloor,
   type ActivityBookingRoom,
   type ActivityBookingSubject,
 } from '@free-spot/activity-bookings/domain';
-import { type ActivityBookingCardVm } from '@free-spot/activity-bookings/domain';
 
 export function mapToActivityBookingVm(
   booking: ActivityBooking,
@@ -19,12 +19,12 @@ export function mapToActivityBookingVm(
   return {
     id: booking.id,
     activityType: booking.activityType,
-    subjectName: subject?.shortName || subject?.name || '',
-    buildingName: building?.name || '',
-    floorName: floor?.name || '',
-    roomName: room?.name || '',
-    date: activity?.date || '',
-    startHour: activity?.startHour || 0,
-    endHour: activity?.endHour || 0,
+    subjectName: subject.shortName ?? subject.name,
+    buildingName: building.name,
+    floorName: floor.name,
+    roomName: room.name,
+    date: activity.date,
+    startHour: activity.startHour,
+    endHour: activity.endHour,
   };
 }

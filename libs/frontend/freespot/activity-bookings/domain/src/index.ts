@@ -1,13 +1,17 @@
 export {
   type ActivityBooking,
   type ActivityBookingActivity,
+  type ActivityBookingActivityType,
+  type ActivityBookingStatus,
+  type ActivityBookingWeekDay,
+  type ActivityBookingWeekParity,
+} from './lib/activity-booking.model';
+
+export {
   type ActivityBookingBuilding,
-  type ActivityBookingCardVm,
   type ActivityBookingFloor,
   type ActivityBookingRoom,
   type ActivityBookingSubject,
-  type BookingStatus,
-  ActivityBookingActivityType,
-  ActivityBookingWeekDay,
-  ActivityBookingWeekParity,
-} from './lib/activity-bookings.model';
+} from './lib/activity-booking-location.model';
+
+export { type ActivityBookingCardVm } from './lib/activity-booking.vm';
