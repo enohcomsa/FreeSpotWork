@@ -1,13 +1,6 @@
-export enum AdminAcademicDegreeType {
-  Lic = 'LIC',
-  Master = 'MASTER',
-  Doct = 'DOCT',
-}
+export type AdminAcademicDegreeType = 'LIC' | 'MASTER' | 'DOCT';
 
-export enum AdminAcademicCohortType {
-  Group = 'GROUP',
-  Semigroup = 'SEMIGROUP',
-}
+export type AdminAcademicCohortType = 'GROUP' | 'SEMIGROUP';
 
 export interface AdminFaculty {
   id: string;
@@ -92,45 +85,4 @@ export interface AdminAcademicUser {
 export interface UpdateAdminAcademicUserCmd {
   groupCohortId?: string | null;
   semigroupCohortId?: string | null;
-}
-
-export interface AdminAcademicRoom {
-  id: string;
-  name: string;
-}
-
-export enum AdminAcademicActivityType {
-  Laboratory = 'LABORATORY',
-  Course = 'COURSE',
-  Project = 'PROJECT',
-  Seminar = 'SEMINAR',
-  SpecialEvent = 'SPECIAL_EVENT',
-}
-
-export enum AdminAcademicWeekDay {
-  Monday = 'MONDAY',
-  Tuesday = 'TUESDAY',
-  Wednesday = 'WEDNESDAY',
-  Thursday = 'THURSDAY',
-  Friday = 'FRIDAY',
-  Saturday = 'SATURDAY',
-  Sunday = 'SUNDAY',
-}
-
-export enum AdminAcademicWeekParity {
-  Both = 'BOTH',
-  Even = 'EVEN',
-  Odd = 'ODD',
-}
-
-export interface AdminAcademicTimetableActivity {
-  id: string;
-  roomId: string;
-  subjectId: string;
-  cohortIds: string[];
-  weekDay: AdminAcademicWeekDay;
-  startHour: number;
-  endHour: number;
-  weekParity: AdminAcademicWeekParity;
-  activityType: AdminAcademicActivityType;
 }

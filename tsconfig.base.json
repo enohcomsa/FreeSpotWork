@@ -67,7 +67,6 @@
       ],
       "@free-spot/admin-academic-structure/domain": ["libs/frontend/freespot/admin-academic-structure/domain/src/index.ts"],
       "@free-spot/admin-academic-structure/feature": ["libs/frontend/freespot/admin-academic-structure/feature/src/index.ts"],
-      "@free-spot/admin-academic-structure/ui": ["libs/frontend/freespot/admin-academic-structure/ui/src/index.ts"],
       "@free-spot/admin-events/data-access": ["libs/frontend/freespot/admin-events/data-access/src/index.ts"],
       "@free-spot/admin-events/domain": ["libs/frontend/freespot/admin-events/domain/src/index.ts"],
       "@free-spot/admin-events/feature": ["libs/frontend/freespot/admin-events/feature/src/index.ts"],

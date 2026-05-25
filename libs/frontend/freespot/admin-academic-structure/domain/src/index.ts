@@ -1,11 +1,6 @@
 export {
-  AdminAcademicActivityType,
-  AdminAcademicCohortType,
-  AdminAcademicDegreeType,
-  AdminAcademicWeekDay,
-  AdminAcademicWeekParity,
-  type AdminAcademicRoom,
-  type AdminAcademicTimetableActivity,
+  type AdminAcademicCohortType,
+  type AdminAcademicDegreeType,
   type AdminAcademicUser,
   type AdminCohort,
   type AdminFaculty,
@@ -19,4 +14,12 @@ export {
   type UpdateAdminFacultyCmd,
   type UpdateAdminProgramCmd,
   type UpdateAdminProgramYearCmd,
-} from './lib/admin-academic-structure.models';
+} from './lib/admin-academic-structure.model';
+
+export {
+  type AdminAcademicActivityType,
+  type AdminAcademicRoom,
+  type AdminAcademicTimetableActivity,
+  type AdminAcademicWeekDay,
+  type AdminAcademicWeekParity,
+} from './lib/admin-academic-structure-timetable.model';

@@ -1,37 +1,31 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, OnInit, Signal, viewChild } from '@angular/core';
-import { MatTabsModule } from '@angular/material/tabs';
-import { MatSlideToggle, MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { DynamicChipListComponent} from '@free-spot/ui';
-import { TimetableItemComponent } from '@free-spot/shared/ui';
 import { FormsModule } from '@angular/forms';
+import { MatSlideToggle, MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ConfirmModalService } from '@free-spot/core/ui';
-import { ActivityType, TimetableActivityCardVM, WeekDay, WeekParity } from '@free-spot/academic-schedule/domain';
-import { AdminGroupTimetableComponent, AdminSemisemiGroupTimetableComponent } from '@free-spot/admin-timetabling/feature';
-
 import { AdminAcademicStructureStore } from '@free-spot/admin-academic-structure/data-access';
 import {
-  AdminAcademicActivityType,
-  AdminAcademicCohortType,
-  AdminAcademicTimetableActivity,
-  AdminAcademicUser,
-  AdminAcademicWeekDay,
-  AdminAcademicWeekParity,
-  AdminCohort,
-  CreateAdminCohortCmd,
+  type AdminAcademicTimetableActivity,
+  type AdminAcademicUser,
+  type CreateAdminCohortCmd,
 } from '@free-spot/admin-academic-structure/domain';
+import { AdminGroupTimetableComponent, AdminSemisemiGroupTimetableComponent } from '@free-spot/admin-timetabling/feature';
+import { ConfirmModalService } from '@free-spot/core/ui';
+import { type TimetableUiActivity, type TimetableUiWeekDay, TimetableItemComponent } from '@free-spot/shared/ui';
+import { DynamicChipListComponent } from '@free-spot/ui';
 
 @Component({
   selector: 'free-spot-group',
+
   imports: [
     FormsModule,
     DynamicChipListComponent,
     MatTabsModule,
-    TimetableItemComponent,
     AdminGroupTimetableComponent,
     MatSlideToggleModule,
     AdminSemisemiGroupTimetableComponent,
     MatTooltipModule,
+    TimetableItemComponent,
   ],
   templateUrl: './group.component.html',
   styleUrl: './group.component.scss',
@@ -50,7 +44,7 @@ export class GroupComponent implements OnInit {
   readonly semiGroup1IdSig = computed(() => this.semigroupListSig()[0]?.id ?? null);
   readonly semiGroup2IdSig = computed(() => this.semigroupListSig()[1]?.id ?? null);
 
-  readonly facultySubjectListSig = computed(() => {
+  readonly facultySubjectListSig = computed<string[]>(() => {
     const group = this.groupSig();
 
     if (!group) {
@@ -76,44 +70,38 @@ export class GroupComponent implements OnInit {
 
   readonly userListSig = this.academicStructureStore.userListSig;
 
-  readonly groupUserListSig = computed(() =>
-    this.userListSig().filter((user: AdminAcademicUser) => user.groupCohortId === this.groupIdSig()),
+  readonly groupUserListSig = computed<AdminAcademicUser[]>(() =>
+    this.userListSig().filter((user) => user.groupCohortId === this.groupIdSig()),
   );
 
-  readonly availableGroupUserListSig = computed(() =>
-    this.userListSig().filter((user: AdminAcademicUser) => user.groupCohortId !== this.groupIdSig()),
+  readonly availableGroupUserListSig = computed<AdminAcademicUser[]>(() =>
+    this.userListSig().filter((user) => user.groupCohortId !== this.groupIdSig()),
   );
 
-  readonly semigroup1UserListSig = computed(() =>
-    this.userListSig().filter((user: AdminAcademicUser) => user.semigroupCohortId === this.semiGroup1IdSig()),
+  readonly semigroup1UserListSig = computed<AdminAcademicUser[]>(() =>
+    this.userListSig().filter((user) => user.semigroupCohortId === this.semiGroup1IdSig()),
   );
 
-  readonly semigroup2UserListSig = computed(() =>
-    this.userListSig().filter((user: AdminAcademicUser) => user.semigroupCohortId === this.semiGroup2IdSig()),
+  readonly semigroup2UserListSig = computed<AdminAcademicUser[]>(() =>
+    this.userListSig().filter((user) => user.semigroupCohortId === this.semiGroup2IdSig()),
   );
 
-  readonly allSemigroupUsersListSig = computed(() => [
+  readonly allSemigroupUsersListSig = computed<AdminAcademicUser[]>(() => [
     ...this.semigroup1UserListSig(),
     ...this.semigroup2UserListSig(),
   ]);
 
-  readonly availableSemigroup1UserListSig = computed(() =>
-    this.userListSig().filter((user: AdminAcademicUser) => user.groupCohortId === null),
+  readonly availableSemigroup1UserListSig = computed<AdminAcademicUser[]>(() =>
+    this.userListSig().filter((user) => user.groupCohortId === null),
   );
 
-  readonly availableSemigroup2UserListSig = computed(() =>
-    this.userListSig().filter((user: AdminAcademicUser) => user.groupCohortId === null),
+  readonly availableSemigroup2UserListSig = computed<AdminAcademicUser[]>(() =>
+    this.userListSig().filter((user) => user.groupCohortId === null),
   );
 
-  readonly nonDeletableSemigroupUsersListSig = computed(() => [] as AdminAcademicUser[]);
+  readonly nonDeletableSemigroupUsersListSig = computed<AdminAcademicUser[]>(() => []);
 
-  readonly workWeek: WeekDay[] = [
-    'MONDAY',
-    'TUESDAY',
-    'WEDNESDAY',
-    'THURSDAY',
-    'FRIDAY',
-  ];
+  readonly workWeek: TimetableUiWeekDay[] = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'];
 
   readonly groupTimetableActivityCardVMs = this.cardVMsByCohortId(this.groupIdSig);
   readonly semigroup1TimetableActivityCardVMs = this.cardVMsByCohortId(this.semiGroup1IdSig);
@@ -124,7 +112,7 @@ export class GroupComponent implements OnInit {
   readonly timetableSemigroup2PerDay = this.perDay(this.semigroup2TimetableActivityCardVMs);
 
   semigroupToggle = viewChild.required<MatSlideToggle>('semigroupsToggle');
-  semigroupsEnabledSig = computed(() => !!this.semigroupListSig().length);
+  semigroupsEnabledSig = computed<boolean>(() => !!this.semigroupListSig().length);
 
   ngOnInit(): void {
     this.academicStructureStore.init();
@@ -229,14 +217,14 @@ export class GroupComponent implements OnInit {
 
         if (enableSemigroups) {
           const newSemigroup1: CreateAdminCohortCmd = {
-            type: AdminAcademicCohortType.Semigroup,
+            type: 'SEMIGROUP',
             programYearId: group.programYearId,
             name: `${group.name} sg1`,
             parentGroupId: this.groupIdSig(),
           };
 
           const newSemigroup2: CreateAdminCohortCmd = {
-            type: AdminAcademicCohortType.Semigroup,
+            type: 'SEMIGROUP',
             programYearId: group.programYearId,
             name: `${group.name} sg2`,
             parentGroupId: this.groupIdSig(),
@@ -247,7 +235,7 @@ export class GroupComponent implements OnInit {
           return;
         }
 
-        this.semigroupListSig().forEach((semiGroup: AdminCohort) => {
+        this.semigroupListSig().forEach((semiGroup) => {
           this.academicStructureStore.deleteCohort(semiGroup.id);
         });
       });
@@ -261,13 +249,13 @@ export class GroupComponent implements OnInit {
     return this.academicStructureStore.getSubjectById(subjectId)()?.shortName ?? '';
   }
 
-  private toCardVM = (timetableActivity: AdminAcademicTimetableActivity): TimetableActivityCardVM => ({
+  private toCardVM = (timetableActivity: AdminAcademicTimetableActivity): TimetableUiActivity => ({
     id: timetableActivity.id,
-    weekDay: this.toAcademicWeekDay(timetableActivity.weekDay),
+    weekDay: timetableActivity.weekDay,
     startHour: timetableActivity.startHour,
     endHour: timetableActivity.endHour,
-    weekParity: this.toAcademicWeekParity(timetableActivity.weekParity),
-    activityType: this.toAcademicActivityType(timetableActivity.activityType),
+    weekParity: timetableActivity.weekParity,
+    activityType: timetableActivity.activityType,
     roomName: this.roomNameById(timetableActivity.roomId),
     subjectItemShortName: this.subjectShortNameById(timetableActivity.subjectId),
   });
@@ -276,18 +264,17 @@ export class GroupComponent implements OnInit {
     return computed(() => {
       const cohortId = cohortIdSig();
 
-      return cohortId
-        ? this.academicStructureStore.selectTimetableActivitiesByCohortId(cohortId)()
-        : [];
+      return cohortId ? this.academicStructureStore.selectTimetableActivitiesByCohortId(cohortId)() : [];
     });
   }
 
-  private cardVMsByCohortId(cohortIdSig: Signal<string | null>): Signal<TimetableActivityCardVM[]> {
+  private cardVMsByCohortId(cohortIdSig: Signal<string | null>): Signal<TimetableUiActivity[]> {
     const activitiesSig = this.activitiesByCohortId(cohortIdSig);
+
     return computed(() => activitiesSig().map((activity) => this.toCardVM(activity)));
   }
 
-  private perDay(cardVMsSig: Signal<TimetableActivityCardVM[]>) {
+  private perDay(cardVMsSig: Signal<TimetableUiActivity[]>): Signal<{ day: TimetableUiWeekDay; activities: TimetableUiActivity[] }[]> {
     return computed(() => {
       const all = cardVMsSig();
 
@@ -297,62 +284,4 @@ export class GroupComponent implements OnInit {
       }));
     });
   }
-
-  private toAcademicWeekDay(day: AdminAcademicWeekDay): WeekDay {
-    switch (day) {
-      case AdminAcademicWeekDay.Monday:
-        return 'MONDAY';
-
-      case AdminAcademicWeekDay.Tuesday:
-        return 'TUESDAY';
-
-      case AdminAcademicWeekDay.Wednesday:
-        return 'WEDNESDAY';
-
-      case AdminAcademicWeekDay.Thursday:
-        return 'THURSDAY';
-
-      case AdminAcademicWeekDay.Friday:
-        return 'FRIDAY';
-
-      case AdminAcademicWeekDay.Saturday:
-        return 'SATURDAY';
-
-      case AdminAcademicWeekDay.Sunday:
-        return 'SUNDAY';
-    }
-  }
-
-  private toAcademicWeekParity(parity: AdminAcademicWeekParity): WeekParity {
-    switch (parity) {
-      case AdminAcademicWeekParity.Both:
-        return 'BOTH';
-
-      case AdminAcademicWeekParity.Even:
-        return 'EVEN';
-
-      case AdminAcademicWeekParity.Odd:
-        return 'ODD';
-    }
-  }
-
-  private toAcademicActivityType(type: AdminAcademicActivityType): ActivityType {
-    switch (type) {
-      case AdminAcademicActivityType.Laboratory:
-        return 'LABORATORY';
-
-      case AdminAcademicActivityType.Course:
-        return 'COURSE';
-
-      case AdminAcademicActivityType.Project:
-        return 'PROJECT';
-
-      case AdminAcademicActivityType.Seminar:
-        return 'SEMINAR';
-
-      case AdminAcademicActivityType.SpecialEvent:
-        return 'SPECIAL_EVENT';
-    }
-  }
 }
-

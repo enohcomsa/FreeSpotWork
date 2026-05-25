@@ -1,34 +1,33 @@
-import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, input, Signal, viewChild } from '@angular/core';
-import { MatListModule } from '@angular/material/list';
-import { MatDividerModule } from '@angular/material/divider';
-import { AddItemCardComponent, DynamicChipListComponent } from '@free-spot/ui';
-import { MatIconModule } from '@angular/material/icon';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { ConfirmModalService } from '@free-spot/core/ui';
-import { AbstractControl, FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { FormErrorMessage } from '@free-spot/util';
-import { take } from 'rxjs';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, Signal, viewChild, input } from '@angular/core';
+import { AbstractControl, FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatListModule } from '@angular/material/list';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { ConfirmModalService } from '@free-spot/core/ui';
+import { AddItemCardComponent, DynamicChipListComponent } from '@free-spot/ui';
+import { FormErrorMessage } from '@free-spot/util';
+import { take } from 'rxjs';
 
 import { AdminAcademicStructureStore } from '@free-spot/admin-academic-structure/data-access';
 import {
-  AdminAcademicCohortType,
-  AdminAcademicDegreeType,
-  AdminCohort,
-  AdminFaculty,
-  AdminProgram,
-  AdminProgramYear,
-  AdminSubjectItem,
-  CreateAdminCohortCmd,
-  CreateAdminProgramCmd,
-  CreateAdminProgramYearCmd,
-  UpdateAdminFacultyCmd,
-  UpdateAdminProgramCmd,
-  UpdateAdminProgramYearCmd,
+  type AdminAcademicDegreeType,
+  type AdminCohort,
+  type AdminFaculty,
+  type AdminProgram,
+  type AdminProgramYear,
+  type AdminSubjectItem,
+  type CreateAdminCohortCmd,
+  type CreateAdminProgramCmd,
+  type CreateAdminProgramYearCmd,
+  type UpdateAdminFacultyCmd,
+  type UpdateAdminProgramCmd,
+  type UpdateAdminProgramYearCmd,
 } from '@free-spot/admin-academic-structure/domain';
 
 @Component({
@@ -65,13 +64,13 @@ export class FacultyComponent {
 
   subjectListSig: Signal<AdminSubjectItem[]> = this.store.subjectListSig;
 
-  facultySubjectListSig = computed(() =>
+  facultySubjectListSig = computed<AdminSubjectItem[]>(() =>
     this.subjectListSig().filter((subject) => this.facultySig().subjectList.includes(subject.id)),
   );
 
-  facultyProgramsSig = computed(() => this.store.selectProgramsByFacultyId(this.facultySig().id)());
+  facultyProgramsSig = computed<AdminProgram[]>(() => this.store.selectProgramsByFacultyId(this.facultySig().id)());
 
-  facultyProgramYearsSig = computed(() => {
+  facultyProgramYearsSig = computed<AdminProgramYear[]>(() => {
     const programYearList: AdminProgramYear[] = [];
 
     this.facultyProgramsSig().forEach((program) => {
@@ -84,15 +83,12 @@ export class FacultyComponent {
   addingProgram = false;
   editingProgram = false;
   editingProgramId: string | null = null;
-  degreeOptions = [
-    AdminAcademicDegreeType.Lic,
-    AdminAcademicDegreeType.Master,
-    AdminAcademicDegreeType.Doct,
-  ];
+
+  degreeOptions: AdminAcademicDegreeType[] = ['LIC', 'MASTER', 'DOCT'];
 
   addProgramFormGroup = this.formBuilder.nonNullable.group({
     name: ['', [Validators.required, Validators.minLength(3)]],
-    degree: [AdminAcademicDegreeType.Lic, Validators.required],
+    degree: ['LIC' as AdminAcademicDegreeType, Validators.required],
   });
 
   addingYear = false;
@@ -105,7 +101,7 @@ export class FacultyComponent {
     programId: ['', Validators.required],
   });
 
-  displayError = (control: AbstractControl | null) => this.formErrorMessage.displayFormErrorMessage(control);
+  displayError = (control: AbstractControl | null): string => this.formErrorMessage.displayFormErrorMessage(control);
 
   getProgramById(programId: string): AdminProgram | undefined {
     return this.store.getProgramById(programId)();
@@ -116,7 +112,7 @@ export class FacultyComponent {
   }
 
   onAddingProgram(): void {
-    this.addProgramFormGroup.reset({ name: '', degree: AdminAcademicDegreeType.Lic });
+    this.addProgramFormGroup.reset({ name: '', degree: 'LIC' });
     this.editingProgram = false;
     this.editingProgramId = null;
     this.addingProgram = true;
@@ -141,7 +137,7 @@ export class FacultyComponent {
 
     this.addProgramFormGroup.patchValue({
       name: programToEdit.name,
-      degree: programToEdit.degree ?? AdminAcademicDegreeType.Lic,
+      degree: programToEdit.degree ?? 'LIC',
     });
 
     this.addingProgram = true;
@@ -225,7 +221,7 @@ export class FacultyComponent {
 
   onDeleteYear(programYearIdToDelete: string): void {
     this.confirmService
-      .openConfirmDialog('Are you sure you want to delete this program?')
+      .openConfirmDialog('Are you sure you want to delete this program year?')
       .afterClosed()
       .pipe(take(1))
       .subscribe((result: boolean) => {
@@ -253,7 +249,7 @@ export class FacultyComponent {
 
     if (addedGroup) {
       const newCohort: CreateAdminCohortCmd = {
-        type: AdminAcademicCohortType.Group,
+        type: 'GROUP',
         programYearId: yearId,
         name: addedGroup.name,
       };
