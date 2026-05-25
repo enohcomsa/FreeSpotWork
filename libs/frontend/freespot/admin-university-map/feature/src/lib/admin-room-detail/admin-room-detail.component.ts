@@ -1,13 +1,14 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, OnInit, Signal } from '@angular/core';
 import { DynamicChipListComponent, TimetableItemComponent } from '@free-spot/ui';
 import { AdminRoomTimetableItemComponent } from '@free-spot/admin-university-map/ui';
-import { AdminRoomService } from '@free-spot-service/room';
-import { SubjectService } from '@free-spot-service/subject';
-import { UpdateRoomCmd } from '@free-spot-domain/room';
-import { SubjectItem } from '@free-spot-domain/subject';
-import { TimetableActivityCardVM } from '@free-spot/academic-schedule/domain';
-import { AdminTimetableActivityService } from '@free-spot-service/timetable-activity';
-import { TimetableActivity, WeekDay } from '@free-spot/academic-schedule/domain';
+import { ActivityType, TimetableActivityCardVM, WeekDay, WeekParity } from '@free-spot/academic-schedule/domain';
+
+import { AdminUniversityMapStore } from '@free-spot/admin-university-map/data-access';
+import {
+  AdminUniversityMapSubject,
+  AdminUniversityMapWeekDay,
+  UpdateAdminUniversityMapRoomCmd,
+} from '@free-spot/admin-university-map/domain';
 
 @Component({
   selector: 'free-spot-admin-room-detail',
@@ -17,37 +18,55 @@ import { TimetableActivity, WeekDay } from '@free-spot/academic-schedule/domain'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminRoomDetailComponent implements OnInit {
-  private _adminRoomService: AdminRoomService = inject(AdminRoomService);
-  private _adminSubjectService: SubjectService = inject(SubjectService);
-  private _adminTimetableActivityService: AdminTimetableActivityService = inject(AdminTimetableActivityService);
+  protected readonly store = inject(AdminUniversityMapStore);
 
   roomIdSig = input.required<string>();
-  readonly roomSig = computed(() => this._adminRoomService.getSignalById(this.roomIdSig())());
-  subjectListSig: Signal<SubjectItem[]> = this._adminSubjectService.subjectListSig;
-  readonly roomSubjectListSig = computed(() =>
-    this.subjectListSig().filter((subjectItem: SubjectItem) =>
-      this.roomSig().subjectList.some((subjectItemId) => subjectItemId === subjectItem.id)));
-  readonly roomTimetableActivitiesSig: Signal<TimetableActivity[]> = computed(() => this._adminTimetableActivityService.getTimetableActivityListSignalByRoomId(this.roomIdSig())());
+
+  readonly roomSig = computed(() => this.store.getRoomById(this.roomIdSig())());
+  readonly subjectListSig: Signal<AdminUniversityMapSubject[]> = this.store.subjectListSig;
+
+  readonly roomSubjectListSig = computed(() => {
+    const room = this.roomSig();
+
+    if (!room) {
+      return [];
+    }
+
+    return this.subjectListSig().filter((subjectItem) =>
+      room.subjectList.some((subjectItemId) => subjectItemId === subjectItem.id),
+    );
+  });
+
+  readonly roomTimetableActivitiesSig = computed(() =>
+    this.store.selectTimetableActivitiesByRoomId(this.roomIdSig())(),
+  );
+
   readonly timetableActivityCardVMs: Signal<TimetableActivityCardVM[]> = computed(() => {
     const room = this.roomSig();
-    const subjects = this.subjectListSig();
-    const subjectMap = new Map(subjects.map(s => [s.id, s]));
-    return this.roomTimetableActivitiesSig().map(activity => {
+
+    if (!room) {
+      return [];
+    }
+
+    const subjectMap = new Map(this.subjectListSig().map((subject) => [subject.id, subject]));
+
+    return this.roomTimetableActivitiesSig().map((activity) => {
       const subject = subjectMap.get(activity.subjectId);
+
       return {
         id: activity.id,
-        weekDay: activity.weekDay,
+        weekDay: activity.weekDay as unknown as WeekDay,
         startHour: activity.startHour,
         endHour: activity.endHour,
-        weekParity: activity.weekParity,
-        activityType: activity.activityType,
+        weekParity: activity.weekParity as unknown as WeekParity,
+        activityType: activity.activityType as unknown as ActivityType,
         roomName: room.name,
         subjectItemShortName: subject?.shortName ?? '',
       } satisfies TimetableActivityCardVM;
     });
   });
 
-  readonly workWeek: WeekDay[] = [
+  readonly academicWorkWeek: WeekDay[] = [
     WeekDay.MONDAY,
     WeekDay.TUESDAY,
     WeekDay.WEDNESDAY,
@@ -55,24 +74,39 @@ export class AdminRoomDetailComponent implements OnInit {
     WeekDay.FRIDAY,
   ];
 
-  readonly timetablePerDay = computed(() => {
-    const allTimetableActivities = this.timetableActivityCardVMs() ?? [];
-    return this.workWeek.map((day: WeekDay) => ({
+  readonly localWorkWeek: AdminUniversityMapWeekDay[] = [
+    AdminUniversityMapWeekDay.Monday,
+    AdminUniversityMapWeekDay.Tuesday,
+    AdminUniversityMapWeekDay.Wednesday,
+    AdminUniversityMapWeekDay.Thursday,
+    AdminUniversityMapWeekDay.Friday,
+  ];
+
+  readonly timetablePerDay = computed(() =>
+    this.academicWorkWeek.map((day) => ({
       day,
-      activities: allTimetableActivities.filter((timetableActivity) => timetableActivity.weekDay === day),
-    }));
-  });
+      activities: this.timetableActivityCardVMs().filter(
+        (timetableActivity) => timetableActivity.weekDay === day,
+      ),
+    })),
+  );
+
+  readonly timetableActivitiesPerDay = computed(() =>
+    this.localWorkWeek.map((day) => ({
+      day,
+      activities: this.roomTimetableActivitiesSig().filter((activity) => activity.weekDay === day),
+    })),
+  );
 
   ngOnInit(): void {
-    this._adminRoomService.init();
-    this._adminSubjectService.init();
-    this._adminTimetableActivityService.init();
+    this.store.init();
   }
 
-  onSubjectListChange(subjectItemList: SubjectItem[]): void {
-    const updatedRoom: UpdateRoomCmd = {
-      subjectList: subjectItemList.map((subjectItem: SubjectItem) => subjectItem.id),
-    }
-    this._adminRoomService.update(this.roomIdSig(), updatedRoom);
+  onSubjectListChange(subjectItemList: AdminUniversityMapSubject[]): void {
+    const updatedRoom: UpdateAdminUniversityMapRoomCmd = {
+      subjectList: subjectItemList.map((subjectItem) => subjectItem.id),
+    };
+
+    this.store.updateRoom(this.roomIdSig(), updatedRoom);
   }
 }

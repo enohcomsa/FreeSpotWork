@@ -7,7 +7,6 @@ import {
   input,
   OnInit,
   signal,
-  Signal,
   viewChild,
   WritableSignal,
 } from '@angular/core';
@@ -16,15 +15,16 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { AdminRoomCardComponent } from '@free-spot/admin-university-map/ui';
-import { AdminRoomService } from '@free-spot-service/room';
-
 import { AddItemCardComponent } from '@free-spot/ui';
-import { AdminFloorService } from '@free-spot-service/floor';
-import { AppDateService } from '@free-spot-service/app-date';
 import { ConfirmModalService } from '@free-spot/core/ui';
 import { FormErrorMessage } from '@free-spot/util';
-import { RoomCardVM, toRoomCardVM } from '@free-spot-presentation/room';
-import { CreateRoomCmd, Room, UpdateRoomCmd } from '@free-spot-domain/room';
+
+import { AdminUniversityMapStore } from '@free-spot/admin-university-map/data-access';
+import {
+  AdminUniversityMapRoomVM,
+  CreateAdminUniversityMapRoomCmd,
+  UpdateAdminUniversityMapRoomCmd,
+} from '@free-spot/admin-university-map/domain';
 
 @Component({
   selector: 'free-spot-admin-floor-detail',
@@ -35,48 +35,41 @@ import { CreateRoomCmd, Room, UpdateRoomCmd } from '@free-spot-domain/room';
     MatInputModule,
     MatButtonModule,
     AdminRoomCardComponent,
-    AddItemCardComponent
+    AddItemCardComponent,
   ],
   templateUrl: './admin-floor-detail.component.html',
   styleUrl: './admin-floor-detail.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminFloorDetailComponent implements OnInit {
-  private _formBuilder: FormBuilder = inject(FormBuilder);
-  private _adminRoomService: AdminRoomService = inject(AdminRoomService);
-  private _adminFloorService: AdminFloorService = inject(AdminFloorService);
-  private _confirmService: ConfirmModalService = inject(ConfirmModalService);
-  private _formErrorMessage: FormErrorMessage = inject(FormErrorMessage);
-  private _appDateService: AppDateService = inject(AppDateService);
+  private readonly formBuilder = inject(FormBuilder);
+  private readonly confirmService = inject(ConfirmModalService);
+  private readonly formErrorMessage = inject(FormErrorMessage);
+  private readonly store = inject(AdminUniversityMapStore);
 
   editRoom = viewChild.required<ElementRef>('editRoom');
   floorIdSig = input.required<string>();
-  readonly floorSig = computed(() => this._adminFloorService.getSignalById(this.floorIdSig())());
+
+  readonly floorSig = computed(() => this.store.getFloorById(this.floorIdSig())());
   readonly editingRoomIdSig: WritableSignal<string | null> = signal<string | null>(null);
-  readonly editingRoomSig: Signal<Room | null> = computed(() => {
-    const id = this.editingRoomIdSig();
-    if (!id) return null;
-    return this.floorRoomListSig().find((room: Room) => room.id === id) ?? null;
-  });
+  readonly floorRoomListSig = computed(() => this.store.selectRoomsByFloorId(this.floorIdSig())());
+  readonly roomCardVMs = computed(() => this.store.selectRoomVMsByFloorId(this.floorIdSig())());
 
   addingRoom = false;
   editingRoom = false;
-  addRoomFormGroup = this._formBuilder.nonNullable.group({
+
+  addRoomFormGroup = this.formBuilder.nonNullable.group({
     roomName: ['', [Validators.required, Validators.minLength(1)]],
     totalSpotsNumber: [0, Validators.required],
     unavailableSpots: [0, Validators.required],
   });
 
-  readonly floorRoomListSig: Signal<Room[]> = computed(() => this._adminRoomService.selectRoomsByFloorId(this.floorIdSig())());
-  readonly roomCardVMs = computed<RoomCardVM[]>(() => (this.floorRoomListSig()).map(toRoomCardVM));
-
   ngOnInit(): void {
-    this._adminRoomService.init();
-    this._adminFloorService.init();
-    this._appDateService.init();
+    this.store.init();
   }
 
-  displayError = (control: AbstractControl | null) => this._formErrorMessage.displayFormErrorMessage(control);
+  displayError = (control: AbstractControl | null) =>
+    this.formErrorMessage.displayFormErrorMessage(control);
 
   onAddingRoom(): void {
     this.addRoomFormGroup.reset();
@@ -86,22 +79,28 @@ export class AdminFloorDetailComponent implements OnInit {
   }
 
   onAddRoom(): void {
-    const newRoom: CreateRoomCmd = {
-      buildingId: this.floorSig().buildingId,
-      floorId: this.floorIdSig(),
-      name: this.addRoomFormGroup.controls['roomName'].value,
-      totalSpotsNumber: this.addRoomFormGroup.controls['totalSpotsNumber'].value,
-      unavailableSpots: this.addRoomFormGroup.controls['unavailableSpots'].value,
-      subjectList: [],
+    const floor = this.floorSig();
+
+    if (!floor) {
+      return;
     }
 
-    this._adminRoomService.create(newRoom);
+    const newRoom: CreateAdminUniversityMapRoomCmd = {
+      buildingId: floor.buildingId,
+      floorId: this.floorIdSig(),
+      name: this.addRoomFormGroup.controls.roomName.value,
+      totalSpotsNumber: this.addRoomFormGroup.controls.totalSpotsNumber.value,
+      unavailableSpots: this.addRoomFormGroup.controls.unavailableSpots.value,
+      subjectList: [],
+    };
+
+    this.store.createRoom(newRoom);
     this.addRoomFormGroup.reset();
     this.addingRoom = false;
     this.editingRoom = false;
   }
 
-  onEditingRoom(roomToEdit: RoomCardVM): void {
+  onEditingRoom(roomToEdit: AdminUniversityMapRoomVM): void {
     this.editingRoom = true;
     this.editingRoomIdSig.set(roomToEdit.id);
     this.addRoomFormGroup.setValue({
@@ -113,28 +112,31 @@ export class AdminFloorDetailComponent implements OnInit {
   }
 
   onEditRoom(): void {
-    const id: string | null = this.editingRoomIdSig();
-    if (!id) return;
+    const id = this.editingRoomIdSig();
 
-    const updatedRoom: UpdateRoomCmd = {
-      name: this.addRoomFormGroup.controls['roomName'].value,
-      totalSpotsNumber: this.addRoomFormGroup.controls['totalSpotsNumber'].value,
-      unavailableSpots: this.addRoomFormGroup.controls['unavailableSpots'].value,
+    if (!id) {
+      return;
     }
 
-    this._adminRoomService.update(id, updatedRoom);
+    const updatedRoom: UpdateAdminUniversityMapRoomCmd = {
+      name: this.addRoomFormGroup.controls.roomName.value,
+      totalSpotsNumber: this.addRoomFormGroup.controls.totalSpotsNumber.value,
+      unavailableSpots: this.addRoomFormGroup.controls.unavailableSpots.value,
+    };
+
+    this.store.updateRoom(id, updatedRoom);
     this.addRoomFormGroup.reset();
     this.addingRoom = false;
     this.editingRoom = false;
   }
 
-  onDeleteRoom(deletedRoom: RoomCardVM): void {
-    this._confirmService
+  onDeleteRoom(deletedRoom: AdminUniversityMapRoomVM): void {
+    this.confirmService
       .openConfirmDialog('Are you sure you want to delete this room?')
       .afterClosed()
       .subscribe((result: boolean) => {
         if (result) {
-          this._adminRoomService.remove(deletedRoom.id);
+          this.store.removeRoom(deletedRoom.id);
           this.addRoomFormGroup.reset();
           this.addingRoom = false;
           this.editingRoom = false;

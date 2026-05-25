@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, OnInit, Signal } from '@angular/core';
-import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, input, OnInit, output } from '@angular/core';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
@@ -7,16 +7,25 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { AdminFacultyService } from '@free-spot-service/faculty';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ConfirmModalService } from '@free-spot/core/ui';
+import { inject } from '@angular/core';
 import { FormErrorMessage } from '@free-spot/util';
-import { ActivityType, CreateTimetableActivityCmd, TimetableActivity, WeekDay, WeekParity } from '@free-spot/academic-schedule/domain';
-import { Room } from '@free-spot-domain/room';
-import { AdminRoomService } from '@free-spot-service/room';
-import { SubjectItem } from '@free-spot-domain/subject';
-import { TimetableActivityCardVM } from '@free-spot/academic-schedule/domain';
-import { AdminTimetableActivityService } from '@free-spot-service/timetable-activity';
+
+import {
+  AdminUniversityMapActivityType,
+  AdminUniversityMapSubject,
+  AdminUniversityMapTimetableActivity,
+  AdminUniversityMapWeekDay,
+  AdminUniversityMapWeekParity,
+  CreateAdminUniversityMapTimetableActivityCmd,
+} from '@free-spot/admin-university-map/domain';
+
+type AddTimetableActivityForm = FormGroup<{
+  startHour: FormControl<number>;
+  subjectName: FormControl<AdminUniversityMapSubject>;
+  activityType: FormControl<AdminUniversityMapActivityType>;
+  weekParity: FormControl<AdminUniversityMapWeekParity>;
+}>;
 
 @Component({
   selector: 'free-spot-admin-room-timetable-item',
@@ -30,49 +39,56 @@ import { AdminTimetableActivityService } from '@free-spot-service/timetable-acti
     MatInputModule,
     MatFormFieldModule,
     MatSelectModule,
-    MatTooltipModule
+    MatTooltipModule,
   ],
   templateUrl: './admin-room-timetable-item.component.html',
   styleUrl: './admin-room-timetable-item.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminRoomTimetableItemComponent implements OnInit {
-  private _formBuilder: FormBuilder = inject(FormBuilder);
-  private _adminFacultyService: AdminFacultyService = inject(AdminFacultyService);
-  private _adminRoomService: AdminRoomService = inject(AdminRoomService);
-  private _confirmService: ConfirmModalService = inject(ConfirmModalService);
-  private _formErrorMessage: FormErrorMessage = inject(FormErrorMessage);
-  private _adminTimetableActivityService: AdminTimetableActivityService = inject(AdminTimetableActivityService);
+  private readonly formBuilder = inject(FormBuilder);
+  private readonly formErrorMessage = inject(FormErrorMessage);
 
   roomIdSig = input.required<string>();
-  day = input.required<WeekDay>();
-  subjectListSig = input.required<SubjectItem[]>();
-  dayTimetableActivityCardVMListSig = input.required<TimetableActivityCardVM[]>();
+  roomNameSig = input.required<string>();
+  roomCapacitySig = input.required<number>();
+  day = input.required<AdminUniversityMapWeekDay>();
+  subjectListSig = input.required<AdminUniversityMapSubject[]>();
+  dayTimetableActivityCardVMListSig = input.required<AdminUniversityMapTimetableActivity[]>();
 
-  readonly timetableActivityListSig: Signal<TimetableActivity[]> = computed(() => this._adminTimetableActivityService.getTimetableActivityListSignalByRoomId(this.roomIdSig())());
-  roomSig: Signal<Room> = computed(() => this._adminRoomService.getSignalById(this.roomIdSig())());
+  createTimetableActivity = output<CreateAdminUniversityMapTimetableActivityCmd>();
+  removeTimetableActivity = output<string>();
+
   startHourList: number[] = [8, 10, 12, 14, 16, 18];
-  eventList: ActivityType[] = Object.values(ActivityType).filter((event: ActivityType) => event !== ActivityType.SPECIAL_EVENT);
-  weekParityList: WeekParity[] = Object.values(WeekParity);
-  addTimetableActivityFormGroup!: FormGroup;
+  eventList: AdminUniversityMapActivityType[] = Object.values(AdminUniversityMapActivityType).filter(
+    (event) => event !== AdminUniversityMapActivityType.SpecialEvent,
+  );
+  weekParityList: AdminUniversityMapWeekParity[] = Object.values(AdminUniversityMapWeekParity);
   addingTimetableActivity = false;
 
+  addTimetableActivityFormGroup!: AddTimetableActivityForm;
+
   ngOnInit(): void {
-    this._adminFacultyService.init();
-    this.addTimetableActivityFormGroup = this._formBuilder.nonNullable.group({
+    this.addTimetableActivityFormGroup = this.formBuilder.nonNullable.group({
       startHour: [this.startHourList[0], Validators.required],
       subjectName: [this.subjectListSig()[0], [Validators.required, Validators.minLength(1)]],
-      activityType: [ActivityType.COURSE, Validators.required],
-      weekParity: [WeekParity.BOTH, Validators.required],
+      activityType: [AdminUniversityMapActivityType.Course, Validators.required],
+      weekParity: [AdminUniversityMapWeekParity.Both, Validators.required],
     });
   }
 
-  displayError = (control: AbstractControl | null) => this._formErrorMessage.displayFormErrorMessage(control);
+  getSubjectShortName(subjectId: string): string {
+    return this.subjectListSig().find((subject) => subject.id === subjectId)?.shortName ?? '';
+  }
 
-  dysplaySubject(subjectItem: SubjectItem): string {
-    if (subjectItem !== undefined && subjectItem !== null && Object.keys(subjectItem).length) {
+  displayError = (control: AbstractControl | null) =>
+    this.formErrorMessage.displayFormErrorMessage(control);
+
+  dysplaySubject(subjectItem: AdminUniversityMapSubject): string {
+    if (subjectItem && Object.keys(subjectItem).length) {
       return subjectItem.shortName;
     }
+
     return '';
   }
 
@@ -96,35 +112,30 @@ export class AdminRoomTimetableItemComponent implements OnInit {
   }
 
   onAddTimetableActivity(): void {
-    const newTimetableActivityCmd: CreateTimetableActivityCmd = {
+    const subject = this.addTimetableActivityFormGroup.controls.subjectName.value;
+
+    const cmd: CreateAdminUniversityMapTimetableActivityCmd = {
       roomId: this.roomIdSig(),
-      subjectId: this.addTimetableActivityFormGroup.controls['subjectName'].value.id,
+      subjectId: subject.id,
       date: new Date().toISOString(),
       weekDay: this.day(),
-      activityType: this.addTimetableActivityFormGroup.controls['activityType'].value,
+      activityType: this.addTimetableActivityFormGroup.controls.activityType.value,
       cohortIds: [],
-      startHour: this.addTimetableActivityFormGroup.controls['startHour'].value,
-      endHour: this.addTimetableActivityFormGroup.controls['startHour'].value + 2,
-      weekParity: this.addTimetableActivityFormGroup.controls['weekParity'].value,
-      capacity: this.roomSig().totalSpotsNumber - this.roomSig().unavailableSpots,
+      startHour: this.addTimetableActivityFormGroup.controls.startHour.value,
+      endHour: this.addTimetableActivityFormGroup.controls.startHour.value + 2,
+      weekParity: this.addTimetableActivityFormGroup.controls.weekParity.value,
+      capacity: this.roomCapacitySig(),
       reservedSpots: 0,
       busySpots: 0,
-      freeSpots: this.roomSig().totalSpotsNumber - this.roomSig().unavailableSpots,
-    }
+      freeSpots: this.roomCapacitySig(),
+    };
 
-    this._adminTimetableActivityService.create(newTimetableActivityCmd);
+    this.createTimetableActivity.emit(cmd);
     this.addTimetableActivityFormGroup.reset();
     this.addingTimetableActivity = false;
   }
 
   onRemoveTimetableActivity(removedTimetableActivityId: string): void {
-    this._confirmService
-      .openConfirmDialog('Are you sure you want to delete this activity?')
-      .afterClosed()
-      .subscribe((result: boolean) => {
-        if (result) {
-          this._adminTimetableActivityService.remove(removedTimetableActivityId);
-        }
-      });
+    this.removeTimetableActivity.emit(removedTimetableActivityId);
   }
 }

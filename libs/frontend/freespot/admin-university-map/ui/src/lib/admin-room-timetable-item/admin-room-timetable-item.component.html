@@ -6,9 +6,9 @@
     <mat-chip removable="true">
       <div class="flex gap-2">
         <p>{{ getTimeInterval(timetableItemActivity.startHour) }}</p>
-        <p>{{ timetableItemActivity.subjectItemShortName}}</p>
+        <p>{{ getSubjectShortName(timetableItemActivity.subjectId) }}</p>
         <p>{{ timetableItemActivity.activityType }}</p>
-        <p>{{ timetableItemActivity.roomName }}</p>
+        <p>{{ roomNameSig() }}</p>
       </div>
       <button matChipRemove (click)="onRemoveTimetableActivity(timetableItemActivity.id)"
         matTooltip="click to remove timetable activity" matTooltipPosition="right" matTooltipPositionAtOrigin="true"
@@ -26,9 +26,9 @@
   <mat-chip removable="true">
     <div class="flex gap-2">
       <p>{{ getTimeInterval(timetableItemActivity.startHour) }}</p>
-      <p>{{ timetableItemActivity.subjectItemShortName }}</p>
+      <p>{{ getSubjectShortName(timetableItemActivity.subjectId) }}</p>
       <p>{{ timetableItemActivity.activityType }}</p>
-      <p>{{ timetableItemActivity.roomName }}</p>
+      <p>{{ roomNameSig() }}</p>
     </div>
     <button matChipRemove (click)="onRemoveTimetableActivity(timetableItemActivity.id)"
       matTooltip="click to remove timetable activity" matTooltipPosition="right" matTooltipPositionAtOrigin="true"

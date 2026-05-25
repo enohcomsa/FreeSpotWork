@@ -12,6 +12,10 @@ import {
   UpdateAdminFacultyCmd,
   UpdateAdminProgramCmd,
   UpdateAdminProgramYearCmd,
+  AdminAcademicRoom,
+  AdminAcademicTimetableActivity,
+  AdminAcademicUser,
+  UpdateAdminAcademicUserCmd,
 } from '@free-spot/admin-academic-structure/domain';
 
 import { HttpAdminAcademicStructureService } from './http-admin-academic-structure.service';
@@ -25,17 +29,24 @@ export class AdminAcademicStructureStore {
   private readonly programsSig = signal<AdminProgram[]>([]);
   private readonly programYearsSig = signal<AdminProgramYear[]>([]);
   private readonly cohortsSig = signal<AdminCohort[]>([]);
+  private readonly roomsSig = signal<AdminAcademicRoom[]>([]);
+  private readonly timetableActivitiesSig = signal<AdminAcademicTimetableActivity[]>([]);
+  private readonly usersSig = signal<AdminAcademicUser[]>([]);
 
   readonly facultyListSig: Signal<AdminFaculty[]> = this.facultiesSig.asReadonly();
   readonly subjectListSig: Signal<AdminSubjectItem[]> = this.subjectsSig.asReadonly();
+  readonly userListSig: Signal<AdminAcademicUser[]> = this.usersSig.asReadonly();
 
   init(): void {
-    this.http.load$().subscribe(({ faculties, subjects, programs, programYears, cohorts }) => {
+    this.http.load$().subscribe(({ faculties, subjects, programs, programYears, cohorts, rooms, timetableActivities, users }) => {
       this.facultiesSig.set(faculties);
       this.subjectsSig.set(subjects);
       this.programsSig.set(programs);
       this.programYearsSig.set(programYears);
       this.cohortsSig.set(cohorts);
+      this.roomsSig.set(rooms);
+      this.timetableActivitiesSig.set(timetableActivities);
+      this.usersSig.set(users);
     });
   }
 
@@ -140,6 +151,23 @@ export class AdminAcademicStructureStore {
   deleteCohort(id: string): void {
     this.http.deleteCohort$(id).subscribe(() => {
       this.cohortsSig.update((cohorts) => cohorts.filter((cohort) => cohort.id !== id));
+    });
+  }
+  getRoomById(id: string) {
+    return computed(() => this.roomsSig().find((room) => room.id === id));
+  }
+
+  selectTimetableActivitiesByCohortId(cohortId: string) {
+    return computed(() =>
+      this.timetableActivitiesSig().filter((activity) => activity.cohortIds.includes(cohortId)),
+    );
+  }
+
+  updateUser(id: string, cmd: UpdateAdminAcademicUserCmd): void {
+    this.http.updateUser$(id, cmd).subscribe((updatedUser) => {
+      this.usersSig.update((users) =>
+        users.map((user) => (user.id === id ? updatedUser : user)),
+      );
     });
   }
 }

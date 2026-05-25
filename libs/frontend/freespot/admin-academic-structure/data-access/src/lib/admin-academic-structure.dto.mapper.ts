@@ -12,6 +12,13 @@ import {
   ProgramYearResponseDTO,
   ProgramYearUpdateDTO,
   SubjectResponseDTO,
+  ActivityTypeDTO,
+  RoomResponseDTO,
+  TimetableActivityResponseDTO,
+  UserResponseDTO,
+  UserUpdateDTO,
+  WeekDayDTO,
+  WeekParityDTO,
 } from '@free-spot/api-client';
 
 import {
@@ -28,6 +35,13 @@ import {
   UpdateAdminFacultyCmd,
   UpdateAdminProgramCmd,
   UpdateAdminProgramYearCmd,
+  AdminAcademicActivityType,
+  AdminAcademicRoom,
+  AdminAcademicTimetableActivity,
+  AdminAcademicUser,
+  AdminAcademicWeekDay,
+  AdminAcademicWeekParity,
+  UpdateAdminAcademicUserCmd,
 } from '@free-spot/admin-academic-structure/domain';
 
 export function mapAdminFacultyDtoToDomain(dto: FacultyResponseDTO): AdminFaculty {
@@ -161,5 +175,90 @@ function mapCohortTypeDomainToDto(domain: AdminAcademicCohortType): CohortTypeDT
       return CohortTypeDTO.GROUP;
     case AdminAcademicCohortType.Semigroup:
       return CohortTypeDTO.SEMIGROUP;
+  }
+}
+
+export function mapAdminAcademicUserDtoToDomain(dto: UserResponseDTO): AdminAcademicUser {
+  return {
+    id: dto.id,
+    firstName: dto.firstName,
+    familyName: dto.familyName,
+    groupCohortId: dto.groupCohortId,
+    semigroupCohortId: dto.semigroupCohortId,
+  };
+}
+
+export function mapUpdateAdminAcademicUserCmdToDto(cmd: UpdateAdminAcademicUserCmd): UserUpdateDTO {
+  return {
+    groupCohortId: cmd.groupCohortId,
+    semigroupCohortId: cmd.semigroupCohortId,
+  };
+}
+
+export function mapAdminAcademicRoomDtoToDomain(dto: RoomResponseDTO): AdminAcademicRoom {
+  return {
+    id: dto.id,
+    name: dto.name,
+  };
+}
+
+export function mapAdminAcademicTimetableActivityDtoToDomain(
+  dto: TimetableActivityResponseDTO,
+): AdminAcademicTimetableActivity {
+  return {
+    id: dto.id,
+    roomId: dto.roomId,
+    subjectId: dto.subjectId,
+    cohortIds: dto.cohortIds,
+    weekDay: mapWeekDayDtoToDomain(dto.weekDay),
+    startHour: dto.startHour,
+    endHour: dto.endHour,
+    weekParity: mapWeekParityDtoToDomain(dto.weekParity),
+    activityType: mapActivityTypeDtoToDomain(dto.activityType),
+  };
+}
+
+function mapActivityTypeDtoToDomain(dto: ActivityTypeDTO): AdminAcademicActivityType {
+  switch (dto) {
+    case ActivityTypeDTO.LABORATORY:
+      return AdminAcademicActivityType.Laboratory;
+    case ActivityTypeDTO.COURSE:
+      return AdminAcademicActivityType.Course;
+    case ActivityTypeDTO.PROJECT:
+      return AdminAcademicActivityType.Project;
+    case ActivityTypeDTO.SEMINAR:
+      return AdminAcademicActivityType.Seminar;
+    case ActivityTypeDTO.SPECIAL_EVENT:
+      return AdminAcademicActivityType.SpecialEvent;
+  }
+}
+
+function mapWeekDayDtoToDomain(dto: WeekDayDTO): AdminAcademicWeekDay {
+  switch (dto) {
+    case WeekDayDTO.MONDAY:
+      return AdminAcademicWeekDay.Monday;
+    case WeekDayDTO.TUESDAY:
+      return AdminAcademicWeekDay.Tuesday;
+    case WeekDayDTO.WEDNESDAY:
+      return AdminAcademicWeekDay.Wednesday;
+    case WeekDayDTO.THURSDAY:
+      return AdminAcademicWeekDay.Thursday;
+    case WeekDayDTO.FRIDAY:
+      return AdminAcademicWeekDay.Friday;
+    case WeekDayDTO.SATURDAY:
+      return AdminAcademicWeekDay.Saturday;
+    case WeekDayDTO.SUNDAY:
+      return AdminAcademicWeekDay.Sunday;
+  }
+}
+
+function mapWeekParityDtoToDomain(dto: WeekParityDTO): AdminAcademicWeekParity {
+  switch (dto) {
+    case WeekParityDTO.BOTH:
+      return AdminAcademicWeekParity.Both;
+    case WeekParityDTO.EVEN:
+      return AdminAcademicWeekParity.Even;
+    case WeekParityDTO.ODD:
+      return AdminAcademicWeekParity.Odd;
   }
 }

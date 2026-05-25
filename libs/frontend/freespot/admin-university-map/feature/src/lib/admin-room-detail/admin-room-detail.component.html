@@ -1,5 +1,7 @@
 <div class="container">
-  <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Room: {{ roomSig().name }}</h1>
+  @if (roomSig(); as room) {
+  <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Room: {{ room.name }}</h1>
+  }
   <h2 class="pb-4 pt-8 text-2xl font-bold md:pb-8 md:pt-12">Room subjects</h2>
 
   <free-spot-dynamic-chip-list [optionListSig]="subjectListSig()"
@@ -8,10 +10,13 @@
   </free-spot-dynamic-chip-list>
 
   <h2 class="pb-4 pt-8 text-2xl font-bold md:pb-8 md:pt-12">Room timetable items</h2>
-  @for (roomTimetableItem of timetablePerDay(); track roomTimetableItem.day) {
+  @for (roomTimetableItem of timetableActivitiesPerDay(); track roomTimetableItem.day) {
   <h2 class="pb-4 pt-8 text-xl font-bold md:pb-8 md:pt-12">{{ roomTimetableItem.day }}</h2>
-  <free-spot-admin-room-timetable-item class="grow" [roomIdSig]="roomIdSig()" [subjectListSig]="roomSubjectListSig()"
-    [day]="roomTimetableItem.day" [dayTimetableActivityCardVMListSig]="roomTimetableItem.activities">
+  <free-spot-admin-room-timetable-item class="grow" [roomIdSig]="roomIdSig()" [roomNameSig]="roomSig()?.name ?? ''"
+    [roomCapacitySig]="(roomSig()?.totalSpotsNumber ?? 0) - (roomSig()?.unavailableSpots ?? 0)"
+    [day]="roomTimetableItem.day" [dayTimetableActivityCardVMListSig]="roomTimetableItem.activities"
+    [subjectListSig]="subjectListSig()" (createTimetableActivity)="store.createTimetableActivity($event)"
+    (removeTimetableActivity)="store.removeTimetableActivity($event)">
   </free-spot-admin-room-timetable-item>
   }
 

@@ -6,26 +6,26 @@ import { MatIconModule } from '@angular/material/icon';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { BuildingCardVM } from '@free-spot-presentation/building-card';
+
+import { AdminUniversityMapBuildingCard } from '@free-spot/admin-university-map/domain';
 
 @Component({
   selector: 'free-spot-admin-building-card',
-
   imports: [MatCardModule, MatDividerModule, MatListModule, MatIconModule, MatButtonModule, MatTooltipModule],
   templateUrl: './admin-building-card.component.html',
   styleUrl: './admin-building-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminBuildingCardComponent {
-  private _router: Router = inject(Router);
-  private _activatedRoute = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly activatedRoute = inject(ActivatedRoute);
 
-  adminBuildingSig = input.required<BuildingCardVM>();
+  adminBuildingSig = input.required<AdminUniversityMapBuildingCard>();
   addingBuildingSig = model.required<boolean>();
-  editBuilding = output<BuildingCardVM>();
-  deleteBuilding = output<BuildingCardVM>();
+  editBuilding = output<AdminUniversityMapBuildingCard>();
+  deleteBuilding = output<AdminUniversityMapBuildingCard>();
 
   onOpenClick(): void {
-    this._router.navigate(['building/' + this.adminBuildingSig().id], { relativeTo: this._activatedRoute });
+    this.router.navigate(['building/' + this.adminBuildingSig().id], { relativeTo: this.activatedRoute });
   }
 }

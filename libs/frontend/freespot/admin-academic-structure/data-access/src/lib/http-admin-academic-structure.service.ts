@@ -5,6 +5,9 @@ import {
   ProgramYearsHttpService,
   ProgramsHttpService,
   SubjectsHttpService,
+  RoomsHttpService,
+  TimetableActivitiesHttpService,
+  UsersHttpService,
 } from '@free-spot/api-client';
 import { forkJoin, map, Observable } from 'rxjs';
 
@@ -20,6 +23,10 @@ import {
   UpdateAdminFacultyCmd,
   UpdateAdminProgramCmd,
   UpdateAdminProgramYearCmd,
+  AdminAcademicRoom,
+  AdminAcademicTimetableActivity,
+  AdminAcademicUser,
+  UpdateAdminAcademicUserCmd,
 } from '@free-spot/admin-academic-structure/domain';
 
 import {
@@ -34,6 +41,10 @@ import {
   mapUpdateAdminFacultyCmdToDto,
   mapUpdateAdminProgramCmdToDto,
   mapUpdateAdminProgramYearCmdToDto,
+  mapAdminAcademicRoomDtoToDomain,
+  mapAdminAcademicTimetableActivityDtoToDomain,
+  mapAdminAcademicUserDtoToDomain,
+  mapUpdateAdminAcademicUserCmdToDto,
 } from './admin-academic-structure.dto.mapper';
 
 @Injectable({ providedIn: 'root' })
@@ -43,6 +54,9 @@ export class HttpAdminAcademicStructureService {
   private readonly programsApi = inject(ProgramsHttpService);
   private readonly programYearsApi = inject(ProgramYearsHttpService);
   private readonly cohortsApi = inject(CohortsHttpService);
+  private readonly roomsApi = inject(RoomsHttpService);
+  private readonly timetableActivitiesApi = inject(TimetableActivitiesHttpService);
+  private readonly usersApi = inject(UsersHttpService);
 
   load$(): Observable<{
     faculties: AdminFaculty[];
@@ -50,6 +64,9 @@ export class HttpAdminAcademicStructureService {
     programs: AdminProgram[];
     programYears: AdminProgramYear[];
     cohorts: AdminCohort[];
+    rooms: AdminAcademicRoom[];
+    timetableActivities: AdminAcademicTimetableActivity[];
+    users: AdminAcademicUser[];
   }> {
     return forkJoin({
       faculties: this.facultiesApi.facultiesGet().pipe(
@@ -66,6 +83,15 @@ export class HttpAdminAcademicStructureService {
       ),
       cohorts: this.cohortsApi.cohortsGet().pipe(
         map((dtos) => (dtos ?? []).map(mapAdminCohortDtoToDomain)),
+      ),
+      rooms: this.roomsApi.roomsGet().pipe(
+        map((dtos) => (dtos ?? []).map(mapAdminAcademicRoomDtoToDomain)),
+      ),
+      timetableActivities: this.timetableActivitiesApi.timetableActivitiesGet().pipe(
+        map((dtos) => (dtos ?? []).map(mapAdminAcademicTimetableActivityDtoToDomain)),
+      ),
+      users: this.usersApi.usersGet().pipe(
+        map((dtos) => (dtos ?? []).map(mapAdminAcademicUserDtoToDomain)),
       ),
     });
   }
@@ -116,5 +142,14 @@ export class HttpAdminAcademicStructureService {
 
   deleteCohort$(id: string): Observable<void> {
     return this.cohortsApi.cohortsIdDelete({ id }).pipe(map(() => undefined));
+  }
+
+  updateUser$(id: string, cmd: UpdateAdminAcademicUserCmd): Observable<AdminAcademicUser> {
+    return this.usersApi
+      .usersIdPatch({
+        id,
+        userUpdateDTO: mapUpdateAdminAcademicUserCmdToDto(cmd),
+      })
+      .pipe(map(mapAdminAcademicUserDtoToDomain));
   }
 }

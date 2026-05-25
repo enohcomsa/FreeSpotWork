@@ -1,1 +1,22 @@
-export * from './lib/freespot-admin-university-map-domain/freespot-admin-university-map-domain';
+export {
+  type AdminUniversityMapBuilding,
+  type AdminUniversityMapBuildingCard,
+  type AdminUniversityMapFloor,
+  type AdminUniversityMapFloorCard,
+  type AdminUniversityMapFloorVM,
+  type AdminUniversityMapRoom,
+  type CreateAdminUniversityMapBuildingCmd,
+  type CreateAdminUniversityMapFloorCmd,
+  type UpdateAdminUniversityMapBuildingCmd,
+  type AdminUniversityMapRoomVM,
+  type CreateAdminUniversityMapRoomCmd,
+  type UpdateAdminUniversityMapRoomCmd,
+  type UpdateAdminUniversityMapFloorCmd,
+  type AdminUniversityMapSubject,
+  type AdminUniversityMapTimetableActivity,
+  type CreateAdminUniversityMapTimetableActivityCmd,
+  AdminUniversityMapActivityType,
+  AdminUniversityMapWeekDay,
+  AdminUniversityMapWeekParity,
+
+} from './lib/admin-university-map.models';
