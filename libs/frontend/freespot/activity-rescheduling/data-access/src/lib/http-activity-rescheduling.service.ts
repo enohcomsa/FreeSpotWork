@@ -3,34 +3,34 @@ import {
   AvailabilityHttpService,
   BookingsHttpService,
   BookingResponseDTO,
-  RescheduleOptionsResponseDTO,
-  BuildingsHttpService,
   BuildingResponseDTO,
-  FloorsHttpService,
+  BuildingsHttpService,
   FloorResponseDTO,
-  RoomsHttpService,
+  FloorsHttpService,
+  RescheduleOptionsResponseDTO,
   RoomResponseDTO,
-  SubjectsHttpService,
+  RoomsHttpService,
   SubjectResponseDTO,
+  SubjectsHttpService,
   TimetableActivitiesHttpService,
   TimetableActivityResponseDTO,
 } from '@free-spot/api-client';
-import { map, Observable } from 'rxjs';
 import {
-  type ActivityReschedulingBooking,
-  type ActivityReschedulingOptionsResult,
   type ActivityRescheduleBookingCmd,
   type ActivityReschedulingActivity,
+  type ActivityReschedulingBooking,
   type ActivityReschedulingBuilding,
   type ActivityReschedulingFloor,
+  type ActivityReschedulingOptionsResult,
   type ActivityReschedulingRoom,
   type ActivityReschedulingSubject,
 } from '@free-spot/activity-rescheduling/domain';
+import { forkJoin, map, Observable } from 'rxjs';
 import {
-  rescheduleOptionsDtoToDomain,
   bookingDtoToDomain,
   buildingDtoToDomain,
   floorDtoToDomain,
+  rescheduleOptionsDtoToDomain,
   roomDtoToDomain,
   subjectDtoToDomain,
   timetableActivityDtoToDomain,
@@ -46,10 +46,22 @@ export class HttpActivityReschedulingService {
   private readonly _buildingsApi = inject(BuildingsHttpService);
   private readonly _floorsApi = inject(FloorsHttpService);
 
-  listBookings$(): Observable<ActivityReschedulingBooking[]> {
-    return this._bookingsApi.bookingsGet().pipe(
-      map((dtos: BookingResponseDTO[]) => (dtos ?? []).map(bookingDtoToDomain))
-    );
+  loadActivityReschedulingContext$(): Observable<{
+    bookings: ActivityReschedulingBooking[];
+    activities: ActivityReschedulingActivity[];
+    subjects: ActivityReschedulingSubject[];
+    rooms: ActivityReschedulingRoom[];
+    buildings: ActivityReschedulingBuilding[];
+    floors: ActivityReschedulingFloor[];
+  }> {
+    return forkJoin({
+      bookings: this.listBookings$(),
+      activities: this.listTimetableActivities$(),
+      subjects: this.listSubjects$(),
+      rooms: this.listRooms$(),
+      buildings: this.listBuildings$(),
+      floors: this.listFloors$(),
+    });
   }
 
   getRescheduleOptions$(bookingId: string): Observable<ActivityReschedulingOptionsResult> {
@@ -67,31 +79,37 @@ export class HttpActivityReschedulingService {
       .pipe(map(() => void 0));
   }
 
-  listSubjects$(): Observable<ActivityReschedulingSubject[]> {
+  private listBookings$(): Observable<ActivityReschedulingBooking[]> {
+    return this._bookingsApi.bookingsGet().pipe(
+      map((dtos: BookingResponseDTO[]) => (dtos ?? []).map(bookingDtoToDomain))
+    );
+  }
+
+  private listSubjects$(): Observable<ActivityReschedulingSubject[]> {
     return this._subjectsApi.subjectsGet().pipe(
       map((dtos: SubjectResponseDTO[]) => (dtos ?? []).map(subjectDtoToDomain))
     );
   }
 
-  listTimetableActivities$(): Observable<ActivityReschedulingActivity[]> {
+  private listTimetableActivities$(): Observable<ActivityReschedulingActivity[]> {
     return this._timetableActivitiesApi.timetableActivitiesGet().pipe(
       map((dtos: TimetableActivityResponseDTO[]) => (dtos ?? []).map(timetableActivityDtoToDomain))
     );
   }
 
-  listRooms$(): Observable<ActivityReschedulingRoom[]> {
+  private listRooms$(): Observable<ActivityReschedulingRoom[]> {
     return this._roomsApi.roomsGet().pipe(
       map((dtos: RoomResponseDTO[]) => (dtos ?? []).map(roomDtoToDomain))
     );
   }
 
-  listBuildings$(): Observable<ActivityReschedulingBuilding[]> {
+  private listBuildings$(): Observable<ActivityReschedulingBuilding[]> {
     return this._buildingsApi.buildingsGet().pipe(
       map((dtos: BuildingResponseDTO[]) => (dtos ?? []).map(buildingDtoToDomain))
     );
   }
 
-  listFloors$(): Observable<ActivityReschedulingFloor[]> {
+  private listFloors$(): Observable<ActivityReschedulingFloor[]> {
     return this._floorsApi.floorsGet().pipe(
       map((dtos: FloorResponseDTO[]) => (dtos ?? []).map(floorDtoToDomain))
     );

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 import { DatePipe } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { TranslateModule } from '@ngx-translate/core';
-import { RescheduleOptionCardVm } from '../reschedule-option-card.model';
+import { RescheduleOptionCardVm } from '@free-spot/activity-rescheduling/domain';
 
 @Component({
   selector: 'free-spot-reschedule-option-card',

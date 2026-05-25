@@ -1,29 +1,3 @@
-export enum ActivityReschedulingActivityType {
-  LABORATORY = 'LABORATORY',
-  COURSE = 'COURSE',
-  PROJECT = 'PROJECT',
-  SEMINAR = 'SEMINAR',
-  SPECIAL_EVENT = 'SPECIAL_EVENT',
-}
-
-export enum ActivityReschedulingWeekDay {
-  MONDAY = 'MONDAY',
-  TUESDAY = 'TUESDAY',
-  WEDNESDAY = 'WEDNESDAY',
-  THURSDAY = 'THURSDAY',
-  FRIDAY = 'FRIDAY',
-  SATURDAY = 'SATURDAY',
-  SUNDAY = 'SUNDAY',
-}
-
-export enum ActivityReschedulingWeekParity {
-  ODD = 'ODD',
-  EVEN = 'EVEN',
-  BOTH = 'BOTH',
-}
-
-export type ActivityReschedulingBookingStatus = 'CONFIRMED' | 'WAITLISTED' | 'CANCELLED';
-
 export interface ActivityReschedulingBooking {
   id: string;
   activityId: string;
@@ -39,7 +13,7 @@ export interface ActivityReschedulingBooking {
   originalActivityId: string | null;
   isRescheduled: boolean | null;
   rescheduledAt: string | null;
-  createdAt: string;
+  createdAt: string | null;
   updatedAt: string | null;
 }
 
@@ -66,28 +40,6 @@ export interface ActivityReschedulingActivity {
   freeSpots: number;
 }
 
-export interface ActivityReschedulingRoom {
-  id: string;
-  buildingId: string;
-  floorId: string;
-  name: string;
-  totalSpotsNumber: number;
-  unavailableSpots: number;
-  subjectList: string[];
-}
-
-export interface ActivityReschedulingBuilding {
-  id: string;
-  name: string;
-  address: string;
-}
-
-export interface ActivityReschedulingFloor {
-  id: string;
-  buildingId: string;
-  name: string;
-}
-
 export interface ActivityReschedulingOption {
   activityId: string;
   freeSpots: number;
@@ -101,19 +53,22 @@ export interface ActivityRescheduleBookingCmd {
   activityId: string;
 }
 
-export interface ReschedulableBookingVm {
-  id: string;
-  label: string;
-}
+export type ActivityReschedulingActivityType =
+  | 'LABORATORY'
+  | 'COURSE'
+  | 'PROJECT'
+  | 'SEMINAR'
+  | 'SPECIAL_EVENT';
 
-export interface RescheduleOptionCardVm {
-  id: string;
-  subjectName: string;
-  buildingName: string;
-  floorName: string;
-  roomName: string;
-  date: string;
-  startHour: number;
-  endHour: number;
-  freeSpots: number;
-}
+export type ActivityReschedulingWeekDay =
+  | 'MONDAY'
+  | 'TUESDAY'
+  | 'WEDNESDAY'
+  | 'THURSDAY'
+  | 'FRIDAY'
+  | 'SATURDAY'
+  | 'SUNDAY';
+
+export type ActivityReschedulingWeekParity = 'ODD' | 'EVEN' | 'BOTH';
+
+export type ActivityReschedulingBookingStatus = 'CONFIRMED' | 'WAITLISTED' | 'CANCELLED';

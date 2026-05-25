@@ -1,17 +1,19 @@
 import {
-  BookingResponseDTO,
-  BuildingResponseDTO,
-  FloorResponseDTO,
-  RescheduleOptionsResponseDTO,
-  RoomResponseDTO,
-  SubjectResponseDTO,
-  TimetableActivityResponseDTO,
+  type ActivityTypeDTO,
+  type BookingResponseDTO,
+  type BookingStatusDTO,
+  type BuildingResponseDTO,
+  type FloorResponseDTO,
+  type RescheduleOptionsResponseDTO,
+  type RoomResponseDTO,
+  type SubjectResponseDTO,
+  type TimetableActivityResponseDTO,
+  type WeekDayDTO,
+  type WeekParityDTO,
 } from '@free-spot/api-client';
 import {
-  ActivityReschedulingActivityType,
-  ActivityReschedulingWeekDay,
-  ActivityReschedulingWeekParity,
   type ActivityReschedulingActivity,
+  type ActivityReschedulingActivityType,
   type ActivityReschedulingBooking,
   type ActivityReschedulingBookingStatus,
   type ActivityReschedulingBuilding,
@@ -19,25 +21,20 @@ import {
   type ActivityReschedulingOptionsResult,
   type ActivityReschedulingRoom,
   type ActivityReschedulingSubject,
+  type ActivityReschedulingWeekDay,
+  type ActivityReschedulingWeekParity,
 } from '@free-spot/activity-rescheduling/domain';
 
 export function rescheduleOptionsDtoToDomain(dto: RescheduleOptionsResponseDTO): ActivityReschedulingOptionsResult {
   return {
-    items: (dto.items ?? [])
-      .filter((item) => item.activityId)
-      .map((item) => ({
-        activityId: item.activityId as string,
-        freeSpots: item.freeSpots ?? 0,
-      })),
+    items: (dto.items ?? []).map((item) => ({
+      activityId: item.activityId,
+      freeSpots: item.freeSpots ?? 0,
+    })),
   };
 }
 
 export function bookingDtoToDomain(dto: BookingResponseDTO): ActivityReschedulingBooking {
-  if (!dto.id) throw new Error('Booking dto.id is missing');
-  if (!dto.activityId) throw new Error('Booking dto.activityId is missing');
-  if (!dto.userId) throw new Error('Booking dto.userId is missing');
-  if (!dto.createdAt) throw new Error('Booking dto.createdAt is missing');
-
   return {
     id: dto.id,
     activityId: dto.activityId,
@@ -48,12 +45,12 @@ export function bookingDtoToDomain(dto: BookingResponseDTO): ActivityReschedulin
     groupCohortId: dto.groupCohortId ?? null,
     semigroupCohortId: dto.semigroupCohortId ?? null,
     subjectId: dto.subjectId ?? null,
-    activityType: activityTypeDtoToDomain(dto.activityType),
-    status: bookingStatusDtoToDomain(dto.status),
+    activityType: toActivityType(dto.activityType),
+    status: toBookingStatus(dto.status),
     originalActivityId: dto.originalActivityId ?? null,
     isRescheduled: dto.isRescheduled ?? null,
     rescheduledAt: dto.rescheduledAt ?? null,
-    createdAt: dto.createdAt,
+    createdAt: dto.createdAt ?? null,
     updatedAt: dto.updatedAt ?? null,
   };
 }
@@ -72,12 +69,12 @@ export function timetableActivityDtoToDomain(dto: TimetableActivityResponseDTO):
     roomId: dto.roomId,
     subjectId: dto.subjectId,
     date: dto.date,
-    weekDay: weekDayDtoToDomain(dto.weekDay),
-    activityType: activityTypeDtoToDomain(dto.activityType),
-    cohortIds: dto.cohortIds,
+    weekDay: toWeekDay(dto.weekDay),
+    activityType: toActivityType(dto.activityType),
+    cohortIds: dto.cohortIds ?? [],
     startHour: dto.startHour,
     endHour: dto.endHour,
-    weekParity: weekParityDtoToDomain(dto.weekParity),
+    weekParity: toWeekParity(dto.weekParity),
     capacity: dto.capacity,
     reservedSpots: dto.reservedSpots,
     busySpots: dto.busySpots,
@@ -93,7 +90,7 @@ export function roomDtoToDomain(dto: RoomResponseDTO): ActivityReschedulingRoom 
     name: dto.name,
     totalSpotsNumber: dto.totalSpotsNumber,
     unavailableSpots: dto.unavailableSpots,
-    subjectList: dto.subjectList,
+    subjectList: dto.subjectList ?? [],
   };
 }
 
@@ -113,66 +110,34 @@ export function floorDtoToDomain(dto: FloorResponseDTO): ActivityReschedulingFlo
   };
 }
 
-export function activityTypeDtoToDomain(value: string | undefined): ActivityReschedulingActivityType {
-  switch (value) {
-    case 'LABORATORY':
-      return ActivityReschedulingActivityType.LABORATORY;
-    case 'COURSE':
-      return ActivityReschedulingActivityType.COURSE;
-    case 'PROJECT':
-      return ActivityReschedulingActivityType.PROJECT;
-    case 'SEMINAR':
-      return ActivityReschedulingActivityType.SEMINAR;
-    case 'SPECIAL_EVENT':
-      return ActivityReschedulingActivityType.SPECIAL_EVENT;
-    default:
-      return ActivityReschedulingActivityType.COURSE;
+function toActivityType(value: ActivityTypeDTO | undefined): ActivityReschedulingActivityType {
+  if (!value) {
+    throw new Error('Missing activity type');
   }
+
+  return value;
 }
 
-function weekDayDtoToDomain(value: string | undefined): ActivityReschedulingWeekDay {
-  switch (value) {
-    case 'MONDAY':
-      return ActivityReschedulingWeekDay.MONDAY;
-    case 'TUESDAY':
-      return ActivityReschedulingWeekDay.TUESDAY;
-    case 'WEDNESDAY':
-      return ActivityReschedulingWeekDay.WEDNESDAY;
-    case 'THURSDAY':
-      return ActivityReschedulingWeekDay.THURSDAY;
-    case 'FRIDAY':
-      return ActivityReschedulingWeekDay.FRIDAY;
-    case 'SATURDAY':
-      return ActivityReschedulingWeekDay.SATURDAY;
-    case 'SUNDAY':
-      return ActivityReschedulingWeekDay.SUNDAY;
-    default:
-      return ActivityReschedulingWeekDay.MONDAY;
+function toBookingStatus(value: BookingStatusDTO | undefined): ActivityReschedulingBookingStatus {
+  if (!value) {
+    throw new Error('Missing booking status');
   }
+
+  return value;
 }
 
-function weekParityDtoToDomain(value: string | undefined): ActivityReschedulingWeekParity {
-  switch (value) {
-    case 'ODD':
-      return ActivityReschedulingWeekParity.ODD;
-    case 'EVEN':
-      return ActivityReschedulingWeekParity.EVEN;
-    case 'BOTH':
-      return ActivityReschedulingWeekParity.BOTH;
-    default:
-      return ActivityReschedulingWeekParity.BOTH;
+function toWeekDay(value: WeekDayDTO | undefined): ActivityReschedulingWeekDay {
+  if (!value) {
+    throw new Error('Missing week day');
   }
+
+  return value;
 }
 
-function bookingStatusDtoToDomain(value: string | undefined): ActivityReschedulingBookingStatus {
-  switch (value) {
-    case 'CONFIRMED':
-      return 'CONFIRMED';
-    case 'WAITLISTED':
-      return 'WAITLISTED';
-    case 'CANCELLED':
-      return 'CANCELLED';
-    default:
-      return 'WAITLISTED';
+function toWeekParity(value: WeekParityDTO | undefined): ActivityReschedulingWeekParity {
+  if (!value) {
+    throw new Error('Missing week parity');
   }
+
+  return value;
 }

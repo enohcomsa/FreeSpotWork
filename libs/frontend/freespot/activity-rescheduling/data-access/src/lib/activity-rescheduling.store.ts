@@ -1,8 +1,7 @@
 import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { forkJoin, Observable, of, switchMap, take } from 'rxjs';
+import { Observable, of, switchMap, take } from 'rxjs';
 import {
-  ActivityReschedulingActivityType,
   type ActivityRescheduleBookingCmd,
   type ActivityReschedulingActivity,
   type ActivityReschedulingBooking,
@@ -38,7 +37,7 @@ export class ActivityReschedulingStore {
 
   readonly reschedulableBookings = computed<ReschedulableBookingVm[]>(() =>
     this._bookings()
-      .filter((b) => b.activityType !== ActivityReschedulingActivityType.SPECIAL_EVENT)
+      .filter((booking) => booking.activityType !== 'SPECIAL_EVENT')
       // .filter((b) => { //TODO: uncomment after timetable date autoupdate
       //   const activity = this.timetableActivityService.getSignalById(b.activityId)();
       //   if (!activity?.date) return false;
@@ -48,15 +47,15 @@ export class ActivityReschedulingStore {
 
       //   return start.getTime() > Date.now();
       // })
-      .map((b) => {
-        const subject = b.subjectId
-          ? this._subjects().find((item) => item.id === b.subjectId)
+      .map((booking) => {
+        const subject = booking.subjectId
+          ? this._subjects().find((item) => item.id === booking.subjectId)
           : null;
-        const activity = this._activities().find((item) => item.id === b.activityId);
+        const activity = this._activities().find((item) => item.id === booking.activityId);
 
         const label = [
-          b.activityType,
-          subject?.shortName || subject?.name,
+          booking.activityType,
+          subject?.shortName ?? subject?.name,
           activity?.date ? new Date(activity.date).toLocaleDateString() : '',
           activity?.startHour != null && activity?.endHour != null
             ? `${activity.startHour}-${activity.endHour}`
@@ -64,18 +63,25 @@ export class ActivityReschedulingStore {
         ]
           .filter(Boolean)
           .join(' · ');
-        return { id: b.id, label };
+
+        return { id: booking.id, label };
       })
   );
 
   readonly optionCards = computed<RescheduleOptionCardVm[]>(() => {
     const result = this.rescheduleOptions();
-    if (!result) return [];
+
+    if (!result) {
+      return [];
+    }
 
     return result.items
       .map((item) => {
         const activity = this._activities().find((current) => current.id === item.activityId);
-        if (!activity?.id) return null;
+
+        if (!activity) {
+          return null;
+        }
 
         const subject = this._subjects().find((current) => current.id === activity.subjectId);
         const room = this._rooms().find((current) => current.id === activity.roomId);
@@ -84,28 +90,22 @@ export class ActivityReschedulingStore {
 
         return {
           id: activity.id,
-          subjectName: subject?.shortName || subject?.name || '',
-          buildingName: building?.name || '',
-          floorName: floor?.name || '',
-          roomName: room?.name || '',
+          subjectName: subject?.shortName ?? subject?.name ?? '',
+          buildingName: building?.name ?? '',
+          floorName: floor?.name ?? '',
+          roomName: room?.name ?? '',
           date: activity.date,
           startHour: activity.startHour,
           endHour: activity.endHour,
           freeSpots: item.freeSpots,
         };
       })
-      .filter((item) => item !== null);
+      .filter((item): item is RescheduleOptionCardVm => item !== null);
   });
 
   load(): void {
-    forkJoin({
-      bookings: this._api.listBookings$(),
-      subjects: this._api.listSubjects$(),
-      activities: this._api.listTimetableActivities$(),
-      rooms: this._api.listRooms$(),
-      buildings: this._api.listBuildings$(),
-      floors: this._api.listFloors$(),
-    })
+    this._api
+      .loadActivityReschedulingContext$()
       .pipe(take(1), takeUntilDestroyed(this.destroyRef))
       .subscribe(({ bookings, subjects, activities, rooms, buildings, floors }) => {
         this._bookings.set(bookings);
@@ -119,16 +119,22 @@ export class ActivityReschedulingStore {
 
   selectBooking(id: string | null): void {
     this._selectedBookingId.set(id);
-    if (!id) this._rescheduleOptions.set(null);
+
+    if (!id) {
+      this._rescheduleOptions.set(null);
+    }
   }
 
   loadOptions(): void {
     const id = this._selectedBookingId();
-    if (!id) return;
+
+    if (!id) {
+      return;
+    }
 
     this._api
       .getRescheduleOptions$(id)
-      .pipe(take(1))
+      .pipe(take(1), takeUntilDestroyed(this.destroyRef))
       .subscribe((result) => {
         this._rescheduleOptions.set(result);
       });
@@ -140,7 +146,10 @@ export class ActivityReschedulingStore {
 
   confirmReschedule(activityId: string): Observable<boolean> {
     const bookingId = this._selectedBookingId();
-    if (!bookingId) return of(false);
+
+    if (!bookingId) {
+      return of(false);
+    }
 
     return this.confirmService
       .openConfirmDialog('Are you sure you want to reschedule this booking? The old booking slot will be lost.')
@@ -148,16 +157,24 @@ export class ActivityReschedulingStore {
       .pipe(
         take(1),
         switchMap((result: boolean) => {
-          if (!result) return of(false);
+          if (!result) {
+            return of(false);
+          }
 
           const cmd: ActivityRescheduleBookingCmd = { activityId };
 
           return this._api.rescheduleBooking$(bookingId, cmd).pipe(
             switchMap(() =>
-              this._api.listBookings$().pipe(
+              this._api.loadActivityReschedulingContext$().pipe(
                 take(1),
-                switchMap((bookings) => {
+                switchMap(({ bookings, subjects, activities, rooms, buildings, floors }) => {
                   this._bookings.set(bookings);
+                  this._subjects.set(subjects);
+                  this._activities.set(activities);
+                  this._rooms.set(rooms);
+                  this._buildings.set(buildings);
+                  this._floors.set(floors);
+
                   this.toastr.success('Booking successfully rescheduled', '', {
                     closeButton: true,
                     progressBar: true,
@@ -165,8 +182,10 @@ export class ActivityReschedulingStore {
                     onActivateTick: true,
                     positionClass: 'toast-bottom-center',
                   });
+
                   this._selectedBookingId.set(null);
                   this._rescheduleOptions.set(null);
+
                   return of(true);
                 })
               )

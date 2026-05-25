@@ -1,3 +1,8 @@
+export interface ReschedulableBookingVm {
+  id: string;
+  label: string;
+}
+
 export interface RescheduleOptionCardVm {
   id: string;
   subjectName: string;
