@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
-import { TimetableItemComponent } from '@free-spot/ui';
+import { TimetableItemComponent } from "@free-spot/shared/ui";
 import { AcademicScheduleStore } from '@free-spot/academic-schedule/data-access';
 
 @Component({

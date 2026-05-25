@@ -1,0 +1,52 @@
+<mat-card appearance="outlined" class="w-full">
+  <mat-card-header class="justify-center font-bold">
+    <mat-card-title>{{ 'TIMETABLE_ITEM.' + day() | translate }}</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content class="!p-0">
+    <mat-list class="!pb-0">
+      <mat-divider></mat-divider>
+
+      @for (item of dayItems(); track item.startHour) {
+      <mat-divider></mat-divider>
+
+      <mat-list-item class="!px-2">
+        <div class="flex w-full">
+          <div class="flex w-10 text-xs font-bold tracking-tighter" [class.lg:hidden]="day() !== 'MONDAY'">
+            <p class="w-[39px] self-center">{{ item.hourInterval }}</p>
+            <mat-divider class="h-12 justify-self-end" vertical="true"></mat-divider>
+          </div>
+
+          @if (item.bothWeekActivity) {
+          <div class="flex w-full items-center justify-center gap-1 text-sm font-light tracking-tighter">
+            <ng-container *ngTemplateOutlet="activityContent; context: { $implicit: item.bothWeekActivity }" />
+          </div>
+          } @else {
+          <div class="flex w-full min-w-40 text-sm font-light tracking-tighter">
+            <div class="flex w-1/2 items-center justify-center gap-1">
+              @if (item.oddWeekActivity) {
+              <ng-container *ngTemplateOutlet="activityContent; context: { $implicit: item.oddWeekActivity }" />
+              }
+            </div>
+
+            <mat-divider vertical class="h-12"></mat-divider>
+
+            <div class="flex w-1/2 items-center justify-center gap-1">
+              @if (item.evenWeekActivity) {
+              <ng-container *ngTemplateOutlet="activityContent; context: { $implicit: item.evenWeekActivity }" />
+              }
+            </div>
+          </div>
+          }
+        </div>
+      </mat-list-item>
+      }
+    </mat-list>
+  </mat-card-content>
+</mat-card>
+
+<ng-template #activityContent let-activity>
+  <p>{{ activity.subjectItemShortName }}</p>
+  <p>{{ getActivityTypeInitial(activity.activityType) }}</p>
+  <p>{{ activity.roomName }}</p>
+</ng-template>

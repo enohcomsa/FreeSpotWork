@@ -1,9 +1,18 @@
-import { TimetableActivityResponseDTO } from '@free-spot/api-client';
-import { ActivityType, TimetableActivity, WeekDay, WeekParity } from '@free-spot/academic-schedule/domain';
-import { RoomResponseDTO, SubjectResponseDTO } from '@free-spot/api-client';
+import {
+  type ActivityTypeDTO,
+  type RoomResponseDTO,
+  type SubjectResponseDTO,
+  type TimetableActivityResponseDTO,
+  type WeekDayDTO,
+  type WeekParityDTO,
+} from '@free-spot/api-client';
 import {
   type AcademicScheduleRoom,
   type AcademicScheduleSubject,
+  type ActivityType,
+  type TimetableActivity,
+  type WeekDay,
+  type WeekParity,
 } from '@free-spot/academic-schedule/domain';
 
 export function timetableActivityDtoToDomain(dto: TimetableActivityResponseDTO): TimetableActivity {
@@ -12,12 +21,12 @@ export function timetableActivityDtoToDomain(dto: TimetableActivityResponseDTO):
     roomId: dto.roomId,
     subjectId: dto.subjectId,
     date: dto.date,
-    weekDay: weekDayDtoToDomain(dto.weekDay),
-    activityType: activityTypeDtoToDomain(dto.activityType),
-    cohortIds: dto.cohortIds,
+    weekDay: toWeekDay(dto.weekDay),
+    activityType: toActivityType(dto.activityType),
+    cohortIds: dto.cohortIds ?? [],
     startHour: dto.startHour,
     endHour: dto.endHour,
-    weekParity: weekParityDtoToDomain(dto.weekParity),
+    weekParity: toWeekParity(dto.weekParity),
     capacity: dto.capacity,
     reservedSpots: dto.reservedSpots,
     busySpots: dto.busySpots,
@@ -41,57 +50,30 @@ export function roomDtoToDomain(dto: RoomResponseDTO): AcademicScheduleRoom {
     name: dto.name,
     totalSpotsNumber: dto.totalSpotsNumber,
     unavailableSpots: dto.unavailableSpots,
-    subjectList: dto.subjectList,
+    subjectList: dto.subjectList ?? [],
   };
 }
 
-function activityTypeDtoToDomain(value: string | undefined): ActivityType {
-  switch (value) {
-    case 'LABORATORY':
-      return ActivityType.LABORATORY;
-    case 'COURSE':
-      return ActivityType.COURSE;
-    case 'PROJECT':
-      return ActivityType.PROJECT;
-    case 'SEMINAR':
-      return ActivityType.SEMINAR;
-    case 'SPECIAL_EVENT':
-      return ActivityType.SPECIAL_EVENT;
-    default:
-      return ActivityType.COURSE;
+function toActivityType(value: ActivityTypeDTO | undefined): ActivityType {
+  if (!value) {
+    throw new Error('Missing activity type');
   }
+
+  return value;
 }
 
-function weekDayDtoToDomain(value: string | undefined): WeekDay {
-  switch (value) {
-    case 'MONDAY':
-      return WeekDay.MONDAY;
-    case 'TUESDAY':
-      return WeekDay.TUESDAY;
-    case 'WEDNESDAY':
-      return WeekDay.WEDNESDAY;
-    case 'THURSDAY':
-      return WeekDay.THURSDAY;
-    case 'FRIDAY':
-      return WeekDay.FRIDAY;
-    case 'SATURDAY':
-      return WeekDay.SATURDAY;
-    case 'SUNDAY':
-      return WeekDay.SUNDAY;
-    default:
-      return WeekDay.MONDAY;
+function toWeekDay(value: WeekDayDTO | undefined): WeekDay {
+  if (!value) {
+    throw new Error('Missing week day');
   }
+
+  return value;
 }
 
-function weekParityDtoToDomain(value: string | undefined): WeekParity {
-  switch (value) {
-    case 'ODD':
-      return WeekParity.ODD;
-    case 'EVEN':
-      return WeekParity.EVEN;
-    case 'BOTH':
-      return WeekParity.BOTH;
-    default:
-      return WeekParity.BOTH;
+function toWeekParity(value: WeekParityDTO | undefined): WeekParity {
+  if (!value) {
+    throw new Error('Missing week parity');
   }
+
+  return value;
 }

@@ -1,8 +1,13 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, OnInit, Signal } from '@angular/core';
-import { DynamicChipListComponent, TimetableItemComponent } from '@free-spot/ui';
+import { DynamicChipListComponent } from '@free-spot/ui';
+import { TimetableItemComponent } from '@free-spot/shared/ui';
 import { AdminRoomTimetableItemComponent } from '@free-spot/admin-university-map/ui';
-import { ActivityType, TimetableActivityCardVM, WeekDay, WeekParity } from '@free-spot/academic-schedule/domain';
-
+import {
+  type ActivityType,
+  type TimetableActivityCardVM,
+  type WeekDay,
+  type WeekParity,
+} from '@free-spot/academic-schedule/domain';
 import { AdminUniversityMapStore } from '@free-spot/admin-university-map/data-access';
 import {
   AdminUniversityMapSubject,
@@ -12,7 +17,7 @@ import {
 
 @Component({
   selector: 'free-spot-admin-room-detail',
-  imports: [DynamicChipListComponent, AdminRoomTimetableItemComponent, TimetableItemComponent],
+  imports: [DynamicChipListComponent, AdminRoomTimetableItemComponent,TimetableItemComponent],
   templateUrl: './admin-room-detail.component.html',
   styleUrl: './admin-room-detail.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -33,12 +38,12 @@ export class AdminRoomDetailComponent implements OnInit {
     }
 
     return this.subjectListSig().filter((subjectItem) =>
-      room.subjectList.some((subjectItemId) => subjectItemId === subjectItem.id),
+      room.subjectList.some((subjectItemId) => subjectItemId === subjectItem.id)
     );
   });
 
   readonly roomTimetableActivitiesSig = computed(() =>
-    this.store.selectTimetableActivitiesByRoomId(this.roomIdSig())(),
+    this.store.selectTimetableActivitiesByRoomId(this.roomIdSig())()
   );
 
   readonly timetableActivityCardVMs: Signal<TimetableActivityCardVM[]> = computed(() => {
@@ -66,13 +71,7 @@ export class AdminRoomDetailComponent implements OnInit {
     });
   });
 
-  readonly academicWorkWeek: WeekDay[] = [
-    WeekDay.MONDAY,
-    WeekDay.TUESDAY,
-    WeekDay.WEDNESDAY,
-    WeekDay.THURSDAY,
-    WeekDay.FRIDAY,
-  ];
+  readonly academicWorkWeek: WeekDay[] = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'];
 
   readonly localWorkWeek: AdminUniversityMapWeekDay[] = [
     AdminUniversityMapWeekDay.Monday,
@@ -85,17 +84,15 @@ export class AdminRoomDetailComponent implements OnInit {
   readonly timetablePerDay = computed(() =>
     this.academicWorkWeek.map((day) => ({
       day,
-      activities: this.timetableActivityCardVMs().filter(
-        (timetableActivity) => timetableActivity.weekDay === day,
-      ),
-    })),
+      activities: this.timetableActivityCardVMs().filter((timetableActivity) => timetableActivity.weekDay === day),
+    }))
   );
 
   readonly timetableActivitiesPerDay = computed(() =>
     this.localWorkWeek.map((day) => ({
       day,
       activities: this.roomTimetableActivitiesSig().filter((activity) => activity.weekDay === day),
-    })),
+    }))
   );
 
   ngOnInit(): void {

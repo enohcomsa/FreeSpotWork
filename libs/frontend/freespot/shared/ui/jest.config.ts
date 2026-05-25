@@ -1,8 +1,8 @@
 export default {
-  displayName: 'ui',
+  displayName: 'freespot-shared-ui',
   preset: '../../../../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  coverageDirectory: '../../../../../coverage/libs/frontend/freespot/academic-schedule/ui',
+  coverageDirectory: '../../../../../coverage/libs/frontend/freespot/shared/ui',
   transform: {
     '^.+\\.(ts|mjs|js|html)$': [
       'jest-preset-angular',

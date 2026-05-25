@@ -4,7 +4,6 @@ import { Booking, RescheduleBookingCmd } from '@free-spot-domain/booking';
 import { HttpBookingService } from '@http-free-spot/booking';
 import { SignalArrayUtil } from '@free-spot/util';
 import { Observable, take } from 'rxjs';
-import { ActivityType } from '@free-spot/academic-schedule/domain';
 
 @Injectable({
   providedIn: 'root',
@@ -26,16 +25,20 @@ export class BookingService {
   readonly errorSig = this._errorSig.asReadonly();
 
   readonly normalBookingListSig = computed(() =>
-    this.bookingListSig().filter((booking: Booking) => booking.activityType !== ActivityType.SPECIAL_EVENT)
+    this.bookingListSig().filter((booking: Booking) => booking.activityType !== 'SPECIAL_EVENT')
   );
 
   readonly specialEventBookingListSig = computed(() =>
-    this.bookingListSig().filter((booking: Booking) => booking.activityType === ActivityType.SPECIAL_EVENT)
+    this.bookingListSig().filter((booking: Booking) => booking.activityType === 'SPECIAL_EVENT')
   );
 
   readonly selectedBookingSig: Signal<Booking | null> = computed(() => {
     const selectedId = this.selectedBookingIdSig();
-    if (!selectedId) return null;
+
+    if (!selectedId) {
+      return null;
+    }
+
     return this.bookingListSig().find((booking: Booking) => booking.id === selectedId) ?? null;
   });
 

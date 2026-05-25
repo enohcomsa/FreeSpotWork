@@ -1,8 +1,23 @@
-import { ActivityType } from './activity-type.enum';
-import { WeekDay } from './week-day.enum';
-import { WeekParity } from './week-parity.enum';
+export type ActivityType =
+  | 'LABORATORY'
+  | 'COURSE'
+  | 'PROJECT'
+  | 'SEMINAR'
+  | 'SPECIAL_EVENT';
 
-export interface TimetableActivity {
+export type WeekDay =
+  | 'MONDAY'
+  | 'TUESDAY'
+  | 'WEDNESDAY'
+  | 'THURSDAY'
+  | 'FRIDAY'
+  | 'SATURDAY'
+  | 'SUNDAY';
+
+export type WeekParity = 'ODD' | 'EVEN' | 'BOTH';
+
+export type TimetableActivity = {
+  id: string;
   roomId: string;
   subjectId: string;
   date: string;
@@ -16,5 +31,22 @@ export interface TimetableActivity {
   reservedSpots: number;
   busySpots: number;
   freeSpots: number;
-  id: string;
-}
+};
+
+export type CreateTimetableActivityCmd = {
+  roomId: string;
+  subjectId: string;
+  date: string;
+  weekDay: WeekDay;
+  activityType: ActivityType;
+  cohortIds: string[];
+  startHour: number;
+  endHour: number;
+  weekParity: WeekParity;
+  capacity: number;
+  reservedSpots: number;
+  busySpots: number;
+  freeSpots: number;
+};
+
+export type UpdateTimetableActivityCmd = Partial<CreateTimetableActivityCmd>;

@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, OnInit, Signal, viewChild } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSlideToggle, MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { DynamicChipListComponent, TimetableItemComponent } from '@free-spot/ui';
+import { DynamicChipListComponent} from '@free-spot/ui';
+import { TimetableItemComponent } from '@free-spot/shared/ui';
 import { FormsModule } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ConfirmModalService } from '@free-spot/core/ui';
@@ -107,11 +108,11 @@ export class GroupComponent implements OnInit {
   readonly nonDeletableSemigroupUsersListSig = computed(() => [] as AdminAcademicUser[]);
 
   readonly workWeek: WeekDay[] = [
-    WeekDay.MONDAY,
-    WeekDay.TUESDAY,
-    WeekDay.WEDNESDAY,
-    WeekDay.THURSDAY,
-    WeekDay.FRIDAY,
+    'MONDAY',
+    'TUESDAY',
+    'WEDNESDAY',
+    'THURSDAY',
+    'FRIDAY',
   ];
 
   readonly groupTimetableActivityCardVMs = this.cardVMsByCohortId(this.groupIdSig);
@@ -300,45 +301,58 @@ export class GroupComponent implements OnInit {
   private toAcademicWeekDay(day: AdminAcademicWeekDay): WeekDay {
     switch (day) {
       case AdminAcademicWeekDay.Monday:
-        return WeekDay.MONDAY;
+        return 'MONDAY';
+
       case AdminAcademicWeekDay.Tuesday:
-        return WeekDay.TUESDAY;
+        return 'TUESDAY';
+
       case AdminAcademicWeekDay.Wednesday:
-        return WeekDay.WEDNESDAY;
+        return 'WEDNESDAY';
+
       case AdminAcademicWeekDay.Thursday:
-        return WeekDay.THURSDAY;
+        return 'THURSDAY';
+
       case AdminAcademicWeekDay.Friday:
-        return WeekDay.FRIDAY;
+        return 'FRIDAY';
+
       case AdminAcademicWeekDay.Saturday:
-        return WeekDay.SATURDAY;
+        return 'SATURDAY';
+
       case AdminAcademicWeekDay.Sunday:
-        return WeekDay.SUNDAY;
+        return 'SUNDAY';
     }
   }
 
   private toAcademicWeekParity(parity: AdminAcademicWeekParity): WeekParity {
     switch (parity) {
       case AdminAcademicWeekParity.Both:
-        return WeekParity.BOTH;
+        return 'BOTH';
+
       case AdminAcademicWeekParity.Even:
-        return WeekParity.EVEN;
+        return 'EVEN';
+
       case AdminAcademicWeekParity.Odd:
-        return WeekParity.ODD;
+        return 'ODD';
     }
   }
 
   private toAcademicActivityType(type: AdminAcademicActivityType): ActivityType {
     switch (type) {
       case AdminAcademicActivityType.Laboratory:
-        return ActivityType.LABORATORY;
+        return 'LABORATORY';
+
       case AdminAcademicActivityType.Course:
-        return ActivityType.COURSE;
+        return 'COURSE';
+
       case AdminAcademicActivityType.Project:
-        return ActivityType.PROJECT;
+        return 'PROJECT';
+
       case AdminAcademicActivityType.Seminar:
-        return ActivityType.SEMINAR;
+        return 'SEMINAR';
+
       case AdminAcademicActivityType.SpecialEvent:
-        return ActivityType.SPECIAL_EVENT;
+        return 'SPECIAL_EVENT';
     }
   }
 }
+

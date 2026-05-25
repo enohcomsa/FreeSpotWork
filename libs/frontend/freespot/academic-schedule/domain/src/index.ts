@@ -1,17 +1,18 @@
-export { type TimetableActivity } from './lib/timetable-activity.model';
-
 export {
+  type ActivityType,
   type CreateTimetableActivityCmd,
+  type TimetableActivity,
   type UpdateTimetableActivityCmd,
-} from './lib/timetable-activity.commands';
-
-export { ActivityType } from './lib/activity-type.enum';
-export { WeekDay } from './lib/week-day.enum';
-export { WeekParity } from './lib/week-parity.enum';
-
-export { type TimetableActivityCardVM } from './lib/timetable-activity-card.vm';
+  type WeekDay,
+  type WeekParity,
+} from './lib/timetable-activity.model';
 
 export {
-  type AcademicScheduleSubject,
+  type TimetableActivityCardVM,
+  type TimetableDayVM,
+} from './lib/timetable-activity.vm';
+
+export {
   type AcademicScheduleRoom,
+  type AcademicScheduleSubject,
 } from './lib/academic-schedule.model';

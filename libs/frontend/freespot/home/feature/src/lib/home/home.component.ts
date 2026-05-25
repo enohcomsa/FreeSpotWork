@@ -26,7 +26,7 @@ export class HomeComponent implements OnInit {
   private readonly userSetupFlow = inject(UserSetupFlow);
 
   ngOnInit(): void {
-    if (!this.authService.initializedSignal$()) {
+    if (!this.authService.initializedSignal()) {
       this.authService.loadMe().subscribe();
     }
 

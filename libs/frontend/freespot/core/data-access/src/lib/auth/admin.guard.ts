@@ -9,17 +9,17 @@ export const adminGuard: CanActivateFn = (): boolean | UrlTree | Observable<bool
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  if (authService.userSignal$()?.role === Role.ADMIN) {
+  if (authService.userSignal()?.role === Role.ADMIN) {
     return true;
   }
 
-  if (authService.initializedSignal$()) {
+  if (authService.initializedSignal()) {
     return router.createUrlTree(['/home']);
   }
 
   return authService.loadMe().pipe(
     map(() => {
-      return authService.userSignal$()?.role === Role.ADMIN
+      return authService.userSignal()?.role === Role.ADMIN
         ? true
         : router.createUrlTree(['/home']);
     }),

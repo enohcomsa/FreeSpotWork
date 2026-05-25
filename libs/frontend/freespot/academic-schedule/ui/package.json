@@ -1,8 +1,0 @@
-{
-  "name": "@frontend/freespot/schedule/ui",
-  "version": "0.0.1",
-  "sideEffects": false,
-  "dependencies": {
-    "@frontend/freespot/schedule/domain": "0.0.1"
-  }
-}

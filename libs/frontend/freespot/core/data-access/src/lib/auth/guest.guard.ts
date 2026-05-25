@@ -11,7 +11,7 @@ export const guestGuard: CanActivateFn = (): boolean | UrlTree | Observable<bool
     return router.createUrlTree(['/home']);
   }
 
-  if (authService.initializedSignal$()) {
+  if (authService.initializedSignal()) {
     return true;
   }
 

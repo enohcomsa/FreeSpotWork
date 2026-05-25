@@ -4,7 +4,7 @@ import { AuthService } from './auth.service';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
-  const xsrfToken = authService.xsrfTokenSignal$();
+  const xsrfToken = authService.xsrfTokenSignal();
 
   const isMutating =
     req.method === 'POST' ||

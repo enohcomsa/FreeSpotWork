@@ -29,9 +29,9 @@ export class AuthService {
   private _loadMeInFlight$: Observable<User | null> | null = null;
   private _refreshSessionInFlight$: Observable<void> | null = null;
 
-  readonly userSignal$ = this._user.asReadonly();
-  readonly xsrfTokenSignal$ = this._xsrfToken.asReadonly();
-  readonly initializedSignal$ = this._initialized.asReadonly();
+  readonly userSignal = this._user.asReadonly();
+  readonly xsrfTokenSignal = this._xsrfToken.asReadonly();
+  readonly initializedSignal = this._initialized.asReadonly();
   readonly loadingMeSignal$ = this._loadingMe.asReadonly();
 
   readonly isAuthenticated = computed(() => !!this._user());

@@ -6,8 +6,6 @@
   },
   "allowedNonPeerDependencies": [
     "@frontend/freespot/schedule/domain",
-    "@free-spot/api-client",
-    "@free-spot/util",
-    "@http-free-spot/timetable-activity"
+    "@free-spot/api-client"
   ]
 }

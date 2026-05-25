@@ -45,7 +45,7 @@ export class NavigationComponent {
   THEME = Theme;
   Role = Role;
 
-  readonly currentUserSig = this._authService.userSignal$;
+  readonly currentUserSig = this._authService.userSignal;
   readonly isAdminSig = computed(() => this.currentUserSig()?.role === Role.ADMIN);
 
   constructor() {

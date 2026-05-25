@@ -1,12 +1,17 @@
 import { computed, DestroyRef, inject, Injectable, Signal, signal, WritableSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivityType, CreateTimetableActivityCmd, TimetableActivity, UpdateTimetableActivityCmd, WeekDay } from '@free-spot/academic-schedule/domain';
+import {
+  type CreateTimetableActivityCmd,
+  type TimetableActivity,
+  type UpdateTimetableActivityCmd,
+  type WeekDay,
+} from '@free-spot/academic-schedule/domain';
 import { HttpTimetableActivityService } from '@http-free-spot/timetable-activity';
 import { Observable, take } from 'rxjs';
 import { SignalArrayUtil } from '@free-spot/util';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AdminTimetableActivityService {
   private _httpTimetableActivityService: HttpTimetableActivityService = inject(HttpTimetableActivityService);
@@ -14,7 +19,6 @@ export class AdminTimetableActivityService {
 
   private _timetableActivityListSig: WritableSignal<TimetableActivity[]> = signal([]);
   timetableActivityListSig = this._timetableActivityListSig.asReadonly();
-
 
   init(): void {
     if (!this._timetableActivityListSig().length) {
@@ -28,15 +32,28 @@ export class AdminTimetableActivityService {
   }
 
   getTimetableActivityListSignalByRoomId(roomId: string): Signal<TimetableActivity[]> {
-    return computed(() => this.timetableActivityListSig().filter((timetableActivity: TimetableActivity) => timetableActivity.roomId === roomId));
+    return computed(() =>
+      this.timetableActivityListSig().filter((timetableActivity: TimetableActivity) => timetableActivity.roomId === roomId)
+    );
   }
 
   selectTimetableActivityListSignalByCohortId(cohortId: string): Signal<TimetableActivity[]> {
-    return computed(() => this.timetableActivityListSig().filter((timetableActivity: TimetableActivity) => timetableActivity.cohortIds.includes(cohortId)));
+    return computed(() =>
+      this.timetableActivityListSig().filter((timetableActivity: TimetableActivity) =>
+        timetableActivity.cohortIds.includes(cohortId)
+      )
+    );
   }
 
   selectTimetableActivityListSignalBysubjectIdAndWeekDay(subjectId: string, weekDay: WeekDay): Signal<TimetableActivity[]> {
-    return computed(() => this.timetableActivityListSig().filter((timetableActivity: TimetableActivity) => timetableActivity.subjectId === subjectId && timetableActivity.weekDay === weekDay && timetableActivity.activityType !== ActivityType.SPECIAL_EVENT));
+    return computed(() =>
+      this.timetableActivityListSig().filter(
+        (timetableActivity: TimetableActivity) =>
+          timetableActivity.subjectId === subjectId &&
+          timetableActivity.weekDay === weekDay &&
+          timetableActivity.activityType !== 'SPECIAL_EVENT'
+      )
+    );
   }
 
   addCohortToActivity(cohortId: string, timetableActivityId: string): void {
@@ -45,8 +62,8 @@ export class AdminTimetableActivityService {
     const updatedCohortIds = [...activity.cohortIds, cohortId];
 
     this.update(timetableActivityId, {
-      cohortIds: updatedCohortIds
-    })
+      cohortIds: updatedCohortIds,
+    });
   }
 
   removeCohortFromAcitvity(cohortId: string, timetableActivityId: string): void {
@@ -56,9 +73,10 @@ export class AdminTimetableActivityService {
       return;
     }
 
-    const updatedCohortIds = activity.cohortIds.filter(id => id !== cohortId);
+    const updatedCohortIds = activity.cohortIds.filter((id) => id !== cohortId);
+
     this.update(timetableActivityId, {
-      cohortIds: updatedCohortIds
+      cohortIds: updatedCohortIds,
     });
   }
 
@@ -70,15 +88,18 @@ export class AdminTimetableActivityService {
         return;
       }
 
-      const updatedCohortIds = activity.cohortIds.filter(id => id !== cohortId);
+      const updatedCohortIds = activity.cohortIds.filter((id) => id !== cohortId);
+
       this.update(activity.id, {
-        cohortIds: updatedCohortIds
+        cohortIds: updatedCohortIds,
       });
     });
   }
 
   getSignalById(id: string): Signal<TimetableActivity> {
-    return computed(() => this.timetableActivityListSig().find((timetableActivity: TimetableActivity) => timetableActivity.id === id) || ({} as TimetableActivity));
+    return computed(
+      () => this.timetableActivityListSig().find((timetableActivity: TimetableActivity) => timetableActivity.id === id) || ({} as TimetableActivity)
+    );
   }
 
   getById(id: string): Observable<TimetableActivity> {
@@ -86,19 +107,22 @@ export class AdminTimetableActivityService {
   }
 
   create(input: CreateTimetableActivityCmd): void {
-    this._httpTimetableActivityService.createTimetableActivityItem$(input)
+    this._httpTimetableActivityService
+      .createTimetableActivityItem$(input)
       .pipe(take(1), takeUntilDestroyed(this._destroyRef))
-      .subscribe(created => SignalArrayUtil.upsertBy('id', created, this._timetableActivityListSig));
+      .subscribe((created) => SignalArrayUtil.upsertBy('id', created, this._timetableActivityListSig));
   }
 
   update(id: string, patch: UpdateTimetableActivityCmd): void {
-    this._httpTimetableActivityService.updateTimetableActivityItem$(id, patch)
+    this._httpTimetableActivityService
+      .updateTimetableActivityItem$(id, patch)
       .pipe(take(1), takeUntilDestroyed(this._destroyRef))
-      .subscribe(updated => SignalArrayUtil.upsertBy('id', updated, this._timetableActivityListSig));
+      .subscribe((updated) => SignalArrayUtil.upsertBy('id', updated, this._timetableActivityListSig));
   }
 
   remove(id: string): void {
-    this._httpTimetableActivityService.deleteTimetableActivityItem$(id)
+    this._httpTimetableActivityService
+      .deleteTimetableActivityItem$(id)
       .pipe(take(1), takeUntilDestroyed(this._destroyRef))
       .subscribe(() => SignalArrayUtil.removeBy('id', id, this._timetableActivityListSig));
   }

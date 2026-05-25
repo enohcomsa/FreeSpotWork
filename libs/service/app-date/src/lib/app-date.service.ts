@@ -47,26 +47,31 @@ export class AppDateService {
     let distance = 0;
 
     switch (weekDay) {
-      case WeekDay.MONDAY:
+      case 'MONDAY':
         distance = (6 + weekDayDate.getDay()) % 7;
         weekDayDate.setDate(weekDayDate.getDate() + 7 - distance);
         return weekDayDate;
-      case WeekDay.TUESDAY:
+
+      case 'TUESDAY':
         distance = (5 + weekDayDate.getDay()) % 7;
         weekDayDate.setDate(weekDayDate.getDate() + 7 - distance);
         return weekDayDate;
-      case WeekDay.WEDNESDAY:
+
+      case 'WEDNESDAY':
         distance = (4 + weekDayDate.getDay()) % 7;
         weekDayDate.setDate(weekDayDate.getDate() + 7 - distance);
         return weekDayDate;
-      case WeekDay.THURSDAY:
+
+      case 'THURSDAY':
         distance = (3 + weekDayDate.getDay()) % 7;
         weekDayDate.setDate(weekDayDate.getDate() + 7 - distance);
         return weekDayDate;
-      case WeekDay.FRIDAY:
+
+      case 'FRIDAY':
         distance = (2 + weekDayDate.getDay()) % 7;
         weekDayDate.setDate(weekDayDate.getDate() + 7 - distance);
         return weekDayDate;
+
       default:
         return weekDayDate;
     }

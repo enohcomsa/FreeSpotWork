@@ -28,8 +28,8 @@ export class UserSetupStore {
   readonly foundSemigroupListSig = signal<UserSetupCohort[]>([]);
 
   readonly shouldOpenDialogSig = computed(() => {
-    const initialized = this._authService.initializedSignal$();
-    const user = this._authService.userSignal$();
+    const initialized = this._authService.initializedSignal();
+    const user = this._authService.userSignal();
 
     if (!initialized || !user) {
       return false;
@@ -62,7 +62,7 @@ export class UserSetupStore {
   }
 
   getCurrentUser() {
-    return this._authService.userSignal$();
+    return this._authService.userSignal();
   }
 
   onFacultySelected(faculty: UserSetupFaculty): void {
@@ -90,7 +90,7 @@ export class UserSetupStore {
   }
 
   preloadDependentLists(): void {
-    const currentUser = this._authService.userSignal$();
+    const currentUser = this._authService.userSignal();
 
     if (!currentUser) {
       return;

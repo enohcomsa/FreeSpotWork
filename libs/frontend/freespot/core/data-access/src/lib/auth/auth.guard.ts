@@ -11,7 +11,7 @@ export const authGuard: CanActivateFn = (): boolean | UrlTree | Observable<boole
     return true;
   }
 
-  if (authService.initializedSignal$()) {
+  if (authService.initializedSignal()) {
     return router.createUrlTree(['/auth']);
   }
 

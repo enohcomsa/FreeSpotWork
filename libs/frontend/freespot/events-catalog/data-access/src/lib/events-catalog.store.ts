@@ -18,8 +18,6 @@ export class EventsCatalogStore {
   private readonly _roomListSig = signal<EventsCatalogRoom[]>([]);
   private readonly _bookingListSig = signal<EventsCatalogBooking[]>([]);
 
-  readonly eventListSig = this._eventListSig.asReadonly();
-
   readonly registeredEventIdSetSig = computed(() => {
     return new Set(this._bookingListSig().map((booking) => booking.activityId).filter((id): id is string => !!id));
   });
