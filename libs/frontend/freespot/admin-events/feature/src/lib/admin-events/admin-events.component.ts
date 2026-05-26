@@ -10,28 +10,26 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
-import { filter } from 'rxjs';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import {
-  AdminEventsBuilding,
-  AdminEventsRoom,
-  AdminEventType,
-  AdminSpecialEvent,
-  CreateAdminSpecialEventCmd,
-  UpdateAdminSpecialEventCmd,
-} from '@free-spot/admin-events/domain';
-import { FormErrorMessage } from '@free-spot/util';
-import { AddItemCardComponent } from '@free-spot/ui';
-
-import { AdminEventCardComponent } from '@free-spot/admin-events/ui';
 import { AdminEventsStore } from '@free-spot/admin-events/data-access';
+import {
+  type AdminEventsBuilding,
+  type AdminEventsRoom,
+  type AdminSpecialEvent,
+  type CreateAdminSpecialEventCmd,
+  type UpdateAdminSpecialEventCmd,
+} from '@free-spot/admin-events/domain';
+import { AdminEventCardComponent } from '@free-spot/admin-events/ui';
+import { AddItemCardComponent } from '@free-spot/ui';
+import { FormErrorMessage } from '@free-spot/util';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'free-spot-admin-events',
@@ -52,133 +50,149 @@ import { AdminEventsStore } from '@free-spot/admin-events/data-access';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminEventsComponent implements OnInit {
-  private _formBuilder: FormBuilder = inject(FormBuilder);
-  private _formErrorMessage: FormErrorMessage = inject(FormErrorMessage);
-  private _adminEventsStore = inject(AdminEventsStore);
-  private _destroyRef = inject(DestroyRef);
+  private readonly formBuilder = inject(FormBuilder);
+  private readonly formErrorMessage = inject(FormErrorMessage);
+  private readonly adminEventsStore = inject(AdminEventsStore);
+  private readonly destroyRef = inject(DestroyRef);
 
   editEvent = viewChild<ElementRef>('editEvent');
 
-  readonly buildingListSig: Signal<AdminEventsBuilding[]> = this._adminEventsStore.buildingListSig;
-  readonly eventListSig: Signal<AdminSpecialEvent[]> = this._adminEventsStore.eventListSig;
+  readonly buildingListSig: Signal<AdminEventsBuilding[]> = this.adminEventsStore.buildingListSig;
+  readonly eventListSig: Signal<AdminSpecialEvent[]> = this.adminEventsStore.eventListSig;
 
-  specialEventSig: WritableSignal<AdminSpecialEvent> = signal({} as AdminSpecialEvent);
+  specialEventSig: WritableSignal<AdminSpecialEvent | null> = signal(null);
 
-  startHourList: number[] = [8, 10, 12, 14, 16, 18];
+  readonly startHourList: number[] = [8, 10, 12, 14, 16, 18];
+
   foundRoomListSig: WritableSignal<AdminEventsRoom[]> = signal([]);
   addingEvent = false;
   editingEvent = false;
 
-  addEventFormGroup = this._formBuilder.nonNullable.group({
+  addEventFormGroup = this.formBuilder.nonNullable.group({
     name: ['', [Validators.required, Validators.minLength(3)]],
     date: [new Date(), [Validators.required]],
     startHour: [8, [Validators.required]],
-    building: [this.buildingListSig()[0], [Validators.required]],
+    building: [{} as AdminEventsBuilding, [Validators.required]],
     room: [{} as AdminEventsRoom, [Validators.required]],
     unavailable: [0, [Validators.required]],
   });
 
   ngOnInit(): void {
-    this._adminEventsStore.init();
+    this.adminEventsStore.init();
 
-    this.addEventFormGroup.controls['building'].valueChanges
+    this.addEventFormGroup.controls.building.valueChanges
       .pipe(
-        filter((building): building is AdminEventsBuilding => !!building),
-        takeUntilDestroyed(this._destroyRef)
+        filter((building): building is AdminEventsBuilding => !!building?.id),
+        takeUntilDestroyed(this.destroyRef),
       )
-      .subscribe((building: AdminEventsBuilding) => {
-        this.foundRoomListSig.set(this._adminEventsStore.selectRoomsByBuildingId(building.id)());
+      .subscribe((building) => {
+        this.foundRoomListSig.set(this.adminEventsStore.selectRoomsByBuildingId(building.id)());
+
         if (!this.editingEvent) {
-          this.addEventFormGroup.controls['room'].reset();
+          this.addEventFormGroup.controls.room.reset();
         }
       });
   }
 
-  displayError = (control: AbstractControl | null) => this._formErrorMessage.displayFormErrorMessage(control);
+  displayError = (control: AbstractControl | null): string => this.formErrorMessage.displayFormErrorMessage(control);
 
   getBuildingById(buildingId: string): AdminEventsBuilding | undefined {
-    return this._adminEventsStore.getBuildingById(buildingId)();
+    return this.adminEventsStore.getBuildingById(buildingId)();
   }
 
   getRoomById(roomId: string): AdminEventsRoom | undefined {
-    return this._adminEventsStore.getRoomById(roomId)();
+    return this.adminEventsStore.getRoomById(roomId)();
   }
 
   onAddingEvent(): void {
     this.addEventFormGroup.reset();
     this.addingEvent = true;
     this.editingEvent = false;
+    this.specialEventSig.set(null);
     this.editEvent()?.nativeElement.scrollIntoView({ block: 'center', behavior: 'smooth' });
   }
 
   onAddEvent(): void {
-    const eventDate: Date = this.addEventFormGroup.controls['date'].value;
-    eventDate.setHours(this.addEventFormGroup.controls['startHour'].value, 0, 0, 0);
+    const eventDate = this.toEventDate();
 
     const newSpecialEvent: CreateAdminSpecialEventCmd = {
-      type: AdminEventType.Special,
-      name: this.addEventFormGroup.controls['name'].value,
+      type: 'SPECIAL',
+      name: this.addEventFormGroup.controls.name.value,
       date: eventDate.toISOString(),
-      startHour: this.addEventFormGroup.controls['startHour'].value,
-      buildingId: this.addEventFormGroup.controls['building'].value.id,
-      roomId: this.addEventFormGroup.controls['room'].value.id,
-      reservedSpots: this.addEventFormGroup.controls['unavailable'].value,
+      startHour: this.addEventFormGroup.controls.startHour.value,
+      buildingId: this.addEventFormGroup.controls.building.value.id,
+      roomId: this.addEventFormGroup.controls.room.value.id,
+      reservedSpots: this.addEventFormGroup.controls.unavailable.value,
     };
 
-    this._adminEventsStore.createEvent(newSpecialEvent);
-    this.editingEvent = false;
-    this.addingEvent = false;
+    this.adminEventsStore.createEvent(newSpecialEvent);
+    this.resetFormState();
   }
 
   onEditingEvent(eventToEdit: AdminSpecialEvent): void {
-    const building = this._adminEventsStore.getBuildingById(eventToEdit.buildingId)();
-    const room = this._adminEventsStore.getRoomById(eventToEdit.roomId)();
+    const building = this.adminEventsStore.getBuildingById(eventToEdit.buildingId)();
+    const room = this.adminEventsStore.getRoomById(eventToEdit.roomId)();
 
     if (!building || !room) {
       return;
     }
 
-
     this.editingEvent = true;
+    this.addingEvent = true;
+    this.foundRoomListSig.set(this.adminEventsStore.selectRoomsByBuildingId(building.id)());
+
     this.addEventFormGroup.setValue({
       name: eventToEdit.name,
-      date: new Date(eventToEdit.date ? new Date(eventToEdit.date) : new Date()),
-      startHour: eventToEdit.startHour as number,
+      date: new Date(eventToEdit.date),
+      startHour: eventToEdit.startHour,
       building,
       room,
-      unavailable: eventToEdit.reservedSpots as number,
+      unavailable: eventToEdit.reservedSpots,
     });
-
-    this.addEventFormGroup.controls['room'].setValue(
-      this.foundRoomListSig().filter((room: AdminEventsRoom) => room.id === eventToEdit.roomId)[0]
-    );
 
     this.specialEventSig.set(eventToEdit);
     this.editEvent()?.nativeElement.scrollIntoView({ block: 'center', behavior: 'smooth' });
   }
 
   onEditEvent(): void {
-    const eventDate: Date = this.addEventFormGroup.controls['date'].value;
-    eventDate.setHours(this.addEventFormGroup.controls['startHour'].value, 0, 0, 0);
+    const specialEvent = this.specialEventSig();
+
+    if (!specialEvent) {
+      return;
+    }
+
+    const eventDate = this.toEventDate();
 
     const updatedSpecialEvent: UpdateAdminSpecialEventCmd = {
-      type: AdminEventType.Special,
-      name: this.addEventFormGroup.controls['name'].value,
+      type: 'SPECIAL',
+      name: this.addEventFormGroup.controls.name.value,
       date: eventDate.toISOString(),
-      startHour: this.addEventFormGroup.controls['startHour'].value,
-      buildingId: this.addEventFormGroup.controls['building'].value.id,
-      roomId: this.addEventFormGroup.controls['room'].value.id,
-      reservedSpots: this.addEventFormGroup.controls['unavailable'].value,
+      startHour: this.addEventFormGroup.controls.startHour.value,
+      buildingId: this.addEventFormGroup.controls.building.value.id,
+      roomId: this.addEventFormGroup.controls.room.value.id,
+      reservedSpots: this.addEventFormGroup.controls.unavailable.value,
     };
 
-    this._adminEventsStore.updateEvent(this.specialEventSig().id, updatedSpecialEvent);
-    this.addEventFormGroup.reset();
-    this.editingEvent = false;
-    this.addingEvent = false;
+    this.adminEventsStore.updateEvent(specialEvent.id, updatedSpecialEvent);
+    this.resetFormState();
   }
 
   onDeleteEvent(deletedSpecialEventId: string): void {
-    this._adminEventsStore.deleteEvent(deletedSpecialEventId);
+    this.adminEventsStore.deleteEvent(deletedSpecialEventId);
+    this.resetFormState();
+  }
+
+  private toEventDate(): Date {
+    const eventDate = new Date(this.addEventFormGroup.controls.date.value);
+
+    eventDate.setHours(this.addEventFormGroup.controls.startHour.value, 0, 0, 0);
+
+    return eventDate;
+  }
+
+  private resetFormState(): void {
+    this.addEventFormGroup.reset();
+    this.specialEventSig.set(null);
     this.editingEvent = false;
     this.addingEvent = false;
   }

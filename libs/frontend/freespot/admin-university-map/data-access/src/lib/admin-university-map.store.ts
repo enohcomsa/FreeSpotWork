@@ -1,23 +1,21 @@
-import { Injectable, Signal, computed, inject, signal } from '@angular/core';
-
+import { computed, inject, Injectable, Signal, signal } from '@angular/core';
 import {
-  AdminUniversityMapBuilding,
-  AdminUniversityMapBuildingCard,
-  CreateAdminUniversityMapBuildingCmd,
-  UpdateAdminUniversityMapBuildingCmd,
-  AdminUniversityMapFloor,
-  AdminUniversityMapFloorVM,
-  AdminUniversityMapRoom,
-  CreateAdminUniversityMapFloorCmd,
-  UpdateAdminUniversityMapFloorCmd,
-  AdminUniversityMapRoomVM,
-  CreateAdminUniversityMapRoomCmd,
-  UpdateAdminUniversityMapRoomCmd,
-  AdminUniversityMapSubject,
-  AdminUniversityMapTimetableActivity,
-  CreateAdminUniversityMapTimetableActivityCmd,
+  type AdminUniversityMapBuilding,
+  type AdminUniversityMapBuildingCard,
+  type AdminUniversityMapFloor,
+  type AdminUniversityMapFloorVM,
+  type AdminUniversityMapRoom,
+  type AdminUniversityMapRoomVM,
+  type AdminUniversityMapSubject,
+  type AdminUniversityMapTimetableActivity,
+  type CreateAdminUniversityMapBuildingCmd,
+  type CreateAdminUniversityMapFloorCmd,
+  type CreateAdminUniversityMapRoomCmd,
+  type CreateAdminUniversityMapTimetableActivityCmd,
+  type UpdateAdminUniversityMapBuildingCmd,
+  type UpdateAdminUniversityMapFloorCmd,
+  type UpdateAdminUniversityMapRoomCmd,
 } from '@free-spot/admin-university-map/domain';
-
 import { HttpAdminUniversityMapService } from './http-admin-university-map.service';
 
 @Injectable({ providedIn: 'root' })
@@ -66,26 +64,24 @@ export class AdminUniversityMapStore {
 
   remove(id: string): void {
     this.http.remove$(id).subscribe(() => {
-      this.buildingsSig.update((buildings) =>
-        buildings.filter((building) => building.id !== id),
-      );
+      this.buildingsSig.update((buildings) => buildings.filter((building) => building.id !== id));
     });
   }
 
-  getBuildingById(id: string) {
+  getBuildingById(id: string): Signal<AdminUniversityMapBuilding | undefined> {
     return computed(() => this.buildingsSig().find((building) => building.id === id));
   }
 
-  selectFloorsByBuildingId(buildingId: string) {
+  selectFloorsByBuildingId(buildingId: string): Signal<AdminUniversityMapFloor[]> {
     return computed(() => this.floorsSig().filter((floor) => floor.buildingId === buildingId));
   }
 
-  selectRoomsByFloorId(floorId: string) {
+  selectRoomsByFloorId(floorId: string): Signal<AdminUniversityMapRoom[]> {
     return computed(() => this.roomsSig().filter((room) => room.floorId === floorId));
   }
 
-  selectFloorVMsByBuildingId(buildingId: string) {
-    return computed<AdminUniversityMapFloorVM[]>(() =>
+  selectFloorVMsByBuildingId(buildingId: string): Signal<AdminUniversityMapFloorVM[]> {
+    return computed(() =>
       this.selectFloorsByBuildingId(buildingId)().map((floor) => ({
         id: floor.id,
         name: floor.name,
@@ -102,9 +98,7 @@ export class AdminUniversityMapStore {
 
   updateFloor(id: string, cmd: UpdateAdminUniversityMapFloorCmd): void {
     this.http.updateFloor$(id, cmd).subscribe((updatedFloor) => {
-      this.floorsSig.update((floors) =>
-        floors.map((floor) => (floor.id === id ? updatedFloor : floor)),
-      );
+      this.floorsSig.update((floors) => floors.map((floor) => (floor.id === id ? updatedFloor : floor)));
     });
   }
 
@@ -114,12 +108,12 @@ export class AdminUniversityMapStore {
     });
   }
 
-  getFloorById(id: string) {
+  getFloorById(id: string): Signal<AdminUniversityMapFloor | undefined> {
     return computed(() => this.floorsSig().find((floor) => floor.id === id));
   }
 
-  selectRoomVMsByFloorId(floorId: string) {
-    return computed<AdminUniversityMapRoomVM[]>(() =>
+  selectRoomVMsByFloorId(floorId: string): Signal<AdminUniversityMapRoomVM[]> {
+    return computed(() =>
       this.selectRoomsByFloorId(floorId)().map((room) => ({
         id: room.id,
         name: room.name,
@@ -137,9 +131,7 @@ export class AdminUniversityMapStore {
 
   updateRoom(id: string, cmd: UpdateAdminUniversityMapRoomCmd): void {
     this.http.updateRoom$(id, cmd).subscribe((updatedRoom) => {
-      this.roomsSig.update((rooms) =>
-        rooms.map((room) => (room.id === id ? updatedRoom : room)),
-      );
+      this.roomsSig.update((rooms) => rooms.map((room) => (room.id === id ? updatedRoom : room)));
     });
   }
 
@@ -149,14 +141,12 @@ export class AdminUniversityMapStore {
     });
   }
 
-  getRoomById(id: string) {
+  getRoomById(id: string): Signal<AdminUniversityMapRoom | undefined> {
     return computed(() => this.roomsSig().find((room) => room.id === id));
   }
 
-  selectTimetableActivitiesByRoomId(roomId: string) {
-    return computed(() =>
-      this.timetableActivitiesSig().filter((activity) => activity.roomId === roomId),
-    );
+  selectTimetableActivitiesByRoomId(roomId: string): Signal<AdminUniversityMapTimetableActivity[]> {
+    return computed(() => this.timetableActivitiesSig().filter((activity) => activity.roomId === roomId));
   }
 
   createTimetableActivity(cmd: CreateAdminUniversityMapTimetableActivityCmd): void {
@@ -167,9 +157,7 @@ export class AdminUniversityMapStore {
 
   removeTimetableActivity(id: string): void {
     this.http.removeTimetableActivity$(id).subscribe(() => {
-      this.timetableActivitiesSig.update((activities) =>
-        activities.filter((activity) => activity.id !== id),
-      );
+      this.timetableActivitiesSig.update((activities) => activities.filter((activity) => activity.id !== id));
     });
   }
 }

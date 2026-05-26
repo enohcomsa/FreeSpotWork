@@ -10,7 +10,6 @@ import {
   WritableSignal,
 } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { debounceTime } from 'rxjs';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
@@ -19,15 +18,15 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { FormErrorMessage } from '@free-spot/util';
-import { ConfirmModalService } from '@free-spot/core/ui';
-
 import { AdminTimetablingStore } from '@free-spot/admin-timetabling/data-access';
 import {
-  AdminTimetableActivity,
-  AdminTimetableActivityType,
-  AdminTimetableWeekDay,
+  type AdminTimetableActivity,
+  type AdminTimetableActivityType,
+  type AdminTimetableWeekDay,
 } from '@free-spot/admin-timetabling/domain';
+import { ConfirmModalService } from '@free-spot/core/ui';
+import { FormErrorMessage } from '@free-spot/util';
+import { debounceTime } from 'rxjs';
 
 @Component({
   selector: 'free-spot-admin-semigroup-timetable',
@@ -55,17 +54,32 @@ export class AdminSemisemiGroupTimetableComponent implements OnInit {
 
   semiGroupIdSig = input.required<string>();
   subjectListSig = input.required<string[]>();
+
   foundActivityListSig: WritableSignal<AdminTimetableActivity[]> = signal([]);
 
   protected semiGroupTimetableActivityListSig: Signal<AdminTimetableActivity[]> = computed(() =>
     this.store.selectTimetableActivityListByCohortId(this.semiGroupIdSig())(),
   );
 
-  startHourList: number[] = [8, 10, 12, 14, 16, 18];
-  eventList: AdminTimetableActivityType[] = Object.values(AdminTimetableActivityType).filter(
-    (event) => event !== AdminTimetableActivityType.SpecialEvent,
-  );
-  weekDayList: AdminTimetableWeekDay[] = Object.values(AdminTimetableWeekDay);
+  readonly startHourList: number[] = [8, 10, 12, 14, 16, 18];
+
+  readonly eventList: AdminTimetableActivityType[] = [
+    'LABORATORY',
+    'COURSE',
+    'PROJECT',
+    'SEMINAR',
+  ];
+
+  readonly weekDayList: AdminTimetableWeekDay[] = [
+    'MONDAY',
+    'TUESDAY',
+    'WEDNESDAY',
+    'THURSDAY',
+    'FRIDAY',
+    'SATURDAY',
+    'SUNDAY',
+  ];
+
   addTimetableActivityFormSemiGroup!: FormGroup;
   addingTimetableActivity = false;
 
@@ -75,9 +89,9 @@ export class AdminSemisemiGroupTimetableComponent implements OnInit {
     this.store.init();
 
     this.addTimetableActivityFormSemiGroup = this.formBuilder.nonNullable.group({
-      weekDay: [AdminTimetableWeekDay.Monday, [Validators.required, Validators.minLength(1)]],
+      weekDay: ['MONDAY' as AdminTimetableWeekDay, [Validators.required, Validators.minLength(1)]],
       subject: [this.subjectListSig()[0], [Validators.required, Validators.minLength(1)]],
-      timetableActivity: [{}, [Validators.required, Validators.minLength(1)]],
+      timetableActivity: [{} as AdminTimetableActivity, [Validators.required, Validators.minLength(1)]],
     });
 
     this.addTimetableActivityFormSemiGroup.valueChanges.pipe(debounceTime(300)).subscribe(() => {
@@ -92,7 +106,7 @@ export class AdminSemisemiGroupTimetableComponent implements OnInit {
     });
   }
 
-  displayError = (control: AbstractControl | null) => this.formErrorMessage.displayFormErrorMessage(control);
+  displayError = (control: AbstractControl | null): string => this.formErrorMessage.displayFormErrorMessage(control);
 
   getSubjectShortNameById(subjectId: string): string {
     return this.store.getSubjectById(subjectId)()?.shortName ?? '';

@@ -38,7 +38,7 @@
         <mat-label>Building adress</mat-label>
         <mat-hint>Enter building address</mat-hint>
         <input type="text" matInput formControlName="adress" />
-        <mat-error>{{ displayError(addBuildingFormGroup.controls['adress']) }}</mat-error>
+        <mat-error>{{ displayError(addBuildingFormGroup.controls['address']) }}</mat-error>
       </mat-form-field>
 
       <button mat-flat-button type="submit" class="sm:mb-5" [disabled]="!addBuildingFormGroup.valid">

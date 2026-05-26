@@ -1,22 +1,27 @@
 export {
   type AdminUniversityMapBuilding,
-  type AdminUniversityMapBuildingCard,
   type AdminUniversityMapFloor,
-  type AdminUniversityMapFloorCard,
-  type AdminUniversityMapFloorVM,
   type AdminUniversityMapRoom,
   type CreateAdminUniversityMapBuildingCmd,
   type CreateAdminUniversityMapFloorCmd,
-  type UpdateAdminUniversityMapBuildingCmd,
-  type AdminUniversityMapRoomVM,
   type CreateAdminUniversityMapRoomCmd,
-  type UpdateAdminUniversityMapRoomCmd,
+  type UpdateAdminUniversityMapBuildingCmd,
   type UpdateAdminUniversityMapFloorCmd,
+  type UpdateAdminUniversityMapRoomCmd,
+} from './lib/admin-university-map.model';
+
+export {
+  type AdminUniversityMapActivityType,
   type AdminUniversityMapSubject,
   type AdminUniversityMapTimetableActivity,
+  type AdminUniversityMapWeekDay,
+  type AdminUniversityMapWeekParity,
   type CreateAdminUniversityMapTimetableActivityCmd,
-  AdminUniversityMapActivityType,
-  AdminUniversityMapWeekDay,
-  AdminUniversityMapWeekParity,
+} from './lib/admin-university-map-timetable.model';
 
-} from './lib/admin-university-map.models';
+export {
+  type AdminUniversityMapBuildingCard,
+  type AdminUniversityMapFloorCard,
+  type AdminUniversityMapFloorVM,
+  type AdminUniversityMapRoomVM,
+} from './lib/admin-university-map.vm';

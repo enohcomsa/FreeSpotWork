@@ -18,16 +18,15 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { AdminTimetablingStore } from '@free-spot/admin-timetabling/data-access';
+import {
+  type AdminTimetableActivity,
+  type AdminTimetableActivityType,
+  type AdminTimetableWeekDay,
+} from '@free-spot/admin-timetabling/domain';
 import { ConfirmModalService } from '@free-spot/core/ui';
 import { FormErrorMessage } from '@free-spot/util';
 import { debounceTime } from 'rxjs';
-
-import { AdminTimetablingStore } from '@free-spot/admin-timetabling/data-access';
-import {
-  AdminTimetableActivity,
-  AdminTimetableActivityType,
-  AdminTimetableWeekDay,
-} from '@free-spot/admin-timetabling/domain';
 
 @Component({
   selector: 'free-spot-admin-group-timetable',
@@ -62,11 +61,25 @@ export class AdminGroupTimetableComponent implements OnInit {
 
   foundActivityListSig: WritableSignal<AdminTimetableActivity[]> = signal([]);
 
-  startHourList: number[] = [8, 10, 12, 14, 16, 18];
-  activityTypeList: AdminTimetableActivityType[] = Object.values(AdminTimetableActivityType).filter(
-    (event) => event !== AdminTimetableActivityType.SpecialEvent,
-  );
-  weekDayList: AdminTimetableWeekDay[] = Object.values(AdminTimetableWeekDay);
+  readonly startHourList: number[] = [8, 10, 12, 14, 16, 18];
+
+  readonly activityTypeList: AdminTimetableActivityType[] = [
+    'LABORATORY',
+    'COURSE',
+    'PROJECT',
+    'SEMINAR',
+  ];
+
+  readonly weekDayList: AdminTimetableWeekDay[] = [
+    'MONDAY',
+    'TUESDAY',
+    'WEDNESDAY',
+    'THURSDAY',
+    'FRIDAY',
+    'SATURDAY',
+    'SUNDAY',
+  ];
+
   addTimetableActivityFormGroup!: FormGroup;
   addingTimetableActivity = false;
 
@@ -76,9 +89,9 @@ export class AdminGroupTimetableComponent implements OnInit {
     this.store.init();
 
     this.addTimetableActivityFormGroup = this.formBuilder.nonNullable.group({
-      weekDay: [AdminTimetableWeekDay.Monday, [Validators.required, Validators.minLength(1)]],
+      weekDay: ['MONDAY' as AdminTimetableWeekDay, [Validators.required, Validators.minLength(1)]],
       subject: [this.subjectListSig()[0], [Validators.required, Validators.minLength(1)]],
-      timetableActivity: [{}, [Validators.required, Validators.minLength(1)]],
+      timetableActivity: [{} as AdminTimetableActivity, [Validators.required, Validators.minLength(1)]],
     });
 
     this.addTimetableActivityFormGroup.valueChanges.pipe(debounceTime(300)).subscribe(() => {
@@ -101,7 +114,7 @@ export class AdminGroupTimetableComponent implements OnInit {
     return this.store.getRoomById(roomId)()?.name ?? '';
   }
 
-  displayError = (control: AbstractControl | null) => this.formErrorMessage.displayFormErrorMessage(control);
+  displayError = (control: AbstractControl | null): string => this.formErrorMessage.displayFormErrorMessage(control);
 
   displaySubject = (subjectId?: string | null): string => (subjectId ? this.getSubjectShortNameById(subjectId) : '');
 

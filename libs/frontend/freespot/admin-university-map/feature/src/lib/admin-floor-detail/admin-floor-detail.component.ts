@@ -10,21 +10,20 @@ import {
   viewChild,
   WritableSignal,
 } from '@angular/core';
-import { FormsModule, ReactiveFormsModule, FormBuilder, Validators, AbstractControl } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { AdminRoomCardComponent } from '@free-spot/admin-university-map/ui';
-import { AddItemCardComponent } from '@free-spot/ui';
-import { ConfirmModalService } from '@free-spot/core/ui';
-import { FormErrorMessage } from '@free-spot/util';
-
 import { AdminUniversityMapStore } from '@free-spot/admin-university-map/data-access';
 import {
-  AdminUniversityMapRoomVM,
-  CreateAdminUniversityMapRoomCmd,
-  UpdateAdminUniversityMapRoomCmd,
+  type AdminUniversityMapRoomVM,
+  type CreateAdminUniversityMapRoomCmd,
+  type UpdateAdminUniversityMapRoomCmd,
 } from '@free-spot/admin-university-map/domain';
+import { AdminRoomCardComponent } from '@free-spot/admin-university-map/ui';
+import { ConfirmModalService } from '@free-spot/core/ui';
+import { AddItemCardComponent } from '@free-spot/ui';
+import { FormErrorMessage } from '@free-spot/util';
 
 @Component({
   selector: 'free-spot-admin-floor-detail',
@@ -51,9 +50,11 @@ export class AdminFloorDetailComponent implements OnInit {
   floorIdSig = input.required<string>();
 
   readonly floorSig = computed(() => this.store.getFloorById(this.floorIdSig())());
-  readonly editingRoomIdSig: WritableSignal<string | null> = signal<string | null>(null);
+  readonly editingRoomIdSig: WritableSignal<string | null> = signal(null);
   readonly floorRoomListSig = computed(() => this.store.selectRoomsByFloorId(this.floorIdSig())());
-  readonly roomCardVMs = computed(() => this.store.selectRoomVMsByFloorId(this.floorIdSig())());
+  readonly roomCardVMs = computed<AdminUniversityMapRoomVM[]>(() =>
+    this.store.selectRoomVMsByFloorId(this.floorIdSig())(),
+  );
 
   addingRoom = false;
   editingRoom = false;
@@ -68,11 +69,12 @@ export class AdminFloorDetailComponent implements OnInit {
     this.store.init();
   }
 
-  displayError = (control: AbstractControl | null) =>
+  displayError = (control: AbstractControl | null): string =>
     this.formErrorMessage.displayFormErrorMessage(control);
 
   onAddingRoom(): void {
     this.addRoomFormGroup.reset();
+    this.editingRoomIdSig.set(null);
     this.editingRoom = false;
     this.addingRoom = true;
     this.editRoom()?.nativeElement.scrollIntoView({ block: 'center', behavior: 'smooth' });
@@ -95,13 +97,12 @@ export class AdminFloorDetailComponent implements OnInit {
     };
 
     this.store.createRoom(newRoom);
-    this.addRoomFormGroup.reset();
-    this.addingRoom = false;
-    this.editingRoom = false;
+    this.resetFormState();
   }
 
   onEditingRoom(roomToEdit: AdminUniversityMapRoomVM): void {
     this.editingRoom = true;
+    this.addingRoom = true;
     this.editingRoomIdSig.set(roomToEdit.id);
     this.addRoomFormGroup.setValue({
       roomName: roomToEdit.name,
@@ -125,9 +126,7 @@ export class AdminFloorDetailComponent implements OnInit {
     };
 
     this.store.updateRoom(id, updatedRoom);
-    this.addRoomFormGroup.reset();
-    this.addingRoom = false;
-    this.editingRoom = false;
+    this.resetFormState();
   }
 
   onDeleteRoom(deletedRoom: AdminUniversityMapRoomVM): void {
@@ -137,10 +136,15 @@ export class AdminFloorDetailComponent implements OnInit {
       .subscribe((result: boolean) => {
         if (result) {
           this.store.removeRoom(deletedRoom.id);
-          this.addRoomFormGroup.reset();
-          this.addingRoom = false;
-          this.editingRoom = false;
+          this.resetFormState();
         }
       });
+  }
+
+  private resetFormState(): void {
+    this.addRoomFormGroup.reset();
+    this.editingRoomIdSig.set(null);
+    this.addingRoom = false;
+    this.editingRoom = false;
   }
 }

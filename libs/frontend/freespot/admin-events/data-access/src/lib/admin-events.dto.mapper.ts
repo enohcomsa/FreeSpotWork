@@ -1,22 +1,22 @@
 import {
-  BuildingResponseDTO,
-  EventCreateDTO,
-  EventResponseDTO,
+  type BuildingResponseDTO,
+  type EventCreateDTO,
+  type EventResponseDTO,
   EventTypeDTO,
-  EventUpdateDTO,
-  RoomResponseDTO,
+  type EventUpdateDTO,
+  type RoomResponseDTO,
 } from '@free-spot/api-client';
 
 import {
-  AdminEventsBuilding,
-  AdminEventsRoom,
-  AdminEventType,
-  AdminSpecialEvent,
-  CreateAdminSpecialEventCmd,
-  UpdateAdminSpecialEventCmd,
+  type AdminEventsBuilding,
+  type AdminEventsRoom,
+  type AdminEventType,
+  type AdminSpecialEvent,
+  type CreateAdminSpecialEventCmd,
+  type UpdateAdminSpecialEventCmd,
 } from '@free-spot/admin-events/domain';
 
-export function mapAdminEventDtoToDomain(dto: EventResponseDTO): AdminSpecialEvent {
+export function adminEventDtoToDomain(dto: EventResponseDTO): AdminSpecialEvent {
   return {
     id: dto.id,
     name: dto.name,
@@ -25,11 +25,11 @@ export function mapAdminEventDtoToDomain(dto: EventResponseDTO): AdminSpecialEve
     buildingId: dto.buildingId,
     roomId: dto.roomId,
     reservedSpots: dto.reservedSpots,
-    type: mapEventTypeDtoToDomain(dto.type),
+    type: toEventType(dto.type),
   };
 }
 
-export function mapAdminEventsBuildingDtoToDomain(dto: BuildingResponseDTO): AdminEventsBuilding {
+export function buildingDtoToDomain(dto: BuildingResponseDTO): AdminEventsBuilding {
   return {
     id: dto.id,
     name: dto.name,
@@ -37,7 +37,7 @@ export function mapAdminEventsBuildingDtoToDomain(dto: BuildingResponseDTO): Adm
   };
 }
 
-export function mapAdminEventsRoomDtoToDomain(dto: RoomResponseDTO): AdminEventsRoom {
+export function roomDtoToDomain(dto: RoomResponseDTO): AdminEventsRoom {
   return {
     id: dto.id,
     name: dto.name,
@@ -45,11 +45,11 @@ export function mapAdminEventsRoomDtoToDomain(dto: RoomResponseDTO): AdminEvents
     floorId: dto.floorId,
     totalSpotsNumber: dto.totalSpotsNumber,
     unavailableSpots: dto.unavailableSpots,
-    subjectList: dto.subjectList,
+    subjectList: dto.subjectList ?? [],
   };
 }
 
-export function mapCreateAdminEventCmdToDto(cmd: CreateAdminSpecialEventCmd): EventCreateDTO {
+export function createAdminEventCmdToDto(cmd: CreateAdminSpecialEventCmd): EventCreateDTO {
   return {
     name: cmd.name,
     date: cmd.date,
@@ -57,11 +57,11 @@ export function mapCreateAdminEventCmdToDto(cmd: CreateAdminSpecialEventCmd): Ev
     buildingId: cmd.buildingId,
     roomId: cmd.roomId,
     reservedSpots: cmd.reservedSpots,
-    type: mapEventTypeDomainToDto(cmd.type),
+    type: toEventTypeDto(cmd.type),
   };
 }
 
-export function mapUpdateAdminEventCmdToDto(cmd: UpdateAdminSpecialEventCmd): EventUpdateDTO {
+export function updateAdminEventCmdToDto(cmd: UpdateAdminSpecialEventCmd): EventUpdateDTO {
   return {
     name: cmd.name,
     date: cmd.date,
@@ -69,22 +69,22 @@ export function mapUpdateAdminEventCmdToDto(cmd: UpdateAdminSpecialEventCmd): Ev
     buildingId: cmd.buildingId,
     roomId: cmd.roomId,
     reservedSpots: cmd.reservedSpots,
-    type: mapEventTypeDomainToDto(cmd.type),
+    type: toEventTypeDto(cmd.type),
   };
 }
 
-function mapEventTypeDtoToDomain(type: EventTypeDTO | undefined): AdminEventType | undefined {
-  if (type === EventTypeDTO.SPECIAL) {
-    return AdminEventType.Special;
+function toEventType(value: EventTypeDTO | undefined): AdminEventType | undefined {
+  if (!value) {
+    return undefined;
   }
 
-  return undefined;
+  return value as AdminEventType;
 }
 
-function mapEventTypeDomainToDto(type: AdminEventType | undefined): EventTypeDTO | undefined {
-  if (type === AdminEventType.Special) {
-    return EventTypeDTO.SPECIAL;
+function toEventTypeDto(value: AdminEventType | undefined): EventTypeDTO | undefined {
+  if (!value) {
+    return undefined;
   }
 
-  return undefined;
+  return value as EventTypeDTO;
 }

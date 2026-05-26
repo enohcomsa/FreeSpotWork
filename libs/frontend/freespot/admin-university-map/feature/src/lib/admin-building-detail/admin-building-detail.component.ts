@@ -10,21 +10,20 @@ import {
   viewChild,
   WritableSignal,
 } from '@angular/core';
-import { AdminFloorCardComponent } from '@free-spot/admin-university-map/ui';
 import { AbstractControl, FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { AddItemCardComponent } from '@free-spot/ui';
-import { ConfirmModalService } from '@free-spot/core/ui';
-import { FormErrorMessage } from '@free-spot/util';
-
 import { AdminUniversityMapStore } from '@free-spot/admin-university-map/data-access';
 import {
-  AdminUniversityMapFloorVM,
-  CreateAdminUniversityMapFloorCmd,
-  UpdateAdminUniversityMapFloorCmd,
+  type AdminUniversityMapFloorVM,
+  type CreateAdminUniversityMapFloorCmd,
+  type UpdateAdminUniversityMapFloorCmd,
 } from '@free-spot/admin-university-map/domain';
+import { AdminFloorCardComponent } from '@free-spot/admin-university-map/ui';
+import { ConfirmModalService } from '@free-spot/core/ui';
+import { AddItemCardComponent } from '@free-spot/ui';
+import { FormErrorMessage } from '@free-spot/util';
 
 @Component({
   selector: 'free-spot-admin-building-detail',
@@ -50,10 +49,12 @@ export class AdminBuildingDetailComponent implements OnInit {
   editFloor = viewChild<ElementRef>('editFloor');
   buildingIdSig = input.required<string>();
 
-  readonly editingFloorIdSig: WritableSignal<string | null> = signal<string | null>(null);
+  readonly editingFloorIdSig: WritableSignal<string | null> = signal(null);
   readonly buildingSig = computed(() => this.store.getBuildingById(this.buildingIdSig())());
   readonly buildingFloorList = computed(() => this.store.selectFloorsByBuildingId(this.buildingIdSig())());
-  readonly floorCardVMs = computed(() => this.store.selectFloorVMsByBuildingId(this.buildingIdSig())());
+  readonly floorCardVMs = computed<AdminUniversityMapFloorVM[]>(() =>
+    this.store.selectFloorVMsByBuildingId(this.buildingIdSig())(),
+  );
 
   addingFloor = false;
   editingFloor = false;
@@ -67,11 +68,12 @@ export class AdminBuildingDetailComponent implements OnInit {
     this.store.init();
   }
 
-  displayError = (control: AbstractControl | null) =>
+  displayError = (control: AbstractControl | null): string =>
     this.formErrorMessage.displayFormErrorMessage(control);
 
   onAddingFloor(): void {
     this.addFloorFormControl.reset();
+    this.editingFloorIdSig.set(null);
     this.editingFloor = false;
     this.addingFloor = true;
     this.editFloor()?.nativeElement.scrollIntoView({ block: 'center', behavior: 'smooth' });
@@ -84,13 +86,12 @@ export class AdminBuildingDetailComponent implements OnInit {
     };
 
     this.store.createFloor(newFloor);
-    this.addFloorFormControl.reset();
-    this.addingFloor = false;
-    this.editingFloor = false;
+    this.resetFormState();
   }
 
   onEditingFloor(floorToEdit: AdminUniversityMapFloorVM): void {
     this.editingFloor = true;
+    this.addingFloor = true;
     this.editingFloorIdSig.set(floorToEdit.id);
     this.addFloorFormControl.setValue(floorToEdit.name);
     this.editFloor()?.nativeElement.scrollIntoView({ block: 'center', behavior: 'smooth' });
@@ -108,9 +109,7 @@ export class AdminBuildingDetailComponent implements OnInit {
     };
 
     this.store.updateFloor(id, updatedFloor);
-    this.addFloorFormControl.reset();
-    this.editingFloor = false;
-    this.addingFloor = false;
+    this.resetFormState();
   }
 
   onDeleteFloor(deletedFloor: AdminUniversityMapFloorVM): void {
@@ -120,10 +119,15 @@ export class AdminBuildingDetailComponent implements OnInit {
       .subscribe((result: boolean) => {
         if (result) {
           this.store.removeFloor(deletedFloor.id);
-          this.addFloorFormControl.reset();
-          this.editingFloor = false;
-          this.addingFloor = false;
+          this.resetFormState();
         }
       });
+  }
+
+  private resetFormState(): void {
+    this.addFloorFormControl.reset();
+    this.editingFloorIdSig.set(null);
+    this.editingFloor = false;
+    this.addingFloor = false;
   }
 }

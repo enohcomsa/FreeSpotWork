@@ -1,17 +1,14 @@
-import { Injectable, Signal, computed, inject, signal } from '@angular/core';
-
+import { computed, inject, Injectable, Signal, signal } from '@angular/core';
 import {
-  AdminTimetableActivity,
-  AdminTimetableActivityType,
-  AdminTimetableWeekDay,
-  AdminTimetablingBooking,
-  AdminTimetablingRoom,
-  AdminTimetablingSubject,
-  AdminTimetablingUser,
-  UpdateAdminTimetableActivityCmd,
-  UpdateAdminTimetablingUserCmd,
+  type AdminTimetableActivity,
+  type AdminTimetableWeekDay,
+  type AdminTimetablingBooking,
+  type AdminTimetablingRoom,
+  type AdminTimetablingSubject,
+  type AdminTimetablingUser,
+  type UpdateAdminTimetableActivityCmd,
+  type UpdateAdminTimetablingUserCmd,
 } from '@free-spot/admin-timetabling/domain';
-
 import { HttpAdminTimetablingService } from './http-admin-timetabling.service';
 
 @Injectable({ providedIn: 'root' })
@@ -42,34 +39,32 @@ export class AdminTimetablingStore {
     });
   }
 
-  getRoomById(id: string) {
+  getRoomById(id: string): Signal<AdminTimetablingRoom | undefined> {
     return computed(() => this.roomsSig().find((room) => room.id === id));
   }
 
-  getSubjectById(id: string) {
+  getSubjectById(id: string): Signal<AdminTimetablingSubject | undefined> {
     return computed(() => this.subjectsSig().find((subject) => subject.id === id));
   }
 
-  getActivityById(id: string) {
+  getActivityById(id: string): Signal<AdminTimetableActivity | undefined> {
     return computed(() => this.activitiesSig().find((activity) => activity.id === id));
   }
 
-  selectTimetableActivityListByCohortId(cohortId: string) {
-    return computed(() =>
-      this.activitiesSig().filter((activity) => activity.cohortIds.includes(cohortId)),
-    );
+  selectTimetableActivityListByCohortId(cohortId: string): Signal<AdminTimetableActivity[]> {
+    return computed(() => this.activitiesSig().filter((activity) => activity.cohortIds.includes(cohortId)));
   }
 
   selectTimetableActivityListBySubjectIdAndWeekDay(
     subjectId: string,
     weekDay: AdminTimetableWeekDay,
-  ) {
+  ): Signal<AdminTimetableActivity[]> {
     return computed(() =>
       this.activitiesSig().filter(
         (activity) =>
           activity.subjectId === subjectId &&
           activity.weekDay === weekDay &&
-          activity.activityType !== AdminTimetableActivityType.SpecialEvent,
+          activity.activityType !== 'SPECIAL_EVENT',
       ),
     );
   }
@@ -108,9 +103,7 @@ export class AdminTimetablingStore {
 
   updateUser(id: string, cmd: UpdateAdminTimetablingUserCmd): void {
     this.http.updateUser$(id, cmd).subscribe((updatedUser) => {
-      this.usersSig.update((users) =>
-        users.map((user) => (user.id === id ? updatedUser : user)),
-      );
+      this.usersSig.update((users) => users.map((user) => (user.id === id ? updatedUser : user)));
     });
   }
 

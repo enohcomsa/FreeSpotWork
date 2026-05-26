@@ -1,6 +1,4 @@
-export enum AdminEventType {
-  Special = 'SPECIAL',
-}
+export type AdminEventType = 'SPECIAL';
 
 export interface AdminSpecialEvent {
   id: string;
