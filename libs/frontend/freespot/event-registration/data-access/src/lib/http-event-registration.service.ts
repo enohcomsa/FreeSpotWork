@@ -8,11 +8,11 @@ import { dtoToEventRegistrationBooking } from './event-registration.dto.mapper';
   providedIn: 'root',
 })
 export class HttpEventRegistrationService {
-  private readonly _api = inject(BookingsHttpService);
+  private readonly api = inject(BookingsHttpService);
 
   createBooking$(activityId: string): Observable<EventRegistrationBooking> {
     const bookingCreateDTO: BookingCreateDTO = { activityId };
 
-    return this._api.bookingsPost({ bookingCreateDTO }).pipe(map(dtoToEventRegistrationBooking));
+    return this.api.bookingsPost({ bookingCreateDTO }).pipe(map(dtoToEventRegistrationBooking));
   }
 }

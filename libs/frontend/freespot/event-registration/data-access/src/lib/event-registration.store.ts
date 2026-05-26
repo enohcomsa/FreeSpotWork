@@ -7,13 +7,13 @@ import { HttpEventRegistrationService } from './http-event-registration.service'
 
 @Injectable({ providedIn: 'root' })
 export class EventRegistrationStore {
-  private readonly _destroyRef = inject(DestroyRef);
-  private readonly _confirmService = inject(ConfirmModalService);
-  private readonly _toastr = inject(ToastrService);
-  private readonly _api = inject(HttpEventRegistrationService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly confirmService = inject(ConfirmModalService);
+  private readonly toastr = inject(ToastrService);
+  private readonly api = inject(HttpEventRegistrationService);
 
   register(eventId: string): void {
-    this._confirmService
+    this.confirmService
       .openConfirmDialog('Are you sure you want to register for this event?')
       .afterClosed()
       .pipe(
@@ -23,16 +23,16 @@ export class EventRegistrationStore {
             return of(null);
           }
 
-          return this._api.createBooking$(eventId).pipe(take(1));
+          return this.api.createBooking$(eventId).pipe(take(1));
         }),
-        takeUntilDestroyed(this._destroyRef)
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe((booking) => {
         if (!booking) {
           return;
         }
 
-        this._toastr.success('Successfully registered for event', '', {
+        this.toastr.success('Successfully registered for event', '', {
           closeButton: true,
           progressBar: true,
           timeOut: 5000,
