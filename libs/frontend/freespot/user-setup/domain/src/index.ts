@@ -1,8 +1,7 @@
-export { type UpdateMyProfileCmd } from './lib/update-my-profile.command';
-
 export {
+  type UpdateMyProfileCmd,
+  type UserSetupCohort,
   type UserSetupFaculty,
   type UserSetupProgram,
   type UserSetupProgramYear,
-  type UserSetupCohort,
 } from './lib/user-setup.model';

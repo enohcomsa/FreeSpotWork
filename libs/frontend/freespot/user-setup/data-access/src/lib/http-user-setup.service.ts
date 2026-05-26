@@ -4,10 +4,8 @@ import {
   FacultiesHttpService,
   ProgramsHttpService,
   ProgramYearsHttpService,
-  type UserMeProfileUpdateDTO,
   UsersHttpService,
 } from '@free-spot/api-client';
-import { forkJoin, map, Observable } from 'rxjs';
 import { type User } from '@free-spot/core/domain';
 import {
   type UpdateMyProfileCmd,
@@ -16,22 +14,23 @@ import {
   type UserSetupProgram,
   type UserSetupProgramYear,
 } from '@free-spot/user-setup/domain';
+import { forkJoin, map, Observable } from 'rxjs';
 import {
   authUserDtoToUser,
-  dtoToUserSetupCohort,
-  dtoToUserSetupFaculty,
-  dtoToUserSetupProgram,
-  dtoToUserSetupProgramYear,
-  toMyProfileUpdateDTO,
+  cohortDtoToDomain,
+  facultyDtoToDomain,
+  programDtoToDomain,
+  programYearDtoToDomain,
+  updateMyProfileCmdToDto,
 } from './user-setup.dto.mapper';
 
 @Injectable({ providedIn: 'root' })
 export class HttpUserSetupService {
-  private readonly _usersApi = inject(UsersHttpService);
-  private readonly _facultiesApi = inject(FacultiesHttpService);
-  private readonly _programsApi = inject(ProgramsHttpService);
-  private readonly _programYearsApi = inject(ProgramYearsHttpService);
-  private readonly _cohortsApi = inject(CohortsHttpService);
+  private readonly usersApi = inject(UsersHttpService);
+  private readonly facultiesApi = inject(FacultiesHttpService);
+  private readonly programsApi = inject(ProgramsHttpService);
+  private readonly programYearsApi = inject(ProgramYearsHttpService);
+  private readonly cohortsApi = inject(CohortsHttpService);
 
   loadSetupData$(): Observable<{
     faculties: UserSetupFaculty[];
@@ -40,16 +39,34 @@ export class HttpUserSetupService {
     cohorts: UserSetupCohort[];
   }> {
     return forkJoin({
-      faculties: this._facultiesApi.facultiesGet().pipe(map((dtos) => (dtos ?? []).map(dtoToUserSetupFaculty))),
-      programs: this._programsApi.programsGet().pipe(map((dtos) => (dtos ?? []).map(dtoToUserSetupProgram))),
-      programYears: this._programYearsApi.programYearsGet().pipe(map((dtos) => (dtos ?? []).map(dtoToUserSetupProgramYear))),
-      cohorts: this._cohortsApi.cohortsGet().pipe(map((dtos) => (dtos ?? []).map(dtoToUserSetupCohort))),
+      faculties: this.listFaculties$(),
+      programs: this.listPrograms$(),
+      programYears: this.listProgramYears$(),
+      cohorts: this.listCohorts$(),
     });
   }
 
   updateMyProfile$(input: UpdateMyProfileCmd): Observable<User> {
-    const userMeProfileUpdateDTO: UserMeProfileUpdateDTO = toMyProfileUpdateDTO(input);
+    return this.usersApi
+      .usersMeProfilePatch({
+        userMeProfileUpdateDTO: updateMyProfileCmdToDto(input),
+      })
+      .pipe(map(authUserDtoToUser));
+  }
 
-    return this._usersApi.usersMeProfilePatch({ userMeProfileUpdateDTO }).pipe(map(authUserDtoToUser));
+  private listFaculties$(): Observable<UserSetupFaculty[]> {
+    return this.facultiesApi.facultiesGet().pipe(map((dtos) => (dtos ?? []).map(facultyDtoToDomain)));
+  }
+
+  private listPrograms$(): Observable<UserSetupProgram[]> {
+    return this.programsApi.programsGet().pipe(map((dtos) => (dtos ?? []).map(programDtoToDomain)));
+  }
+
+  private listProgramYears$(): Observable<UserSetupProgramYear[]> {
+    return this.programYearsApi.programYearsGet().pipe(map((dtos) => (dtos ?? []).map(programYearDtoToDomain)));
+  }
+
+  private listCohorts$(): Observable<UserSetupCohort[]> {
+    return this.cohortsApi.cohortsGet().pipe(map((dtos) => (dtos ?? []).map(cohortDtoToDomain)));
   }
 }

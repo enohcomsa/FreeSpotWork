@@ -35,7 +35,7 @@ export function authUserDtoToUser(dto: AuthUserDTO): User {
   };
 }
 
-export function toMyProfileUpdateDTO(cmd: UpdateMyProfileCmd): UserMeProfileUpdateDTO {
+export function updateMyProfileCmdToDto(cmd: UpdateMyProfileCmd): UserMeProfileUpdateDTO {
   return {
     firstName: cmd.firstName,
     familyName: cmd.familyName,
@@ -47,7 +47,7 @@ export function toMyProfileUpdateDTO(cmd: UpdateMyProfileCmd): UserMeProfileUpda
   };
 }
 
-export function dtoToUserSetupFaculty(dto: FacultyResponseDTO): UserSetupFaculty {
+export function facultyDtoToDomain(dto: FacultyResponseDTO): UserSetupFaculty {
   if (!dto.id) {
     throw new Error('Faculty id is required');
   }
@@ -58,7 +58,7 @@ export function dtoToUserSetupFaculty(dto: FacultyResponseDTO): UserSetupFaculty
   };
 }
 
-export function dtoToUserSetupProgram(dto: ProgramResponseDTO): UserSetupProgram {
+export function programDtoToDomain(dto: ProgramResponseDTO): UserSetupProgram {
   if (!dto.id) {
     throw new Error('Program id is required');
   }
@@ -74,7 +74,7 @@ export function dtoToUserSetupProgram(dto: ProgramResponseDTO): UserSetupProgram
   };
 }
 
-export function dtoToUserSetupProgramYear(dto: ProgramYearResponseDTO): UserSetupProgramYear {
+export function programYearDtoToDomain(dto: ProgramYearResponseDTO): UserSetupProgramYear {
   if (!dto.id) {
     throw new Error('Program year id is required');
   }
@@ -90,7 +90,7 @@ export function dtoToUserSetupProgramYear(dto: ProgramYearResponseDTO): UserSetu
   };
 }
 
-export function dtoToUserSetupCohort(dto: CohortResponseDTO): UserSetupCohort {
+export function cohortDtoToDomain(dto: CohortResponseDTO): UserSetupCohort {
   if (!dto.id) {
     throw new Error('Cohort id is required');
   }
