@@ -11,18 +11,16 @@ import {
 } from '@free-spot/university-map/domain';
 import { forkJoin, map, Observable } from 'rxjs';
 import {
-  dtoToBuildingCardVm,
-  dtoToUniversityMapFloor,
-  dtoToUniversityMapRoom,
+  buildingDtoToVm,
+  floorDtoToDomain,
+  roomDtoToDomain,
 } from './university-map.dto.mapper';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class HttpUniversityMapService {
-  private readonly _buildingsApi = inject(BuildingsHttpService);
-  private readonly _floorsApi = inject(FloorsHttpService);
-  private readonly _roomsApi = inject(RoomsHttpService);
+  private readonly buildingsApi = inject(BuildingsHttpService);
+  private readonly floorsApi = inject(FloorsHttpService);
+  private readonly roomsApi = inject(RoomsHttpService);
 
   loadMap$(): Observable<{
     buildings: BuildingCardVm[];
@@ -30,9 +28,21 @@ export class HttpUniversityMapService {
     floors: UniversityMapFloor[];
   }> {
     return forkJoin({
-      buildings: this._buildingsApi.buildingsGet().pipe(map((dtos) => (dtos ?? []).map(dtoToBuildingCardVm))),
-      rooms: this._roomsApi.roomsGet().pipe(map((dtos) => (dtos ?? []).map(dtoToUniversityMapRoom))),
-      floors: this._floorsApi.floorsGet().pipe(map((dtos) => (dtos ?? []).map(dtoToUniversityMapFloor))),
+      buildings: this.listBuildings$(),
+      rooms: this.listRooms$(),
+      floors: this.listFloors$(),
     });
+  }
+
+  private listBuildings$(): Observable<BuildingCardVm[]> {
+    return this.buildingsApi.buildingsGet().pipe(map((dtos) => (dtos ?? []).map(buildingDtoToVm)));
+  }
+
+  private listRooms$(): Observable<UniversityMapRoom[]> {
+    return this.roomsApi.roomsGet().pipe(map((dtos) => (dtos ?? []).map(roomDtoToDomain)));
+  }
+
+  private listFloors$(): Observable<UniversityMapFloor[]> {
+    return this.floorsApi.floorsGet().pipe(map((dtos) => (dtos ?? []).map(floorDtoToDomain)));
   }
 }

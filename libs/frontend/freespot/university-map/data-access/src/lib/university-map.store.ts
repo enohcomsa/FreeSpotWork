@@ -10,24 +10,24 @@ import { HttpUniversityMapService } from './http-university-map.service';
 
 @Injectable()
 export class UniversityMapStore {
-  private readonly _api = inject(HttpUniversityMapService);
+  private readonly api = inject(HttpUniversityMapService);
 
-  private readonly _buildingCardsSig = signal<BuildingCardVm[]>([]);
-  private readonly _roomsSig = signal<UniversityMapRoom[]>([]);
-  private readonly _floorsSig = signal<UniversityMapFloor[]>([]);
+  private readonly buildingCardsSigInternal = signal<BuildingCardVm[]>([]);
+  private readonly roomsSig = signal<UniversityMapRoom[]>([]);
+  private readonly floorsSig = signal<UniversityMapFloor[]>([]);
 
-  readonly buildingCardsSig = this._buildingCardsSig.asReadonly();
+  readonly buildingCardsSig = this.buildingCardsSigInternal.asReadonly();
 
   init(): void {
-    if (this._buildingCardsSig().length) {
+    if (this.buildingCardsSigInternal().length) {
       return;
     }
 
-    this._api
+    this.api
       .loadMap$()
       .pipe(take(1))
       .subscribe(({ buildings, rooms, floors }) => {
-        this._buildingCardsSig.set(
+        this.buildingCardsSigInternal.set(
           buildings.map((building) => ({
             ...building,
             floors: floors
@@ -35,11 +35,11 @@ export class UniversityMapStore {
               .map((floor) => ({
                 name: floor.name,
               })),
-          }))
+          })),
         );
 
-        this._roomsSig.set(rooms);
-        this._floorsSig.set(floors);
+        this.roomsSig.set(rooms);
+        this.floorsSig.set(floors);
       });
   }
 
@@ -48,13 +48,13 @@ export class UniversityMapStore {
   }
 
   getRoomCardVmsByFloorName(floorName: string): RoomCardVm[] {
-    const floor = this._floorsSig().find((item) => item.name === floorName);
+    const floor = this.floorsSig().find((item) => item.name === floorName);
 
     if (!floor) {
       return [];
     }
 
-    return this._roomsSig()
+    return this.roomsSig()
       .filter((room) => room.floorId === floor.id)
       .map((room) => ({
         id: room.id,

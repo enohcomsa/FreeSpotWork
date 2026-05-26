@@ -9,9 +9,9 @@ import {
   type UniversityMapRoom,
 } from '@free-spot/university-map/domain';
 
-export function dtoToBuildingCardVm(dto: BuildingResponseDTO): BuildingCardVm {
+export function buildingDtoToVm(dto: BuildingResponseDTO): BuildingCardVm {
   if (!dto.id) {
-    throw new Error('Building id is required');
+    throw new Error('Missing building id');
   }
 
   return {
@@ -22,9 +22,9 @@ export function dtoToBuildingCardVm(dto: BuildingResponseDTO): BuildingCardVm {
   };
 }
 
-export function dtoToUniversityMapRoom(dto: RoomResponseDTO): UniversityMapRoom {
+export function roomDtoToDomain(dto: RoomResponseDTO): UniversityMapRoom {
   if (!dto.id) {
-    throw new Error('Room id is required');
+    throw new Error('Missing room id');
   }
 
   return {
@@ -34,9 +34,9 @@ export function dtoToUniversityMapRoom(dto: RoomResponseDTO): UniversityMapRoom 
   };
 }
 
-export function dtoToUniversityMapFloor(dto: FloorResponseDTO): UniversityMapFloor {
+export function floorDtoToDomain(dto: FloorResponseDTO): UniversityMapFloor {
   if (!dto.id) {
-    throw new Error('Floor id is required');
+    throw new Error('Missing floor id');
   }
 
   return {

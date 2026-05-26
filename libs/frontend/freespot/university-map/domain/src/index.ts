@@ -1,6 +1,9 @@
-export { type BuildingCardVm } from './lib/building-card.vm';
-export { type RoomCardVm } from './lib/room-card.vm';
 export {
-  type UniversityMapRoom,
   type UniversityMapFloor,
+  type UniversityMapRoom,
 } from './lib/university-map.model';
+
+export {
+  type BuildingCardVm,
+  type RoomCardVm,
+} from './lib/university-map.vm';
