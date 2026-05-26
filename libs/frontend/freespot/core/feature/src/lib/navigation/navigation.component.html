@@ -163,10 +163,10 @@
   <button mat-menu-item>
     <mat-icon>language</mat-icon>
     <span class="flex justify-around gap-4 text-base">
-      <span [ngClass]="{ 'lang-color': currentUserSig()?.preferredLanguage === LANG.EN }" (click)="onLangChange(LANG.EN)">
+      <span [ngClass]="{ 'lang-color': currentUserSig()?.preferredLanguage === 'en' }" (click)="onLangChange('en')">
         EN
       </span>
-      <span [ngClass]="{ 'lang-color': currentUserSig()?.preferredLanguage === LANG.RO }" (click)="onLangChange(LANG.RO)">
+      <span [ngClass]="{ 'lang-color': currentUserSig()?.preferredLanguage === 'ro' }" (click)="onLangChange('ro')">
         RO
       </span>
     </span>
@@ -175,17 +175,17 @@
   <button class="theme-menu-button h-12 w-full px-3">
     <div class="flex w-full items-center justify-between">
       <mat-icon
-        [ngClass]="{ 'primary-icon': currentUserSig()?.preferredTheme === THEME.LIGHT }"
+        [ngClass]="{ 'primary-icon': currentUserSig()?.preferredTheme === 'LIGHT' }"
         class="mr-3 cursor-pointer"
-        (click)="onThemeChange(THEME.LIGHT)"
+        (click)="onThemeChange('LIGHT')"
       >
         light_mode
       </mat-icon>
 
       <mat-icon
-        [ngClass]="{ 'primary-icon': currentUserSig()?.preferredTheme === THEME.DARK }"
+        [ngClass]="{ 'primary-icon': currentUserSig()?.preferredTheme === 'DARK' }"
         class="mr-5 cursor-pointer"
-        (click)="onThemeChange(THEME.DARK)"
+        (click)="onThemeChange('DARK')"
       >
         dark_mode
       </mat-icon>

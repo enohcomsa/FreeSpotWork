@@ -1,15 +1,15 @@
 import {
-  AuthUserDTO,
-  CohortResponseDTO,
-  FacultyResponseDTO,
-  ProgramResponseDTO,
-  ProgramYearResponseDTO,
-  UserMeProfileUpdateDTO,
-  PreferredLanguageDTO,
-  PreferredThemeDTO,
-  UserRoleDTO
+  type AuthUserDTO,
+  type CohortResponseDTO,
+  type FacultyResponseDTO,
+  type PreferredLanguageDTO,
+  type PreferredThemeDTO,
+  type ProgramResponseDTO,
+  type ProgramYearResponseDTO,
+  type UserMeProfileUpdateDTO,
+  type UserRoleDTO,
 } from '@free-spot/api-client';
-import { Role, Language, Theme, type User } from '@free-spot/core/domain';
+import { type Language, type Role, type Theme, type User } from '@free-spot/core/domain';
 import {
   type UpdateMyProfileCmd,
   type UserSetupCohort,
@@ -24,9 +24,9 @@ export function authUserDtoToUser(dto: AuthUserDTO): User {
     email: dto.email,
     firstName: dto.firstName,
     familyName: dto.familyName,
-    role: mapRole(dto.role),
-    preferredLanguage: mapLanguage(dto.preferredLanguage),
-    preferredTheme: mapTheme(dto.preferredTheme),
+    role: toRole(dto.role),
+    preferredLanguage: toLanguage(dto.preferredLanguage),
+    preferredTheme: toTheme(dto.preferredTheme),
     facultyId: dto.facultyId,
     programId: dto.programId,
     programYearId: dto.programYearId,
@@ -107,41 +107,26 @@ export function dtoToUserSetupCohort(dto: CohortResponseDTO): UserSetupCohort {
   };
 }
 
-function mapRole(value: UserRoleDTO): Role {
-  switch (value) {
-    case UserRoleDTO.ADMIN:
-      return Role.ADMIN;
-    case UserRoleDTO.MEMBER:
-      return Role.MEMBER;
-    default:
-      throw new Error('Invalid user role');
+function toRole(value: UserRoleDTO | undefined): Role {
+  if (!value) {
+    throw new Error('Missing user role');
   }
+
+  return value as Role;
 }
 
-function mapLanguage(value: PreferredLanguageDTO | null | undefined): Language {
-  switch (value) {
-    case PreferredLanguageDTO.EN:
-      return Language.EN;
-    case PreferredLanguageDTO.RO:
-      return Language.RO;
-    case null:
-    case undefined:
-      return Language.EN;
-    default:
-      throw new Error('Invalid user language');
+function toLanguage(value: PreferredLanguageDTO | null | undefined): Language {
+  if (!value) {
+    return 'en';
   }
+
+  return value as Language;
 }
 
-function mapTheme(value: PreferredThemeDTO | null | undefined): Theme {
-  switch (value) {
-    case PreferredThemeDTO.DARK:
-      return Theme.DARK;
-    case PreferredThemeDTO.LIGHT:
-      return Theme.LIGHT;
-    case null:
-    case undefined:
-      return Theme.LIGHT;
-    default:
-      throw new Error('Invalid user theme');
+function toTheme(value: PreferredThemeDTO | null | undefined): Theme {
+  if (!value) {
+    return 'LIGHT';
   }
+
+  return value as Theme;
 }

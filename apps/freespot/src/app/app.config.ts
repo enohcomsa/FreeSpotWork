@@ -1,16 +1,14 @@
+import { provideHttpClient, withInterceptors, HttpClient } from '@angular/common/http';
 import { ApplicationConfig, importProvidersFrom, provideZonelessChangeDetection } from '@angular/core';
-import { provideRouter, withComponentInputBinding } from '@angular/router';
-import { appRoutes } from './app.routes';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
-import { loadingInterceptor } from '@free-spot/core';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { provideToastr } from 'ngx-toastr';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { authInterceptor, refreshInterceptor } from '@free-spot/core/data-access';
-import { Language } from '@free-spot/core/domain';
-import { provideAuthApi } from '@free-spot/core/data-access';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
+import { authInterceptor, provideAuthApi, refreshInterceptor } from '@free-spot/core/data-access';
+import { loadingInterceptor } from '@free-spot/core/data-access';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { provideToastr } from 'ngx-toastr';
+import { appRoutes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -27,7 +25,7 @@ export const appConfig: ApplicationConfig = {
           useFactory: (http: HttpClient) => new TranslateHttpLoader(http, './assets/i18n/', '.json'),
           deps: [HttpClient],
         },
-        defaultLanguage: Language.EN,
+        defaultLanguage: 'en',
       }),
     ),
     provideAuthApi(),

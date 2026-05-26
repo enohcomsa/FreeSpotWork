@@ -2,14 +2,12 @@ import { inject } from '@angular/core';
 import { CanActivateFn, Router, UrlTree } from '@angular/router';
 import { map, Observable } from 'rxjs';
 import { AuthService } from './auth.service';
-import { Role } from '@free-spot/core/domain';
-
 
 export const adminGuard: CanActivateFn = (): boolean | UrlTree | Observable<boolean | UrlTree> => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  if (authService.userSignal()?.role === Role.ADMIN) {
+  if (authService.userSignal()?.role === 'ADMIN') {
     return true;
   }
 
@@ -19,7 +17,7 @@ export const adminGuard: CanActivateFn = (): boolean | UrlTree | Observable<bool
 
   return authService.loadMe().pipe(
     map(() => {
-      return authService.userSignal()?.role === Role.ADMIN
+      return authService.userSignal()?.role === 'ADMIN'
         ? true
         : router.createUrlTree(['/home']);
     }),

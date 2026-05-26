@@ -1,14 +1,10 @@
-export enum Theme {
-  LIGHT = 'LIGHT',
-  DARK = 'DARK',
-  COLORBLIND_LIGHT = 'COLORBLIND_LIGHT',
-  COLORBLIND_DARK = 'COLORBLIND_DARK',
-}
+export type Theme =
+  | 'LIGHT'
+  | 'DARK'
+  | 'COLORBLIND_LIGHT'
+  | 'COLORBLIND_DARK';
 
-export enum Language {
-  RO = 'ro',
-  EN = 'en',
-}
+export type Language = 'ro' | 'en';
 
 export type UpdateMyPreferencesCmd = {
   preferredLanguage?: Language | null;

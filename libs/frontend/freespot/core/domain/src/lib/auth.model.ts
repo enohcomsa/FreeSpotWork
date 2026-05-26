@@ -1,7 +1,4 @@
-export enum Role {
-  MEMBER = 'MEMBER',
-  ADMIN = 'ADMIN',
-}
+export type Role = 'MEMBER' | 'ADMIN';
 
 export interface AuthOk {
   xsrfToken: string | null;

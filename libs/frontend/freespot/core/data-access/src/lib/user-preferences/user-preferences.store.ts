@@ -1,35 +1,35 @@
 import { inject, Injectable } from '@angular/core';
+import { type Language, type Theme, type UpdateMyPreferencesCmd } from '@free-spot/core/domain';
 import { take } from 'rxjs';
-import { HttpUserPreferencesService } from './http-user-preferences.service';
-import { Language, Theme, UpdateMyPreferencesCmd } from '@free-spot/core/domain';
 import { AuthService } from '../auth/auth.service';
+import { HttpUserPreferencesService } from './http-user-preferences.service';
 
 @Injectable({ providedIn: 'root' })
 export class UserPreferencesStore {
-  private readonly _authService = inject(AuthService);
-  private readonly _httpUserPreferencesService = inject(HttpUserPreferencesService);
+  private readonly authService = inject(AuthService);
+  private readonly httpUserPreferencesService = inject(HttpUserPreferencesService);
 
   updateLanguage(language: Language, currentTheme: Theme | null | undefined): void {
-    this._updatePreferences({
+    this.updatePreferences({
       preferredLanguage: language,
-      preferredTheme: currentTheme ?? Theme.DARK,
+      preferredTheme: currentTheme ?? 'DARK',
     });
   }
 
   updateTheme(theme: Theme, currentLanguage: Language | null | undefined): void {
-    this._updatePreferences({
-      preferredLanguage: currentLanguage ?? Language.EN,
+    this.updatePreferences({
+      preferredLanguage: currentLanguage ?? 'en',
       preferredTheme: theme,
     });
   }
 
-  private _updatePreferences(input: UpdateMyPreferencesCmd): void {
-    this._httpUserPreferencesService
+  private updatePreferences(input: UpdateMyPreferencesCmd): void {
+    this.httpUserPreferencesService
       .updateMyPreferences$(input)
       .pipe(take(1))
       .subscribe({
         next: () => {
-          this._authService.loadMe().pipe(take(1)).subscribe();
+          this.authService.loadMe().pipe(take(1)).subscribe();
         },
         error: (err: unknown) => {
           console.error(err);

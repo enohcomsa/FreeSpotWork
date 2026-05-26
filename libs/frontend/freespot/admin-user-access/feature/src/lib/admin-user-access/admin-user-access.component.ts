@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, OnInit, Signal, WritableSignal, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit, Signal, signal, WritableSignal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
@@ -6,14 +7,10 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-
-import { Role } from '@free-spot/core/domain';
+import { AdminUserAccessStore } from '@free-spot/admin-user-access/data-access';
 import { type AdminUser } from '@free-spot/admin-user-access/domain';
 import { ConfirmModalService } from '@free-spot/core/ui';
-import { AdminUserAccessStore } from '@free-spot/admin-user-access/data-access';
 import { FormErrorMessage } from '@free-spot/util';
-import { DestroyRef } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'free-spot-admin-user-access',
@@ -32,30 +29,33 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminUserAccessComponent implements OnInit {
-  private _formBuilder: FormBuilder = inject(FormBuilder);
-  private _store = inject(AdminUserAccessStore);
-  private _confirmService: ConfirmModalService = inject(ConfirmModalService);
-  private _formErrorMessage: FormErrorMessage = inject(FormErrorMessage);
-  private _destroyRef = inject(DestroyRef);
+  private readonly formBuilder = inject(FormBuilder);
+  private readonly store = inject(AdminUserAccessStore);
+  private readonly confirmService = inject(ConfirmModalService);
+  private readonly formErrorMessage = inject(FormErrorMessage);
+  private readonly destroyRef = inject(DestroyRef);
 
-readonly userListSig: Signal<AdminUser[]> = this._store.userListSig;
+  readonly userListSig: Signal<AdminUser[]> = this.store.usersSig;
+
   readonly adminUserListSig: Signal<AdminUser[]> = computed(() =>
-    this.userListSig().filter((user: AdminUser) => user.role === Role.ADMIN)
+    this.userListSig().filter((user) => user.role === 'ADMIN'),
   );
+
   readonly memberUserListSig: Signal<AdminUser[]> = computed(() =>
-    this.userListSig().filter((user: AdminUser) => user.role === Role.MEMBER)
+    this.userListSig().filter((user) => user.role === 'MEMBER'),
   );
+
   readonly foundMemberUserListSig: WritableSignal<AdminUser[]> = signal([]);
 
-  addAdminFormGroup = this._formBuilder.group({
+  addAdminFormGroup = this.formBuilder.group({
     user: [null as AdminUser | string | null, [Validators.required]],
   });
 
   ngOnInit(): void {
-    this._store.init();
+    this.store.init();
 
-    this.addAdminFormGroup.controls['user'].valueChanges
-      .pipe(takeUntilDestroyed(this._destroyRef))
+    this.addAdminFormGroup.controls.user.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((value) => {
         if (!value) {
           this.foundMemberUserListSig.set(this.memberUserListSig());
@@ -69,16 +69,16 @@ readonly userListSig: Signal<AdminUser[]> = this._store.userListSig;
         const query = value.toLowerCase().trim();
 
         this.foundMemberUserListSig.set(
-          this.memberUserListSig().filter((user: AdminUser) =>
-            `${user.firstName ?? ''} ${user.familyName ?? ''} ${user.email}`.toLowerCase().includes(query)
-          )
+          this.memberUserListSig().filter((user) =>
+            `${user.firstName ?? ''} ${user.familyName ?? ''} ${user.email}`.toLowerCase().includes(query),
+          ),
         );
       });
 
     this.foundMemberUserListSig.set(this.memberUserListSig());
   }
 
-  displayError = (control: AbstractControl | null) => this._formErrorMessage.displayFormErrorMessage(control);
+  displayError = (control: AbstractControl | null): string => this.formErrorMessage.displayFormErrorMessage(control);
 
   displayUser = (user?: AdminUser | string | null): string => {
     if (!user || typeof user === 'string') {
@@ -93,20 +93,18 @@ readonly userListSig: Signal<AdminUser[]> = this._store.userListSig;
   }
 
   onAddAdmin(): void {
-    const value = this.addAdminFormGroup.controls['user'].value;
+    const value = this.addAdminFormGroup.controls.user.value;
 
     if (!value || typeof value === 'string') {
       return;
     }
 
-    const user = value;
-
-    this._confirmService
-      .openConfirmDialog(`Are you sure you want to make ${this.getUserDisplayName(user)} an admin?`)
+    this.confirmService
+      .openConfirmDialog(`Are you sure you want to make ${this.getUserDisplayName(value)} an admin?`)
       .afterClosed()
       .subscribe((result: boolean) => {
         if (result) {
-          this._store.makeAdmin(user.id);
+          this.store.makeAdmin(value.id);
           this.addAdminFormGroup.reset();
           this.foundMemberUserListSig.set(this.memberUserListSig());
         }
@@ -114,15 +112,15 @@ readonly userListSig: Signal<AdminUser[]> = this._store.userListSig;
   }
 
   onRemoveAdmin(userId: string): void {
-    const user = this.adminUserListSig().find((item: AdminUser) => item.id === userId);
+    const user = this.adminUserListSig().find((item) => item.id === userId);
     const label = user ? this.getUserDisplayName(user) : 'this user';
 
-    this._confirmService
+    this.confirmService
       .openConfirmDialog(`Are you sure you want to remove admin rights from ${label}?`)
       .afterClosed()
       .subscribe((result: boolean) => {
         if (result) {
-          this._store.removeAdmin(userId);
+          this.store.removeAdmin(userId);
           this.foundMemberUserListSig.set(this.memberUserListSig());
         }
       });

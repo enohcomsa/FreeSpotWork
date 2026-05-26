@@ -1,5 +1,5 @@
-import { type UserResponseDTO, UserRoleDTO } from '@free-spot/api-client';
-import { Role } from '@free-spot/core/domain';
+import { type UserResponseDTO, type UserRoleDTO } from '@free-spot/api-client';
+import { type Role } from '@free-spot/core/domain';
 import { type AdminUser } from '@free-spot/admin-user-access/domain';
 
 export function dtoToAdminUser(dto: UserResponseDTO): AdminUser {
@@ -12,28 +12,18 @@ export function dtoToAdminUser(dto: UserResponseDTO): AdminUser {
     email: dto.email ?? '',
     firstName: dto.firstName ?? null,
     familyName: dto.familyName ?? null,
-    role: dtoToRole(dto.role),
+    role: toRole(dto.role),
   };
 }
 
-function dtoToRole(role: UserRoleDTO): Role {
-  switch (role) {
-    case UserRoleDTO.ADMIN:
-      return Role.ADMIN;
-    case UserRoleDTO.MEMBER:
-      return Role.MEMBER;
-    default:
-      throw new Error('Invalid user role');
-  }
+export function roleToDto(role: Role): UserRoleDTO {
+  return role as UserRoleDTO;
 }
 
-export function roleToDto(role: Role): UserRoleDTO {
-  switch (role) {
-    case Role.ADMIN:
-      return UserRoleDTO.ADMIN;
-    case Role.MEMBER:
-      return UserRoleDTO.MEMBER;
-    default:
-      throw new Error('Invalid user role');
+function toRole(role: UserRoleDTO | undefined): Role {
+  if (!role) {
+    throw new Error('Missing user role');
   }
+
+  return role as Role;
 }

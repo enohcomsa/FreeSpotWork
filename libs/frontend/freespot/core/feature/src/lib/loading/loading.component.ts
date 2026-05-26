@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { LoadingService } from './loading.service';
+import { LoadingService } from '@free-spot/core/data-access';
 
 @Component({
   selector: 'free-spot-loading',
