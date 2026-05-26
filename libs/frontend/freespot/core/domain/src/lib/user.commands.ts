@@ -1,5 +1,5 @@
-import { Language, Theme } from './user-preferences.model';
-import { Role } from './auth.model';
+import { type Role } from './auth.model';
+import { type Language, type Theme } from './user-preferences.model';
 
 export type UpdateUserCmd = Partial<{
   username: string | null;

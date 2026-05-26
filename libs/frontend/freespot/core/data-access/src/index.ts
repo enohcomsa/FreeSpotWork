@@ -9,4 +9,4 @@ export { adminGuard } from './lib/auth/admin.guard';
 export { authInterceptor } from './lib/auth/auth.interceptor';
 export { refreshInterceptor } from './lib/auth/refresh.interceptor';
 export { provideAuthApi } from './lib/auth/auth-api.providers';
-export { loadingInterceptor } from './lib/interceptors/loading.interceptor';
+export { loadingInterceptor } from './lib/loading/loading.interceptor';

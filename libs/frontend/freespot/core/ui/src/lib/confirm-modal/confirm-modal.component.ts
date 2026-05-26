@@ -5,10 +5,9 @@ import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'free-spot-confirm-modal',
-
   imports: [MatDialogModule, MatButtonModule],
-  templateUrl: './free-spot-confirm-modal.component.html',
-  styleUrl: './free-spot-confirm-modal.component.sass',
+  templateUrl: './confirm-modal.component.html',
+  styleUrl: './confirm-modal.component.sass',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FreeSpotConfirmModalComponent {
