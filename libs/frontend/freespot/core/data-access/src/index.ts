@@ -2,7 +2,7 @@ export { AuthService } from './lib/auth/auth.service';
 export { UserPreferencesStore } from './lib/user-preferences/user-preferences.store';
 export { LanguageService } from './lib/i18n/language.service';
 export { ThemeService } from './lib/theme/theme.service';
-export { LoadingService } from '../../data-access/src/lib/loading/loading.service';
+export { LoadingService } from './lib/loading/loading.service';
 export { authGuard } from './lib/auth/auth.guard';
 export { guestGuard } from './lib/auth/guest.guard';
 export { adminGuard } from './lib/auth/admin.guard';

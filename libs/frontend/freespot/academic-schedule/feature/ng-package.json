@@ -6,10 +6,6 @@
   },
   "allowedNonPeerDependencies": [
     "@frontend/freespot/schedule/data-access",
-    "@free-spot/ui",
-    "@free-spot-service/auth",
-    "@free-spot-service/room",
-    "@free-spot-service/subject",
     "@frontend/freespot/schedule/ui",
     "@frontend/freespot/schedule/domain"
   ]

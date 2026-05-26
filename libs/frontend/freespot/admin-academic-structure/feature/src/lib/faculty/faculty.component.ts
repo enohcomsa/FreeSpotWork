@@ -10,8 +10,8 @@ import { MatListModule } from '@angular/material/list';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ConfirmModalService } from '@free-spot/core/ui';
-import { AddItemCardComponent, DynamicChipListComponent } from '@free-spot/ui';
-import { FormErrorMessage } from '@free-spot/util';
+import { DynamicChipListComponent, AddItemCardComponent } from '@free-spot/shared/ui';
+import { FormErrorMessage } from '@free-spot/shared/util';
 import { take } from 'rxjs';
 
 import { AdminAcademicStructureStore } from '@free-spot/admin-academic-structure/data-access';

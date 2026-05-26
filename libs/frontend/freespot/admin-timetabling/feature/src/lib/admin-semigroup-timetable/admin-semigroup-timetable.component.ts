@@ -25,7 +25,7 @@ import {
   type AdminTimetableWeekDay,
 } from '@free-spot/admin-timetabling/domain';
 import { ConfirmModalService } from '@free-spot/core/ui';
-import { FormErrorMessage } from '@free-spot/util';
+import { FormErrorMessage } from  '@free-spot/shared/util';
 import { debounceTime } from 'rxjs';
 
 @Component({

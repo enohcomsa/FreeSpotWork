@@ -6,8 +6,7 @@ import {
   type UpdateAdminUniversityMapRoomCmd,
 } from '@free-spot/admin-university-map/domain';
 import { AdminRoomTimetableItemComponent } from '@free-spot/admin-university-map/ui';
-import { type TimetableUiActivity, type TimetableUiWeekDay, TimetableItemComponent } from '@free-spot/shared/ui';
-import { DynamicChipListComponent } from '@free-spot/ui';
+import { type TimetableUiActivity, type TimetableUiWeekDay, TimetableItemComponent, DynamicChipListComponent } from '@free-spot/shared/ui';
 
 @Component({
   selector: 'free-spot-admin-room-detail',

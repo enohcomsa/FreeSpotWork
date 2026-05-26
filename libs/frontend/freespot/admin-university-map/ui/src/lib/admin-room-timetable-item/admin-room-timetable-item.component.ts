@@ -16,7 +16,7 @@ import {
   type AdminUniversityMapWeekParity,
   type CreateAdminUniversityMapTimetableActivityCmd,
 } from '@free-spot/admin-university-map/domain';
-import { FormErrorMessage } from '@free-spot/util';
+import { FormErrorMessage } from  '@free-spot/shared/util';
 
 type AddTimetableActivityForm = FormGroup<{
   startHour: FormControl<number>;

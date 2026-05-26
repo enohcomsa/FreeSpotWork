@@ -1,5 +1,5 @@
 {
-  "name": "@frontend/freespot/schedule/domain",
+  "name": "@free-spot/academic-schedule/domain",
   "version": "0.0.1",
   "sideEffects": false,
   "peerDependencies": {

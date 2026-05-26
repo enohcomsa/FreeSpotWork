@@ -1,8 +1,0 @@
-{
-  "name": "@free-spot-presentation/cohort",
-  "version": "0.0.1",
-  "sideEffects": false,
-  "dependencies": {
-    "@free-spot-domain/cohort": "0.0.1"
-  }
-}

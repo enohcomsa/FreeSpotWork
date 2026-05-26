@@ -27,8 +27,8 @@ import {
   type UpdateAdminSpecialEventCmd,
 } from '@free-spot/admin-events/domain';
 import { AdminEventCardComponent } from '@free-spot/admin-events/ui';
-import { AddItemCardComponent } from '@free-spot/ui';
-import { FormErrorMessage } from '@free-spot/util';
+import { AddItemCardComponent } from '@free-spot/shared/ui';
+import { FormErrorMessage } from  '@free-spot/shared/util';
 import { filter } from 'rxjs';
 
 @Component({

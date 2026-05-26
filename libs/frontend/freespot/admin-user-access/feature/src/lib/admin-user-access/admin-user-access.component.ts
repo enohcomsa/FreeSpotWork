@@ -10,7 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { AdminUserAccessStore } from '@free-spot/admin-user-access/data-access';
 import { type AdminUser } from '@free-spot/admin-user-access/domain';
 import { ConfirmModalService } from '@free-spot/core/ui';
-import { FormErrorMessage } from '@free-spot/util';
+import { FormErrorMessage } from  '@free-spot/shared/util';
 
 @Component({
   selector: 'free-spot-admin-user-access',

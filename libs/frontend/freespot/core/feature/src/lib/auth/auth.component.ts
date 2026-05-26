@@ -17,7 +17,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
 import { AuthService, ThemeService } from '@free-spot/core/data-access';
-import { FormErrorMessage } from '@free-spot/util';
+import { FormErrorMessage } from  '@free-spot/shared/util';
 import { TranslateModule } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 

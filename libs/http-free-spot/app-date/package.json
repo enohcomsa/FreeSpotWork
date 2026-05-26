@@ -1,8 +1,0 @@
-{
-  "name": "@http-free-spot/app-date",
-  "version": "0.0.1",
-  "peerDependencies": {
-    "@angular/core": "^20.0.0"
-  },
-  "sideEffects": false
-}

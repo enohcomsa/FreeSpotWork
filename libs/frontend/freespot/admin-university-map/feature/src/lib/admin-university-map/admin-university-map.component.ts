@@ -21,8 +21,8 @@ import {
 } from '@free-spot/admin-university-map/domain';
 import { AdminBuildingCardComponent } from '@free-spot/admin-university-map/ui';
 import { ConfirmModalService } from '@free-spot/core/ui';
-import { AddItemCardComponent } from '@free-spot/ui';
-import { FormErrorMessage } from '@free-spot/util';
+import { AddItemCardComponent } from '@free-spot/shared/ui';
+import { FormErrorMessage } from  '@free-spot/shared/util';
 
 @Component({
   selector: 'free-spot-admin-university-map',

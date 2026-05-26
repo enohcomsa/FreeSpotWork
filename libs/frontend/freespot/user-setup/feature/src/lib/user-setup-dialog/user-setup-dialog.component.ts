@@ -7,7 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { filter, Subscription } from 'rxjs';
 import { TranslateModule } from '@ngx-translate/core';
-import { FormErrorMessage } from '@free-spot/util';
+import { FormErrorMessage } from  '@free-spot/shared/util';
 import {
   type UserSetupCohort,
   type UserSetupFaculty,
