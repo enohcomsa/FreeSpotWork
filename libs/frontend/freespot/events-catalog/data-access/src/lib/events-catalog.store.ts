@@ -11,27 +11,27 @@ import { HttpEventsCatalogService } from './http-events-catalog.service';
 
 @Injectable()
 export class EventsCatalogStore {
-  private readonly _api = inject(HttpEventsCatalogService);
+  private readonly api = inject(HttpEventsCatalogService);
 
-  private readonly _eventListSig = signal<EventsCatalogEvent[]>([]);
-  private readonly _buildingListSig = signal<EventsCatalogBuilding[]>([]);
-  private readonly _roomListSig = signal<EventsCatalogRoom[]>([]);
-  private readonly _bookingListSig = signal<EventsCatalogBooking[]>([]);
+  private readonly eventListSig = signal<EventsCatalogEvent[]>([]);
+  private readonly buildingListSig = signal<EventsCatalogBuilding[]>([]);
+  private readonly roomListSig = signal<EventsCatalogRoom[]>([]);
+  private readonly bookingListSig = signal<EventsCatalogBooking[]>([]);
 
-  readonly registeredEventIdSetSig = computed(() => {
-    return new Set(this._bookingListSig().map((booking) => booking.activityId).filter((id): id is string => !!id));
+  readonly registeredEventIdSetSig = computed<Set<string>>(() => {
+    return new Set(this.bookingListSig().map((booking) => booking.activityId).filter((id): id is string => !!id));
   });
 
   readonly futureEventCardVmsSig = computed<EventCardVm[]>(() => {
     const now = Date.now();
     const registeredEventIds = this.registeredEventIdSetSig();
 
-    return this._eventListSig()
+    return this.eventListSig()
       .filter((event) => new Date(event.date).getTime() > now)
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
       .map((event) => {
-        const building = this._buildingListSig().find((item) => item.id === event.buildingId);
-        const room = this._roomListSig().find((item) => item.id === event.roomId);
+        const building = this.buildingListSig().find((item) => item.id === event.buildingId);
+        const room = this.roomListSig().find((item) => item.id === event.roomId);
 
         const totalSpotsNumber = room?.totalSpotsNumber ?? 0;
         const unavailableSpots = room?.unavailableSpots ?? 0;
@@ -53,18 +53,18 @@ export class EventsCatalogStore {
   });
 
   init(): void {
-    if (this._eventListSig().length) {
+    if (this.eventListSig().length) {
       return;
     }
 
-    this._api
+    this.api
       .loadCatalog$()
       .pipe(take(1))
       .subscribe(({ events, buildings, rooms, bookings }) => {
-        this._eventListSig.set(events);
-        this._buildingListSig.set(buildings);
-        this._roomListSig.set(rooms);
-        this._bookingListSig.set(bookings);
+        this.eventListSig.set(events);
+        this.buildingListSig.set(buildings);
+        this.roomListSig.set(rooms);
+        this.bookingListSig.set(bookings);
       });
   }
 }

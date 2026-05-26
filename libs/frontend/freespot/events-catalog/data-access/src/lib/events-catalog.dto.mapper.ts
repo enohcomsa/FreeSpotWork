@@ -11,25 +11,25 @@ import {
   type EventsCatalogRoom,
 } from '@free-spot/events-catalog/domain';
 
-export function dtoToEventsCatalogEvent(dto: EventResponseDTO): EventsCatalogEvent {
+export function eventDtoToDomain(dto: EventResponseDTO): EventsCatalogEvent {
   if (!dto.id) {
-    throw new Error('Event id is required');
+    throw new Error('Missing event id');
   }
 
   if (!dto.name) {
-    throw new Error('Event name is required');
+    throw new Error('Missing event name');
   }
 
   if (!dto.date) {
-    throw new Error('Event date is required');
+    throw new Error('Missing event date');
   }
 
   if (!dto.buildingId) {
-    throw new Error('Event buildingId is required');
+    throw new Error('Missing event building id');
   }
 
   if (!dto.roomId) {
-    throw new Error('Event roomId is required');
+    throw new Error('Missing event room id');
   }
 
   return {
@@ -42,9 +42,9 @@ export function dtoToEventsCatalogEvent(dto: EventResponseDTO): EventsCatalogEve
   };
 }
 
-export function dtoToEventsCatalogBuilding(dto: BuildingResponseDTO): EventsCatalogBuilding {
+export function buildingDtoToDomain(dto: BuildingResponseDTO): EventsCatalogBuilding {
   if (!dto.id) {
-    throw new Error('Building id is required');
+    throw new Error('Missing building id');
   }
 
   return {
@@ -54,9 +54,9 @@ export function dtoToEventsCatalogBuilding(dto: BuildingResponseDTO): EventsCata
   };
 }
 
-export function dtoToEventsCatalogRoom(dto: RoomResponseDTO): EventsCatalogRoom {
+export function roomDtoToDomain(dto: RoomResponseDTO): EventsCatalogRoom {
   if (!dto.id) {
-    throw new Error('Room id is required');
+    throw new Error('Missing room id');
   }
 
   return {
@@ -67,7 +67,7 @@ export function dtoToEventsCatalogRoom(dto: RoomResponseDTO): EventsCatalogRoom 
   };
 }
 
-export function dtoToEventsCatalogBooking(dto: BookingResponseDTO): EventsCatalogBooking {
+export function bookingDtoToDomain(dto: BookingResponseDTO): EventsCatalogBooking {
   return {
     activityId: dto.activityId ?? null,
   };
