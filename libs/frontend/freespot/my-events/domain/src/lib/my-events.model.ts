@@ -1,10 +1,9 @@
-export enum MyEventsActivityType {
-  LABORATORY = 'LABORATORY',
-  COURSE = 'COURSE',
-  PROJECT = 'PROJECT',
-  SEMINAR = 'SEMINAR',
-  SPECIAL_EVENT = 'SPECIAL_EVENT',
-}
+export type MyEventsActivityType =
+  | 'LABORATORY'
+  | 'COURSE'
+  | 'PROJECT'
+  | 'SEMINAR'
+  | 'SPECIAL_EVENT';
 
 export interface MyEventsBooking {
   id: string;

@@ -15,22 +15,20 @@ import {
 } from '@free-spot/my-events/domain';
 import { forkJoin, map, Observable } from 'rxjs';
 import {
-  dtoToMyEventsBooking,
-  dtoToMyEventsBuilding,
-  dtoToMyEventsEvent,
-  dtoToMyEventsFloor,
-  dtoToMyEventsRoom,
+  bookingDtoToDomain,
+  buildingDtoToDomain,
+  eventDtoToDomain,
+  floorDtoToDomain,
+  roomDtoToDomain,
 } from './my-events.dto.mapper';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class HttpMyEventsService {
-  private readonly _bookingsApi = inject(BookingsHttpService);
-  private readonly _eventsApi = inject(EventsHttpService);
-  private readonly _buildingsApi = inject(BuildingsHttpService);
-  private readonly _roomsApi = inject(RoomsHttpService);
-  private readonly _floorsApi = inject(FloorsHttpService);
+  private readonly bookingsApi = inject(BookingsHttpService);
+  private readonly eventsApi = inject(EventsHttpService);
+  private readonly buildingsApi = inject(BuildingsHttpService);
+  private readonly roomsApi = inject(RoomsHttpService);
+  private readonly floorsApi = inject(FloorsHttpService);
 
   loadMyEvents$(): Observable<{
     bookings: MyEventsBooking[];
@@ -40,15 +38,35 @@ export class HttpMyEventsService {
     floors: MyEventsFloor[];
   }> {
     return forkJoin({
-      bookings: this._bookingsApi.bookingsGet().pipe(map((dtos) => (dtos ?? []).map(dtoToMyEventsBooking))),
-      events: this._eventsApi.eventsGet().pipe(map((dtos) => (dtos ?? []).map(dtoToMyEventsEvent))),
-      buildings: this._buildingsApi.buildingsGet().pipe(map((dtos) => (dtos ?? []).map(dtoToMyEventsBuilding))),
-      rooms: this._roomsApi.roomsGet().pipe(map((dtos) => (dtos ?? []).map(dtoToMyEventsRoom))),
-      floors: this._floorsApi.floorsGet().pipe(map((dtos) => (dtos ?? []).map(dtoToMyEventsFloor))),
+      bookings: this.listBookings$(),
+      events: this.listEvents$(),
+      buildings: this.listBuildings$(),
+      rooms: this.listRooms$(),
+      floors: this.listFloors$(),
     });
   }
 
   deleteBooking$(id: string): Observable<void> {
-    return this._bookingsApi.bookingsIdDelete({ id }).pipe(map(() => void 0));
+    return this.bookingsApi.bookingsIdDelete({ id }).pipe(map(() => void 0));
+  }
+
+  private listBookings$(): Observable<MyEventsBooking[]> {
+    return this.bookingsApi.bookingsGet().pipe(map((dtos) => (dtos ?? []).map(bookingDtoToDomain)));
+  }
+
+  private listEvents$(): Observable<MyEventsEvent[]> {
+    return this.eventsApi.eventsGet().pipe(map((dtos) => (dtos ?? []).map(eventDtoToDomain)));
+  }
+
+  private listBuildings$(): Observable<MyEventsBuilding[]> {
+    return this.buildingsApi.buildingsGet().pipe(map((dtos) => (dtos ?? []).map(buildingDtoToDomain)));
+  }
+
+  private listRooms$(): Observable<MyEventsRoom[]> {
+    return this.roomsApi.roomsGet().pipe(map((dtos) => (dtos ?? []).map(roomDtoToDomain)));
+  }
+
+  private listFloors$(): Observable<MyEventsFloor[]> {
+    return this.floorsApi.floorsGet().pipe(map((dtos) => (dtos ?? []).map(floorDtoToDomain)));
   }
 }

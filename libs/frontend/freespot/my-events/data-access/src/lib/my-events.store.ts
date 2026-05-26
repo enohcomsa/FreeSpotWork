@@ -1,8 +1,6 @@
 import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { take } from 'rxjs';
 import {
-  MyEventsActivityType,
   type MyEventCardVm,
   type MyEventsBooking,
   type MyEventsBuilding,
@@ -10,75 +8,72 @@ import {
   type MyEventsFloor,
   type MyEventsRoom,
 } from '@free-spot/my-events/domain';
-import { mapToMyEventVm } from './my-event.mapper';
+import { take } from 'rxjs';
 import { HttpMyEventsService } from './http-my-events.service';
+import { mapToMyEventVm } from './my-event.mapper';
 
 @Injectable({ providedIn: 'root' })
 export class MyEventsStore {
-  private readonly _api = inject(HttpMyEventsService);
-  private readonly _destroyRef = inject(DestroyRef);
+  private readonly api = inject(HttpMyEventsService);
+  private readonly destroyRef = inject(DestroyRef);
 
-  private readonly _bookings = signal<MyEventsBooking[]>([]);
-  private readonly _events = signal<MyEventsEvent[]>([]);
-  private readonly _buildings = signal<MyEventsBuilding[]>([]);
-  private readonly _rooms = signal<MyEventsRoom[]>([]);
-  private readonly _floors = signal<MyEventsFloor[]>([]);
+  private readonly bookingsSig = signal<MyEventsBooking[]>([]);
+  private readonly eventsSig = signal<MyEventsEvent[]>([]);
+  private readonly buildingsSig = signal<MyEventsBuilding[]>([]);
+  private readonly roomsSig = signal<MyEventsRoom[]>([]);
+  private readonly floorsSig = signal<MyEventsFloor[]>([]);
 
-  readonly bookings = computed(() =>
-    this._bookings().filter((b) => b.activityType === MyEventsActivityType.SPECIAL_EVENT)
+  readonly bookings = computed<MyEventsBooking[]>(() =>
+    this.bookingsSig().filter((booking) => booking.activityType === 'SPECIAL_EVENT'),
   );
 
   readonly eventCards = computed<MyEventCardVm[]>(() =>
     this.bookings()
       .map((booking) => {
         const event = booking.activityId
-          ? this._events().find((e) => e.id === booking.activityId)
+          ? this.eventsSig().find((item) => item.id === booking.activityId)
           : null;
 
-        if (!event) return null;
+        if (!event) {
+          return null;
+        }
 
         const room = event.roomId
-          ? this._rooms().find((r) => r.id === event.roomId)
+          ? this.roomsSig().find((item) => item.id === event.roomId)
           : null;
 
         const building = event.buildingId
-          ? this._buildings().find((b) => b.id === event.buildingId)
+          ? this.buildingsSig().find((item) => item.id === event.buildingId)
           : null;
 
         const floor = room?.floorId
-          ? this._floors().find((f) => f.id === room.floorId)
+          ? this.floorsSig().find((item) => item.id === room.floorId)
           : null;
 
-        return mapToMyEventVm(
-          booking,
-          event,
-          building ?? ({} as never),
-          floor ?? ({} as never),
-          room ?? ({} as never)
-        );
+        return mapToMyEventVm(booking, event, building ?? null, floor ?? null, room ?? null);
       })
-      .filter((x): x is MyEventCardVm => x !== null)
+      .filter((item): item is MyEventCardVm => item !== null),
   );
 
   load(): void {
-    this._api
+    this.api
       .loadMyEvents$()
-      .pipe(take(1), takeUntilDestroyed(this._destroyRef))
+      .pipe(take(1), takeUntilDestroyed(this.destroyRef))
       .subscribe(({ bookings, events, buildings, rooms, floors }) => {
-        this._bookings.set(bookings);
-        this._events.set(events);
-        this._buildings.set(buildings);
-        this._rooms.set(rooms);
-        this._floors.set(floors);
+        this.bookingsSig.set(bookings);
+        this.eventsSig.set(events);
+        this.buildingsSig.set(buildings);
+        this.roomsSig.set(rooms);
+        this.floorsSig.set(floors);
       });
   }
 
   remove(id: string): void {
-    this._api
+    this.api
       .deleteBooking$(id)
-      .pipe(take(1), takeUntilDestroyed(this._destroyRef))
+      .pipe(take(1), takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
-        this._bookings.update((items) => items.filter((b) => b.id !== id));
+        this.bookingsSig.update((items) => items.filter((booking) => booking.id !== id));
       });
   }
 }

@@ -1,13 +1,13 @@
 import {
+  type ActivityTypeDTO,
   type BookingResponseDTO,
   type BuildingResponseDTO,
   type EventResponseDTO,
   type FloorResponseDTO,
   type RoomResponseDTO,
-  ActivityTypeDTO
 } from '@free-spot/api-client';
 import {
-  MyEventsActivityType,
+  type MyEventsActivityType,
   type MyEventsBooking,
   type MyEventsBuilding,
   type MyEventsEvent,
@@ -15,38 +15,21 @@ import {
   type MyEventsRoom,
 } from '@free-spot/my-events/domain';
 
-function mapActivityType(dto: ActivityTypeDTO): MyEventsActivityType {
-  switch (dto) {
-    case ActivityTypeDTO.LABORATORY:
-      return MyEventsActivityType.LABORATORY;
-    case ActivityTypeDTO.COURSE:
-      return MyEventsActivityType.COURSE;
-    case ActivityTypeDTO.PROJECT:
-      return MyEventsActivityType.PROJECT;
-    case ActivityTypeDTO.SEMINAR:
-      return MyEventsActivityType.SEMINAR;
-    case ActivityTypeDTO.SPECIAL_EVENT:
-      return MyEventsActivityType.SPECIAL_EVENT;
-    default:
-      throw new Error('Invalid activity type');
-  }
-}
-
-export function dtoToMyEventsBooking(dto: BookingResponseDTO): MyEventsBooking {
+export function bookingDtoToDomain(dto: BookingResponseDTO): MyEventsBooking {
   if (!dto.id) {
-    throw new Error('Booking id is required');
+    throw new Error('Missing booking id');
   }
 
   return {
     id: dto.id,
     activityId: dto.activityId ?? null,
-    activityType: mapActivityType(dto.activityType),
+    activityType: toActivityType(dto.activityType),
   };
 }
 
-export function dtoToMyEventsEvent(dto: EventResponseDTO): MyEventsEvent {
+export function eventDtoToDomain(dto: EventResponseDTO): MyEventsEvent {
   if (!dto.id) {
-    throw new Error('Event id is required');
+    throw new Error('Missing event id');
   }
 
   return {
@@ -59,9 +42,9 @@ export function dtoToMyEventsEvent(dto: EventResponseDTO): MyEventsEvent {
   };
 }
 
-export function dtoToMyEventsBuilding(dto: BuildingResponseDTO): MyEventsBuilding {
+export function buildingDtoToDomain(dto: BuildingResponseDTO): MyEventsBuilding {
   if (!dto.id) {
-    throw new Error('Building id is required');
+    throw new Error('Missing building id');
   }
 
   return {
@@ -70,9 +53,9 @@ export function dtoToMyEventsBuilding(dto: BuildingResponseDTO): MyEventsBuildin
   };
 }
 
-export function dtoToMyEventsFloor(dto: FloorResponseDTO): MyEventsFloor {
+export function floorDtoToDomain(dto: FloorResponseDTO): MyEventsFloor {
   if (!dto.id) {
-    throw new Error('Floor id is required');
+    throw new Error('Missing floor id');
   }
 
   return {
@@ -81,9 +64,9 @@ export function dtoToMyEventsFloor(dto: FloorResponseDTO): MyEventsFloor {
   };
 }
 
-export function dtoToMyEventsRoom(dto: RoomResponseDTO): MyEventsRoom {
+export function roomDtoToDomain(dto: RoomResponseDTO): MyEventsRoom {
   if (!dto.id) {
-    throw new Error('Room id is required');
+    throw new Error('Missing room id');
   }
 
   return {
@@ -91,4 +74,12 @@ export function dtoToMyEventsRoom(dto: RoomResponseDTO): MyEventsRoom {
     name: dto.name ?? '',
     floorId: dto.floorId ?? null,
   };
+}
+
+function toActivityType(value: ActivityTypeDTO | undefined): MyEventsActivityType {
+  if (!value) {
+    throw new Error('Missing activity type');
+  }
+
+  return value as MyEventsActivityType;
 }
