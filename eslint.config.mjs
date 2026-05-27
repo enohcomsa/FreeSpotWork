@@ -9,6 +9,39 @@ const compat = new FlatCompat({
   recommendedConfig: js.configs.recommended,
 });
 
+const slices = [
+  'academic-schedule',
+  'activity-bookings',
+  'activity-rescheduling',
+  'admin-academic-structure',
+  'admin-events',
+  'admin-timetabling',
+  'admin-university-map',
+  'admin-user-access',
+  'event-registration',
+  'events-catalog',
+  'my-events',
+  'university-map',
+  'user-setup',
+];
+
+const sharedDomainAccessBySlice = {
+  'admin-university-map': ['shared-domain:university-map'],
+  'university-map': ['shared-domain:university-map'],
+};
+
+const sliceAccess = slices.map((slice) => ({
+  sourceTag: `slice:${slice}`,
+  onlyDependOnLibsWithTags: [
+    `slice:${slice}`,
+    'slice:core',
+    'slice:shared',
+    'scope:shared',
+    'scope:api',
+    ...(sharedDomainAccessBySlice[slice] ?? []),
+  ],
+}));
+
 export default [
   {
     ignores: ['**/dist', '**/libs/_free-spot-client-api/**'],
@@ -24,6 +57,69 @@ export default [
           allow: [],
           depConstraints: [
             {
+              allSourceTags: ['shared-domain:university-map'],
+              onlyDependOnLibsWithTags: ['shared-domain:university-map', 'slice:shared', 'scope:shared'],
+            },
+
+            ...sliceAccess,
+
+            {
+              sourceTag: 'slice:core',
+              onlyDependOnLibsWithTags: ['slice:core', 'slice:shared', 'scope:shared', 'scope:api'],
+            },
+            {
+              sourceTag: 'slice:shared',
+              onlyDependOnLibsWithTags: ['slice:shared'],
+            },
+
+            {
+              sourceTag: 'role:composition',
+              onlyDependOnLibsWithTags: ['type:feature', 'type:ui', 'type:util', 'slice:core', 'slice:shared', 'scope:shared'],
+            },
+
+            {
+              sourceTag: 'type:app',
+              onlyDependOnLibsWithTags: ['type:feature', 'type:domain', 'type:data-access', 'type:ui', 'type:util'],
+            },
+            {
+              sourceTag: 'type:feature',
+              onlyDependOnLibsWithTags: ['type:data-access', 'type:domain', 'type:ui', 'type:util'],
+            },
+            {
+              sourceTag: 'type:data-access',
+              onlyDependOnLibsWithTags: ['type:domain', 'type:util', 'type:api-client'],
+            },
+            {
+              sourceTag: 'type:domain',
+              onlyDependOnLibsWithTags: ['type:util'],
+            },
+            {
+              sourceTag: 'type:ui',
+              onlyDependOnLibsWithTags: ['type:domain', 'type:ui', 'type:util'],
+            },
+            {
+              sourceTag: 'type:util',
+              onlyDependOnLibsWithTags: ['type:util'],
+            },
+            {
+              sourceTag: 'type:api-client',
+              onlyDependOnLibsWithTags: ['type:api-client'],
+            },
+
+            {
+              sourceTag: 'scope:freespot',
+              onlyDependOnLibsWithTags: ['scope:freespot', 'scope:shared', 'scope:api'],
+            },
+            {
+              sourceTag: 'scope:shared',
+              onlyDependOnLibsWithTags: ['scope:shared'],
+            },
+            {
+              sourceTag: 'scope:api',
+              onlyDependOnLibsWithTags: ['scope:api'],
+            },
+
+            {
               sourceTag: 'platform:frontend',
               notDependOnLibsWithTags: ['platform:backend'],
             },
@@ -31,64 +127,7 @@ export default [
               sourceTag: 'platform:backend',
               notDependOnLibsWithTags: ['platform:frontend'],
             },
-
-            {
-              sourceTag: 'scope:freespot',
-              onlyDependOnLibsWithTags: ['scope:freespot', 'scope:shared', 'scope:core', 'scope:api'],
-              notDependOnLibsWithTags: ['scope:meal-plan'],
-            },
-            {
-              sourceTag: 'scope:meal-plan',
-              onlyDependOnLibsWithTags: ['scope:meal-plan', 'scope:shared', 'scope:core', 'scope:api'],
-              notDependOnLibsWithTags: ['scope:freespot'],
-            },
-            {
-              sourceTag: 'scope:core',
-              onlyDependOnLibsWithTags: ['scope:core', 'scope:shared', 'scope:api'],
-            },
-            {
-              sourceTag: 'scope:shared',
-              onlyDependOnLibsWithTags: ['scope:shared', 'scope:api'],
-            },
-            {
-              sourceTag: 'scope:api',
-              onlyDependOnLibsWithTags: ['scope:api', 'scope:shared'],
-            },
-
-            {
-              sourceTag: 'type:app',
-              onlyDependOnLibsWithTags: ['type:feature', 'type:ui', 'type:util', 'type:infra', 'type:generated'],
-            },
-            {
-              sourceTag: 'type:feature',
-              onlyDependOnLibsWithTags: ['type:data-access', 'type:domain', 'type:ui', 'type:util', 'type:infra', 'type:generated'],
-            },
-            {
-              sourceTag: 'type:data-access',
-              onlyDependOnLibsWithTags: ['type:data-access', 'type:domain', 'type:util', 'type:infra', 'type:generated', 'type:api-client'],
-            },
-            {
-              sourceTag: 'type:domain',
-              onlyDependOnLibsWithTags: ['type:domain', 'type:util', 'type:generated'],
-            },
-            {
-              sourceTag: 'type:ui',
-              onlyDependOnLibsWithTags: ['type:ui', 'type:domain', 'type:util', 'type:generated'],
-              notDependOnLibsWithTags: ['type:data-access'],
-            },
-            {
-              sourceTag: 'type:util',
-              onlyDependOnLibsWithTags: ['type:util'],
-            },
-            {
-              sourceTag: 'type:generated',
-              onlyDependOnLibsWithTags: ['type:generated', 'type:util'],
-            },
-            {
-              sourceTag: 'type:infra',
-              onlyDependOnLibsWithTags: ['type:infra', 'type:util', 'type:domain', 'type:generated'],
-            },
-          ]
+          ],
         },
       ],
     },

@@ -16,7 +16,8 @@
   "tags": [
     "platform:frontend",
     "scope:freespot",
-    "type:data-access"
+    "type:data-access",
+    "slice:activity-bookings"
   ],
   "targets": {
     "build": {
