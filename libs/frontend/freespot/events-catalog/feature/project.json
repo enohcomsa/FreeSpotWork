@@ -15,9 +15,9 @@
   },
   "tags": [
     "platform:frontend",
-    "scope:freespot",
-    "type:feature",
-    "slice:events-catalog"
+    "product:freespot",
+    "domain:events-catalog",
+    "layer:feature"
   ],
   "targets": {
     "build": {

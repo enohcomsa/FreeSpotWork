@@ -6,9 +6,10 @@
   "projectType": "library",
   "tags": [
     "platform:frontend",
-    "scope:freespot",
-    "type:feature",
-    "slice:academic-schedule"
+    "product:freespot",
+    "domain:academic-schedule",
+    "layer:feature",
+    "role:composition"
   ],
   "targets": {
     "build": {

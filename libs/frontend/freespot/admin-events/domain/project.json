@@ -1,61 +1,59 @@
 {
-    "name":  "freespot-admin-events-domain",
-    "$schema":  "../../../../../node_modules/nx/schemas/project-schema.json",
-    "sourceRoot":  "libs/frontend/freespot/admin-events/domain/src",
-    "prefix":  "free-spot",
-    "projectType":  "library",
-    "release":  {
-                    "version":  {
-                                    "manifestRootsToUpdate":  [
-                                                                  "dist/{projectRoot}"
-                                                              ],
-                                    "currentVersionResolver":  "git-tag",
-                                    "fallbackCurrentVersionResolver":  "disk"
-                                }
-                },
-    "tags":  [
-                 "platform:frontend",
-                 "scope:freespot",
-                 "type:domain",
-                 "slice:admin-events"
-             ],
-    "targets":  {
-                    "build":  {
-                                  "executor":  "@nx/angular:package",
-                                  "outputs":  [
-                                                  "{workspaceRoot}/dist/{projectRoot}"
-                                              ],
-                                  "options":  {
-                                                  "project":  "libs/frontend/freespot/admin-events/domain/ng-package.json",
-                                                  "tsConfig":  "libs/frontend/freespot/admin-events/domain/tsconfig.lib.json"
-                                              },
-                                  "configurations":  {
-                                                         "production":  {
-                                                                            "tsConfig":  "libs/frontend/freespot/admin-events/domain/tsconfig.lib.prod.json"
-                                                                        },
-                                                         "development":  {
-
-                                                                         }
-                                                     },
-                                  "defaultConfiguration":  "production"
-                              },
-                    "nx-release-publish":  {
-                                               "options":  {
-                                                               "packageRoot":  "dist/{projectRoot}"
-                                                           }
-                                           },
-                    "test":  {
-                                 "executor":  "@nx/jest:jest",
-                                 "outputs":  [
-                                                 "{workspaceRoot}/coverage/{projectRoot}"
-                                             ],
-                                 "options":  {
-                                                 "jestConfig":  "libs/frontend/freespot/admin-events/domain/jest.config.ts",
-                                                 "tsConfig":  "libs/frontend/freespot/admin-events/domain/tsconfig.spec.json"
-                                             }
-                             },
-                    "lint":  {
-                                 "executor":  "@nx/eslint:lint"
-                             }
-                }
+  "name": "freespot-admin-events-domain",
+  "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/frontend/freespot/admin-events/domain/src",
+  "prefix": "free-spot",
+  "projectType": "library",
+  "release": {
+    "version": {
+      "manifestRootsToUpdate": [
+        "dist/{projectRoot}"
+      ],
+      "currentVersionResolver": "git-tag",
+      "fallbackCurrentVersionResolver": "disk"
+    }
+  },
+  "tags": [
+    "platform:frontend",
+    "product:freespot",
+    "domain:admin-events",
+    "layer:domain"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:package",
+      "outputs": [
+        "{workspaceRoot}/dist/{projectRoot}"
+      ],
+      "options": {
+        "project": "libs/frontend/freespot/admin-events/domain/ng-package.json",
+        "tsConfig": "libs/frontend/freespot/admin-events/domain/tsconfig.lib.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "libs/frontend/freespot/admin-events/domain/tsconfig.lib.prod.json"
+        },
+        "development": {}
+      },
+      "defaultConfiguration": "production"
+    },
+    "nx-release-publish": {
+      "options": {
+        "packageRoot": "dist/{projectRoot}"
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectRoot}"
+      ],
+      "options": {
+        "jestConfig": "libs/frontend/freespot/admin-events/domain/jest.config.ts",
+        "tsConfig": "libs/frontend/freespot/admin-events/domain/tsconfig.spec.json"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
 }

@@ -15,9 +15,10 @@
   },
   "tags": [
     "platform:frontend",
-    "scope:freespot",
-    "type:ui",
-    "slice:core"
+    "product:freespot",
+    "domain:core",
+    "layer:ui",
+    "role:infrastructure"
   ],
   "targets": {
     "build": {

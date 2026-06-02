@@ -15,9 +15,9 @@
   },
   "tags": [
     "platform:frontend",
-    "scope:freespot",
-    "type:data-access",
-    "slice:activity-rescheduling"
+    "product:freespot",
+    "domain:activity-rescheduling",
+    "layer:data-access"
   ],
   "targets": {
     "build": {

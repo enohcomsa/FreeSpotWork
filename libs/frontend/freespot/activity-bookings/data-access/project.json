@@ -13,12 +13,12 @@
       "fallbackCurrentVersionResolver": "disk"
     }
   },
-  "tags": [
-    "platform:frontend",
-    "scope:freespot",
-    "type:data-access",
-    "slice:activity-bookings"
-  ],
+"tags": [
+  "platform:frontend",
+  "product:freespot",
+  "domain:activity-bookings",
+  "layer:data-access"
+],
   "targets": {
     "build": {
       "executor": "@nx/angular:package",

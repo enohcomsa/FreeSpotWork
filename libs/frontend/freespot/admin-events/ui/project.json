@@ -15,9 +15,9 @@
   },
   "tags": [
     "platform:frontend",
-    "scope:freespot",
-    "type:ui",
-    "slice:admin-events"
+    "product:freespot",
+    "domain:admin-events",
+    "layer:ui"
   ],
   "targets": {
     "build": {

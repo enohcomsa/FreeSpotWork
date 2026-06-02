@@ -15,9 +15,9 @@
   },
   "tags": [
     "platform:frontend",
-    "scope:freespot",
-    "type:data-access",
-    "slice:university-map"
+    "product:freespot",
+    "domain:university-map",
+    "layer:data-access"
   ],
   "targets": {
     "build": {

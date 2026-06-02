@@ -15,9 +15,9 @@
   },
   "tags": [
     "platform:frontend",
-    "scope:freespot",
-    "type:ui",
-    "slice:activity-bookings"
+    "product:freespot",
+    "domain:activity-bookings",
+    "layer:ui"
   ],
   "targets": {
     "build": {

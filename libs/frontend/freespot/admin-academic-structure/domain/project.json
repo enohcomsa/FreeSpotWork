@@ -15,9 +15,9 @@
   },
   "tags": [
     "platform:frontend",
-    "scope:freespot",
-    "type:domain",
-    "slice:admin-academic-structure"
+    "product:freespot",
+    "domain:admin-academic-structure",
+    "layer:domain"
   ],
   "targets": {
     "build": {

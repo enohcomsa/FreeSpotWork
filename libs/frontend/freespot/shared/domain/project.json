@@ -15,9 +15,9 @@
   },
   "tags": [
     "platform:frontend",
-    "type:domain",
-    "slice:shared",
-    "scope:shared"
+    "product:freespot",
+    "domain:shared",
+    "layer:shared-domain"
   ],
   "targets": {
     "build": {

@@ -15,9 +15,9 @@
   },
   "tags": [
     "platform:frontend",
-    "scope:freespot",
-    "type:domain",
-    "slice:admin-university-map"
+    "product:freespot",
+    "domain:admin-university-map",
+    "layer:domain"
   ],
   "targets": {
     "build": {

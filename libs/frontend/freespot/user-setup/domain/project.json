@@ -15,9 +15,9 @@
   },
   "tags": [
     "platform:frontend",
-    "scope:freespot",
-    "type:domain",
-    "slice:user-setup"
+    "product:freespot",
+    "domain:user-setup",
+    "layer:domain"
   ],
   "targets": {
     "build": {

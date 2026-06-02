@@ -15,9 +15,9 @@
   },
   "tags": [
     "platform:frontend",
-    "scope:freespot",
-    "type:domain",
-    "slice:event-registration"
+    "product:freespot",
+    "domain:event-registration",
+    "layer:domain"
   ],
   "targets": {
     "build": {
