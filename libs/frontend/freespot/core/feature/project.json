@@ -16,7 +16,8 @@
   "tags": [
     "platform:frontend",
     "product:freespot",
-    "layer:core-feature"
+    "layer:core-feature",
+    "role:entry-feature"
   ],
   "targets": {
     "build": {

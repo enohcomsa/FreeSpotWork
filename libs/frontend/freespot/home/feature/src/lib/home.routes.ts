@@ -1,4 +1,5 @@
 import { Route } from '@angular/router';
+import { FloorDetailsComponent } from '@free-spot/university-map/feature';
 
 export const homeRoutes: Route[] = [
   {
@@ -10,9 +11,6 @@ export const homeRoutes: Route[] = [
   },
   {
     path: 'building/:buildingId/floor/:floorName',
-    loadComponent: async () => {
-      const mod = await import('@free-spot/university-map/feature');
-      return mod.FloorDetailsComponent;
-    },
+    component: FloorDetailsComponent,
   },
 ];

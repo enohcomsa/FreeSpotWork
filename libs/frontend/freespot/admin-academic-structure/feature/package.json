@@ -3,7 +3,15 @@
   "version": "0.0.1",
   "peerDependencies": {
     "@angular/common": "^20.0.0",
-    "@angular/core": "^20.0.0"
+    "@angular/core": "^20.0.0",
+    "@angular/material": "^20.0.1",
+    "@free-spot/admin-academic-structure/domain": "0.0.1",
+    "@free-spot/admin-academic-structure/data-access": "0.0.1",
+    "@angular/forms": "20.0.0",
+    "@free-spot/shared/ui": "0.0.1",
+    "@free-spot/shared/util": "0.0.1",
+    "rxjs": "^7.8.2",
+    "@free-spot/admin-timetabling/feature": "0.0.1"
   },
   "sideEffects": false
 }

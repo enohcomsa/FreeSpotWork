@@ -13,7 +13,7 @@ import {
   type ReschedulableBookingVm,
   type RescheduleOptionCardVm,
 } from '@free-spot/activity-rescheduling/domain';
-import { ConfirmModalService } from '@free-spot/core/ui';
+import { ConfirmModalService } from '@free-spot/shared/ui';
 import { ToastrService } from 'ngx-toastr';
 import { HttpActivityReschedulingService } from './http-activity-rescheduling.service';
 

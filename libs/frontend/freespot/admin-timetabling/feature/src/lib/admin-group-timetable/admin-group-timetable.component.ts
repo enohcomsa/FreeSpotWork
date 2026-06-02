@@ -24,7 +24,7 @@ import {
   type AdminTimetableActivityType,
   type AdminTimetableWeekDay,
 } from '@free-spot/admin-timetabling/domain';
-import { ConfirmModalService } from '@free-spot/core/ui';
+import { ConfirmModalService } from '@free-spot/shared/ui';
 import { FormErrorMessage } from  '@free-spot/shared/util';
 import { debounceTime } from 'rxjs';
 

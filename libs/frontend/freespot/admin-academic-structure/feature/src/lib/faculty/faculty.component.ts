@@ -9,7 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ConfirmModalService } from '@free-spot/core/ui';
+import { ConfirmModalService } from '@free-spot/shared/ui';
 import { DynamicChipListComponent, AddItemCardComponent } from '@free-spot/shared/ui';
 import { FormErrorMessage } from '@free-spot/shared/util';
 import { take } from 'rxjs';

@@ -10,7 +10,7 @@ import {
   type CreateAdminCohortCmd,
 } from '@free-spot/admin-academic-structure/domain';
 import { AdminGroupTimetableComponent, AdminSemisemiGroupTimetableComponent } from '@free-spot/admin-timetabling/feature';
-import { ConfirmModalService } from '@free-spot/core/ui';
+import { ConfirmModalService } from '@free-spot/shared/ui';
 import { type TimetableUiActivity, type TimetableUiWeekDay, TimetableItemComponent, DynamicChipListComponent } from '@free-spot/shared/ui';
 
 

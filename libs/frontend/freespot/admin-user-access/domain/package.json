@@ -2,8 +2,7 @@
   "name": "@free-spot/admin-user-access/domain",
   "version": "0.0.1",
   "peerDependencies": {
-    "@angular/common": "^20.0.0",
-    "@angular/core": "^20.0.0"
+    "@free-spot/core/domain": "0.0.1"
   },
   "sideEffects": false
 }

@@ -1,4 +1,10 @@
 import { Route } from '@angular/router';
+import { GroupComponent } from '@free-spot/admin-academic-structure/feature';
+import {
+  AdminBuildingDetailComponent,
+  AdminFloorDetailComponent,
+  AdminRoomDetailComponent,
+} from '@free-spot/admin-university-map/feature';
 
 export const adminRoutes: Route[] = [
   {
@@ -13,31 +19,19 @@ export const adminRoutes: Route[] = [
       },
       {
         path: 'group/:groupIdSig',
-        loadComponent: async () => {
-          const mod = await import('@free-spot/admin-academic-structure/feature');
-          return mod.GroupComponent;
-        },
+        component: GroupComponent,
       },
       {
         path: 'building/:buildingIdSig',
-        loadComponent: async () => {
-          const mod = await import('@free-spot/admin-university-map/feature');
-          return mod.AdminBuildingDetailComponent;
-        },
+        component: AdminBuildingDetailComponent,
       },
       {
         path: 'building/:buildingIdSig/:floorIdSig',
-        loadComponent: async () => {
-          const mod = await import('@free-spot/admin-university-map/feature');
-          return mod.AdminFloorDetailComponent;
-        },
+        component: AdminFloorDetailComponent,
       },
       {
         path: 'building/:buildingIdSig/:floorIdSig/:roomIdSig',
-        loadComponent: async () => {
-          const mod = await import('@free-spot/admin-university-map/feature');
-          return mod.AdminRoomDetailComponent;
-        },
+        component: AdminRoomDetailComponent,
       },
       { path: '**', redirectTo: '/' },
     ],

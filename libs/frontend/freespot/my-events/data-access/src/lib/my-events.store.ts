@@ -1,7 +1,6 @@
 import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
-  type MyEventCardVm,
   type MyEventsBooking,
   type MyEventsBuilding,
   type MyEventsEvent,
@@ -10,7 +9,6 @@ import {
 } from '@free-spot/my-events/domain';
 import { take } from 'rxjs';
 import { HttpMyEventsService } from './http-my-events.service';
-import { mapToMyEventVm } from './my-event.mapper';
 
 @Injectable({ providedIn: 'root' })
 export class MyEventsStore {
@@ -27,7 +25,7 @@ export class MyEventsStore {
     this.bookingsSig().filter((booking) => booking.activityType === 'SPECIAL_EVENT'),
   );
 
-  readonly eventCards = computed<MyEventCardVm[]>(() =>
+  readonly bookedEvents = computed(() =>
     this.bookings()
       .map((booking) => {
         const event = booking.activityId
@@ -50,9 +48,21 @@ export class MyEventsStore {
           ? this.floorsSig().find((item) => item.id === room.floorId)
           : null;
 
-        return mapToMyEventVm(booking, event, building ?? null, floor ?? null, room ?? null);
+        return {
+          booking,
+          event,
+          building: building ?? null,
+          floor: floor ?? null,
+          room: room ?? null,
+        };
       })
-      .filter((item): item is MyEventCardVm => item !== null),
+      .filter((item): item is {
+        booking: MyEventsBooking;
+        event: MyEventsEvent;
+        building: MyEventsBuilding | null;
+        floor: MyEventsFloor | null;
+        room: MyEventsRoom | null;
+      } => item !== null),
   );
 
   load(): void {

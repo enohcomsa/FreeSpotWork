@@ -85,12 +85,14 @@ export const dependencyBoundaries = {
       onlyDependOnLibsWithTags: [
         roles.COMPOSITION,
         roles.ENTRY_FEATURE,
+        layers.CORE_DATA_ACCESS,
       ],
     },
     {
       sourceTag: roles.COMPOSITION,
       onlyDependOnLibsWithTags: [
         roles.LEAF,
+        layers.CORE_DATA_ACCESS,
       ],
     },
 
@@ -146,6 +148,7 @@ export const dependencyBoundaries = {
       sourceTag: layers.DOMAIN,
       onlyDependOnLibsWithTags: [
         layers.SHARED_DOMAIN,
+        layers.CORE_DOMAIN,
       ],
     },
     {

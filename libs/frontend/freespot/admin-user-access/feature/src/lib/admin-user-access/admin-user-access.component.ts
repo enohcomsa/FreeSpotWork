@@ -9,7 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { AdminUserAccessStore } from '@free-spot/admin-user-access/data-access';
 import { type AdminUser } from '@free-spot/admin-user-access/domain';
-import { ConfirmModalService } from '@free-spot/core/ui';
+import { ConfirmModalService } from '@free-spot/shared/ui';
 import { FormErrorMessage } from  '@free-spot/shared/util';
 
 @Component({

@@ -3,7 +3,11 @@
   "version": "0.0.1",
   "peerDependencies": {
     "@angular/common": "^20.0.0",
-    "@angular/core": "^20.0.0"
+    "@angular/core": "^20.0.0",
+    "@angular/material": "^20.0.1",
+    "@angular/forms": "20.0.0",
+    "@free-spot/shared/util": "0.0.1",
+    "@ngx-translate/core": "^16.0.4"
   },
   "sideEffects": false
 }

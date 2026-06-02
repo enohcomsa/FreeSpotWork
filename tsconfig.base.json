@@ -84,7 +84,6 @@
       "@free-spot/core/data-access": ["libs/frontend/freespot/core/data-access/src/index.ts"],
       "@free-spot/core/domain": ["libs/frontend/freespot/core/domain/src/index.ts"],
       "@free-spot/core/feature": ["libs/frontend/freespot/core/feature/src/index.ts"],
-      "@free-spot/core/ui": ["libs/frontend/freespot/core/ui/src/index.ts"],
 
       "@free-spot/shared/domain": ["libs/frontend/freespot/shared/domain/src/index.ts"],
       "@free-spot/shared/ui": ["libs/frontend/freespot/shared/ui/src/index.ts"],

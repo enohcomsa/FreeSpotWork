@@ -1,11 +1,11 @@
 import {
-  type MyEventCardVm,
   type MyEventsBooking,
   type MyEventsBuilding,
   type MyEventsEvent,
   type MyEventsFloor,
   type MyEventsRoom,
 } from '@free-spot/my-events/domain';
+import { MyEventCardVm } from '@free-spot/my-events/ui';
 
 export function mapToMyEventVm(
   booking: MyEventsBooking,

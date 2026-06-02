@@ -1,6 +1,6 @@
 import { DestroyRef, Injectable, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ConfirmModalService } from '@free-spot/core/ui';
+import { ConfirmModalService } from '@free-spot/shared/ui';
 import { ToastrService } from 'ngx-toastr';
 import { of, switchMap, take } from 'rxjs';
 import { HttpEventRegistrationService } from './http-event-registration.service';

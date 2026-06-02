@@ -8,7 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ConfirmModalService } from '@free-spot/core/ui';
+import { ConfirmModalService } from "../confirm-modal.service";
 import { FormErrorMessage } from '@free-spot/shared/util';
 
 @Component({

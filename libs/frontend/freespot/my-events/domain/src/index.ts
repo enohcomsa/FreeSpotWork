@@ -1,5 +1,3 @@
-export { type MyEventCardVm } from './lib/my-event-card.vm';
-
 export {
   MyEventsActivityType,
   type MyEventsBooking,
