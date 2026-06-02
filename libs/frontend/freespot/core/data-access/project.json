@@ -16,9 +16,7 @@
   "tags": [
     "platform:frontend",
     "product:freespot",
-    "domain:core",
-    "layer:data-access",
-    "role:infrastructure"
+    "layer:core-data-access"
   ],
   "targets": {
     "build": {

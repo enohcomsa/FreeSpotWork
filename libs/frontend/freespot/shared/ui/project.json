@@ -16,7 +16,6 @@
   "tags": [
     "platform:frontend",
     "product:freespot",
-    "domain:shared",
     "layer:shared-ui"
   ],
   "targets": {

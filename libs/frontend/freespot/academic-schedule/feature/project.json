@@ -9,7 +9,7 @@
     "product:freespot",
     "domain:academic-schedule",
     "layer:feature",
-    "role:composition"
+    "role:entry-feature"
   ],
   "targets": {
     "build": {
