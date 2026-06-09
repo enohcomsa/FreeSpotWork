@@ -7,9 +7,9 @@ import {
   type TimetableActivity,
   type TimetableActivityCardVM,
   type TimetableDayVM,
-  type WeekDay,
 } from '@free-spot/academic-schedule/domain';
 import { HttpAcademicScheduleService } from './http-academic-schedule.service';
+import { WeekDay } from '@free-spot/shared/domain';
 
 @Injectable()
 export class AcademicScheduleStore {

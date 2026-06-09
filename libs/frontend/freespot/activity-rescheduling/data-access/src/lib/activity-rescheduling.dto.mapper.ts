@@ -21,9 +21,9 @@ import {
   type ActivityReschedulingOptionsResult,
   type ActivityReschedulingRoom,
   type ActivityReschedulingSubject,
-  type ActivityReschedulingWeekDay,
-  type ActivityReschedulingWeekParity,
 } from '@free-spot/activity-rescheduling/domain';
+
+import { WeekDay, WeekParity } from '@free-spot/shared/domain';
 
 export function rescheduleOptionsDtoToDomain(dto: RescheduleOptionsResponseDTO): ActivityReschedulingOptionsResult {
   return {
@@ -126,7 +126,7 @@ function toBookingStatus(value: BookingStatusDTO | undefined): ActivityReschedul
   return value;
 }
 
-function toWeekDay(value: WeekDayDTO | undefined): ActivityReschedulingWeekDay {
+function toWeekDay(value: WeekDayDTO | undefined): WeekDay {
   if (!value) {
     throw new Error('Missing week day');
   }
@@ -134,7 +134,7 @@ function toWeekDay(value: WeekDayDTO | undefined): ActivityReschedulingWeekDay {
   return value;
 }
 
-function toWeekParity(value: WeekParityDTO | undefined): ActivityReschedulingWeekParity {
+function toWeekParity(value: WeekParityDTO | undefined): WeekParity {
   if (!value) {
     throw new Error('Missing week parity');
   }

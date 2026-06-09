@@ -20,6 +20,4 @@ export {
   type AdminAcademicActivityType,
   type AdminAcademicRoom,
   type AdminAcademicTimetableActivity,
-  type AdminAcademicWeekDay,
-  type AdminAcademicWeekParity,
 } from './lib/admin-academic-structure-timetable.model';

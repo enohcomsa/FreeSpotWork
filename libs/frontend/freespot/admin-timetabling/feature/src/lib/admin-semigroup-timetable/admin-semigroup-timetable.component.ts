@@ -22,11 +22,11 @@ import { AdminTimetablingStore } from '@free-spot/admin-timetabling/data-access'
 import {
   type AdminTimetableActivity,
   type AdminTimetableActivityType,
-  type AdminTimetableWeekDay,
 } from '@free-spot/admin-timetabling/domain';
 import { ConfirmModalService } from '@free-spot/shared/ui';
 import { FormErrorMessage } from  '@free-spot/shared/util';
 import { debounceTime } from 'rxjs';
+import { WeekDay } from '@free-spot/shared/domain';
 
 @Component({
   selector: 'free-spot-admin-semigroup-timetable',
@@ -70,7 +70,7 @@ export class AdminSemisemiGroupTimetableComponent implements OnInit {
     'SEMINAR',
   ];
 
-  readonly weekDayList: AdminTimetableWeekDay[] = [
+  readonly weekDayList: WeekDay[] = [
     'MONDAY',
     'TUESDAY',
     'WEDNESDAY',
@@ -89,7 +89,7 @@ export class AdminSemisemiGroupTimetableComponent implements OnInit {
     this.store.init();
 
     this.addTimetableActivityFormSemiGroup = this.formBuilder.nonNullable.group({
-      weekDay: ['MONDAY' as AdminTimetableWeekDay, [Validators.required, Validators.minLength(1)]],
+      weekDay: ['MONDAY' as WeekDay, [Validators.required, Validators.minLength(1)]],
       subject: [this.subjectListSig()[0], [Validators.required, Validators.minLength(1)]],
       timetableActivity: [{} as AdminTimetableActivity, [Validators.required, Validators.minLength(1)]],
     });

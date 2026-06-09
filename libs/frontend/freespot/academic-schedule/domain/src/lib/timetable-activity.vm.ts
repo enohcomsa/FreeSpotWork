@@ -1,4 +1,5 @@
-import { WeekDay, WeekParity, ActivityType } from './timetable-activity.model';
+import { WeekDay, WeekParity } from '@free-spot/shared/domain';
+import { ActivityType } from './timetable-activity.model';
 
 export type TimetableActivityCardVM = {
   id: string;

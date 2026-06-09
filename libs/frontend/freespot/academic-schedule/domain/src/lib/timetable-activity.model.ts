@@ -1,20 +1,11 @@
+import { WeekDay, WeekParity } from "@free-spot/shared/domain";
+
 export type ActivityType =
   | 'LABORATORY'
   | 'COURSE'
   | 'PROJECT'
   | 'SEMINAR'
   | 'SPECIAL_EVENT';
-
-export type WeekDay =
-  | 'MONDAY'
-  | 'TUESDAY'
-  | 'WEDNESDAY'
-  | 'THURSDAY'
-  | 'FRIDAY'
-  | 'SATURDAY'
-  | 'SUNDAY';
-
-export type WeekParity = 'ODD' | 'EVEN' | 'BOTH';
 
 export type TimetableActivity = {
   id: string;

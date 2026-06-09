@@ -7,8 +7,6 @@ export {
   type ActivityReschedulingOption,
   type ActivityReschedulingOptionsResult,
   type ActivityReschedulingSubject,
-  type ActivityReschedulingWeekDay,
-  type ActivityReschedulingWeekParity,
 } from './lib/activity-rescheduling.model';
 
 export {

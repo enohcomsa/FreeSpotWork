@@ -10,9 +10,9 @@ import {
   type AdminAcademicActivityType,
   type AdminAcademicRoom,
   type AdminAcademicTimetableActivity,
-  type AdminAcademicWeekDay,
-  type AdminAcademicWeekParity,
 } from '@free-spot/admin-academic-structure/domain';
+
+import { WeekDay, WeekParity } from '@free-spot/shared/domain';
 
 export function roomDtoToDomain(dto: RoomResponseDTO): AdminAcademicRoom {
   return {
@@ -45,7 +45,7 @@ function toActivityType(value: ActivityTypeDTO | undefined): AdminAcademicActivi
   return value;
 }
 
-function toWeekDay(value: WeekDayDTO | undefined): AdminAcademicWeekDay {
+function toWeekDay(value: WeekDayDTO | undefined): WeekDay {
   if (!value) {
     throw new Error('Missing week day');
   }
@@ -53,7 +53,7 @@ function toWeekDay(value: WeekDayDTO | undefined): AdminAcademicWeekDay {
   return value;
 }
 
-function toWeekParity(value: WeekParityDTO | undefined): AdminAcademicWeekParity {
+function toWeekParity(value: WeekParityDTO | undefined): WeekParity {
   if (!value) {
     throw new Error('Missing week parity');
   }

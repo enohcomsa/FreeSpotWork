@@ -7,8 +7,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import {
   type TimetableDayItem,
   type TimetableUiActivity,
-  type TimetableUiWeekDay,
 } from './timetable-item.model';
+import { WeekDay, WeekParity } from '@free-spot/shared/domain';
 
 @Component({
   selector: 'free-spot-timetable-item',
@@ -18,7 +18,7 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TimetableItemComponent {
-  readonly day = input<TimetableUiWeekDay>();
+  readonly day = input<WeekDay>();
   readonly timetableItemSig = input<TimetableUiActivity[]>();
 
   private readonly baseDayItems: TimetableDayItem[] = [

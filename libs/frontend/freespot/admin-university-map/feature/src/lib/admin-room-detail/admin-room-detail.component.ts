@@ -2,11 +2,11 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, OnInit, Si
 import { AdminUniversityMapStore } from '@free-spot/admin-university-map/data-access';
 import {
   type AdminUniversityMapSubject,
-  type AdminUniversityMapWeekDay,
   type UpdateAdminUniversityMapRoomCmd,
 } from '@free-spot/admin-university-map/domain';
 import { AdminRoomTimetableItemComponent } from '@free-spot/admin-university-map/ui';
-import { type TimetableUiActivity, type TimetableUiWeekDay, TimetableItemComponent, DynamicChipListComponent } from '@free-spot/shared/ui';
+import { type TimetableUiActivity, TimetableItemComponent, DynamicChipListComponent } from '@free-spot/shared/ui';
+import { WeekDay } from '@free-spot/shared/domain';
 
 @Component({
   selector: 'free-spot-admin-room-detail',
@@ -64,9 +64,9 @@ export class AdminRoomDetailComponent implements OnInit {
     });
   });
 
-  readonly workWeek: TimetableUiWeekDay[] = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'];
+  readonly workWeek: WeekDay[] = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'];
 
-  readonly localWorkWeek: AdminUniversityMapWeekDay[] = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'];
+  readonly localWorkWeek: WeekDay[] = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'];
 
   readonly timetablePerDay = computed(() =>
     this.workWeek.map((day) => ({

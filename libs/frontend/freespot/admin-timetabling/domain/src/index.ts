@@ -1,8 +1,6 @@
 export {
   type AdminTimetableActivity,
   type AdminTimetableActivityType,
-  type AdminTimetableWeekDay,
-  type AdminTimetableWeekParity,
   type AdminTimetablingRoom,
   type AdminTimetablingSubject,
   type UpdateAdminTimetableActivityCmd,

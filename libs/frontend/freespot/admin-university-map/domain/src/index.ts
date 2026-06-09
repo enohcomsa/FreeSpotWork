@@ -14,8 +14,6 @@ export {
   type AdminUniversityMapActivityType,
   type AdminUniversityMapSubject,
   type AdminUniversityMapTimetableActivity,
-  type AdminUniversityMapWeekDay,
-  type AdminUniversityMapWeekParity,
   type CreateAdminUniversityMapTimetableActivityCmd,
 } from './lib/admin-university-map-timetable.model';
 

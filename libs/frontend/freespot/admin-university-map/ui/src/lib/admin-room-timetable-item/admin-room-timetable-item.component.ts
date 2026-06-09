@@ -12,17 +12,16 @@ import {
   type AdminUniversityMapActivityType,
   type AdminUniversityMapSubject,
   type AdminUniversityMapTimetableActivity,
-  type AdminUniversityMapWeekDay,
-  type AdminUniversityMapWeekParity,
   type CreateAdminUniversityMapTimetableActivityCmd,
 } from '@free-spot/admin-university-map/domain';
-import { FormErrorMessage } from  '@free-spot/shared/util';
+import { FormErrorMessage } from '@free-spot/shared/util';
+import { WeekDay, WeekParity } from '@free-spot/shared/domain';
 
 type AddTimetableActivityForm = FormGroup<{
   startHour: FormControl<number>;
   subjectName: FormControl<AdminUniversityMapSubject>;
   activityType: FormControl<AdminUniversityMapActivityType>;
-  weekParity: FormControl<AdminUniversityMapWeekParity>;
+  weekParity: FormControl<WeekParity>;
 }>;
 
 @Component({
@@ -50,7 +49,7 @@ export class AdminRoomTimetableItemComponent implements OnInit {
   roomIdSig = input.required<string>();
   roomNameSig = input.required<string>();
   roomCapacitySig = input.required<number>();
-  day = input.required<AdminUniversityMapWeekDay>();
+  day = input.required<WeekDay>();
   subjectListSig = input.required<AdminUniversityMapSubject[]>();
   dayTimetableActivityCardVMListSig = input.required<AdminUniversityMapTimetableActivity[]>();
 
@@ -66,7 +65,7 @@ export class AdminRoomTimetableItemComponent implements OnInit {
     'SEMINAR',
   ];
 
-  readonly weekParityList: AdminUniversityMapWeekParity[] = ['BOTH', 'EVEN', 'ODD'];
+  readonly weekParityList: WeekParity[] = ['BOTH', 'EVEN', 'ODD'];
 
   addingTimetableActivity = false;
 
@@ -77,7 +76,7 @@ export class AdminRoomTimetableItemComponent implements OnInit {
       startHour: [this.startHourList[0], Validators.required],
       subjectName: [this.subjectListSig()[0], [Validators.required, Validators.minLength(1)]],
       activityType: ['COURSE' as AdminUniversityMapActivityType, Validators.required],
-      weekParity: ['BOTH' as AdminUniversityMapWeekParity, Validators.required],
+      weekParity: ['BOTH' as WeekParity, Validators.required],
     });
   }
 

@@ -1,20 +1,11 @@
+import { WeekDay, WeekParity } from "@free-spot/shared/domain";
+
 export type ActivityBookingActivityType =
   | 'LABORATORY'
   | 'COURSE'
   | 'PROJECT'
   | 'SEMINAR'
   | 'SPECIAL_EVENT';
-
-export type ActivityBookingWeekDay =
-  | 'MONDAY'
-  | 'TUESDAY'
-  | 'WEDNESDAY'
-  | 'THURSDAY'
-  | 'FRIDAY'
-  | 'SATURDAY'
-  | 'SUNDAY';
-
-export type ActivityBookingWeekParity = 'ODD' | 'EVEN' | 'BOTH';
 
 export type ActivityBookingStatus = 'CONFIRMED' | 'WAITLISTED' | 'CANCELLED';
 
@@ -42,12 +33,12 @@ export type ActivityBookingActivity = {
   roomId: string;
   subjectId: string;
   date: string;
-  weekDay: ActivityBookingWeekDay;
+  weekDay: WeekDay;
   activityType: ActivityBookingActivityType;
   cohortIds: string[];
   startHour: number;
   endHour: number;
-  weekParity: ActivityBookingWeekParity;
+  weekParity: WeekParity;
   capacity: number;
   reservedSpots: number;
   busySpots: number;

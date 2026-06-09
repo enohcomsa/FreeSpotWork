@@ -1,3 +1,5 @@
+import { WeekDay, WeekParity } from '@free-spot/shared/domain';
+
 export type AdminTimetableActivityType =
   | 'LABORATORY'
   | 'COURSE'
@@ -5,28 +7,17 @@ export type AdminTimetableActivityType =
   | 'SEMINAR'
   | 'SPECIAL_EVENT';
 
-export type AdminTimetableWeekDay =
-  | 'MONDAY'
-  | 'TUESDAY'
-  | 'WEDNESDAY'
-  | 'THURSDAY'
-  | 'FRIDAY'
-  | 'SATURDAY'
-  | 'SUNDAY';
-
-export type AdminTimetableWeekParity = 'BOTH' | 'EVEN' | 'ODD';
-
 export interface AdminTimetableActivity {
   id: string;
   roomId: string;
   subjectId: string;
   date: string;
-  weekDay: AdminTimetableWeekDay;
+  weekDay: WeekDay;
   activityType: AdminTimetableActivityType;
   cohortIds: string[];
   startHour: number;
   endHour: number;
-  weekParity: AdminTimetableWeekParity;
+  weekParity: WeekParity;
   capacity: number;
   reservedSpots: number;
   busySpots: number;
@@ -37,12 +28,12 @@ export interface UpdateAdminTimetableActivityCmd {
   roomId?: string;
   subjectId?: string;
   date?: string;
-  weekDay?: AdminTimetableWeekDay;
+  weekDay?: WeekDay;
   activityType?: AdminTimetableActivityType;
   cohortIds?: string[];
   startHour?: number;
   endHour?: number;
-  weekParity?: AdminTimetableWeekParity;
+  weekParity?: WeekParity;
   capacity?: number;
   reservedSpots?: number;
   busySpots?: number;

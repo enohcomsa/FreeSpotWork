@@ -1,7 +1,6 @@
 import { computed, inject, Injectable, Signal, signal } from '@angular/core';
 import {
   type AdminTimetableActivity,
-  type AdminTimetableWeekDay,
   type AdminTimetablingBooking,
   type AdminTimetablingRoom,
   type AdminTimetablingSubject,
@@ -10,6 +9,7 @@ import {
   type UpdateAdminTimetablingUserCmd,
 } from '@free-spot/admin-timetabling/domain';
 import { HttpAdminTimetablingService } from './http-admin-timetabling.service';
+import { WeekDay } from '@free-spot/shared/domain';
 
 @Injectable({ providedIn: 'root' })
 export class AdminTimetablingStore {
@@ -57,7 +57,7 @@ export class AdminTimetablingStore {
 
   selectTimetableActivityListBySubjectIdAndWeekDay(
     subjectId: string,
-    weekDay: AdminTimetableWeekDay,
+    weekDay: WeekDay,
   ): Signal<AdminTimetableActivity[]> {
     return computed(() =>
       this.activitiesSig().filter(

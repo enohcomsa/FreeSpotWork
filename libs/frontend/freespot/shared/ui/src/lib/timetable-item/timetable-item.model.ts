@@ -1,20 +1,11 @@
-export type TimetableUiWeekDay =
-  | 'MONDAY'
-  | 'TUESDAY'
-  | 'WEDNESDAY'
-  | 'THURSDAY'
-  | 'FRIDAY'
-  | 'SATURDAY'
-  | 'SUNDAY';
-
-export type TimetableUiWeekParity = 'ODD' | 'EVEN' | 'BOTH';
+import { WeekDay, WeekParity } from '@free-spot/shared/domain';
 
 export type TimetableUiActivity = {
   id: string;
-  weekDay: TimetableUiWeekDay;
+  weekDay: WeekDay;
   startHour: number;
   endHour: number;
-  weekParity: TimetableUiWeekParity;
+  weekParity: WeekParity;
   activityType: string;
   roomName: string;
   subjectItemShortName: string;

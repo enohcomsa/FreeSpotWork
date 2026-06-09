@@ -3,8 +3,6 @@ export {
   type CreateTimetableActivityCmd,
   type TimetableActivity,
   type UpdateTimetableActivityCmd,
-  type WeekDay,
-  type WeekParity,
 } from './lib/timetable-activity.model';
 
 export {

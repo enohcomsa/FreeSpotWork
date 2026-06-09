@@ -10,10 +10,9 @@ import {
   type AdminUniversityMapActivityType,
   type AdminUniversityMapSubject,
   type AdminUniversityMapTimetableActivity,
-  type AdminUniversityMapWeekDay,
-  type AdminUniversityMapWeekParity,
   type CreateAdminUniversityMapTimetableActivityCmd,
 } from '@free-spot/admin-university-map/domain';
+import { WeekDay, WeekParity } from '@free-spot/shared/domain';
 
 export function subjectDtoToDomain(dto: SubjectResponseDTO): AdminUniversityMapSubject {
   return {
@@ -68,26 +67,26 @@ function toActivityTypeDto(value: AdminUniversityMapActivityType): ActivityTypeD
   return value as ActivityTypeDTO;
 }
 
-function toWeekDay(value: WeekDayDTO | undefined): AdminUniversityMapWeekDay {
+function toWeekDay(value: WeekDayDTO | undefined): WeekDay {
   if (!value) {
     throw new Error('Missing week day');
   }
 
-  return value as AdminUniversityMapWeekDay;
+  return value as WeekDay;
 }
 
-function toWeekDayDto(value: AdminUniversityMapWeekDay): WeekDayDTO {
+function toWeekDayDto(value: WeekDay): WeekDayDTO {
   return value as WeekDayDTO;
 }
 
-function toWeekParity(value: WeekParityDTO | undefined): AdminUniversityMapWeekParity {
+function toWeekParity(value: WeekParityDTO | undefined): WeekParity {
   if (!value) {
     throw new Error('Missing week parity');
   }
 
-  return value as AdminUniversityMapWeekParity;
+  return value as WeekParity;
 }
 
-function toWeekParityDto(value: AdminUniversityMapWeekParity): WeekParityDTO {
+function toWeekParityDto(value: WeekParity): WeekParityDTO {
   return value as WeekParityDTO;
 }

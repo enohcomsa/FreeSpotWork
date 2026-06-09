@@ -14,8 +14,6 @@ import {
 import {
   type AdminTimetableActivity,
   type AdminTimetableActivityType,
-  type AdminTimetableWeekDay,
-  type AdminTimetableWeekParity,
   type AdminTimetablingBooking,
   type AdminTimetablingRoom,
   type AdminTimetablingSubject,
@@ -23,6 +21,8 @@ import {
   type UpdateAdminTimetableActivityCmd,
   type UpdateAdminTimetablingUserCmd,
 } from '@free-spot/admin-timetabling/domain';
+
+import { WeekDay, WeekParity } from '@free-spot/shared/domain';
 
 export function timetableActivityDtoToDomain(dto: TimetableActivityResponseDTO): AdminTimetableActivity {
   return {
@@ -123,26 +123,26 @@ function toActivityTypeDto(value: AdminTimetableActivityType): ActivityTypeDTO {
   return value as ActivityTypeDTO;
 }
 
-function toWeekDay(value: WeekDayDTO | undefined): AdminTimetableWeekDay {
+function toWeekDay(value: WeekDayDTO | undefined): WeekDay {
   if (!value) {
     throw new Error('Missing week day');
   }
 
-  return value as AdminTimetableWeekDay;
+  return value as WeekDay;
 }
 
-function toWeekDayDto(value: AdminTimetableWeekDay): WeekDayDTO {
+function toWeekDayDto(value: WeekDay): WeekDayDTO {
   return value as WeekDayDTO;
 }
 
-function toWeekParity(value: WeekParityDTO | undefined): AdminTimetableWeekParity {
+function toWeekParity(value: WeekParityDTO | undefined): WeekParity {
   if (!value) {
     throw new Error('Missing week parity');
   }
 
-  return value as AdminTimetableWeekParity;
+  return value as WeekParity;
 }
 
-function toWeekParityDto(value: AdminTimetableWeekParity): WeekParityDTO {
+function toWeekParityDto(value: WeekParity): WeekParityDTO {
   return value as WeekParityDTO;
 }

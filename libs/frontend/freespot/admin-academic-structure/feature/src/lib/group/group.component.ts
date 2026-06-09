@@ -11,8 +11,8 @@ import {
 } from '@free-spot/admin-academic-structure/domain';
 import { AdminGroupTimetableComponent, AdminSemisemiGroupTimetableComponent } from '@free-spot/admin-timetabling/feature';
 import { ConfirmModalService } from '@free-spot/shared/ui';
-import { type TimetableUiActivity, type TimetableUiWeekDay, TimetableItemComponent, DynamicChipListComponent } from '@free-spot/shared/ui';
-
+import { type TimetableUiActivity, TimetableItemComponent, DynamicChipListComponent } from '@free-spot/shared/ui';
+import { WeekDay } from '@free-spot/shared/domain';
 
 @Component({
   selector: 'free-spot-group',
@@ -101,7 +101,7 @@ export class GroupComponent implements OnInit {
 
   readonly nonDeletableSemigroupUsersListSig = computed<AdminAcademicUser[]>(() => []);
 
-  readonly workWeek: TimetableUiWeekDay[] = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'];
+  readonly workWeek: WeekDay[] = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'];
 
   readonly groupTimetableActivityCardVMs = this.cardVMsByCohortId(this.groupIdSig);
   readonly semigroup1TimetableActivityCardVMs = this.cardVMsByCohortId(this.semiGroup1IdSig);
@@ -274,7 +274,7 @@ export class GroupComponent implements OnInit {
     return computed(() => activitiesSig().map((activity) => this.toCardVM(activity)));
   }
 
-  private perDay(cardVMsSig: Signal<TimetableUiActivity[]>): Signal<{ day: TimetableUiWeekDay; activities: TimetableUiActivity[] }[]> {
+  private perDay(cardVMsSig: Signal<TimetableUiActivity[]>): Signal<{ day: WeekDay; activities: TimetableUiActivity[] }[]> {
     return computed(() => {
       const all = cardVMsSig();
 

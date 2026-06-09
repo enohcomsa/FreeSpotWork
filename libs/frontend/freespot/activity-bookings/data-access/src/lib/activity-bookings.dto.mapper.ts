@@ -19,9 +19,8 @@ import {
   type ActivityBookingRoom,
   type ActivityBookingStatus,
   type ActivityBookingSubject,
-  type ActivityBookingWeekDay,
-  type ActivityBookingWeekParity,
 } from '@free-spot/activity-bookings/domain';
+import { WeekDay, WeekParity } from '@free-spot/shared/domain';
 
 export function bookingDtoToDomain(dto: BookingResponseDTO): ActivityBooking {
   if (!dto.id) {
@@ -123,7 +122,7 @@ function toActivityType(value: ActivityTypeDTO | undefined): ActivityBookingActi
   return value;
 }
 
-function toWeekDay(value: WeekDayDTO | undefined): ActivityBookingWeekDay {
+function toWeekDay(value: WeekDayDTO | undefined): WeekDay {
   if (!value) {
     throw new Error('Missing week day');
   }
@@ -131,7 +130,7 @@ function toWeekDay(value: WeekDayDTO | undefined): ActivityBookingWeekDay {
   return value;
 }
 
-function toWeekParity(value: WeekParityDTO | undefined): ActivityBookingWeekParity {
+function toWeekParity(value: WeekParityDTO | undefined): WeekParity {
   if (!value) {
     throw new Error('Missing week parity');
   }

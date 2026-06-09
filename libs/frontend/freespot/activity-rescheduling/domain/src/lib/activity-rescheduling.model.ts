@@ -1,3 +1,4 @@
+import { WeekDay, WeekParity } from '@free-spot/shared/domain';
 export interface ActivityReschedulingBooking {
   id: string;
   activityId: string;
@@ -28,12 +29,12 @@ export interface ActivityReschedulingActivity {
   roomId: string;
   subjectId: string;
   date: string;
-  weekDay: ActivityReschedulingWeekDay;
+  weekDay: WeekDay;
   activityType: ActivityReschedulingActivityType;
   cohortIds: string[];
   startHour: number;
   endHour: number;
-  weekParity: ActivityReschedulingWeekParity;
+  weekParity: WeekParity;
   capacity: number;
   reservedSpots: number;
   busySpots: number;
@@ -59,16 +60,5 @@ export type ActivityReschedulingActivityType =
   | 'PROJECT'
   | 'SEMINAR'
   | 'SPECIAL_EVENT';
-
-export type ActivityReschedulingWeekDay =
-  | 'MONDAY'
-  | 'TUESDAY'
-  | 'WEDNESDAY'
-  | 'THURSDAY'
-  | 'FRIDAY'
-  | 'SATURDAY'
-  | 'SUNDAY';
-
-export type ActivityReschedulingWeekParity = 'ODD' | 'EVEN' | 'BOTH';
 
 export type ActivityReschedulingBookingStatus = 'CONFIRMED' | 'WAITLISTED' | 'CANCELLED';

@@ -1,20 +1,11 @@
+import { WeekDay, WeekParity } from '@free-spot/shared/domain';
+
 export type AdminAcademicActivityType =
   | 'LABORATORY'
   | 'COURSE'
   | 'PROJECT'
   | 'SEMINAR'
   | 'SPECIAL_EVENT';
-
-export type AdminAcademicWeekDay =
-  | 'MONDAY'
-  | 'TUESDAY'
-  | 'WEDNESDAY'
-  | 'THURSDAY'
-  | 'FRIDAY'
-  | 'SATURDAY'
-  | 'SUNDAY';
-
-export type AdminAcademicWeekParity = 'BOTH' | 'EVEN' | 'ODD';
 
 export interface AdminAcademicRoom {
   id: string;
@@ -26,9 +17,9 @@ export interface AdminAcademicTimetableActivity {
   roomId: string;
   subjectId: string;
   cohortIds: string[];
-  weekDay: AdminAcademicWeekDay;
+  weekDay: WeekDay;
   startHour: number;
   endHour: number;
-  weekParity: AdminAcademicWeekParity;
+  weekParity: WeekParity;
   activityType: AdminAcademicActivityType;
 }

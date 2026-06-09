@@ -116,6 +116,7 @@ export const dependencyBoundaries = {
         layers.CORE_DATA_ACCESS,
         layers.SHARED_UI,
         layers.SHARED_UTIL,
+        layers.SHARED_DOMAIN
       ],
     },
     {
@@ -131,6 +132,7 @@ export const dependencyBoundaries = {
         layers.CORE_DATA_ACCESS,
         layers.SHARED_UI,
         layers.SHARED_UTIL,
+        layers.SHARED_DOMAIN
       ],
     },
     {

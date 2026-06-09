@@ -3,8 +3,6 @@ export {
   type ActivityBookingActivity,
   type ActivityBookingActivityType,
   type ActivityBookingStatus,
-  type ActivityBookingWeekDay,
-  type ActivityBookingWeekParity,
 } from './lib/activity-booking.model';
 
 export {
