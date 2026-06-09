@@ -21,12 +21,11 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { AdminTimetablingStore } from '@free-spot/admin-timetabling/data-access';
 import {
   type AdminTimetableActivity,
-  type AdminTimetableActivityType,
 } from '@free-spot/admin-timetabling/domain';
 import { ConfirmModalService } from '@free-spot/shared/ui';
-import { FormErrorMessage } from  '@free-spot/shared/util';
+import { FormErrorMessage } from '@free-spot/shared/util';
 import { debounceTime } from 'rxjs';
-import { WeekDay } from '@free-spot/shared/domain';
+import { WeekDay, ActivityType } from '@free-spot/shared/domain';
 
 @Component({
   selector: 'free-spot-admin-group-timetable',
@@ -63,7 +62,7 @@ export class AdminGroupTimetableComponent implements OnInit {
 
   readonly startHourList: number[] = [8, 10, 12, 14, 16, 18];
 
-  readonly activityTypeList: AdminTimetableActivityType[] = [
+  readonly activityTypeList: ActivityType[] = [
     'LABORATORY',
     'COURSE',
     'PROJECT',

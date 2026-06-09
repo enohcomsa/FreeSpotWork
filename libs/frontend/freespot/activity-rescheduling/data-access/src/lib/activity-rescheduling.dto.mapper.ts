@@ -13,7 +13,6 @@ import {
 } from '@free-spot/api-client';
 import {
   type ActivityReschedulingActivity,
-  type ActivityReschedulingActivityType,
   type ActivityReschedulingBooking,
   type ActivityReschedulingBookingStatus,
   type ActivityReschedulingBuilding,
@@ -22,8 +21,7 @@ import {
   type ActivityReschedulingRoom,
   type ActivityReschedulingSubject,
 } from '@free-spot/activity-rescheduling/domain';
-
-import { WeekDay, WeekParity } from '@free-spot/shared/domain';
+import { WeekDay, WeekParity, ActivityType } from '@free-spot/shared/domain';
 
 export function rescheduleOptionsDtoToDomain(dto: RescheduleOptionsResponseDTO): ActivityReschedulingOptionsResult {
   return {
@@ -110,7 +108,7 @@ export function floorDtoToDomain(dto: FloorResponseDTO): ActivityReschedulingFlo
   };
 }
 
-function toActivityType(value: ActivityTypeDTO | undefined): ActivityReschedulingActivityType {
+function toActivityType(value: ActivityTypeDTO | undefined): ActivityType {
   if (!value) {
     throw new Error('Missing activity type');
   }

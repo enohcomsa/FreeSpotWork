@@ -11,7 +11,7 @@ import {
 } from '@free-spot/admin-academic-structure/domain';
 import { AdminGroupTimetableComponent, AdminSemisemiGroupTimetableComponent } from '@free-spot/admin-timetabling/feature';
 import { ConfirmModalService } from '@free-spot/shared/ui';
-import { type TimetableUiActivity, TimetableItemComponent, DynamicChipListComponent } from '@free-spot/shared/ui';
+import { type TimetableActivityVm, TimetableItemComponent, DynamicChipListComponent } from '@free-spot/shared/ui';
 import { WeekDay } from '@free-spot/shared/domain';
 
 @Component({
@@ -249,7 +249,7 @@ export class GroupComponent implements OnInit {
     return this.academicStructureStore.getSubjectById(subjectId)()?.shortName ?? '';
   }
 
-  private toCardVM = (timetableActivity: AdminAcademicTimetableActivity): TimetableUiActivity => ({
+  private toCardVM = (timetableActivity: AdminAcademicTimetableActivity): TimetableActivityVm => ({
     id: timetableActivity.id,
     weekDay: timetableActivity.weekDay,
     startHour: timetableActivity.startHour,
@@ -268,13 +268,13 @@ export class GroupComponent implements OnInit {
     });
   }
 
-  private cardVMsByCohortId(cohortIdSig: Signal<string | null>): Signal<TimetableUiActivity[]> {
+  private cardVMsByCohortId(cohortIdSig: Signal<string | null>): Signal<TimetableActivityVm[]> {
     const activitiesSig = this.activitiesByCohortId(cohortIdSig);
 
     return computed(() => activitiesSig().map((activity) => this.toCardVM(activity)));
   }
 
-  private perDay(cardVMsSig: Signal<TimetableUiActivity[]>): Signal<{ day: WeekDay; activities: TimetableUiActivity[] }[]> {
+  private perDay(cardVMsSig: Signal<TimetableActivityVm[]>): Signal<{ day: WeekDay; activities: TimetableActivityVm[] }[]> {
     return computed(() => {
       const all = cardVMsSig();
 

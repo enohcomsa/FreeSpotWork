@@ -203,6 +203,7 @@ export const dependencyBoundaries = {
       sourceTag: layers.SHARED_UI,
       onlyDependOnLibsWithTags: [
         layers.SHARED_UTIL,
+        layers.SHARED_DOMAIN
       ],
     },
     {

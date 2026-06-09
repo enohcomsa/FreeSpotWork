@@ -1,11 +1,4 @@
-import { WeekDay, WeekParity } from "@free-spot/shared/domain";
-
-export type ActivityType =
-  | 'LABORATORY'
-  | 'COURSE'
-  | 'PROJECT'
-  | 'SEMINAR'
-  | 'SPECIAL_EVENT';
+import { WeekDay, WeekParity, ActivityType } from "@free-spot/shared/domain";
 
 export type TimetableActivity = {
   id: string;

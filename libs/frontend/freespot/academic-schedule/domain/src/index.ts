@@ -1,5 +1,4 @@
 export {
-  type ActivityType,
   type CreateTimetableActivityCmd,
   type TimetableActivity,
   type UpdateTimetableActivityCmd,

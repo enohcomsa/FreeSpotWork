@@ -1,7 +1,6 @@
 export {
   type ActivityBooking,
   type ActivityBookingActivity,
-  type ActivityBookingActivityType,
   type ActivityBookingStatus,
 } from './lib/activity-booking.model';
 

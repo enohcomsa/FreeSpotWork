@@ -2,9 +2,8 @@ import { ChangeDetectionStrategy, Component, computed, inject, OnInit, output, s
 import { MatChipsModule } from '@angular/material/chips';
 import { TranslateModule } from '@ngx-translate/core';
 import { ActivityBookingsStore } from '@free-spot/activity-bookings/data-access';
-import { type ActivityBookingActivityType } from '@free-spot/activity-bookings/domain';
 import { ActivityBookingCardComponent } from '@free-spot/activity-bookings/ui';
-
+import { type ActivityType } from '@free-spot/shared/domain';
 @Component({
   selector: 'free-spot-my-activity-bookings',
   imports: [MatChipsModule, TranslateModule, ActivityBookingCardComponent],
@@ -17,9 +16,9 @@ export class MyActivityBookingsComponent implements OnInit {
 
   readonly bookingSelected = output<string>();
 
-  readonly activityTypes: ActivityBookingActivityType[] = ['LABORATORY', 'COURSE', 'PROJECT', 'SEMINAR'];
+  readonly activityTypes: ActivityType[] = ['LABORATORY', 'COURSE', 'PROJECT', 'SEMINAR'];
 
-  private readonly filter = signal<ActivityBookingActivityType | null>(null);
+  private readonly filter = signal<ActivityType | null>(null);
 
   readonly bookings = computed(() => {
     const currentFilter = this.filter();
@@ -40,7 +39,7 @@ export class MyActivityBookingsComponent implements OnInit {
     this.store.refresh();
   }
 
-  setFilter(type: ActivityBookingActivityType | null): void {
+  setFilter(type: ActivityType | null): void {
     this.filter.set(type);
   }
 

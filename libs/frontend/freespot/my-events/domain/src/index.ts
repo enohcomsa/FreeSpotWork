@@ -1,5 +1,4 @@
 export {
-  MyEventsActivityType,
   type MyEventsBooking,
   type MyEventsEvent,
   type MyEventsBuilding,

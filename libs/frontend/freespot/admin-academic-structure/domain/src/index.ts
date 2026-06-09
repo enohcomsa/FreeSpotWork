@@ -17,7 +17,6 @@ export {
 } from './lib/admin-academic-structure.model';
 
 export {
-  type AdminAcademicActivityType,
   type AdminAcademicRoom,
   type AdminAcademicTimetableActivity,
 } from './lib/admin-academic-structure-timetable.model';

@@ -1,7 +1,6 @@
 export {
   type ActivityRescheduleBookingCmd,
   type ActivityReschedulingActivity,
-  type ActivityReschedulingActivityType,
   type ActivityReschedulingBooking,
   type ActivityReschedulingBookingStatus,
   type ActivityReschedulingOption,

@@ -1,6 +1,5 @@
 export {
   type AdminTimetableActivity,
-  type AdminTimetableActivityType,
   type AdminTimetablingRoom,
   type AdminTimetablingSubject,
   type UpdateAdminTimetableActivityCmd,

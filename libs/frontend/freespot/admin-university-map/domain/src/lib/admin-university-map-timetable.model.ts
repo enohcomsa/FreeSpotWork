@@ -1,12 +1,4 @@
-import { WeekDay, WeekParity } from '@free-spot/shared/domain';
-
-export type AdminUniversityMapActivityType =
-  | 'LABORATORY'
-  | 'COURSE'
-  | 'PROJECT'
-  | 'SEMINAR'
-  | 'SPECIAL_EVENT';
-
+import { WeekDay, WeekParity, ActivityType } from '@free-spot/shared/domain';
 
 export interface AdminUniversityMapSubject {
   id: string;
@@ -22,7 +14,7 @@ export interface AdminUniversityMapTimetableActivity {
   startHour: number;
   endHour: number;
   weekParity: WeekParity;
-  activityType: AdminUniversityMapActivityType;
+  activityType: ActivityType;
 }
 
 export interface CreateAdminUniversityMapTimetableActivityCmd {
@@ -30,7 +22,7 @@ export interface CreateAdminUniversityMapTimetableActivityCmd {
   subjectId: string;
   date: string;
   weekDay: WeekDay;
-  activityType: AdminUniversityMapActivityType;
+  activityType: ActivityType;
   cohortIds: string[];
   startHour: number;
   endHour: number;

@@ -1,8 +1,8 @@
-import { type ActivityBookingActivityType } from './activity-booking.model';
+import { ActivityType } from '@free-spot/shared/domain';
 
 export type ActivityBookingCardVm = {
   id: string;
-  activityType: ActivityBookingActivityType;
+  activityType: ActivityType;
   subjectName: string;
   buildingName: string;
   floorName: string;

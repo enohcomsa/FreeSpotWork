@@ -7,12 +7,11 @@ import {
   type WeekParityDTO,
 } from '@free-spot/api-client';
 import {
-  type AdminUniversityMapActivityType,
   type AdminUniversityMapSubject,
   type AdminUniversityMapTimetableActivity,
   type CreateAdminUniversityMapTimetableActivityCmd,
 } from '@free-spot/admin-university-map/domain';
-import { WeekDay, WeekParity } from '@free-spot/shared/domain';
+import { WeekDay, WeekParity, ActivityType } from '@free-spot/shared/domain';
 
 export function subjectDtoToDomain(dto: SubjectResponseDTO): AdminUniversityMapSubject {
   return {
@@ -55,15 +54,15 @@ export function createTimetableActivityCmdToDto(
   };
 }
 
-function toActivityType(value: ActivityTypeDTO | undefined): AdminUniversityMapActivityType {
+function toActivityType(value: ActivityTypeDTO | undefined): ActivityType {
   if (!value) {
     throw new Error('Missing activity type');
   }
 
-  return value as AdminUniversityMapActivityType;
+  return value as ActivityType;
 }
 
-function toActivityTypeDto(value: AdminUniversityMapActivityType): ActivityTypeDTO {
+function toActivityTypeDto(value: ActivityType): ActivityTypeDTO {
   return value as ActivityTypeDTO;
 }
 

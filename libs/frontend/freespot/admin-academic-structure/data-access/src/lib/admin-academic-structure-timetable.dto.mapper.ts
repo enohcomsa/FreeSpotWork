@@ -7,12 +7,11 @@ import {
 } from '@free-spot/api-client';
 
 import {
-  type AdminAcademicActivityType,
   type AdminAcademicRoom,
   type AdminAcademicTimetableActivity,
 } from '@free-spot/admin-academic-structure/domain';
 
-import { WeekDay, WeekParity } from '@free-spot/shared/domain';
+import { WeekDay, WeekParity, ActivityType } from '@free-spot/shared/domain';
 
 export function roomDtoToDomain(dto: RoomResponseDTO): AdminAcademicRoom {
   return {
@@ -37,7 +36,7 @@ export function timetableActivityDtoToDomain(
   };
 }
 
-function toActivityType(value: ActivityTypeDTO | undefined): AdminAcademicActivityType {
+function toActivityType(value: ActivityTypeDTO | undefined): ActivityType {
   if (!value) {
     throw new Error('Missing activity type');
   }

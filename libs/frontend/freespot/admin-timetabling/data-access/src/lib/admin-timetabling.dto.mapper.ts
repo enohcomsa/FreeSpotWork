@@ -13,7 +13,6 @@ import {
 
 import {
   type AdminTimetableActivity,
-  type AdminTimetableActivityType,
   type AdminTimetablingBooking,
   type AdminTimetablingRoom,
   type AdminTimetablingSubject,
@@ -22,7 +21,7 @@ import {
   type UpdateAdminTimetablingUserCmd,
 } from '@free-spot/admin-timetabling/domain';
 
-import { WeekDay, WeekParity } from '@free-spot/shared/domain';
+import { WeekDay, WeekParity, ActivityType } from '@free-spot/shared/domain';
 
 export function timetableActivityDtoToDomain(dto: TimetableActivityResponseDTO): AdminTimetableActivity {
   return {
@@ -111,15 +110,15 @@ export function updateUserCmdToDto(cmd: UpdateAdminTimetablingUserCmd): UserUpda
   };
 }
 
-function toActivityType(value: ActivityTypeDTO | undefined): AdminTimetableActivityType {
+function toActivityType(value: ActivityTypeDTO | undefined): ActivityType {
   if (!value) {
     throw new Error('Missing activity type');
   }
 
-  return value as AdminTimetableActivityType;
+  return value as ActivityType;
 }
 
-function toActivityTypeDto(value: AdminTimetableActivityType): ActivityTypeDTO {
+function toActivityTypeDto(value: ActivityType): ActivityTypeDTO {
   return value as ActivityTypeDTO;
 }
 

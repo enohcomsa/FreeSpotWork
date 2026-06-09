@@ -5,7 +5,7 @@ import {
   type UpdateAdminUniversityMapRoomCmd,
 } from '@free-spot/admin-university-map/domain';
 import { AdminRoomTimetableItemComponent } from '@free-spot/admin-university-map/ui';
-import { type TimetableUiActivity, TimetableItemComponent, DynamicChipListComponent } from '@free-spot/shared/ui';
+import { type TimetableActivityVm, TimetableItemComponent, DynamicChipListComponent } from '@free-spot/shared/ui';
 import { WeekDay } from '@free-spot/shared/domain';
 
 @Component({
@@ -39,7 +39,7 @@ export class AdminRoomDetailComponent implements OnInit {
     this.store.selectTimetableActivitiesByRoomId(this.roomIdSig())(),
   );
 
-  readonly timetableActivityCardVMs: Signal<TimetableUiActivity[]> = computed(() => {
+  readonly timetableActivityCardVMs: Signal<TimetableActivityVm[]> = computed(() => {
     const room = this.roomSig();
 
     if (!room) {

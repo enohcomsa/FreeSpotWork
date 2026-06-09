@@ -11,7 +11,6 @@ export {
 } from './lib/admin-university-map.model';
 
 export {
-  type AdminUniversityMapActivityType,
   type AdminUniversityMapSubject,
   type AdminUniversityMapTimetableActivity,
   type CreateAdminUniversityMapTimetableActivityCmd,

@@ -9,11 +9,9 @@ import {
 import {
   type AcademicScheduleRoom,
   type AcademicScheduleSubject,
-  type ActivityType,
   type TimetableActivity,
-
 } from '@free-spot/academic-schedule/domain';
-import { type WeekDay, type WeekParity } from '@free-spot/shared/domain';
+import { type WeekDay, type WeekParity, type ActivityType, } from '@free-spot/shared/domain';
 
 export function timetableActivityDtoToDomain(dto: TimetableActivityResponseDTO): TimetableActivity {
   return {

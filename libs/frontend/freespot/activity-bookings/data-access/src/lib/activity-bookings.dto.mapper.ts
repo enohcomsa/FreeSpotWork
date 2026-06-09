@@ -13,14 +13,13 @@ import {
 import {
   type ActivityBooking,
   type ActivityBookingActivity,
-  type ActivityBookingActivityType,
   type ActivityBookingBuilding,
   type ActivityBookingFloor,
   type ActivityBookingRoom,
   type ActivityBookingStatus,
   type ActivityBookingSubject,
 } from '@free-spot/activity-bookings/domain';
-import { WeekDay, WeekParity } from '@free-spot/shared/domain';
+import { WeekDay, WeekParity, ActivityType } from '@free-spot/shared/domain';
 
 export function bookingDtoToDomain(dto: BookingResponseDTO): ActivityBooking {
   if (!dto.id) {
@@ -114,7 +113,7 @@ export function floorDtoToDomain(dto: FloorResponseDTO): ActivityBookingFloor {
   };
 }
 
-function toActivityType(value: ActivityTypeDTO | undefined): ActivityBookingActivityType {
+function toActivityType(value: ActivityTypeDTO | undefined): ActivityType {
   if (!value) {
     throw new Error('Missing activity type');
   }

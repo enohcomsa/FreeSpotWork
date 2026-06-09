@@ -1,6 +1,6 @@
 import { WeekDay, WeekParity } from '@free-spot/shared/domain';
 
-export type TimetableUiActivity = {
+export type TimetableActivityVm = {
   id: string;
   weekDay: WeekDay;
   startHour: number;
@@ -11,10 +11,10 @@ export type TimetableUiActivity = {
   subjectItemShortName: string;
 };
 
-export type TimetableDayItem = {
+export type TimetableDayItemVm = {
   hourInterval: string;
   startHour: number;
-  evenWeekActivity?: TimetableUiActivity;
-  oddWeekActivity?: TimetableUiActivity;
-  bothWeekActivity?: TimetableUiActivity;
+  evenWeekActivity?: TimetableActivityVm;
+  oddWeekActivity?: TimetableActivityVm;
+  bothWeekActivity?: TimetableActivityVm;
 };

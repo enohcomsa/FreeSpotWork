@@ -20,13 +20,12 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AdminTimetablingStore } from '@free-spot/admin-timetabling/data-access';
 import {
-  type AdminTimetableActivity,
-  type AdminTimetableActivityType,
+  type AdminTimetableActivity
 } from '@free-spot/admin-timetabling/domain';
 import { ConfirmModalService } from '@free-spot/shared/ui';
-import { FormErrorMessage } from  '@free-spot/shared/util';
+import { FormErrorMessage } from '@free-spot/shared/util';
 import { debounceTime } from 'rxjs';
-import { WeekDay } from '@free-spot/shared/domain';
+import { WeekDay, ActivityType } from '@free-spot/shared/domain';
 
 @Component({
   selector: 'free-spot-admin-semigroup-timetable',
@@ -63,7 +62,7 @@ export class AdminSemisemiGroupTimetableComponent implements OnInit {
 
   readonly startHourList: number[] = [8, 10, 12, 14, 16, 18];
 
-  readonly eventList: AdminTimetableActivityType[] = [
+  readonly eventList: ActivityType[] = [
     'LABORATORY',
     'COURSE',
     'PROJECT',

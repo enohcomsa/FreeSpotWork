@@ -1,11 +1,4 @@
-import { WeekDay, WeekParity } from "@free-spot/shared/domain";
-
-export type ActivityBookingActivityType =
-  | 'LABORATORY'
-  | 'COURSE'
-  | 'PROJECT'
-  | 'SEMINAR'
-  | 'SPECIAL_EVENT';
+import { WeekDay, WeekParity, ActivityType } from "@free-spot/shared/domain";
 
 export type ActivityBookingStatus = 'CONFIRMED' | 'WAITLISTED' | 'CANCELLED';
 
@@ -19,7 +12,7 @@ export type ActivityBooking = {
   groupCohortId: string | null;
   semigroupCohortId: string | null;
   subjectId: string | null;
-  activityType: ActivityBookingActivityType;
+  activityType: ActivityType;
   status: ActivityBookingStatus;
   originalActivityId: string | null;
   isRescheduled: boolean | null;
@@ -34,7 +27,7 @@ export type ActivityBookingActivity = {
   subjectId: string;
   date: string;
   weekDay: WeekDay;
-  activityType: ActivityBookingActivityType;
+  activityType: ActivityType;
   cohortIds: string[];
   startHour: number;
   endHour: number;

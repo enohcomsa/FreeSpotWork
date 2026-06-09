@@ -7,13 +7,13 @@ import {
   type RoomResponseDTO,
 } from '@free-spot/api-client';
 import {
-  type MyEventsActivityType,
   type MyEventsBooking,
   type MyEventsBuilding,
   type MyEventsEvent,
   type MyEventsFloor,
   type MyEventsRoom,
 } from '@free-spot/my-events/domain';
+import { ActivityType } from '@free-spot/shared/domain';
 
 export function bookingDtoToDomain(dto: BookingResponseDTO): MyEventsBooking {
   if (!dto.id) {
@@ -76,10 +76,10 @@ export function roomDtoToDomain(dto: RoomResponseDTO): MyEventsRoom {
   };
 }
 
-function toActivityType(value: ActivityTypeDTO | undefined): MyEventsActivityType {
+function toActivityType(value: ActivityTypeDTO | undefined): ActivityType {
   if (!value) {
     throw new Error('Missing activity type');
   }
 
-  return value as MyEventsActivityType;
+  return value as ActivityType;
 }

@@ -1,14 +1,8 @@
-export type MyEventsActivityType =
-  | 'LABORATORY'
-  | 'COURSE'
-  | 'PROJECT'
-  | 'SEMINAR'
-  | 'SPECIAL_EVENT';
-
+import { ActivityType } from '@free-spot/shared/domain';
 export interface MyEventsBooking {
   id: string;
   activityId: string | null;
-  activityType: MyEventsActivityType;
+  activityType: ActivityType;
 }
 
 export interface MyEventsEvent {

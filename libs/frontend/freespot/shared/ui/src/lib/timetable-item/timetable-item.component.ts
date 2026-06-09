@@ -5,10 +5,10 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatCardModule } from '@angular/material/card';
 import { TranslateModule } from '@ngx-translate/core';
 import {
-  type TimetableDayItem,
-  type TimetableUiActivity,
+  type TimetableDayItemVm,
+  type TimetableActivityVm,
 } from './timetable-item.model';
-import { WeekDay, WeekParity } from '@free-spot/shared/domain';
+import { WeekDay } from '@free-spot/shared/domain';
 
 @Component({
   selector: 'free-spot-timetable-item',
@@ -19,9 +19,9 @@ import { WeekDay, WeekParity } from '@free-spot/shared/domain';
 })
 export class TimetableItemComponent {
   readonly day = input<WeekDay>();
-  readonly timetableItemSig = input<TimetableUiActivity[]>();
+  readonly timetableItemSig = input<TimetableActivityVm[]>();
 
-  private readonly baseDayItems: TimetableDayItem[] = [
+  private readonly baseDayItems: TimetableDayItemVm[] = [
     { hourInterval: '08-10', startHour: 8 },
     { hourInterval: '10-12', startHour: 10 },
     { hourInterval: '12-14', startHour: 12 },
@@ -30,7 +30,7 @@ export class TimetableItemComponent {
     { hourInterval: '18-20', startHour: 18 },
   ];
 
-  readonly dayItems = computed<TimetableDayItem[]>(() => {
+  readonly dayItems = computed<TimetableDayItemVm[]>(() => {
     const items = this.baseDayItems.map((item) => ({ ...item }));
 
     for (const activity of this.timetableItemSig() ?? []) {

@@ -12,6 +12,13 @@ export type WeekParity =
   | 'EVEN'
   | 'BOTH';
 
+export type ActivityType =
+  | 'LABORATORY'
+  | 'COURSE'
+  | 'PROJECT'
+  | 'SEMINAR'
+  | 'SPECIAL_EVENT';
+
 export interface TimetableActivity {
   id: string;
   weekDay: WeekDay;

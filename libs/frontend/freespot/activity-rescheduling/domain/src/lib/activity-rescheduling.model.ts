@@ -1,4 +1,4 @@
-import { WeekDay, WeekParity } from '@free-spot/shared/domain';
+import { WeekDay, WeekParity, ActivityType } from '@free-spot/shared/domain';
 export interface ActivityReschedulingBooking {
   id: string;
   activityId: string;
@@ -9,7 +9,7 @@ export interface ActivityReschedulingBooking {
   groupCohortId: string | null;
   semigroupCohortId: string | null;
   subjectId: string | null;
-  activityType: ActivityReschedulingActivityType;
+  activityType: ActivityType;
   status: ActivityReschedulingBookingStatus;
   originalActivityId: string | null;
   isRescheduled: boolean | null;
@@ -30,7 +30,7 @@ export interface ActivityReschedulingActivity {
   subjectId: string;
   date: string;
   weekDay: WeekDay;
-  activityType: ActivityReschedulingActivityType;
+  activityType: ActivityType;
   cohortIds: string[];
   startHour: number;
   endHour: number;
@@ -53,12 +53,5 @@ export interface ActivityReschedulingOptionsResult {
 export interface ActivityRescheduleBookingCmd {
   activityId: string;
 }
-
-export type ActivityReschedulingActivityType =
-  | 'LABORATORY'
-  | 'COURSE'
-  | 'PROJECT'
-  | 'SEMINAR'
-  | 'SPECIAL_EVENT';
 
 export type ActivityReschedulingBookingStatus = 'CONFIRMED' | 'WAITLISTED' | 'CANCELLED';

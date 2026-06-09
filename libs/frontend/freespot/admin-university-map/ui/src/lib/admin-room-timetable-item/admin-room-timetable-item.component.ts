@@ -9,18 +9,17 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import {
-  type AdminUniversityMapActivityType,
   type AdminUniversityMapSubject,
   type AdminUniversityMapTimetableActivity,
   type CreateAdminUniversityMapTimetableActivityCmd,
 } from '@free-spot/admin-university-map/domain';
 import { FormErrorMessage } from '@free-spot/shared/util';
-import { WeekDay, WeekParity } from '@free-spot/shared/domain';
+import { WeekDay, WeekParity, ActivityType } from '@free-spot/shared/domain';
 
 type AddTimetableActivityForm = FormGroup<{
   startHour: FormControl<number>;
   subjectName: FormControl<AdminUniversityMapSubject>;
-  activityType: FormControl<AdminUniversityMapActivityType>;
+  activityType: FormControl<ActivityType>;
   weekParity: FormControl<WeekParity>;
 }>;
 
@@ -58,7 +57,7 @@ export class AdminRoomTimetableItemComponent implements OnInit {
 
   readonly startHourList: number[] = [8, 10, 12, 14, 16, 18];
 
-  readonly eventList: AdminUniversityMapActivityType[] = [
+  readonly eventList: ActivityType[] = [
     'LABORATORY',
     'COURSE',
     'PROJECT',
@@ -75,7 +74,7 @@ export class AdminRoomTimetableItemComponent implements OnInit {
     this.addTimetableActivityFormGroup = this.formBuilder.nonNullable.group({
       startHour: [this.startHourList[0], Validators.required],
       subjectName: [this.subjectListSig()[0], [Validators.required, Validators.minLength(1)]],
-      activityType: ['COURSE' as AdminUniversityMapActivityType, Validators.required],
+      activityType: ['COURSE' as ActivityType, Validators.required],
       weekParity: ['BOTH' as WeekParity, Validators.required],
     });
   }
