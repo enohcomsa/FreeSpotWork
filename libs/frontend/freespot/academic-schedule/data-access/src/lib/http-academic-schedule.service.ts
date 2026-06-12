@@ -25,6 +25,18 @@ export class HttpAcademicScheduleService {
   private readonly _subjectsApi = inject(SubjectsHttpService);
   private readonly _roomsApi = inject(RoomsHttpService);
 
+  loadSchedule$(): Observable<{
+    activities: TimetableActivity[];
+    subjects: AcademicScheduleSubject[];
+    rooms: AcademicScheduleRoom[];
+  }> {
+    return forkJoin({
+      activities: this.listTimetableActivities$(),
+      subjects: this.listSubjects$(),
+      rooms: this.listRooms$(),
+    });
+  }
+
   private listTimetableActivities$(): Observable<TimetableActivity[]> {
     return this._timetableActivitiesApi.timetableActivitiesGet().pipe(
       map((dtos: TimetableActivityResponseDTO[]) => (dtos ?? []).map(timetableActivityDtoToDomain))
@@ -41,17 +53,5 @@ export class HttpAcademicScheduleService {
     return this._roomsApi.roomsGet().pipe(
       map((dtos: RoomResponseDTO[]) => (dtos ?? []).map(roomDtoToDomain))
     );
-  }
-
-  loadSchedule$(): Observable<{
-    activities: TimetableActivity[];
-    subjects: AcademicScheduleSubject[];
-    rooms: AcademicScheduleRoom[];
-  }> {
-    return forkJoin({
-      activities: this.listTimetableActivities$(),
-      subjects: this.listSubjects$(),
-      rooms: this.listRooms$(),
-    });
   }
 }

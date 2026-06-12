@@ -2,11 +2,11 @@ import {
   type ActivityBooking,
   type ActivityBookingActivity,
   type ActivityBookingBuilding,
-  type ActivityBookingCardVm,
   type ActivityBookingFloor,
   type ActivityBookingRoom,
   type ActivityBookingSubject,
 } from '@free-spot/activity-bookings/domain';
+import { ActivityBookingCardVm } from '@free-spot/activity-bookings/ui';
 
 export function mapToActivityBookingVm(
   booking: ActivityBooking,

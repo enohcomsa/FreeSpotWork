@@ -5,7 +5,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
-import { ActivityBookingCardVm } from '@free-spot/activity-bookings/domain';
+import { ActivityBookingCardVm } from './activity-booking.vm';
 
 @Component({
   selector: 'free-spot-activity-booking-card',
