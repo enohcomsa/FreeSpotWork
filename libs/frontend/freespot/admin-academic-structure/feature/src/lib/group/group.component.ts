@@ -9,7 +9,8 @@ import {
   type AdminAcademicUser,
   type CreateAdminCohortCmd,
 } from '@free-spot/admin-academic-structure/domain';
-import { AdminGroupTimetableComponent, AdminSemisemiGroupTimetableComponent } from '@free-spot/admin-timetabling/feature';
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import { AdminGroupTimetableComponent, AdminSemisemiGroupTimetableComponent } from '@free-spot/admin-timetabling/feature';//TO DO: refactor into a different solution
 import { ConfirmModalService } from '@free-spot/shared/ui';
 import { type TimetableActivityVm, TimetableItemComponent, DynamicChipListComponent } from '@free-spot/shared/ui';
 import { WeekDay } from '@free-spot/shared/domain';

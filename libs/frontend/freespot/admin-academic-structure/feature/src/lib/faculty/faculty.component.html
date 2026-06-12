@@ -53,10 +53,10 @@
 @for (year of facultyProgramYearsSig(); track year.id) {
 <mat-list>
   <div mat-subheader class="flex cursor-pointer items-center gap-2 text-lg font-bold">
-    <span (click)="onEditingYear(year)" matTooltip="click to add year" matTooltipPosition="right"
-      matTooltipPositionAtOrigin="true" matTooltipShowDelay="500">
-      {{ getProgramById(year.programId)?.name}} ({{getProgramById(year.programId)?.degree}})-{{year.label}}
-    </span>
+    <button type="button" (click)="onEditingYear(year)" class="inline text-left cursor-pointer" matTooltip="click to edit year"
+      matTooltipPosition="right" matTooltipPositionAtOrigin="true" matTooltipShowDelay="500">
+      {{ getProgramById(year.programId)?.name }} ({{ getProgramById(year.programId)?.degree }})-{{ year.label }}
+    </button>
     <mat-icon class="delete-icon cursor-pointer" (click)="onDeleteYear(year.id)" matTooltip="click to delete year"
       matTooltipPosition="right" matTooltipPositionAtOrigin="true" matTooltipShowDelay="500">
       cancel

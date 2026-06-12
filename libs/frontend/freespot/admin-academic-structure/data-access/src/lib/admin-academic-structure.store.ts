@@ -20,7 +20,7 @@ import { HttpAdminAcademicStructureService } from './http-admin-academic-structu
 
 @Injectable({ providedIn: 'root' })
 export class AdminAcademicStructureStore {
-  private readonly http = inject(HttpAdminAcademicStructureService);
+  private readonly api = inject(HttpAdminAcademicStructureService);
 
   private readonly facultiesSig = signal<AdminFaculty[]>([]);
   private readonly subjectsSig = signal<AdminSubjectItem[]>([]);
@@ -36,7 +36,7 @@ export class AdminAcademicStructureStore {
   readonly userListSig: Signal<AdminAcademicUser[]> = this.usersSig.asReadonly();
 
   init(): void {
-    this.http.load$().subscribe(({ faculties, subjects, programs, programYears, cohorts, rooms, timetableActivities, users }) => {
+    this.api.load$().subscribe(({ faculties, subjects, programs, programYears, cohorts, rooms, timetableActivities, users }) => {
       this.facultiesSig.set(faculties);
       this.subjectsSig.set(subjects);
       this.programsSig.set(programs);
@@ -93,37 +93,37 @@ export class AdminAcademicStructureStore {
   }
 
   updateFaculty(id: string, cmd: UpdateAdminFacultyCmd): void {
-    this.http.updateFaculty$(id, cmd).subscribe((updatedFaculty) => {
+    this.api.updateFaculty$(id, cmd).subscribe((updatedFaculty) => {
       this.facultiesSig.update((faculties) => faculties.map((faculty) => (faculty.id === id ? updatedFaculty : faculty)));
     });
   }
 
   createProgram(cmd: CreateAdminProgramCmd): void {
-    this.http.createProgram$(cmd).subscribe((program) => {
+    this.api.createProgram$(cmd).subscribe((program) => {
       this.programsSig.update((programs) => [...programs, program]);
     });
   }
 
   updateProgram(id: string, cmd: UpdateAdminProgramCmd): void {
-    this.http.updateProgram$(id, cmd).subscribe((updatedProgram) => {
+    this.api.updateProgram$(id, cmd).subscribe((updatedProgram) => {
       this.programsSig.update((programs) => programs.map((program) => (program.id === id ? updatedProgram : program)));
     });
   }
 
   deleteProgram(id: string): void {
-    this.http.deleteProgram$(id).subscribe(() => {
+    this.api.deleteProgram$(id).subscribe(() => {
       this.programsSig.update((programs) => programs.filter((program) => program.id !== id));
     });
   }
 
   createProgramYear(cmd: CreateAdminProgramYearCmd): void {
-    this.http.createProgramYear$(cmd).subscribe((programYear) => {
+    this.api.createProgramYear$(cmd).subscribe((programYear) => {
       this.programYearsSig.update((programYears) => [...programYears, programYear]);
     });
   }
 
   updateProgramYear(id: string, cmd: UpdateAdminProgramYearCmd): void {
-    this.http.updateProgramYear$(id, cmd).subscribe((updatedProgramYear) => {
+    this.api.updateProgramYear$(id, cmd).subscribe((updatedProgramYear) => {
       this.programYearsSig.update((programYears) =>
         programYears.map((programYear) => (programYear.id === id ? updatedProgramYear : programYear)),
       );
@@ -131,25 +131,25 @@ export class AdminAcademicStructureStore {
   }
 
   deleteProgramYear(id: string): void {
-    this.http.deleteProgramYear$(id).subscribe(() => {
+    this.api.deleteProgramYear$(id).subscribe(() => {
       this.programYearsSig.update((programYears) => programYears.filter((programYear) => programYear.id !== id));
     });
   }
 
   createCohort(cmd: CreateAdminCohortCmd): void {
-    this.http.createCohort$(cmd).subscribe((cohort) => {
+    this.api.createCohort$(cmd).subscribe((cohort) => {
       this.cohortsSig.update((cohorts) => [...cohorts, cohort]);
     });
   }
 
   deleteCohort(id: string): void {
-    this.http.deleteCohort$(id).subscribe(() => {
+    this.api.deleteCohort$(id).subscribe(() => {
       this.cohortsSig.update((cohorts) => cohorts.filter((cohort) => cohort.id !== id));
     });
   }
 
   updateUser(id: string, cmd: UpdateAdminAcademicUserCmd): void {
-    this.http.updateUser$(id, cmd).subscribe((updatedUser) => {
+    this.api.updateUser$(id, cmd).subscribe((updatedUser) => {
       this.usersSig.update((users) => users.map((user) => (user.id === id ? updatedUser : user)));
     });
   }
