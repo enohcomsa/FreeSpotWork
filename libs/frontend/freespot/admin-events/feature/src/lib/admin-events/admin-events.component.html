@@ -1,16 +1,11 @@
 <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Events</h1>
 
 <div class="flex flex-col gap-8 pb-4 md:grid md:grid-cols-2 xl:grid-cols-3">
-  @for (event of eventListSig(); track event.id) {
-  @let building = getBuildingById(event.buildingId);
-  @let room = getRoomById(event.roomId);
-
-  @if (building && room) {
-  <free-spot-admin-event-card [adminEventSig]="event" [adminEventBuildingSig]="building" [adminEventRoomSig]="room"
-    [addingEventSig]="addingEvent" (addingEventSigChange)="addingEvent = $event" (editEvent)="onEditingEvent($event)"
-    (deleteEvent)="onDeleteEvent($event.id)">
+  @for (eventVm of eventCardListVmSig(); track eventVm.id) {
+  <free-spot-admin-event-card [adminEventSig]="eventVm" [addingEventSig]="addingEvent"
+    (addingEventSigChange)="addingEvent = $event" (editEvent)="onEditingEvent($event)"
+    (deleteEvent)="onDeleteEvent($event)">
   </free-spot-admin-event-card>
-  }
   } @empty {
   <h3>No events added yet.</h3>
   }

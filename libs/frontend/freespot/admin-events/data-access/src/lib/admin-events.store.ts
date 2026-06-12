@@ -27,6 +27,10 @@ export class AdminEventsStore {
     });
   }
 
+  getAdminSpecialEventSigById(id: string): Signal<AdminSpecialEvent | undefined> {
+    return computed(() => this.eventListSig().find((event) => event.id === id));
+  }
+
   getBuildingById(id: string): Signal<AdminEventsBuilding | undefined> {
     return computed(() => this.buildingsSig().find((building) => building.id === id));
   }

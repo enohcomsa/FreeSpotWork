@@ -6,6 +6,7 @@ import {
   OnInit,
   Signal,
   WritableSignal,
+  computed,
   inject,
   signal,
   viewChild,
@@ -26,10 +27,11 @@ import {
   type CreateAdminSpecialEventCmd,
   type UpdateAdminSpecialEventCmd,
 } from '@free-spot/admin-events/domain';
-import { AdminEventCardComponent } from '@free-spot/admin-events/ui';
+import { AdminEventCardComponent, AdminEventCardVm } from '@free-spot/admin-events/ui';
 import { AddItemCardComponent } from '@free-spot/shared/ui';
-import { FormErrorMessage } from  '@free-spot/shared/util';
+import { FormErrorMessage } from '@free-spot/shared/util';
 import { filter } from 'rxjs';
+import { toAdminEventCardVm } from './admin-event-card.vm.mapper';
 
 @Component({
   selector: 'free-spot-admin-events',
@@ -59,6 +61,20 @@ export class AdminEventsComponent implements OnInit {
 
   readonly buildingListSig: Signal<AdminEventsBuilding[]> = this.adminEventsStore.buildingListSig;
   readonly eventListSig: Signal<AdminSpecialEvent[]> = this.adminEventsStore.eventListSig;
+  readonly eventCardListVmSig = computed<AdminEventCardVm[]>(() =>
+    this.eventListSig()
+      .map((event) => {
+        const building = this.getBuildingById(event.buildingId);
+        const room = this.getRoomById(event.roomId);
+
+        if (!building || !room) {
+          return null;
+        }
+
+        return toAdminEventCardVm(event, building, room);
+      })
+      .filter((event): event is AdminEventCardVm => event !== null),
+  );
 
   specialEventSig: WritableSignal<AdminSpecialEvent | null> = signal(null);
 
@@ -129,7 +145,12 @@ export class AdminEventsComponent implements OnInit {
     this.resetFormState();
   }
 
-  onEditingEvent(eventToEdit: AdminSpecialEvent): void {
+  onEditingEvent(eventToEditId: string): void {
+    const eventToEdit: AdminSpecialEvent | undefined = this.adminEventsStore.getAdminSpecialEventSigById(eventToEditId)();
+    if (!eventToEdit) {
+      return;
+    }
+
     const building = this.adminEventsStore.getBuildingById(eventToEdit.buildingId)();
     const room = this.adminEventsStore.getRoomById(eventToEdit.roomId)();
 
