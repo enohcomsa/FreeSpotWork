@@ -21,7 +21,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { TranslateModule } from '@ngx-translate/core';
 import { ActivityReschedulingStore } from '@free-spot/activity-rescheduling/data-access';
-import { RescheduleOptionCardComponent } from '@free-spot/activity-rescheduling/ui';
+import { RescheduleOptionCardComponent, RescheduleOptionCardVm } from '@free-spot/activity-rescheduling/ui';
+import { mapToReschedulableBookingVm, mapToRescheduleOptionCardVm } from './activity-rescheduling.vm.mapper';
+import { ConfirmModalService } from '@free-spot/shared/ui';
+import { ToastrService } from 'ngx-toastr';
+import { filter, switchMap, take } from 'rxjs';
+import { ReschedulableBookingVm } from './reschedulable-booking.vm';
 
 @Component({
   selector: 'free-spot-activity-rescheduling',
@@ -42,38 +47,69 @@ import { RescheduleOptionCardComponent } from '@free-spot/activity-rescheduling/
 })
 export class ActivityReschedulingComponent implements OnInit, OnChanges {
   private readonly fb = inject(FormBuilder);
-  private readonly store = inject(ActivityReschedulingStore);
+  private readonly _store = inject(ActivityReschedulingStore);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly confirmService = inject(ConfirmModalService);
+  private readonly toastr = inject(ToastrService);
 
   readonly selectedBookingId = input<string | null>(null);
   readonly rescheduled = output<void>();
-  readonly autocompleteOptionSelected = signal(false);
+
   readonly searchActive = signal(false);
-
   readonly bookingQuery = signal('');
-
-  readonly form = this.fb.group({
+  readonly bookingForm = this.fb.group({
     bookingQuery: [''],
   });
-
   readonly canSearch = computed(() => {
     return this.autocompleteOptionSelected() && !this.searchActive();
   });
 
-  readonly bookingOptions = this.store.reschedulableBookings;
-  readonly optionCards = this.store.optionCards;
+  readonly optionCards = computed<RescheduleOptionCardVm[]>(() => {
+    const result = this._store.rescheduleOptions();
+
+    if (!result) {
+      return [];
+    }
+
+    return result.items
+      .map((item) => {
+        return mapToRescheduleOptionCardVm(item, this._store.activities(), this._store.subjects(), this._store.rooms(), this._store.buildings(), this._store.floors());
+      })
+      .filter((item): item is RescheduleOptionCardVm => item !== null);
+  });
 
   readonly filteredBookingOptions = computed(() => {
     const query = this.bookingQuery().trim().toLowerCase();
 
     if (!query) {
-      return this.bookingOptions();
+      return this._bookingOptions();
     }
 
-    return this.bookingOptions().filter((item) =>
+    return this._bookingOptions().filter((item) =>
       item.label.toLowerCase().includes(query)
     );
   });
+
+
+  private readonly _bookingOptions = computed<ReschedulableBookingVm[]>(() =>
+    this._store.bookings()
+      .filter((booking) => booking.activityType !== 'SPECIAL_EVENT')
+      // .filter((b) => { //TODO: uncomment after timetable date autoupdate
+      //   const activity = this.timetableActivityService.getSignalById(b.activityId)();
+      //   if (!activity?.date) return false;
+
+      //   const start = new Date(activity.date);
+      //   start.setHours(activity.startHour, 0, 0, 0);
+
+      //   return start.getTime() > Date.now();
+      // })
+      .map((booking) => {
+        return mapToReschedulableBookingVm(booking, this._store.subjects(), this._store.activities());
+      })
+  );
+  private readonly autocompleteOptionSelected = signal(false);
+
+
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['selectedBookingId']) {
@@ -85,19 +121,19 @@ export class ActivityReschedulingComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    this.store.load();
+    this._store.load();
 
-    this.form.valueChanges
+    this.bookingForm.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
-        const rawValue = this.form.controls.bookingQuery.value;
+        const rawValue = this.bookingForm.controls.bookingQuery.value;
         this.bookingQuery.set((rawValue ?? '').toString());
 
         this.searchActive.set(false);
-        this.store.clearOptions();
+        this._store.clearOptions();
 
         if (typeof rawValue === 'string') {
-          this.store.selectBooking(null);
+          this._store.selectBooking(null);
         }
       });
   }
@@ -105,19 +141,19 @@ export class ActivityReschedulingComponent implements OnInit, OnChanges {
   displayBookingLabel = (value: string | null): string => {
     if (!value) return '';
 
-    const booking = this.bookingOptions().find((b) => b.id === value);
+    const booking = this._bookingOptions().find((b) => b.id === value);
     return booking?.label ?? value;
   };
 
   onBookingSelected(event: MatAutocompleteSelectedEvent): void {
     this.autocompleteOptionSelected.set(true);
     const bookingId = event.option.value as string;
-    const booking = this.bookingOptions().find((item) => item.id === bookingId);
+    const booking = this._bookingOptions().find((item) => item.id === bookingId);
 
-    this.store.selectBooking(bookingId);
+    this._store.selectBooking(bookingId);
     this.bookingQuery.set(booking?.label ?? '');
 
-    this.form.patchValue(
+    this.bookingForm.patchValue(
       {
         bookingQuery: booking?.label ?? '',
       },
@@ -126,42 +162,55 @@ export class ActivityReschedulingComponent implements OnInit, OnChanges {
   }
 
   onSubmit(): void {
-    this.store.loadOptions();
+    this._store.loadOptions();
     this.searchActive.set(true);
   }
 
   onBook(activityId: string): void {
-    this.store
-      .confirmReschedule(activityId)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+    this.confirmService
+      .openConfirmDialog('Are you sure you want to reschedule this booking? The old booking slot will be lost.')
+      .afterClosed()
+      .pipe(
+        take(1),
+        filter(Boolean),
+        switchMap(() => this._store.rescheduleBooking(activityId)),
+      )
       .subscribe((success) => {
         if (!success) {
           return;
         }
 
+        this.toastr.success('Booking successfully rescheduled', '', {
+          closeButton: true,
+          progressBar: true,
+          timeOut: 5000,
+          onActivateTick: true,
+          positionClass: 'toast-bottom-center',
+        });
+
         this.searchActive.set(false);
         this.autocompleteOptionSelected.set(false);
         this.bookingQuery.set('');
-        this.form.patchValue({ bookingQuery: '' });
+        this.bookingForm.patchValue({ bookingQuery: '' });
         this.rescheduled.emit();
       });
   }
 
   private applySelectedBooking(id: string): void {
-    const booking = this.bookingOptions().find((item) => item.id === id);
+    const booking = this._bookingOptions().find((item) => item.id === id);
     if (!booking) return;
 
-    this.store.selectBooking(id);
+    this._store.selectBooking(id);
     this.bookingQuery.set(booking.label);
 
-    this.form.patchValue(
+    this.bookingForm.patchValue(
       {
         bookingQuery: booking.label,
       },
       { emitEvent: false }
     );
 
-    this.store.loadOptions();
+    this._store.loadOptions();
     this.searchActive.set(true);
   }
 }

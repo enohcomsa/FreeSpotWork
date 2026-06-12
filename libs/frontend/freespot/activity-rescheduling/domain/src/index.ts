@@ -14,7 +14,3 @@ export {
   type ActivityReschedulingRoom,
 } from './lib/activity-rescheduling-location.model';
 
-export {
-  type ReschedulableBookingVm,
-  type RescheduleOptionCardVm,
-} from './lib/activity-rescheduling.vm';

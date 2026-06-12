@@ -1,6 +1,8 @@
 {
   "name": "@free-spot/my-events/domain",
   "version": "0.0.1",
-  "peerDependencies": {},
+  "peerDependencies": {
+    "@free-spot/shared/domain": "0.0.1"
+  },
   "sideEffects": false
 }

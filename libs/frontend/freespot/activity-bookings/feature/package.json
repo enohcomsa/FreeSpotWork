@@ -7,7 +7,8 @@
     "@ngx-translate/core": "^16.0.4",
     "@free-spot/activity-bookings/data-access": "0.0.1",
     "@free-spot/activity-bookings/domain": "0.0.1",
-    "@free-spot/activity-bookings/ui": "0.0.1"
+    "@free-spot/activity-bookings/ui": "0.0.1",
+    "@free-spot/shared/domain": "0.0.1"
   },
   "sideEffects": false
 }

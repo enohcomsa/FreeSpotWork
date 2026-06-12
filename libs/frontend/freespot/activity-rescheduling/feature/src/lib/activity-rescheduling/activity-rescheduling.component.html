@@ -1,6 +1,6 @@
 <mat-card class="@container">
   <mat-card-content>
-    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="mb-4 flex flex-col gap-4 md:flex-row md:items-end md:gap-4">
+    <form [formGroup]="bookingForm" (ngSubmit)="onSubmit()" class="mb-4 flex flex-col gap-4 md:flex-row md:items-end md:gap-4">
       <mat-form-field class="w-full md:flex-1">
         <mat-label>{{ 'DINAMIC_FORM.SELECT_BOOKING' | translate }}</mat-label>
 
