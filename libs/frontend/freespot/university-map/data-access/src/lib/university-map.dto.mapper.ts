@@ -4,12 +4,12 @@ import {
   type RoomResponseDTO,
 } from '@free-spot/api-client';
 import {
-  type BuildingCardVm,
   type UniversityMapFloor,
   type UniversityMapRoom,
+  type BuildingCard
 } from '@free-spot/university-map/domain';
 
-export function buildingDtoToVm(dto: BuildingResponseDTO): BuildingCardVm {
+export function buildingDtoToVm(dto: BuildingResponseDTO): BuildingCard {
   if (!dto.id) {
     throw new Error('Missing building id');
   }

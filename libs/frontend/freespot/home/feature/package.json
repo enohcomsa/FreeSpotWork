@@ -7,7 +7,9 @@
     "@free-spot/university-map/feature": "0.0.1",
     "@free-spot/events-catalog/feature": "0.0.1",
     "@free-spot/user-setup/feature": "0.0.1",
-    "@free-spot/core/data-access": "0.0.1"
+    "@free-spot/core/data-access": "0.0.1",
+    "@free-spot/event-registration/data-access": "0.0.1",
+    "ngx-toastr": "^19.0.0"
   },
   "sideEffects": false
 }

@@ -1,7 +1,6 @@
 import { inject, Injectable, signal } from '@angular/core';
 import {
-  type BuildingCardVm,
-  type RoomCardVm,
+  BuildingCard,
   type UniversityMapFloor,
   type UniversityMapRoom,
 } from '@free-spot/university-map/domain';
@@ -12,7 +11,7 @@ import { HttpUniversityMapService } from './http-university-map.service';
 export class UniversityMapStore {
   private readonly api = inject(HttpUniversityMapService);
 
-  private readonly buildingCardsSigInternal = signal<BuildingCardVm[]>([]);
+  private readonly buildingCardsSigInternal = signal<BuildingCard[]>([]);
   private readonly roomsSig = signal<UniversityMapRoom[]>([]);
   private readonly floorsSig = signal<UniversityMapFloor[]>([]);
 
@@ -43,22 +42,17 @@ export class UniversityMapStore {
       });
   }
 
-  getBuildingById(buildingId: string): BuildingCardVm | null {
+  getBuildingById(buildingId: string): BuildingCard | null {
     return this.buildingCardsSig().find((building) => building.id === buildingId) ?? null;
   }
 
-  getRoomCardVmsByFloorName(floorName: string): RoomCardVm[] {
+  getRoomsByFloorName(floorName: string): UniversityMapRoom[] {
     const floor = this.floorsSig().find((item) => item.name === floorName);
 
     if (!floor) {
       return [];
     }
 
-    return this.roomsSig()
-      .filter((room) => room.floorId === floor.id)
-      .map((room) => ({
-        id: room.id,
-        name: room.name,
-      }));
+    return this.roomsSig().filter((room) => room.floorId === floor.id);
   }
 }

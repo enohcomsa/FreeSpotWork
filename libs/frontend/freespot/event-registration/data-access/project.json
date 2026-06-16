@@ -17,7 +17,8 @@
     "platform:frontend",
     "product:freespot",
     "domain:event-registration",
-    "layer:data-access"
+    "layer:data-access",
+    "role:leaf"
   ],
   "targets": {
     "build": {

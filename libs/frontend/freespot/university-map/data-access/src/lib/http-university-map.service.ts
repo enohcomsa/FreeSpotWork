@@ -5,9 +5,9 @@ import {
   RoomsHttpService,
 } from '@free-spot/api-client';
 import {
-  type BuildingCardVm,
   type UniversityMapFloor,
   type UniversityMapRoom,
+  type BuildingCard
 } from '@free-spot/university-map/domain';
 import { forkJoin, map, Observable } from 'rxjs';
 import {
@@ -23,7 +23,7 @@ export class HttpUniversityMapService {
   private readonly roomsApi = inject(RoomsHttpService);
 
   loadMap$(): Observable<{
-    buildings: BuildingCardVm[];
+    buildings: BuildingCard[];
     rooms: UniversityMapRoom[];
     floors: UniversityMapFloor[];
   }> {
@@ -34,7 +34,7 @@ export class HttpUniversityMapService {
     });
   }
 
-  private listBuildings$(): Observable<BuildingCardVm[]> {
+  private listBuildings$(): Observable<BuildingCard[]> {
     return this.buildingsApi.buildingsGet().pipe(map((dtos) => (dtos ?? []).map(buildingDtoToVm)));
   }
 

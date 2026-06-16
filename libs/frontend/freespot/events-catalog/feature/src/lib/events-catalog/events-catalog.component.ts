@@ -1,8 +1,11 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit, output } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { EventCardComponent } from '@free-spot/events-catalog/ui';
+import { EventCardComponent, EventCardVm } from '@free-spot/events-catalog/ui';
 import { EventsCatalogStore } from '@free-spot/events-catalog/data-access';
-import { EventRegistrationStore } from '@free-spot/event-registration/data-access';
+import { ConfirmModalService } from '@free-spot/shared/ui';
+import { filter, take } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { toEventCardVm } from './event-card.vm.mapper';
 
 @Component({
   selector: 'free-spot-events-catalog',
@@ -13,17 +16,41 @@ import { EventRegistrationStore } from '@free-spot/event-registration/data-acces
   providers: [EventsCatalogStore],
 })
 export class EventsCatalogComponent implements OnInit {
+  private readonly confirmModalService = inject(ConfirmModalService);
+  private readonly destroyRef = inject(DestroyRef);
+
+  readonly registerEvent = output<string>();
+
   readonly store = inject(EventsCatalogStore);
 
-  private readonly _eventRegistrationStore = inject(EventRegistrationStore);
-
-  readonly eventCardVmsSig = this.store.futureEventCardVmsSig;
+  readonly eventCardVmsSig = computed<EventCardVm[]>(() =>
+    this.store
+      .futureEventListSig()
+      .map((event) =>
+        toEventCardVm(
+          event,
+          this.store.buildingListSig(),
+          this.store.roomListSig(),
+          this.store.registeredEventIdSetSig(),
+        ),
+      ),
+  );
 
   ngOnInit(): void {
     this.store.init();
   }
 
   onRegister(eventId: string): void {
-    this._eventRegistrationStore.register(eventId);
+    this.confirmModalService
+      .openConfirmDialog('Are you sure you want to register for this event?')
+      .afterClosed()
+      .pipe(
+        take(1),
+        filter(Boolean),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe(() => {
+        this.registerEvent.emit(eventId);
+      });
   }
 }

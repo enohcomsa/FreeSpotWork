@@ -1,5 +1,4 @@
-export type RoomCardVm = {
-  id: string;
+export type BuildingFloorCardVm = {
   name: string;
 };
 
@@ -7,7 +6,5 @@ export type BuildingCardVm = {
   id: string;
   name: string;
   address: string;
-  floors: {
-    name: string;
-  }[];
+  floors: BuildingFloorCardVm[];
 };

@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, OnInit } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { UniversityMapStore } from '@free-spot/university-map/data-access';
-import { RoomCardComponent } from '@free-spot/university-map/ui';
+import { RoomCardComponent, RoomCardVm } from '@free-spot/university-map/ui';
+import { toRoomCardVm } from './room-card.vm.mapper';
 
 @Component({
   selector: 'free-spot-floor-details',
@@ -19,8 +20,8 @@ export class FloorDetailsComponent implements OnInit {
 
   readonly buildingSig = computed(() => this.store.getBuildingById(this.buildingId()));
 
-  readonly roomListSig = computed(() =>
-    this.store.getRoomCardVmsByFloorName(this.floorName())
+  readonly roomListSig = computed<RoomCardVm[]>(() =>
+    this.store.getRoomsByFloorName(this.floorName()).map(toRoomCardVm),
   );
 
   ngOnInit(): void {

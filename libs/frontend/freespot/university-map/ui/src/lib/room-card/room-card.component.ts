@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
-import { RoomCardVm } from '@free-spot/university-map/domain';
+import { RoomCardVm } from './room-card.vm';
 
 @Component({
   selector: 'free-spot-room-card',

@@ -6,7 +6,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TranslateModule } from '@ngx-translate/core';
-import { BuildingCardVm } from '@free-spot/university-map/domain';
+import { BuildingCardVm } from './building-card.vm';
 
 @Component({
   selector: 'free-spot-building-card',

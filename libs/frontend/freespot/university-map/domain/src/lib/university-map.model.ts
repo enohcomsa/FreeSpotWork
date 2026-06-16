@@ -9,3 +9,14 @@ export interface UniversityMapFloor {
   name: string;
   buildingId: string | null;
 }
+
+export type BuildingFloorCard = {
+  name: string;
+};
+
+export type BuildingCard = {
+  id: string;
+  name: string;
+  address: string;
+  floors: BuildingFloorCard[];
+};

@@ -6,7 +6,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { TranslateModule } from '@ngx-translate/core';
-import { EventCardVm } from '@free-spot/events-catalog/domain';
+import { EventCardVm } from './events-catalog.vm';
 
 @Component({
   selector: 'free-spot-event-card',
