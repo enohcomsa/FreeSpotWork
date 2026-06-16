@@ -1,6 +1,5 @@
 <mat-chip-set>
-  @for (timetableItemActivity of dayTimetableActivityCardVMListSig(); track timetableItemActivity.startHour; let last =
-  $last) {
+  @for (timetableItemActivity of activities(); track timetableItemActivity.startHour; let last = $last) {
   @if (last) {
   <div class="relative flex">
     <mat-chip removable="true">
@@ -8,7 +7,7 @@
         <p>{{ getTimeInterval(timetableItemActivity.startHour) }}</p>
         <p>{{ getSubjectShortName(timetableItemActivity.subjectId) }}</p>
         <p>{{ timetableItemActivity.activityType }}</p>
-        <p>{{ roomNameSig() }}</p>
+        <p>{{ vm().roomName }}</p>
       </div>
       <button matChipRemove (click)="onRemoveTimetableActivity(timetableItemActivity.id)"
         matTooltip="click to remove timetable activity" matTooltipPosition="right" matTooltipPositionAtOrigin="true"
@@ -19,7 +18,7 @@
     <button mat-icon-button class="ml-2" (click)="addingTimetableActivity = true"
       matTooltip="click to add timetable activity" matTooltipPosition="right" matTooltipPositionAtOrigin="true"
       matTooltipShowDelay="500">
-      <mat-icon class="primary-icon mb-2">add </mat-icon>
+      <mat-icon class="primary-icon mb-2">add</mat-icon>
     </button>
   </div>
   } @else {
@@ -28,7 +27,7 @@
       <p>{{ getTimeInterval(timetableItemActivity.startHour) }}</p>
       <p>{{ getSubjectShortName(timetableItemActivity.subjectId) }}</p>
       <p>{{ timetableItemActivity.activityType }}</p>
-      <p>{{ roomNameSig() }}</p>
+      <p>{{ vm().roomName }}</p>
     </div>
     <button matChipRemove (click)="onRemoveTimetableActivity(timetableItemActivity.id)"
       matTooltip="click to remove timetable activity" matTooltipPosition="right" matTooltipPositionAtOrigin="true"
@@ -42,7 +41,7 @@
   <button mat-icon-button class="ml-2" (click)="addingTimetableActivity = true"
     matTooltip="click to add timetable activity" matTooltipPosition="right" matTooltipPositionAtOrigin="true"
     matTooltipShowDelay="500">
-    <mat-icon class="primary-icon mb-2">add </mat-icon>
+    <mat-icon class="primary-icon mb-2">add</mat-icon>
   </button>
   }
 </mat-chip-set>
@@ -58,18 +57,18 @@
         <mat-option [value]="startHour">{{ startHour }}</mat-option>
         }
       </mat-select>
-      <mat-error>{{ displayError(addTimetableActivityFormGroup.controls['startHour']) }}</mat-error>
+      <mat-error>{{ displayError(addTimetableActivityFormGroup.controls.startHour) }}</mat-error>
     </mat-form-field>
 
     <mat-form-field class="flex-auto">
       <mat-label>Subject name</mat-label>
-      <input type="text" matInput formControlName="subjectName" [matAutocomplete]="autoSubject" />
-      <mat-autocomplete autoActiveFirstOption #autoSubject="matAutocomplete" [displayWith]="dysplaySubject">
-        @for (subject of subjectListSig(); track subject.name) {
-        <mat-option [value]="subject">{{ subject.name }}</mat-option>
+      <input type="text" matInput formControlName="subject" [matAutocomplete]="autoSubject" />
+      <mat-autocomplete autoActiveFirstOption #autoSubject="matAutocomplete" [displayWith]="displaySubject">
+        @for (subject of subjects(); track subject.id) {
+        <mat-option [value]="subject">{{ subject.shortName }}</mat-option>
         }
       </mat-autocomplete>
-      <mat-error>{{ displayError(addTimetableActivityFormGroup.controls['subjectName']) }}</mat-error>
+      <mat-error>{{ displayError(addTimetableActivityFormGroup.controls.subject) }}</mat-error>
     </mat-form-field>
 
     <mat-form-field class="flex-auto">
@@ -80,7 +79,7 @@
         <mat-option [value]="event">{{ event }}</mat-option>
         }
       </mat-autocomplete>
-      <mat-error>{{ displayError(addTimetableActivityFormGroup.controls['activityType']) }}</mat-error>
+      <mat-error>{{ displayError(addTimetableActivityFormGroup.controls.activityType) }}</mat-error>
     </mat-form-field>
   </div>
 
@@ -93,7 +92,7 @@
         <mat-option [value]="weekParity">{{ weekParity }}</mat-option>
         }
       </mat-autocomplete>
-      <mat-error>{{ displayError(addTimetableActivityFormGroup.controls['weekParity']) }}</mat-error>
+      <mat-error>{{ displayError(addTimetableActivityFormGroup.controls.weekParity) }}</mat-error>
     </mat-form-field>
     <button mat-flat-button type="submit" class="flex-auto sm:mb-5" [disabled]="!addTimetableActivityFormGroup.valid">
       Add timetable item

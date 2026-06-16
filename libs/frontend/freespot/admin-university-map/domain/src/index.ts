@@ -8,6 +8,8 @@ export {
   type UpdateAdminUniversityMapBuildingCmd,
   type UpdateAdminUniversityMapFloorCmd,
   type UpdateAdminUniversityMapRoomCmd,
+  type AdminUniversityMapBuildingCard,
+  type AdminUniversityMapFloorCard
 } from './lib/admin-university-map.model';
 
 export {
@@ -15,10 +17,3 @@ export {
   type AdminUniversityMapTimetableActivity,
   type CreateAdminUniversityMapTimetableActivityCmd,
 } from './lib/admin-university-map-timetable.model';
-
-export {
-  type AdminUniversityMapBuildingCard,
-  type AdminUniversityMapFloorCard,
-  type AdminUniversityMapFloorVM,
-  type AdminUniversityMapRoomVM,
-} from './lib/admin-university-map.vm';

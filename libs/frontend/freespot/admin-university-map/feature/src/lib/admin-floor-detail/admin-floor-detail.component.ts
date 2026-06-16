@@ -16,14 +16,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { AdminUniversityMapStore } from '@free-spot/admin-university-map/data-access';
 import {
-  type AdminUniversityMapRoomVM,
   type CreateAdminUniversityMapRoomCmd,
   type UpdateAdminUniversityMapRoomCmd,
 } from '@free-spot/admin-university-map/domain';
-import { AdminRoomCardComponent } from '@free-spot/admin-university-map/ui';
+import { AdminRoomCardComponent, AdminUniversityMapRoomVm } from '@free-spot/admin-university-map/ui';
 import { ConfirmModalService } from '@free-spot/shared/ui';
 import { AddItemCardComponent } from '@free-spot/shared/ui';
 import { FormErrorMessage } from  '@free-spot/shared/util';
+import { toAdminUniversityMapRoomVm } from './admin-room-card.vm.mapper';
 
 @Component({
   selector: 'free-spot-admin-floor-detail',
@@ -52,9 +52,11 @@ export class AdminFloorDetailComponent implements OnInit {
   readonly floorSig = computed(() => this.store.getFloorById(this.floorIdSig())());
   readonly editingRoomIdSig: WritableSignal<string | null> = signal(null);
   readonly floorRoomListSig = computed(() => this.store.selectRoomsByFloorId(this.floorIdSig())());
-  readonly roomCardVMs = computed<AdminUniversityMapRoomVM[]>(() =>
-    this.store.selectRoomVMsByFloorId(this.floorIdSig())(),
-  );
+  readonly roomCardVMs = computed<AdminUniversityMapRoomVm[]>(() =>
+  this.store
+    .selectRoomsByFloorId(this.floorIdSig())()
+    .map(toAdminUniversityMapRoomVm),
+);
 
   addingRoom = false;
   editingRoom = false;
@@ -100,7 +102,7 @@ export class AdminFloorDetailComponent implements OnInit {
     this.resetFormState();
   }
 
-  onEditingRoom(roomToEdit: AdminUniversityMapRoomVM): void {
+  onEditingRoom(roomToEdit: AdminUniversityMapRoomVm): void {
     this.editingRoom = true;
     this.addingRoom = true;
     this.editingRoomIdSig.set(roomToEdit.id);
@@ -129,7 +131,7 @@ export class AdminFloorDetailComponent implements OnInit {
     this.resetFormState();
   }
 
-  onDeleteRoom(deletedRoom: AdminUniversityMapRoomVM): void {
+  onDeleteRoom(deletedRoom: AdminUniversityMapRoomVm): void {
     this.confirmService
       .openConfirmDialog('Are you sure you want to delete this room?')
       .afterClosed()

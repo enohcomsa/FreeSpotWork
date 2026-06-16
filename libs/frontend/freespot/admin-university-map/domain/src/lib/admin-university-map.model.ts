@@ -57,3 +57,17 @@ export interface UpdateAdminUniversityMapRoomCmd {
   unavailableSpots?: number;
   subjectList?: string[];
 }
+
+export interface AdminUniversityMapFloorCard {
+  name: string;
+  total: number;
+  unavailable: number;
+}
+
+export interface AdminUniversityMapBuildingCard {
+  id: string;
+  name: string;
+  address: string;
+  floors: AdminUniversityMapFloorCard[];
+}
+

@@ -5,7 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { AdminUniversityMapFloorVM } from '@free-spot/admin-university-map/domain';
+import { AdminUniversityMapFloorVm } from './admin-floor-card.vm'
 
 @Component({
   selector: 'free-spot-admin-floor-card',
@@ -18,10 +18,10 @@ export class AdminFloorCardComponent {
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
 
-  adminFloorSig = input.required<AdminUniversityMapFloorVM>();
+  adminFloorSig = input.required<AdminUniversityMapFloorVm>();
   addingFloorSig = model.required<boolean>();
-  editFloor = output<AdminUniversityMapFloorVM>();
-  deleteFloor = output<AdminUniversityMapFloorVM>();
+  editFloor = output<AdminUniversityMapFloorVm>();
+  deleteFloor = output<AdminUniversityMapFloorVm>();
 
   onOpenClick(): void {
     this.router.navigate([this.adminFloorSig().id], { relativeTo: this.activatedRoute });

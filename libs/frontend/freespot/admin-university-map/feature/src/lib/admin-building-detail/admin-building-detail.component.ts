@@ -16,14 +16,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { AdminUniversityMapStore } from '@free-spot/admin-university-map/data-access';
 import {
-  type AdminUniversityMapFloorVM,
   type CreateAdminUniversityMapFloorCmd,
   type UpdateAdminUniversityMapFloorCmd,
 } from '@free-spot/admin-university-map/domain';
-import { AdminFloorCardComponent } from '@free-spot/admin-university-map/ui';
+import { AdminFloorCardComponent, AdminUniversityMapFloorVm } from '@free-spot/admin-university-map/ui';
 import { ConfirmModalService } from '@free-spot/shared/ui';
 import { AddItemCardComponent } from '@free-spot/shared/ui';
-import { FormErrorMessage } from  '@free-spot/shared/util';
+import { FormErrorMessage } from '@free-spot/shared/util';
+import { toAdminUniversityMapFloorVm } from './admin-floor-card.vm.mapper';
 
 @Component({
   selector: 'free-spot-admin-building-detail',
@@ -52,8 +52,10 @@ export class AdminBuildingDetailComponent implements OnInit {
   readonly editingFloorIdSig: WritableSignal<string | null> = signal(null);
   readonly buildingSig = computed(() => this.store.getBuildingById(this.buildingIdSig())());
   readonly buildingFloorList = computed(() => this.store.selectFloorsByBuildingId(this.buildingIdSig())());
-  readonly floorCardVMs = computed<AdminUniversityMapFloorVM[]>(() =>
-    this.store.selectFloorVMsByBuildingId(this.buildingIdSig())(),
+  readonly floorCardVMs = computed<AdminUniversityMapFloorVm[]>(() =>
+    this.store.selectFloorsWithRoomsByBuildingId(this.buildingIdSig())().map(({ floor, rooms }) =>
+      toAdminUniversityMapFloorVm(floor, rooms),
+    ),
   );
 
   addingFloor = false;
@@ -89,7 +91,7 @@ export class AdminBuildingDetailComponent implements OnInit {
     this.resetFormState();
   }
 
-  onEditingFloor(floorToEdit: AdminUniversityMapFloorVM): void {
+  onEditingFloor(floorToEdit: AdminUniversityMapFloorVm): void {
     this.editingFloor = true;
     this.addingFloor = true;
     this.editingFloorIdSig.set(floorToEdit.id);
@@ -112,7 +114,7 @@ export class AdminBuildingDetailComponent implements OnInit {
     this.resetFormState();
   }
 
-  onDeleteFloor(deletedFloor: AdminUniversityMapFloorVM): void {
+  onDeleteFloor(deletedFloor: AdminUniversityMapFloorVm): void {
     this.confirmService
       .openConfirmDialog('Are you sure you want to delete this floor?')
       .afterClosed()

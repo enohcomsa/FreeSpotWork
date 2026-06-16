@@ -3,9 +3,7 @@ import {
   type AdminUniversityMapBuilding,
   type AdminUniversityMapBuildingCard,
   type AdminUniversityMapFloor,
-  type AdminUniversityMapFloorVM,
   type AdminUniversityMapRoom,
-  type AdminUniversityMapRoomVM,
   type AdminUniversityMapSubject,
   type AdminUniversityMapTimetableActivity,
   type CreateAdminUniversityMapBuildingCmd,
@@ -30,7 +28,7 @@ export class AdminUniversityMapStore {
   private readonly timetableActivitiesSig = signal<AdminUniversityMapTimetableActivity[]>([]);
 
   readonly buildingListSig: Signal<AdminUniversityMapBuilding[]> = this.buildingsSig.asReadonly();
-  readonly buildingCardVMs: Signal<AdminUniversityMapBuildingCard[]> = this.buildingCardsSig.asReadonly();
+  readonly buildingCardList: Signal<AdminUniversityMapBuildingCard[]> = this.buildingCardsSig.asReadonly();//from be not actually true ui vm
   readonly subjectListSig: Signal<AdminUniversityMapSubject[]> = this.subjectsSig.asReadonly();
 
   init(): void {
@@ -80,12 +78,11 @@ export class AdminUniversityMapStore {
     return computed(() => this.roomsSig().filter((room) => room.floorId === floorId));
   }
 
-  selectFloorVMsByBuildingId(buildingId: string): Signal<AdminUniversityMapFloorVM[]> {
+  selectFloorsWithRoomsByBuildingId(buildingId: string): Signal<{ floor: AdminUniversityMapFloor; rooms: AdminUniversityMapRoom[]; }[]> {
     return computed(() =>
       this.selectFloorsByBuildingId(buildingId)().map((floor) => ({
-        id: floor.id,
-        name: floor.name,
-        roomsCount: this.selectRoomsByFloorId(floor.id)().length,
+        floor,
+        rooms: this.selectRoomsByFloorId(floor.id)(),
       })),
     );
   }
@@ -110,17 +107,6 @@ export class AdminUniversityMapStore {
 
   getFloorById(id: string): Signal<AdminUniversityMapFloor | undefined> {
     return computed(() => this.floorsSig().find((floor) => floor.id === id));
-  }
-
-  selectRoomVMsByFloorId(floorId: string): Signal<AdminUniversityMapRoomVM[]> {
-    return computed(() =>
-      this.selectRoomsByFloorId(floorId)().map((room) => ({
-        id: room.id,
-        name: room.name,
-        totalSpotsNumber: room.totalSpotsNumber,
-        unavailableSpots: room.unavailableSpots,
-      })),
-    );
   }
 
   createRoom(cmd: CreateAdminUniversityMapRoomCmd): void {

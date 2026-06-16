@@ -4,7 +4,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
-import { AdminUniversityMapRoomVM } from '@free-spot/admin-university-map/domain';
+import { AdminUniversityMapRoomVm } from './admin-room-card.vm';
 
 @Component({
   selector: 'free-spot-admin-room-card',
@@ -17,10 +17,10 @@ export class AdminRoomCardComponent {
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
 
-  adminRoomSig = input.required<AdminUniversityMapRoomVM>();
+  adminRoomSig = input.required<AdminUniversityMapRoomVm>();
   addingRoomSig = model.required<boolean>();
-  editRoom = output<AdminUniversityMapRoomVM>();
-  deleteRoom = output<AdminUniversityMapRoomVM>();
+  editRoom = output<AdminUniversityMapRoomVm>();
+  deleteRoom = output<AdminUniversityMapRoomVm>();
 
   onOpenClick(): void {
     this.router.navigate([this.adminRoomSig().id], { relativeTo: this.activatedRoute });

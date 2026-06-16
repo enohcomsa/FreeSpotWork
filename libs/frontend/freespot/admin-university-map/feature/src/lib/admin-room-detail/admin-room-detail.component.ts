@@ -4,9 +4,16 @@ import {
   type AdminUniversityMapSubject,
   type UpdateAdminUniversityMapRoomCmd,
 } from '@free-spot/admin-university-map/domain';
-import { AdminRoomTimetableItemComponent } from '@free-spot/admin-university-map/ui';
+import {
+  AdminRoomTimetableItemComponent,
+  type CreateAdminRoomTimetableActivityVm,
+} from '@free-spot/admin-university-map/ui';
+import { type WeekDay } from '@free-spot/shared/domain';
 import { type TimetableActivityVm, TimetableItemComponent, DynamicChipListComponent } from '@free-spot/shared/ui';
-import { WeekDay } from '@free-spot/shared/domain';
+import {
+  createAdminRoomTimetableActivityVmToCmd,
+  toAdminRoomTimetableItemVm,
+} from './admin-room-timetable-item.vm.mapper';
 
 @Component({
   selector: 'free-spot-admin-room-detail',
@@ -66,8 +73,6 @@ export class AdminRoomDetailComponent implements OnInit {
 
   readonly workWeek: WeekDay[] = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'];
 
-  readonly localWorkWeek: WeekDay[] = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'];
-
   readonly timetablePerDay = computed(() =>
     this.workWeek.map((day) => ({
       day,
@@ -75,12 +80,23 @@ export class AdminRoomDetailComponent implements OnInit {
     })),
   );
 
-  readonly timetableActivitiesPerDay = computed(() =>
-    this.localWorkWeek.map((day) => ({
+  readonly timetableActivitiesPerDay = computed(() => {
+    const room = this.roomSig();
+
+    return this.workWeek.map((day) => ({
       day,
-      activities: this.roomTimetableActivitiesSig().filter((activity) => activity.weekDay === day),
-    })),
-  );
+      vm: room
+        ? toAdminRoomTimetableItemVm({
+            roomId: room.id,
+            roomName: room.name,
+            roomCapacity: room.totalSpotsNumber - room.unavailableSpots,
+            day,
+            subjects: this.subjectListSig(),
+            activities: this.roomTimetableActivitiesSig().filter((activity) => activity.weekDay === day),
+          })
+        : null,
+    }));
+  });
 
   ngOnInit(): void {
     this.store.init();
@@ -92,5 +108,9 @@ export class AdminRoomDetailComponent implements OnInit {
     };
 
     this.store.updateRoom(this.roomIdSig(), updatedRoom);
+  }
+
+  onCreateTimetableActivity(vm: CreateAdminRoomTimetableActivityVm): void {
+    this.store.createTimetableActivity(createAdminRoomTimetableActivityVmToCmd(vm, this.roomIdSig()));
   }
 }

@@ -5,7 +5,6 @@
     "@angular/core": "^20.0.0",
     "@angular/material": "^20.0.1",
     "@angular/router": "20.0.0",
-    "@free-spot/admin-university-map/domain": "0.0.1",
     "@angular/forms": "20.0.0",
     "@free-spot/shared/util": "0.0.1",
     "@free-spot/shared/domain": "0.0.1"

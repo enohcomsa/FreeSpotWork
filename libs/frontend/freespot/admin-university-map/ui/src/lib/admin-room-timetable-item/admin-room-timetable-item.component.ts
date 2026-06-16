@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, input, OnInit, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, OnInit, output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
@@ -8,17 +8,17 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import {
-  type AdminUniversityMapSubject,
-  type AdminUniversityMapTimetableActivity,
-  type CreateAdminUniversityMapTimetableActivityCmd,
-} from '@free-spot/admin-university-map/domain';
+import { type ActivityType, type WeekParity } from '@free-spot/shared/domain';
 import { FormErrorMessage } from '@free-spot/shared/util';
-import { WeekDay, WeekParity, ActivityType } from '@free-spot/shared/domain';
+import {
+  type AdminRoomTimetableItemVm,
+  type AdminRoomTimetableSubjectVm,
+  type CreateAdminRoomTimetableActivityVm,
+} from './admin-room-timetable-item.vm';
 
 type AddTimetableActivityForm = FormGroup<{
   startHour: FormControl<number>;
-  subjectName: FormControl<AdminUniversityMapSubject>;
+  subject: FormControl<AdminRoomTimetableSubjectVm>;
   activityType: FormControl<ActivityType>;
   weekParity: FormControl<WeekParity>;
 }>;
@@ -45,26 +45,17 @@ export class AdminRoomTimetableItemComponent implements OnInit {
   private readonly formBuilder = inject(FormBuilder);
   private readonly formErrorMessage = inject(FormErrorMessage);
 
-  roomIdSig = input.required<string>();
-  roomNameSig = input.required<string>();
-  roomCapacitySig = input.required<number>();
-  day = input.required<WeekDay>();
-  subjectListSig = input.required<AdminUniversityMapSubject[]>();
-  dayTimetableActivityCardVMListSig = input.required<AdminUniversityMapTimetableActivity[]>();
+  readonly vm = input.required<AdminRoomTimetableItemVm>();
 
-  createTimetableActivity = output<CreateAdminUniversityMapTimetableActivityCmd>();
-  removeTimetableActivity = output<string>();
+  readonly createTimetableActivity = output<CreateAdminRoomTimetableActivityVm>();
+  readonly removeTimetableActivity = output<string>();
 
   readonly startHourList: number[] = [8, 10, 12, 14, 16, 18];
-
-  readonly eventList: ActivityType[] = [
-    'LABORATORY',
-    'COURSE',
-    'PROJECT',
-    'SEMINAR',
-  ];
-
+  readonly eventList: ActivityType[] = ['LABORATORY', 'COURSE', 'PROJECT', 'SEMINAR'];
   readonly weekParityList: WeekParity[] = ['BOTH', 'EVEN', 'ODD'];
+
+  readonly activities = computed(() => this.vm().activities);
+  readonly subjects = computed(() => this.vm().subjects);
 
   addingTimetableActivity = false;
 
@@ -73,25 +64,21 @@ export class AdminRoomTimetableItemComponent implements OnInit {
   ngOnInit(): void {
     this.addTimetableActivityFormGroup = this.formBuilder.nonNullable.group({
       startHour: [this.startHourList[0], Validators.required],
-      subjectName: [this.subjectListSig()[0], [Validators.required, Validators.minLength(1)]],
+      subject: [this.subjects()[0], [Validators.required]],
       activityType: ['COURSE' as ActivityType, Validators.required],
       weekParity: ['BOTH' as WeekParity, Validators.required],
     });
   }
 
-  dysplaySubject(subjectItem: AdminUniversityMapSubject | null): string {
-    return subjectItem?.shortName ?? '';
-  }
-
-  getSubjectShortName(subjectId: string): string {
-    return this.subjectListSig().find((subject) => subject.id === subjectId)?.shortName ?? '';
-  }
-
   displayError = (control: AbstractControl | null): string =>
     this.formErrorMessage.displayFormErrorMessage(control);
 
-  displaySubject(subjectItem: AdminUniversityMapSubject | null): string {
-    return subjectItem?.shortName ?? '';
+  displaySubject(subject: AdminRoomTimetableSubjectVm | null): string {
+    return subject?.shortName ?? '';
+  }
+
+  getSubjectShortName(subjectId: string): string {
+    return this.subjects().find((subject) => subject.id === subjectId)?.shortName ?? '';
   }
 
   getTimeInterval(startHour: number): string {
@@ -114,26 +101,19 @@ export class AdminRoomTimetableItemComponent implements OnInit {
   }
 
   onAddTimetableActivity(): void {
-    const subject = this.addTimetableActivityFormGroup.controls.subjectName.value;
+    const subject = this.addTimetableActivityFormGroup.controls.subject.value;
     const startHour = this.addTimetableActivityFormGroup.controls.startHour.value;
 
-    const cmd: CreateAdminUniversityMapTimetableActivityCmd = {
-      roomId: this.roomIdSig(),
+    this.createTimetableActivity.emit({
       subjectId: subject.id,
-      date: new Date().toISOString(),
-      weekDay: this.day(),
-      activityType: this.addTimetableActivityFormGroup.controls.activityType.value,
-      cohortIds: [],
       startHour,
       endHour: startHour + 2,
+      weekDay: this.vm().day,
+      activityType: this.addTimetableActivityFormGroup.controls.activityType.value,
       weekParity: this.addTimetableActivityFormGroup.controls.weekParity.value,
-      capacity: this.roomCapacitySig(),
-      reservedSpots: 0,
-      busySpots: 0,
-      freeSpots: this.roomCapacitySig(),
-    };
+      capacity: this.vm().roomCapacity,
+    });
 
-    this.createTimetableActivity.emit(cmd);
     this.addTimetableActivityFormGroup.reset();
     this.addingTimetableActivity = false;
   }

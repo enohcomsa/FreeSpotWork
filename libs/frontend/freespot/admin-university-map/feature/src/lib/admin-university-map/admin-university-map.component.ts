@@ -48,7 +48,7 @@ export class AdminUniversityMapComponent implements OnInit {
   editBuilding = viewChild<ElementRef>('editBuilding');
 
   readonly buildingCardVMs: Signal<AdminUniversityMapBuildingCard[]> =
-    this.adminUniversityMapStore.buildingCardVMs;
+    this.adminUniversityMapStore.buildingCardList;
 
   readonly buildingSig: WritableSignal<AdminUniversityMapBuildingCard | null> = signal(null);
 

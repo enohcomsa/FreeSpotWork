@@ -6,8 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
-
-import { AdminUniversityMapBuildingCard } from '@free-spot/admin-university-map/domain';
+import { type AdminUniversityMapBuildingCardVm } from './admin-building-card.vm';
 
 @Component({
   selector: 'free-spot-admin-building-card',
@@ -20,10 +19,10 @@ export class AdminBuildingCardComponent {
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
 
-  adminBuildingSig = input.required<AdminUniversityMapBuildingCard>();
-  addingBuildingSig = model.required<boolean>();
-  editBuilding = output<AdminUniversityMapBuildingCard>();
-  deleteBuilding = output<AdminUniversityMapBuildingCard>();
+  readonly adminBuildingSig = input.required<AdminUniversityMapBuildingCardVm>();
+  readonly addingBuildingSig = model.required<boolean>();
+  readonly editBuilding = output<AdminUniversityMapBuildingCardVm>();
+  readonly deleteBuilding = output<AdminUniversityMapBuildingCardVm>();
 
   onOpenClick(): void {
     this.router.navigate(['building/' + this.adminBuildingSig().id], { relativeTo: this.activatedRoute });
