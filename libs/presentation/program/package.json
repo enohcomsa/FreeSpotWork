@@ -1,8 +1,0 @@
-{
-  "name": "@free-spot-presentation/program",
-  "version": "0.0.1",
-  "sideEffects": false,
-  "dependencies": {
-    "@free-spot-domain/program": "0.0.1"
-  }
-}

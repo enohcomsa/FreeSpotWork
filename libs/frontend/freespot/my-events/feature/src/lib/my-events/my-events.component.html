@@ -1,0 +1,11 @@
+<h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">
+  {{ 'BOOKINGS_PAGE.MY_EVENTS' | translate }}
+</h1>
+
+<div class="grid grid-cols-1 gap-8 pb-4 md:grid-cols-2 xl:grid-cols-3">
+  @for (event of events(); track event.id) {
+  <free-spot-my-event-card [vm]="event" (remove)="remove($event)"></free-spot-my-event-card>
+  } @empty {
+  <h3>{{ 'BOOKINGS_PAGE.NO_BOOKINGS_MSG' | translate }}</h3>
+  }
+</div>

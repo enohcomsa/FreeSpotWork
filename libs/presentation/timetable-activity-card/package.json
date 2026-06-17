@@ -1,8 +1,0 @@
-{
-  "name": "@free-spot-presentation/timetable-activity-card",
-  "version": "0.0.1",
-  "sideEffects": false,
-  "dependencies": {
-    "@free-spot-domain/timetable-activity": "0.0.1"
-  }
-}

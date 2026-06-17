@@ -1,0 +1,9 @@
+{
+  "name": "@free-spot/academic-schedule/domain",
+  "version": "0.0.1",
+  "sideEffects": false,
+  "peerDependencies": {
+    "@angular/core": "20.0.0"
+  },
+  "dependencies": {}
+}

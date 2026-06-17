@@ -1,0 +1,13 @@
+<div class="container">
+  <h1 class="pb-4 pt-8 text-xl font-bold sm:text-2xl md:pb-8 md:pt-12 md:text-3xl">
+    {{ buildingSig()?.name }} > {{ floorName() }}
+  </h1>
+
+  <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+    @for (room of roomListSig(); track room.id) {
+      <free-spot-room-card [roomCardVm]="room"></free-spot-room-card>
+    } @empty {
+      <h3>{{ 'DASH_FLOOR_DETAIL.NO_ROOM_MSG' | translate }}</h3>
+    }
+  </div>
+</div>

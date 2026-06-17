@@ -1,10 +1,10 @@
-import { Component, DestroyRef, inject, OnInit, DOCUMENT } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { LanguageService } from './translate/language.service';
+import { DOCUMENT } from '@angular/common';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { RouterModule } from '@angular/router';
+import { LanguageService, ThemeService } from '@free-spot/core/data-access';
+import { type Language, type Theme } from '@free-spot/core/domain';
 import { TranslateService } from '@ngx-translate/core';
-import { ThemeService } from './theme/theme.service';
-import { Language, Theme } from '@free-spot-domain/user';
 
 @Component({
   imports: [RouterModule],
@@ -12,26 +12,27 @@ import { Language, Theme } from '@free-spot-domain/user';
   template: '<router-outlet></router-outlet>',
 })
 export class AppComponent implements OnInit {
-  title = 'FreeSpot';
-  private _languageService: LanguageService = inject(LanguageService);
-  private _translateService: TranslateService = inject(TranslateService);
-  private _themeService: ThemeService = inject(ThemeService);
-  private _document = inject(DOCUMENT);
-  destroyRef = inject(DestroyRef);
+  private readonly languageService = inject(LanguageService);
+  private readonly translateService = inject(TranslateService);
+  private readonly themeService = inject(ThemeService);
+  private readonly document = inject(DOCUMENT);
+  private readonly destroyRef = inject(DestroyRef);
 
-  private _lang$ = toObservable(this._languageService.langSig);
-  private _theme$ = toObservable(this._themeService.themeSig);
+  private readonly lang$ = toObservable(this.languageService.langSig);
+  private readonly theme$ = toObservable(this.themeService.themeSig);
+
+  title = 'FreeSpot';
 
   ngOnInit(): void {
-    this._lang$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((lang: Language) => {
-      this._translateService.use(lang);
+    this.lang$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((lang: Language) => {
+      this.translateService.use(lang);
     });
 
-    this._theme$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((theme: Theme) => {
-      if (theme === Theme.DARK) {
-        this._document.body.classList.add('dark-mode');
+    this.theme$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((theme: Theme) => {
+      if (theme === 'DARK') {
+        this.document.body.classList.add('dark-mode');
       } else {
-        this._document.body.classList.remove('dark-mode');
+        this.document.body.classList.remove('dark-mode');
       }
     });
   }

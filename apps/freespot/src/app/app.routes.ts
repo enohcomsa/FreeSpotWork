@@ -1,42 +1,42 @@
 import { Route } from '@angular/router';
-import { adminGuard, authGuard, guestGuard } from '@free-spot-service/auth';
+import { authGuard, guestGuard, adminGuard } from '@free-spot/core/data-access';
 
 export const appRoutes: Route[] = [
   {
     path: 'auth',
     canActivate: [guestGuard],
-    loadComponent: () => import('./auth/auth.component').then((m) => m.default),
+    loadComponent: () => import('@free-spot/core/feature').then((m) => m.AuthComponent),
   },
   {
     path: '',
     canActivate: [authGuard],
-    loadComponent: () => import('./navigation/navigation.component').then((m) => m.default),
+    loadComponent: () => import('@free-spot/core/feature').then((m) => m.NavigationComponent),
     children: [
       {
-        path: 'dashboard',
-        loadChildren: () => import('@free-spot/dashboard'),
+        path: 'home',
+        loadChildren: () => import('@free-spot/home/feature'),
       },
       {
         path: 'schedule',
-        loadChildren: () => import('@free-spot/schedule'),
+        loadChildren: () => import('@free-spot/academic-schedule/feature'),
       },
       {
         path: 'my-bookings',
-        loadChildren: () => import('@free-spot/my-bookings'),
+        loadChildren: () => import('@free-spot/my-bookings/feature'),
       },
       {
         path: 'admin',
         canActivate: [adminGuard],
-        loadChildren: () => import('@free-spot/admin'),
+        loadChildren: () => import('@free-spot/admin/feature'),
       },
       {
         path: '',
         pathMatch: 'full',
-        redirectTo: 'dashboard',
+        redirectTo: 'home',
       },
       {
         path: '**',
-        redirectTo: 'dashboard',
+        redirectTo: 'home',
       },
     ],
   },

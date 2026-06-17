@@ -1,8 +1,0 @@
-{
-  "name": "@free-spot-domain/booking",
-  "version": "0.0.1",
-  "sideEffects": false,
-  "dependencies": {
-    "@free-spot-domain/timetable-activity": "0.0.1"
-  }
-}

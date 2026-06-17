@@ -1,0 +1,12 @@
+{
+  "$schema": "../../../../../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../../../../dist/libs/frontend/freespot/academic-schedule/feature",
+  "lib": {
+    "entryFile": "src/index.ts"
+  },
+  "allowedNonPeerDependencies": [
+    "@frontend/freespot/schedule/data-access",
+    "@frontend/freespot/schedule/ui",
+    "@frontend/freespot/schedule/domain"
+  ]
+}

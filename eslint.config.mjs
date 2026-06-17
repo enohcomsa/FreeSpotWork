@@ -3,6 +3,7 @@ import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import js from '@eslint/js';
 import nxEslintPlugin from '@nx/eslint-plugin';
+import { dependencyBoundaries } from './tools/eslint/dependency-boundaries.mjs';
 
 const compat = new FlatCompat({
   baseDirectory: dirname(fileURLToPath(import.meta.url)),
@@ -21,62 +22,8 @@ export default [
         'error',
         {
           enforceBuildableLibDependency: true,
-          allow: [],
-          depConstraints: [
-            {
-              sourceTag: 'type:app',
-              onlyDependOnLibsWithTags: [
-                'type:page',
-                'type:presentation',
-                'type:service',
-                'type:http',
-                'type:ui',
-                'type:domain',
-                'type:shared',
-                'type:util',
-                'type:api-client',
-              ],
-            },
-            {
-              sourceTag: 'type:page',
-              onlyDependOnLibsWithTags: [
-                'type:presentation',
-                'type:service',
-                'type:ui',
-                'type:domain',
-                'type:shared',
-                'type:util',
-              ],
-            },
-            {
-              sourceTag: 'type:presentation',
-              onlyDependOnLibsWithTags: ['type:domain'],
-            },
-            {
-              sourceTag: 'type:service',
-              onlyDependOnLibsWithTags: ['type:http', 'type:domain', 'type:shared', 'type:util', 'type:presentation'],
-            },
-            {
-              sourceTag: 'type:http',
-              onlyDependOnLibsWithTags: ['type:http', 'type:shared', 'type:util', 'type:api-client', 'type:presentation', 'type:domain'],
-            },
-            {
-              sourceTag: 'type:ui',
-              onlyDependOnLibsWithTags: ['type:shared', 'type:util', 'type:domain', 'type:service', 'type:presentation'],
-            },
-            {
-              sourceTag: 'type:domain',
-              onlyDependOnLibsWithTags: ['type:domain', 'type:shared', 'type:util'],
-            },
-            {
-              sourceTag: 'type:shared',
-              onlyDependOnLibsWithTags: ['type:util'],
-            },
-            {
-              sourceTag: 'type:util',
-              onlyDependOnLibsWithTags: ['type:util'],
-            },
-          ]
+          allow: dependencyBoundaries.allow,
+          depConstraints: dependencyBoundaries.depConstraints,
         },
       ],
     },
