@@ -1,0 +1,10 @@
+{
+  "name": "@free-spot/shared/util",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@angular/core": "^20.0.0",
+    "@ngx-translate/core": "^16.0.4",
+    "@angular/forms": "20.0.0"
+  },
+  "sideEffects": false
+}

@@ -1,8 +1,0 @@
-{
-  "name": "@free-spot-presentation/room",
-  "version": "0.0.1",
-  "sideEffects": false,
-  "dependencies": {
-    "@free-spot-domain/room": "0.0.1"
-  }
-}

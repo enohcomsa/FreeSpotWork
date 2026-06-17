@@ -1,0 +1,62 @@
+<mat-card>
+  <mat-card-header class="!block">
+    <mat-card-title class="!flex items-start justify-between gap-4">
+      <div>
+        <p>{{ eventCardVm().name }}</p>
+      </div>
+
+      <div class="flex shrink-0 items-center gap-3">
+        <p class="text-sm tracking-tight">
+          {{ eventCardVm().date | date: 'MMM dd, yyyy HH:mm' }}
+        </p>
+      </div>
+    </mat-card-title>
+
+    <mat-card-subtitle class="!mt-2 !flex flex-col !text-xs sm:flex-row sm:items-end sm:!text-sm">
+      <div class="flex items-end gap-1 !text-sm">
+        <mat-icon class="-ml-2 -mr-1 scale-50">location_on</mat-icon>
+        <p>{{ eventCardVm().buildingName }}<span class="hidden sm:mx-1 sm:inline">|</span></p>
+      </div>
+      <p>{{ eventCardVm().buildingAddress }}</p>
+    </mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <mat-list class="!pb-0">
+      <mat-list-item class="!p-0">
+        <div class="flex justify-between text-xs tracking-tighter">
+          <p class="min-w-24">{{ 'BUILDING_CARD.ROOM' | translate }}</p>
+          <div class="flex gap-4 [&>p]:w-14 [&>p]:text-center">
+            <p>{{ 'BUILDING_CARD.FREE_DESK' | translate }}</p>
+            <p>{{ 'BUILDING_CARD.BOOKED' | translate }}</p>
+            <p>{{ 'BUILDING_CARD.RESERVED' | translate }}</p>
+          </div>
+        </div>
+      </mat-list-item>
+
+      <mat-divider></mat-divider>
+
+      <mat-list-item class="!p-0">
+        <div class="flex justify-between text-sm tracking-tighter">
+          <p class="min-w-24 truncate">{{ eventCardVm().roomName }}</p>
+          <div class="flex gap-4 [&>p]:w-14 [&>p]:text-center">
+            <p class="total-spots">{{ eventCardVm().freeSpots }}</p>
+            <p class="busy-spots">{{ eventCardVm().bookedSpots }}</p>
+            <p class="unavabile-spots">{{ eventCardVm().reservedSpots }}</p>
+          </div>
+        </div>
+      </mat-list-item>
+    </mat-list>
+  </mat-card-content>
+
+  <mat-card-actions class="px-4 pb-4">
+    <button
+      mat-flat-button
+      type="button"
+      class="w-full"
+      [disabled]="eventCardVm().isRegistered"
+      (click)="onRegister(); $event.stopPropagation()">
+      {{ eventCardVm().isRegistered ? 'Registered' : 'Register' }}
+    </button>
+  </mat-card-actions>
+</mat-card>

@@ -1,0 +1,34 @@
+<div class="container">
+  @if (roomSig(); as room) {
+  <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Room: {{ room.name }}</h1>
+  }
+  <h2 class="pb-4 pt-8 text-2xl font-bold md:pb-8 md:pt-12">Room subjects</h2>
+
+  <free-spot-dynamic-chip-list [optionListSig]="subjectListSig()"
+    [itemListSig]="roomSubjectListSig()?   roomSubjectListSig() : []" itemKeyDysplay="name" itemLabelSig="subject"
+    (itemListSigChange)="onSubjectListChange($event)">
+  </free-spot-dynamic-chip-list>
+
+<h2 class="pb-4 pt-8 text-2xl font-bold md:pb-8 md:pt-12">Room timetable items</h2>
+@for (roomTimetableItem of timetableActivitiesPerDay(); track roomTimetableItem.day) {
+  <h2 class="pb-4 pt-8 text-xl font-bold md:pb-8 md:pt-12">{{ roomTimetableItem.day }}</h2>
+
+  @if (roomTimetableItem.vm; as vm) {
+    <free-spot-admin-room-timetable-item
+      class="grow"
+      [vm]="vm"
+      (createTimetableActivity)="onCreateTimetableActivity($event)"
+      (removeTimetableActivity)="store.removeTimetableActivity($event)"
+    >
+    </free-spot-admin-room-timetable-item>
+  }
+}
+
+  <h2 class="pb-4 pt-8 text-2xl font-bold md:pb-8 md:pt-12">Room timetable</h2>
+  <div class="flex flex-wrap gap-4 lg:items-center lg:gap-0">
+    @for(dayItem of timetablePerDay();track dayItem.day){
+    <free-spot-timetable-item class="grow" [day]="dayItem.day" [timetableItemSig]="dayItem.activities">
+    </free-spot-timetable-item>
+    }
+  </div>
+</div>

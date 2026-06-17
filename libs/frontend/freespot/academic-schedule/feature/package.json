@@ -1,0 +1,16 @@
+{
+  "name": "@free-spot/academic-schedule/feature",
+  "version": "0.0.1",
+  "sideEffects": false,
+  "peerDependencies": {
+    "@angular/common": "20.0.0",
+    "@angular/core": "20.0.0",
+    "@angular/router": "20.0.0",
+    "rxjs": "^7.8.2"
+  },
+  "dependencies": {
+    "@frontend/freespot/schedule/data-access": "0.0.1",
+    "@frontend/freespot/schedule/ui": "0.0.1",
+    "@frontend/freespot/schedule/domain": "0.0.1"
+  }
+}
