@@ -1,5 +1,5 @@
 {
-  "name": "@angular-monorepo/source",
+  "name": "@H1-group/source",
   "$schema": "node_modules/nx/schemas/project-schema.json",
   "targets": {
     "local-registry": {
