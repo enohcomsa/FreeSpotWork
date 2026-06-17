@@ -86,6 +86,7 @@ export const dependencyBoundaries = {
         roles.COMPOSITION,
         roles.ENTRY_FEATURE,
         layers.CORE_DATA_ACCESS,
+        layers.CORE_DOMAIN
       ],
     },
     {
@@ -101,6 +102,9 @@ export const dependencyBoundaries = {
       sourceTag: layers.APP,
       onlyDependOnLibsWithTags: [
         layers.FEATURE,
+        layers.CORE_FEATURE,
+        layers.CORE_DATA_ACCESS,
+        layers.CORE_DOMAIN
       ],
     },
     {
