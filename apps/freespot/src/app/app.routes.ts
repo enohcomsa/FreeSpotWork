@@ -14,20 +14,20 @@ export const appRoutes: Route[] = [
     children: [
       {
         path: 'home',
-        loadChildren: () => import('@free-spot/home/feature'),
+        loadChildren: () => import('@free-spot/home/feature').then((m) => m.default),
       },
       {
         path: 'schedule',
-        loadChildren: () => import('@free-spot/academic-schedule/feature'),
+        loadChildren: () => import('@free-spot/academic-schedule/feature').then((m) => m.default),
       },
       {
         path: 'my-bookings',
-        loadChildren: () => import('@free-spot/my-bookings/feature'),
+        loadChildren: () => import('@free-spot/my-bookings/feature').then((m) => m.default),
       },
       {
         path: 'admin',
         canActivate: [adminGuard],
-        loadChildren: () => import('@free-spot/admin/feature'),
+        loadChildren: () => import('@free-spot/admin/feature').then((m) => m.default),
       },
       {
         path: '',
