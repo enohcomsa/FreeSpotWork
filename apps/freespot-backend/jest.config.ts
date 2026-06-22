@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   displayName: 'freespot-backend',
   preset: '../../jest.preset.js',
   testEnvironment: 'node',

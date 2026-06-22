@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   displayName: 'freespot-university-map-domain',
   preset: '../../../../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],

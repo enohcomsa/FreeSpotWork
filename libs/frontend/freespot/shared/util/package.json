@@ -2,9 +2,9 @@
   "name": "@free-spot/shared/util",
   "version": "0.0.1",
   "peerDependencies": {
-    "@angular/core": "^20.0.0",
+    "@angular/core": "21",
     "@ngx-translate/core": "^16.0.4",
-    "@angular/forms": "20.0.0"
+    "@angular/forms": "21"
   },
   "sideEffects": false
 }
