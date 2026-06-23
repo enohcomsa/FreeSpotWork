@@ -12,7 +12,7 @@ const compat = new FlatCompat({
 
 export default [
   {
-    ignores: ['**/dist', '**/libs/_free-spot-client-api/**'],
+    ignores: ['**/dist', '**/libs/_free-spot-client-api/**', '**/vitest.config.*.timestamp*'],
   },
   { plugins: { '@nx': nxEslintPlugin } },
   {

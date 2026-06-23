@@ -4,18 +4,12 @@
   "projectType": "application",
   "prefix": "free-spot",
   "sourceRoot": "apps/freespot/src",
-  "tags": [
-    "platform:frontend",
-    "product:freespot",
-    "layer:app",
-    "role:app-shell"
-  ],
+  "tags": ["platform:frontend", "product:freespot", "layer:app", "role:app-shell"],
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:application",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
       "options": {
         "outputPath": "dist/apps/freespot",
         "index": "apps/freespot/src/index.html",
@@ -28,13 +22,9 @@
             "input": "apps/freespot/public"
           }
         ],
-        "styles": [
-          "apps/freespot/src/styles.scss"
-        ],
+        "styles": ["apps/freespot/src/styles.scss"],
         "stylePreprocessorOptions": {
-          "includePaths": [
-            "node_modules/"
-          ]
+          "includePaths": ["node_modules/"]
         },
         "scripts": []
       },
@@ -59,11 +49,11 @@
           "extractLicenses": false,
           "sourceMap": true
         }
-      },
-      "defaultConfiguration": "production"
+      }
     },
     "serve": {
       "executor": "@angular-devkit/build-angular:dev-server",
+      "defaultConfiguration": "development",
       "configurations": {
         "production": {
           "buildTarget": "freespot:build:production"
@@ -71,8 +61,7 @@
         "development": {
           "buildTarget": "freespot:build:development"
         }
-      },
-      "defaultConfiguration": "development"
+      }
     },
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",
@@ -83,15 +72,6 @@
     "lint": {
       "executor": "@nx/eslint:lint"
     },
-    "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": [
-        "{workspaceRoot}/coverage/{projectRoot}"
-      ],
-      "options": {
-        "jestConfig": "apps/freespot/jest.config.ts"
-      }
-    },
     "serve-static": {
       "executor": "@nx/web:file-server",
       "options": {
@@ -99,6 +79,13 @@
         "port": 4200,
         "staticFilePath": "dist/apps/freespot/browser",
         "spa": true
+      }
+    },
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "reportsDirectory": "coverage/apps/freespot"
       }
     }
   }
