@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   displayName: 'freespot-shared-util',
   preset: '../../../../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],

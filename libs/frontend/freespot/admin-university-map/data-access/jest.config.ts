@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   displayName: 'freespot-admin-university-map-data-access',
   preset: '../../../../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],

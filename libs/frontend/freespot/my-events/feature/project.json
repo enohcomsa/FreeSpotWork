@@ -6,26 +6,16 @@
   "projectType": "library",
   "release": {
     "version": {
-      "manifestRootsToUpdate": [
-        "dist/{projectRoot}"
-      ],
+      "manifestRootsToUpdate": ["dist/{projectRoot}"],
       "currentVersionResolver": "git-tag",
       "fallbackCurrentVersionResolver": "disk"
     }
   },
-  "tags": [
-    "platform:frontend",
-    "product:freespot",
-    "domain:my-events",
-    "layer:feature",
-    "role:leaf"
-  ],
+  "tags": ["platform:frontend", "product:freespot", "domain:my-events", "layer:feature", "role:leaf"],
   "targets": {
     "build": {
       "executor": "@nx/angular:package",
-      "outputs": [
-        "{workspaceRoot}/dist/{projectRoot}"
-      ],
+      "outputs": ["{workspaceRoot}/dist/{projectRoot}"],
       "options": {
         "project": "libs/frontend/freespot/my-events/feature/ng-package.json",
         "tsConfig": "libs/frontend/freespot/my-events/feature/tsconfig.lib.json"
@@ -45,9 +35,7 @@
     },
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": [
-        "{workspaceRoot}/coverage/{projectRoot}"
-      ],
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
         "jestConfig": "libs/frontend/freespot/my-events/feature/jest.config.ts",
         "tsConfig": "libs/frontend/freespot/my-events/feature/tsconfig.spec.json"
