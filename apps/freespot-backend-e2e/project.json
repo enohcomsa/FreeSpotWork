@@ -7,18 +7,6 @@
   ],
   "targets": {
     "e2e": {
-      "executor": "@nx/jest:jest",
-      "outputs": [
-        "{workspaceRoot}/coverage/{e2eProjectRoot}"
-      ],
-      "options": {
-        "jestConfig": "apps/freespot-backend-e2e/jest.config.ts",
-        "passWithNoTests": true
-      },
-      "dependsOn": [
-        "freespot-backend:build",
-        "freespot-backend:serve"
-      ]
     }
   },
   "tags": []

@@ -82,10 +82,9 @@
       }
     },
     "test": {
-      "executor": "@nx/vitest:test",
-      "outputs": ["{options.reportsDirectory}"],
+      "outputs": ["{projectRoot}/{options.coverage.reportsDirectory}", "{workspaceRoot}/coverage/apps/freespot"],
       "options": {
-        "reportsDirectory": "coverage/apps/freespot"
+        "coverage.reportsDirectory": "../../coverage/apps/freespot"
       }
     }
   }

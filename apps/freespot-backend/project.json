@@ -24,10 +24,9 @@
       }
     },
     "test": {
-      "executor": "@nx/vitest:test",
-      "outputs": ["{options.reportsDirectory}"],
+      "outputs": ["{projectRoot}/{options.coverage.reportsDirectory}", "{workspaceRoot}/coverage/apps/freespot-backend"],
       "options": {
-        "reportsDirectory": "coverage/apps/freespot-backend"
+        "coverage.reportsDirectory": "../../coverage/apps/freespot-backend"
       }
     }
   }
