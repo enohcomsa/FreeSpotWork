@@ -3,17 +3,13 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/freespot-backend/src",
   "projectType": "application",
-  "tags": [
-    "type:app"
-  ],
+  "tags": ["platform:backend", "product:freespot", "layer:app"],
   "targets": {
     "serve": {
       "continuous": true,
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
-      "dependsOn": [
-        "build"
-      ],
+      "dependsOn": ["build"],
       "options": {
         "buildTarget": "freespot-backend:build",
         "runBuildTargetDependencies": false
@@ -28,8 +24,9 @@
       }
     },
     "test": {
+      "outputs": ["{projectRoot}/{options.coverage.reportsDirectory}", "{workspaceRoot}/coverage/apps/freespot-backend"],
       "options": {
-        "passWithNoTests": true
+        "coverage.reportsDirectory": "../../coverage/apps/freespot-backend"
       }
     }
   }
