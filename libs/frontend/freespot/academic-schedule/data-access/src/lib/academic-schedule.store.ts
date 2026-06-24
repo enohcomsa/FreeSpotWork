@@ -17,14 +17,14 @@ export class AcademicScheduleStore {
   private readonly _subjects = signal<AcademicScheduleSubject[]>([]);
   private readonly _rooms = signal<AcademicScheduleRoom[]>([]);
 
-  readonly subjectListSig = this._subjects.asReadonly();
-  readonly roomListSig = this._rooms.asReadonly();
-
   private readonly activeCohortIdSig = computed<string | null>(() => {
     const user = this._authService.userSignal();
 
     return user?.semigroupCohortId ?? user?.groupCohortId ?? null;
   });
+
+  readonly subjectListSig = this._subjects.asReadonly();
+  readonly roomListSig = this._rooms.asReadonly();
 
   readonly timetableActivityListSig = computed<TimetableActivity[]>(() => {
     const cohortId = this.activeCohortIdSig();
@@ -35,8 +35,6 @@ export class AcademicScheduleStore {
 
     return this._activities().filter((activity) => activity.cohortIds.includes(cohortId));
   });
-
-
 
   init(): void {
     this._api
