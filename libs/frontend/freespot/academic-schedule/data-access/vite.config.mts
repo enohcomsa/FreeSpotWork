@@ -18,7 +18,6 @@ export default defineConfig(() => ({
     passWithNoTests: true,
     environment: 'jsdom',
     include: ['{src,tests}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
-    setupFiles: ['src/test-setup.ts'],
     reporters: ['default'],
     coverage: {
       reportsDirectory: '../../../../../coverage/libs/frontend/freespot/academic-schedule/data-access',
