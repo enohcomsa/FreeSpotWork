@@ -9,7 +9,10 @@
     "@free-spot/user-setup/feature": "0.0.1",
     "@free-spot/core/data-access": "0.0.1",
     "@free-spot/event-registration/data-access": "0.0.1",
-    "ngx-toastr": "^19.0.0"
+    "ngx-toastr": "^19.0.0",
+    "vite": "^7.3.2",
+    "@analogjs/vite-plugin-angular": "~2.1.2",
+    "vite-tsconfig-paths": "^6.1.1"
   },
   "sideEffects": false
 }

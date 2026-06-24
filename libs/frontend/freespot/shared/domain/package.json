@@ -1,6 +1,9 @@
 {
   "name": "@free-spot/shared/domain",
   "version": "0.0.1",
-  "peerDependencies": {},
+  "peerDependencies": {
+    "vitest": "^4.1.9",
+    "vite-tsconfig-paths": "^6.1.1"
+  },
   "sideEffects": false
 }

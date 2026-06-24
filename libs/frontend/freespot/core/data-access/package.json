@@ -7,7 +7,10 @@
     "@angular/router": "21",
     "rxjs": "^7.8.2",
     "@free-spot/api-client": "0.0.1",
-    "@free-spot/core/domain": "0.0.1"
+    "@free-spot/core/domain": "0.0.1",
+    "vite": "^7.3.2",
+    "@analogjs/vite-plugin-angular": "~2.1.2",
+    "vite-tsconfig-paths": "^6.1.1"
   },
   "sideEffects": false
 }
