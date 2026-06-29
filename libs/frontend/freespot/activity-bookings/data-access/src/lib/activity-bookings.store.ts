@@ -13,8 +13,8 @@ import { HttpActivityBookingsService } from './http-activity-bookings.service';
 @Injectable({ providedIn: 'root' })
 export class ActivityBookingsStore {
   private readonly _api = inject(HttpActivityBookingsService);
-
   private readonly _bookings = signal<ActivityBooking[]>([]);
+
   readonly subjects = signal<ActivityBookingSubject[]>([]);
   readonly activities = signal<ActivityBookingActivity[]>([]);
   readonly rooms = signal<ActivityBookingRoom[]>([]);
