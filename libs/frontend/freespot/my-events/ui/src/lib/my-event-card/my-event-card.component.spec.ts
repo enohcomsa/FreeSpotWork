@@ -11,6 +11,16 @@ describe('TimetableItemComponent', () => {
   let component: MyEventCardComponent;
   let fixture: ComponentFixture<MyEventCardComponent>;
 
+  const vm: MyEventCardVm = {
+    id: 'event-1',
+    name: 'Software Engineering',
+    buildingName: 'Main Building',
+    floorName: 'First Floor',
+    roomName: 'A101',
+    date: '2026-06-29',
+    startHour: 8,
+  };
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [MyEventCardComponent,
@@ -26,16 +36,6 @@ describe('TimetableItemComponent', () => {
 
     fixture = TestBed.createComponent(MyEventCardComponent);
     component = fixture.componentInstance;
-
-    const vm: MyEventCardVm = {
-      id: 'event-1',
-      name: 'Software Engineering',
-      buildingName: 'Main Building',
-      floorName: 'First Floor',
-      roomName: 'A101',
-      date: '2026-06-29',
-      startHour: 8,
-    };
 
     fixture.componentRef.setInput('vm', vm);
     fixture.detectChanges();
@@ -62,6 +62,12 @@ describe('TimetableItemComponent', () => {
     const text = fixture.nativeElement.textContent;
 
     expect(text).toContain('First Floor');
+  });
+  it('should render the room name', () => {//TO DO example
+    const element = fixture.debugElement.nativeElement.querySelector('p[data-automation-id="room-name"]');
+    const text = element.textContent;
+
+    expect(text).toContain('A101');
   });
 
 
