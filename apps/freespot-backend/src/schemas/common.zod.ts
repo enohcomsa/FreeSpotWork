@@ -12,6 +12,7 @@ import {
   USER_ROLES,
   WEEK_DAYS,
   WEEK_PARITIES,
+  TIMETABLE_ACTIVITY_ROLLOVER_JOB_STATUSES
 } from "./common.constants";
 
 extendZodWithOpenApi(z);
@@ -66,6 +67,7 @@ export const PreferredTheme = z
   .enum(PREFERRED_THEMES)
   .openapi("PreferredTheme");
 
+export const RolloverJobStatus = z.enum(TIMETABLE_ACTIVITY_ROLLOVER_JOB_STATUSES);
 
 export const SubjectIdArray = z
   .array(ObjectIdStr)

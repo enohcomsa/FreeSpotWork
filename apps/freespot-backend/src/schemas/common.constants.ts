@@ -59,3 +59,9 @@ export const PREFERRED_THEMES = [
   "DARK",
   "LIGHT",
 ] as const;
+
+export const TIMETABLE_ACTIVITY_ROLLOVER_JOB_STATUSES = [
+  "IDLE",
+  "RUNNING",
+  "FAILED",
+] as const;

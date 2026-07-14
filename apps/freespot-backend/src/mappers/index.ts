@@ -11,3 +11,4 @@ export * from "./timetable-activities.mapper";
 export * from "./users.mapper";
 export * from "./events.mapper";
 export * from "./auth.mapper";
+export * from './timetable-activity-rollover-job.mapper';

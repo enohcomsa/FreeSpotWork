@@ -7,6 +7,7 @@ import { errorHandler } from "./middlewares/error";
 import { connectToDatabase } from "./db";
 import { setupSwagger } from "./swagger";
 import cookieParser from "cookie-parser";
+import { runTimetableRolloverOnStartup, startTimetableRolloverScheduler } from "./services/timetable-rollover/timetable-activity-rollover.runner";
 
 
 async function bootstrap() {
@@ -77,6 +78,8 @@ async function bootstrap() {
 
   try {
     await connectToDatabase();
+    await runTimetableRolloverOnStartup();
+    startTimetableRolloverScheduler();
     const port = Number(process.env.PORT) || 3333;
     app.listen(port, () => {
       console.log(`API running on port ${port}`);
