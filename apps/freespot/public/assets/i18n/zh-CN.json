@@ -236,7 +236,8 @@
   "COMMON": {
     "YES": "是",
     "NO": "否",
-    "CONFIRMATION": "确认"
+    "CONFIRMATION": "确认",
+    "CONFIRM_RESCHEDULE_BOOKING": "确定要重新安排此预约吗？当前预约将会失效。"
   },
   "SHARED_UI": {
     "ADD_ITEM_TOOLTIP": "添加项目",

@@ -236,7 +236,8 @@
   "COMMON": {
     "YES": "हाँ",
     "NO": "नहीं",
-    "CONFIRMATION": "पुष्टि"
+    "CONFIRMATION": "पुष्टि",
+    "CONFIRM_RESCHEDULE_BOOKING": "क्या आप वाकई इस बुकिंग का पुनर्निर्धारण करना चाहते हैं? वर्तमान बुकिंग समाप्त हो जाएगी।"
   },
   "SHARED_UI": {
     "ADD_ITEM_TOOLTIP": "आइटम जोड़ें",

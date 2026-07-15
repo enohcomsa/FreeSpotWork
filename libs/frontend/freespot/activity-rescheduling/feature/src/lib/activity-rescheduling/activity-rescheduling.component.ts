@@ -19,7 +19,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ActivityReschedulingStore } from '@free-spot/activity-rescheduling/data-access';
 import { RescheduleOptionCardComponent, RescheduleOptionCardVm } from '@free-spot/activity-rescheduling/ui';
 import { mapToReschedulableBookingVm, mapToRescheduleOptionCardVm } from './activity-rescheduling.vm.mapper';
@@ -51,6 +51,7 @@ export class ActivityReschedulingComponent implements OnInit, OnChanges {
   private readonly destroyRef = inject(DestroyRef);
   private readonly confirmService = inject(ConfirmModalService);
   private readonly toastr = inject(ToastrService);
+  private readonly translate = inject(TranslateService);
 
   readonly selectedBookingId = input<string | null>(null);
   readonly rescheduled = output<void>();
@@ -159,7 +160,7 @@ export class ActivityReschedulingComponent implements OnInit, OnChanges {
 
   onBook(activityId: string): void {
     this.confirmService
-      .openConfirmDialog('Are you sure you want to reschedule this booking? The old booking slot will be lost.')
+      .openConfirmDialog(this.translate.instant('COMMON.CONFIRM_RESCHEDULE_BOOKING'))
       .afterClosed()
       .pipe(
         take(1),

@@ -236,7 +236,8 @@
   "COMMON": {
     "YES": "Da",
     "NO": "Nu",
-    "CONFIRMATION": "Confirmare"
+    "CONFIRMATION": "Confirmare",
+    "CONFIRM_RESCHEDULE_BOOKING": "Sigur dorești să reprogramezi această rezervare? Rezervarea curentă va fi pierdută."
   },
   "SHARED_UI": {
     "ADD_ITEM_TOOLTIP": "Adaugă element",
