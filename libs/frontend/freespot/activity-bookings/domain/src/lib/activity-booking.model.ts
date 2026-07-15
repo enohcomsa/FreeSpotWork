@@ -1,6 +1,7 @@
 import { WeekDay, WeekParity, ActivityType } from "@free-spot/shared/domain";
 
 export type ActivityBookingStatus = 'CONFIRMED' | 'WAITLISTED' | 'CANCELLED';
+export type BookingRangeFilter = | 'THIS_WEEK_FUTURE' | 'THIS_WEEK_PAST' | 'NEXT_WEEK';
 
 export type ActivityBooking = {
   id: string;

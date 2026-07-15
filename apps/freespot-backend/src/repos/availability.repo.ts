@@ -26,7 +26,7 @@ export async function findRescheduleOptions(bookingId: string): Promise<Reschedu
     rescheduledAt: booking.rescheduledAt == null ? null : booking.rescheduledAt.toISOString(),
   };
 
-  if (!booking.subjectId || !booking.programYearId || booking.activityType === "SPECIAL_EVENT") {
+  if (!booking.subjectId || !booking.programYearId || !booking.groupCohortId || !booking.semigroupCohortId || booking.activityType === "SPECIAL_EVENT") {
     return {
       currentBooking,
       items: [],
