@@ -41,6 +41,7 @@ async function bootstrap() {
 
   const allowedOrigins = [
     "http://localhost:4200",
+    "http://localhost:3333",
     "https://free-spot.vercel.app",
     "https://freespotwork.onrender.com",
     "https://shimmering-frangollo-07e558.netlify.app",
