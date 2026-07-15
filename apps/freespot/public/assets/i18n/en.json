@@ -236,7 +236,8 @@
   "COMMON": {
     "YES": "Yes",
     "NO": "No",
-    "CONFIRMATION": "Confirmation"
+    "CONFIRMATION": "Confirmation",
+    "CONFIRM_RESCHEDULE_BOOKING": "Are you sure you want to reschedule this booking? The current booking will be lost."
   },
   "SHARED_UI": {
     "ADD_ITEM_TOOLTIP": "Add item",

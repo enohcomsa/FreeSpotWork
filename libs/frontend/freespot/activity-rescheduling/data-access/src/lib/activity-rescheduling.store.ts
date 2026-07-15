@@ -80,7 +80,6 @@ export class ActivityReschedulingStore {
     if (!id) {
       return;
     }
-console.log(id);
 
     this._api
       .getRescheduleOptions$(id)

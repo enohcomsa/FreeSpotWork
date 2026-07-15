@@ -236,7 +236,8 @@
   "COMMON": {
     "YES": "예",
     "NO": "아니오",
-    "CONFIRMATION": "확인"
+    "CONFIRMATION": "확인",
+    "CONFIRM_RESCHEDULE_BOOKING": "이 예약을 다시 예약하시겠습니까? 현재 예약은 취소됩니다."
   },
   "SHARED_UI": {
     "ADD_ITEM_TOOLTIP": "항목 추가",
