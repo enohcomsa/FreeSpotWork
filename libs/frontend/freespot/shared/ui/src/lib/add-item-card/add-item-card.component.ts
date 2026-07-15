@@ -4,13 +4,14 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'free-spot-add-item-card',
 
-  imports: [MatCardModule, MatButtonModule, MatIconModule, MatTooltipModule],
+  imports: [MatCardModule, MatButtonModule, MatIconModule, MatTooltipModule, TranslateModule],
   templateUrl: './add-item-card.component.html',
   styleUrl: './add-item-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AddItemCardComponent {}
+export class AddItemCardComponent { }

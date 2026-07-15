@@ -2,6 +2,7 @@ export {
   type ActivityBooking,
   type ActivityBookingActivity,
   type ActivityBookingStatus,
+  type BookingRangeFilter,
 } from './lib/activity-booking.model';
 
 export {

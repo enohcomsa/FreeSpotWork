@@ -81,7 +81,7 @@ export class AdminAcademicStructureStore {
   }
 
   selectGroupsByProgramYearId(programYearId: string): Signal<AdminCohort[]> {
-    return computed(() => this.cohortsSig().filter((cohort) => cohort.programYearId === programYearId));
+    return computed(() => this.cohortsSig().filter((cohort) => cohort.programYearId === programYearId && !cohort.parentGroupId));
   }
 
   selectSemigroupsByParentGroupId(parentGroupId: string): Signal<AdminCohort[]> {

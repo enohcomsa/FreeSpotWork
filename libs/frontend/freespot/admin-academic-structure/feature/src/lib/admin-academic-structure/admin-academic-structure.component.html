@@ -1,15 +1,15 @@
-<h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Faculties</h1>
+<h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">{{ 'ADMIN_ACADEMIC_STRUCTURE.FACULTIES' | translate }}</h1>
 
 <mat-accordion>
   @for (faculty of facultyListSig(); track faculty.id) {
-    <mat-expansion-panel outline="true">
-      <mat-expansion-panel-header class="!h-fit !py-2">
-        <mat-panel-title>{{ faculty.name }}</mat-panel-title>
-      </mat-expansion-panel-header>
+  <mat-expansion-panel outline="true">
+    <mat-expansion-panel-header class="!h-fit !py-2">
+      <mat-panel-title>{{ faculty.name }}</mat-panel-title>
+    </mat-expansion-panel-header>
 
-      <free-spot-faculty [facultySig]="faculty"></free-spot-faculty>
-    </mat-expansion-panel>
+    <free-spot-faculty [facultySig]="faculty"></free-spot-faculty>
+  </mat-expansion-panel>
   } @empty {
-    <h3>No faculty added yet.</h3>
+  <h3>{{ 'ADMIN_ACADEMIC_STRUCTURE.NO_FACULTIES' | translate }}.</h3>
   }
 </mat-accordion>

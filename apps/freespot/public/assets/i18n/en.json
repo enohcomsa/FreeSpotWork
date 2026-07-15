@@ -5,25 +5,34 @@
     "MIN_CHARACTERS": "Min {{charNumber}} characters required!"
   },
   "NAV": {
-    "DASHBOARD": "Dashboard",
+    "HOME": "Home",
     "SCHEDULE": "Schedule",
     "MY_BOOKINGS": "My bookings",
-    "ADMIN": "Admin"
+    "ADMIN": "Admin",
+    "LOGOUT": "Logout"
+  },
+  "PROFILE_MENU": {
+    "LANGUAGE": "Language",
+    "THEME": "Theme",
+    "LIGHT_MODE": "Light mode",
+    "DARK_MODE": "Dark mode"
   },
   "LOGIN": {
     "WELCOME": "Welcome back",
     "CREATE_ACCOUNT": "Create an account",
-    "NO_ACCOUNT": "Dont't have an account?",
+    "NO_ACCOUNT": "Don't have an account?",
     "ALREADY_ACCOUNT": "Already have an account?",
     "FIRST_NAME": "First name",
     "LAST_NAME": "Last name",
     "EMAIL": "Email",
     "PASSWORD": "Password",
-    "PASSWORD_HINT": "Use 6 ore more characters",
+    "USERNAME": "Username",
+    "USERNAME_OR_EMAIL": "Username or email",
+    "PASSWORD_HINT": "Use 8 or more characters",
     "SIGNUP": "Sign up",
     "LOGIN": "Log in"
   },
-  "DINAMIC_FORM": {
+  "DYNAMIC_FORM": {
     "SELECT_BOOKING": "Select booking",
     "LABORATORY": "Laboratory",
     "COURSE": "Course",
@@ -32,16 +41,18 @@
     "SPECIAL_EVENT": "Special event",
     "EVENT_NAME": "Event name",
     "NO_EV_FOUND": "No event found",
+    "NO_BOOKINGS_FOUND": "No bookings found",
     "SUBJECT": "Subject",
     "NO_FREE_SPOTS": "No free spot available.",
     "SELECT_BOOKING_HINT": "Select a booking and search.",
-    "SEARCH": "Search"
+    "SEARCH": "Search",
+    "BOOK": "Book"
   },
   "BOOKING_SEARCH_RESULT": {
-    "FREE_SPOTS": " free spots:",
+    "FREE_SPOTS": "free spots",
     "BOOK_SPOT": "Book spot"
   },
-  "BUILDIG_PAGE": {
+  "BUILDING_PAGE": {
     "BUILDINGS": "Buildings",
     "NO_BUILDINGS_MESSAGE": "No building added yet.",
     "EVENTS": "Events",
@@ -55,11 +66,12 @@
     "ROOM": "Room",
     "FREE_DESK": "Free",
     "BOOKED": "Booked",
-    "RESERVED": "Reserved"
+    "RESERVED": "Reserved",
+    "SEE_FLOOR_TOOLTIP": "See floor"
   },
   "DASH_FLOOR_DETAIL": {
     "NO_ROOM_MSG": "No room added yet.",
-    "ROOM_NAME": "Room name :",
+    "ROOM_NAME": "Room name:",
     "BOOK_SPOT": "Book spot",
     "ROOM": "Room:"
   },
@@ -78,9 +90,181 @@
     "LABORATORY": "Laboratory",
     "COURSE": "Course",
     "PROJECT": "Project",
-    "SEMINARY": "Seminary",
+    "SEMINAR": "Seminary",
     "MY_EVENTS": "My Events",
-    "NO_BOOKINGS_MSG": "No bookings found.",
-    "DELETE": "Delete"
+    "NO_BOOKINGS_MSG": "No bookings found",
+    "NO_EVENTS_MSG": "No registered events found",
+    "DELETE": "Delete",
+    "UPCOMING_THIS_WEEK": "Upcoming this week",
+    "PAST_THIS_WEEK": "Past this week",
+    "NEXT_WEEK": "Next week",
+    "RESCHEDULE": "Reschedule"
+  },
+  "FACULTY": {
+    "SUBJECTS": "Subjects",
+    "PROGRAMS": "Programs",
+    "YEARS": "Years",
+    "PROGRAM_NAME": "Program name",
+    "PROGRAM": "Program",
+    "PROGRAM_HINT": "Select the program for this year",
+    "DEGREE": "Degree",
+    "YEAR_LABEL": "Year label",
+    "YEAR": "Year",
+    "ADD_PROGRAM": "Add program",
+    "EDIT_PROGRAM": "Edit program",
+    "ADD_YEAR": "Add year",
+    "EDIT_YEAR": "Edit year",
+    "NO_YEARS": "No years added yet",
+    "TOOLTIP": {
+      "ADD_ITEM": "Add item",
+      "REMOVE_ITEM": "Remove item",
+      "EDIT_YEAR": "Edit year",
+      "DELETE_YEAR": "Delete year"
+    }
+  },
+  "GROUP": {
+    "TITLE": "Group",
+    "STUDENTS": "Students",
+    "TIMETABLE": "Timetable",
+    "ENABLE_SEMIGROUPS": "Enable semigroups",
+    "TIMETABLE_SEMIGROUP_1": "Timetable - Semigroup 1",
+    "TIMETABLE_SEMIGROUP_2": "Timetable - Semigroup 2",
+    "TAB": {
+      "GROUP": "Group",
+      "SEMIGROUP_1": "Semigroup 1",
+      "SEMIGROUP_2": "Semigroup 2"
+    },
+    "TOOLTIP": {
+      "REMOVE_STUDENTS_BEFORE_TOGGLE": "Remove students from the group before enabling semigroups.",
+      "TOGGLE_SEMIGROUPS": "Enable or disable semigroups."
+    }
+  },
+  "ADMIN_EVENTS": {
+    "TITLE": "Events",
+    "NO_EVENTS": "No events added yet.",
+    "NEW_EVENT": "New event",
+    "EVENT_NAME_HINT": "Enter event name",
+    "EVENT_DATE": "Event date",
+    "EVENT_START_HOUR": "Event start hour",
+    "EVENT_BUILDING": "Event building",
+    "EVENT_LOCATION": "Event location",
+    "EVENT_ROOM": "Event room",
+    "EVENT_RESERVED_SPOTS": "Event reserved spots",
+    "ADD_EVENT": "Add event",
+    "EDIT_EVENT": "Edit event"
+  },
+  "EVENT_CARD": {
+    "ROOM": "Room",
+    "FREE_DESK": "Free desk",
+    "BOOKED": "Booked",
+    "RESERVED": "Reserved",
+    "EDIT": "Edit",
+    "DELETE": "Delete",
+    "REGISTER": "Register",
+    "REGISTERED": "Registered"
+  },
+  "ADMIN_TIMETABLE": {
+    "NO_ITEMS": "No timetable items added yet",
+    "WEEK_DAY": "Week day",
+    "SUBJECT_NAME": "Subject name",
+    "ACTIVITY": "Activity",
+    "ADD_ITEM": "Add timetable item",
+    "TOOLTIP": {
+      "ADD_ACTIVITY": "Add timetable activity",
+      "REMOVE_ACTIVITY": "Remove timetable activity"
+    }
+  },
+  "ADMIN_BUILDING": {
+    "TITLE": "Building",
+    "BUILDING_FLOORS": "Building floors",
+    "NEW_FLOOR": "New floor",
+    "FLOOR_NAME_HINT": "Enter floor name",
+    "ADD_FLOOR": "Add floor",
+    "EDIT_FLOOR": "Edit floor"
+  },
+  "ADMIN_FLOOR": {
+    "TITLE": "Floor",
+    "FLOOR_ROOMS": "Floor rooms",
+    "NEW_ROOM": "New room",
+    "ROOM_NAME_HINT": "Enter room name",
+    "TOTAL_SPOTS": "Total spots",
+    "UNAVAILABLE_SPOTS": "Unavailable spots",
+    "ADD_ROOM": "Add room",
+    "EDIT_ROOM": "Edit room"
+  },
+  "ADMIN_ROOM": {
+    "TITLE": "Room",
+    "ROOM_SUBJECTS": "Room subjects",
+    "ROOM_TIMETABLE_ITEMS": "Room timetable items",
+    "ROOM_TIMETABLE": "Room timetable"
+  },
+  "ADMIN_UNIVERSITY_MAP": {
+    "TITLE": "Buildings",
+    "NO_BUILDINGS": "No buildings added yet.",
+    "BUILDING_NAME": "Building name",
+    "BUILDING_NAME_HINT": "Enter building name",
+    "BUILDING_ADDRESS": "Building address",
+    "BUILDING_ADDRESS_HINT": "Enter building address",
+    "ADD_BUILDING": "Add building",
+    "EDIT_BUILDING": "Edit building"
+  },
+  "ADMIN_CARD": {
+    "OPEN": "Open",
+    "EDIT": "Edit",
+    "DELETE": "Delete",
+    "ROOMS": "Rooms",
+    "TOTAL_SPOTS": "Total spots",
+    "UNAVAILABLE_SPOTS": "Unavailable spots",
+    "TOOLTIP": {
+      "REMOVE_BUILDING": "Remove all floors before deleting the building.",
+      "REMOVE_FLOOR": "Remove all rooms before deleting the floor."
+    }
+  },
+  "ADMIN_ROOM_TIMETABLE": {
+    "START_HOUR": "Start hour",
+    "SUBJECT_NAME": "Subject name",
+    "ACTIVITY_TYPE": "Activity type",
+    "WEEK_PARITY": "Week parity",
+    "ADD_ITEM": "Add timetable item"
+  },
+  "ADMIN_USER_ACCESS": {
+    "TITLE": "Admin list",
+    "NO_ADMINS": "No admins added yet",
+    "ADD_ADMIN": "Add admin",
+    "NO_USERS_FOUND": "No users found"
+  },
+  "COMMON": {
+    "YES": "Yes",
+    "NO": "No",
+    "CONFIRMATION": "Confirmation"
+  },
+  "SHARED_UI": {
+    "ADD_ITEM_TOOLTIP": "Add item",
+    "REMOVE_ITEM_TOOLTIP": "Remove item",
+    "SEE_DETAILS_TOOLTIP": "See details",
+    "NO_ITEMS": "No items added yet",
+    "NO_OPTIONS": "No options found",
+    "NO_ITEM_FOUND": "No item found",
+    "NEW_ITEM": "New {{ item }}",
+    "ADD_ITEM": "Add {{ item }}"
+  },
+  "USER_SETUP": {
+    "FIRST_NAME": "First name",
+    "FAMILY_NAME": "Family name",
+    "FACULTY": "Faculty",
+    "PROGRAM": "Program",
+    "YEAR": "Year",
+    "GROUP": "Group",
+    "SEMIGROUP": "Semigroup",
+    "NO_SEMIGROUP": "No semigroup",
+    "UPDATE_ACCOUNT": "Update account"
+  },
+  "WEEK_PARITY": {
+    "BOTH": "Both weeks",
+    "EVEN": "Even weeks",
+    "ODD": "Odd weeks"
+  },
+  "ADMIN_ACADEMIC_STRUCTURE": {
+    "FACULTIES": "Faculties"
   }
 }

@@ -32,6 +32,7 @@ import { AddItemCardComponent } from '@free-spot/shared/ui';
 import { FormErrorMessage } from '@free-spot/shared/util';
 import { filter } from 'rxjs';
 import { toAdminEventCardVm } from './admin-event-card.vm.mapper';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'free-spot-admin-events',
@@ -46,6 +47,7 @@ import { toAdminEventCardVm } from './admin-event-card.vm.mapper';
     MatDatepickerModule,
     MatSelectModule,
     AdminEventCardComponent,
+    TranslateModule
   ],
   templateUrl: './admin-events.component.html',
   styleUrl: './admin-events.component.scss',

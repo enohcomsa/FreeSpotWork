@@ -5,10 +5,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { AdminUniversityMapRoomVm } from './admin-room-card.vm';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'free-spot-admin-room-card',
-  imports: [MatCardModule, MatIconModule, MatButtonModule, MatDividerModule],
+  imports: [MatCardModule, MatIconModule, MatButtonModule, MatDividerModule, TranslateModule],
   templateUrl: './admin-room-card.component.html',
   styleUrl: './admin-room-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

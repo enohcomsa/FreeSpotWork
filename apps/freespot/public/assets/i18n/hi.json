@@ -1,0 +1,270 @@
+{
+  "FORM_ERROR": {
+    "FIELD_REQUIRED": "यह फ़ील्ड आवश्यक है!",
+    "EMAIL": "अमान्य ईमेल!",
+    "MIN_CHARACTERS": "कम से कम {{charNumber}} अक्षर आवश्यक हैं!"
+  },
+  "NAV": {
+    "HOME": "होम",
+    "SCHEDULE": "समय-सारिणी",
+    "MY_BOOKINGS": "मेरी बुकिंग",
+    "ADMIN": "प्रशासक",
+    "LOGOUT": "लॉग आउट"
+  },
+  "PROFILE_MENU": {
+    "LANGUAGE": "भाषा",
+    "THEME": "थीम",
+    "LIGHT_MODE": "हल्की थीम",
+    "DARK_MODE": "गहरी थीम"
+  },
+  "LOGIN": {
+    "WELCOME": "वापसी पर स्वागत है",
+    "CREATE_ACCOUNT": "खाता बनाएँ",
+    "NO_ACCOUNT": "क्या आपका खाता नहीं है?",
+    "ALREADY_ACCOUNT": "क्या आपका पहले से खाता है?",
+    "FIRST_NAME": "पहला नाम",
+    "LAST_NAME": "अंतिम नाम",
+    "EMAIL": "ईमेल",
+    "PASSWORD": "पासवर्ड",
+    "USERNAME": "उपयोगकर्ता नाम",
+    "USERNAME_OR_EMAIL": "उपयोगकर्ता नाम या ईमेल",
+    "PASSWORD_HINT": "8 या अधिक अक्षरों का उपयोग करें",
+    "SIGNUP": "साइन अप करें",
+    "LOGIN": "लॉग इन करें"
+  },
+  "DYNAMIC_FORM": {
+    "SELECT_BOOKING": "बुकिंग चुनें",
+    "LABORATORY": "प्रयोगशाला",
+    "COURSE": "कोर्स",
+    "PROJECT": "प्रोजेक्ट",
+    "SEMINAR": "सेमिनार",
+    "SPECIAL_EVENT": "विशेष कार्यक्रम",
+    "EVENT_NAME": "कार्यक्रम का नाम",
+    "NO_EV_FOUND": "कोई कार्यक्रम नहीं मिला",
+    "NO_BOOKINGS_FOUND": "कोई बुकिंग नहीं मिली",
+    "SUBJECT": "विषय",
+    "NO_FREE_SPOTS": "कोई खाली स्थान उपलब्ध नहीं है।",
+    "SELECT_BOOKING_HINT": "एक बुकिंग चुनें और खोजें।",
+    "SEARCH": "खोजें",
+    "BOOK": "बुक करें"
+  },
+  "BOOKING_SEARCH_RESULT": {
+    "FREE_SPOTS": "खाली स्थान",
+    "BOOK_SPOT": "स्थान बुक करें"
+  },
+  "BUILDING_PAGE": {
+    "BUILDINGS": "भवन",
+    "NO_BUILDINGS_MESSAGE": "अभी तक कोई भवन नहीं जोड़ा गया है।",
+    "EVENTS": "कार्यक्रम",
+    "NO_EVENTS_MESSAGE": "अभी तक कोई कार्यक्रम नहीं जोड़ा गया है।"
+  },
+  "BUILDING_CARD": {
+    "FLOOR": "मंज़िल",
+    "TOTAL": "कुल",
+    "UNAVAILABLE": "अनुपलब्ध",
+    "NO_FLOOR_MSG": "अभी तक कोई मंज़िल नहीं जोड़ी गई है",
+    "ROOM": "कक्ष",
+    "FREE_DESK": "खाली",
+    "BOOKED": "बुक किया गया",
+    "RESERVED": "आरक्षित",
+    "SEE_FLOOR_TOOLTIP": "मंज़िल देखें"
+  },
+  "DASH_FLOOR_DETAIL": {
+    "NO_ROOM_MSG": "अभी तक कोई कक्ष नहीं जोड़ा गया है।",
+    "ROOM_NAME": "कक्ष का नाम:",
+    "BOOK_SPOT": "स्थान बुक करें",
+    "ROOM": "कक्ष:"
+  },
+  "TIMETABLE_ITEM": {
+    "MONDAY": "सोमवार",
+    "TUESDAY": "मंगलवार",
+    "WEDNESDAY": "बुधवार",
+    "THURSDAY": "गुरुवार",
+    "FRIDAY": "शुक्रवार",
+    "SATURDAY": "शनिवार",
+    "SUNDAY": "रविवार"
+  },
+  "BOOKINGS_PAGE": {
+    "MY_BOOKINGS": "मेरी बुकिंग",
+    "ALL": "सभी बुकिंग",
+    "LABORATORY": "प्रयोगशाला",
+    "COURSE": "कोर्स",
+    "PROJECT": "प्रोजेक्ट",
+    "SEMINAR": "सेमिनार",
+    "MY_EVENTS": "मेरे कार्यक्रम",
+    "NO_BOOKINGS_MSG": "कोई बुकिंग नहीं मिली।",
+    "NO_EVENTS_MSG": "कोई पंजीकृत कार्यक्रम नहीं मिला।",
+    "DELETE": "हटाएँ",
+    "UPCOMING_THIS_WEEK": "इस सप्ताह आने वाले",
+    "PAST_THIS_WEEK": "इस सप्ताह बीत चुके",
+    "NEXT_WEEK": "अगला सप्ताह",
+    "RESCHEDULE": "पुनर्निर्धारित करें"
+  },
+  "FACULTY": {
+    "SUBJECTS": "विषय",
+    "PROGRAMS": "कार्यक्रम",
+    "YEARS": "वर्ष",
+    "PROGRAM_NAME": "कार्यक्रम का नाम",
+    "PROGRAM": "कार्यक्रम",
+    "PROGRAM_HINT": "इस वर्ष के लिए कार्यक्रम चुनें",
+    "DEGREE": "डिग्री",
+    "YEAR_LABEL": "वर्ष लेबल",
+    "YEAR": "वर्ष",
+    "ADD_PROGRAM": "कार्यक्रम जोड़ें",
+    "EDIT_PROGRAM": "कार्यक्रम संपादित करें",
+    "ADD_YEAR": "वर्ष जोड़ें",
+    "EDIT_YEAR": "वर्ष संपादित करें",
+    "NO_YEARS": "अभी तक कोई वर्ष नहीं जोड़ा गया है",
+    "TOOLTIP": {
+      "ADD_ITEM": "आइटम जोड़ें",
+      "REMOVE_ITEM": "आइटम हटाएँ",
+      "EDIT_YEAR": "वर्ष संपादित करें",
+      "DELETE_YEAR": "वर्ष हटाएँ"
+    }
+  },
+  "GROUP": {
+    "TITLE": "समूह",
+    "STUDENTS": "छात्र",
+    "TIMETABLE": "समय-सारिणी",
+    "ENABLE_SEMIGROUPS": "उपसमूह सक्षम करें",
+    "TIMETABLE_SEMIGROUP_1": "समय-सारिणी - उपसमूह 1",
+    "TIMETABLE_SEMIGROUP_2": "समय-सारिणी - उपसमूह 2",
+    "TAB": {
+      "GROUP": "समूह",
+      "SEMIGROUP_1": "उपसमूह 1",
+      "SEMIGROUP_2": "उपसमूह 2"
+    },
+    "TOOLTIP": {
+      "REMOVE_STUDENTS_BEFORE_TOGGLE": "उपसमूह सक्षम करने से पहले समूह से छात्रों को हटाएँ।",
+      "TOGGLE_SEMIGROUPS": "उपसमूह सक्षम या अक्षम करें।"
+    }
+  },
+  "ADMIN_EVENTS": {
+    "TITLE": "कार्यक्रम",
+    "NO_EVENTS": "अभी तक कोई कार्यक्रम नहीं जोड़ा गया है।",
+    "NEW_EVENT": "नया कार्यक्रम",
+    "EVENT_NAME_HINT": "कार्यक्रम का नाम दर्ज करें",
+    "EVENT_DATE": "कार्यक्रम की तिथि",
+    "EVENT_START_HOUR": "कार्यक्रम प्रारंभ समय",
+    "EVENT_BUILDING": "कार्यक्रम भवन",
+    "EVENT_LOCATION": "कार्यक्रम का स्थान",
+    "EVENT_ROOM": "कार्यक्रम कक्ष",
+    "EVENT_RESERVED_SPOTS": "आरक्षित स्थान",
+    "ADD_EVENT": "कार्यक्रम जोड़ें",
+    "EDIT_EVENT": "कार्यक्रम संपादित करें"
+  },
+  "EVENT_CARD": {
+    "ROOM": "कक्ष",
+    "FREE_DESK": "खाली",
+    "BOOKED": "बुक किया गया",
+    "RESERVED": "आरक्षित",
+    "EDIT": "संपादित करें",
+    "DELETE": "हटाएँ",
+    "REGISTER": "पंजीकरण करें",
+    "REGISTERED": "पंजीकृत"
+  },
+  "ADMIN_TIMETABLE": {
+    "NO_ITEMS": "अभी तक समय-सारिणी में कोई आइटम नहीं जोड़ा गया है",
+    "WEEK_DAY": "सप्ताह का दिन",
+    "SUBJECT_NAME": "विषय का नाम",
+    "ACTIVITY": "गतिविधि",
+    "ADD_ITEM": "समय-सारिणी आइटम जोड़ें",
+    "TOOLTIP": {
+      "ADD_ACTIVITY": "समय-सारिणी गतिविधि जोड़ें",
+      "REMOVE_ACTIVITY": "समय-सारिणी गतिविधि हटाएँ"
+    }
+  },
+  "ADMIN_BUILDING": {
+    "TITLE": "भवन",
+    "BUILDING_FLOORS": "भवन की मंज़िलें",
+    "NEW_FLOOR": "नई मंज़िल",
+    "FLOOR_NAME_HINT": "मंज़िल का नाम दर्ज करें",
+    "ADD_FLOOR": "मंज़िल जोड़ें",
+    "EDIT_FLOOR": "मंज़िल संपादित करें"
+  },
+  "ADMIN_FLOOR": {
+    "TITLE": "मंज़िल",
+    "FLOOR_ROOMS": "मंज़िल के कक्ष",
+    "NEW_ROOM": "नया कक्ष",
+    "ROOM_NAME_HINT": "कक्ष का नाम दर्ज करें",
+    "TOTAL_SPOTS": "कुल स्थान",
+    "UNAVAILABLE_SPOTS": "अनुपलब्ध स्थान",
+    "ADD_ROOM": "कक्ष जोड़ें",
+    "EDIT_ROOM": "कक्ष संपादित करें"
+  },
+  "ADMIN_ROOM": {
+    "TITLE": "कक्ष",
+    "ROOM_SUBJECTS": "कक्ष के विषय",
+    "ROOM_TIMETABLE_ITEMS": "कक्ष समय-सारिणी आइटम",
+    "ROOM_TIMETABLE": "कक्ष समय-सारिणी"
+  },
+  "ADMIN_UNIVERSITY_MAP": {
+    "TITLE": "भवन",
+    "NO_BUILDINGS": "अभी तक कोई भवन नहीं जोड़ा गया है।",
+    "BUILDING_NAME": "भवन का नाम",
+    "BUILDING_NAME_HINT": "भवन का नाम दर्ज करें",
+    "BUILDING_ADDRESS": "भवन का पता",
+    "BUILDING_ADDRESS_HINT": "भवन का पता दर्ज करें",
+    "ADD_BUILDING": "भवन जोड़ें",
+    "EDIT_BUILDING": "भवन संपादित करें"
+  },
+  "ADMIN_CARD": {
+    "OPEN": "खोलें",
+    "EDIT": "संपादित करें",
+    "DELETE": "हटाएँ",
+    "ROOMS": "कक्ष",
+    "TOTAL_SPOTS": "कुल स्थान",
+    "UNAVAILABLE_SPOTS": "अनुपलब्ध स्थान",
+    "TOOLTIP": {
+      "REMOVE_BUILDING": "भवन हटाने से पहले सभी मंज़िलें हटाएँ।",
+      "REMOVE_FLOOR": "मंज़िल हटाने से पहले सभी कक्ष हटाएँ।"
+    }
+  },
+  "ADMIN_ROOM_TIMETABLE": {
+    "START_HOUR": "प्रारंभ समय",
+    "SUBJECT_NAME": "विषय का नाम",
+    "ACTIVITY_TYPE": "गतिविधि का प्रकार",
+    "WEEK_PARITY": "सप्ताह की समता",
+    "ADD_ITEM": "समय-सारिणी आइटम जोड़ें"
+  },
+  "ADMIN_USER_ACCESS": {
+    "TITLE": "प्रशासकों की सूची",
+    "NO_ADMINS": "अभी तक कोई प्रशासक नहीं जोड़ा गया है",
+    "ADD_ADMIN": "प्रशासक जोड़ें",
+    "NO_USERS_FOUND": "कोई उपयोगकर्ता नहीं मिला"
+  },
+  "COMMON": {
+    "YES": "हाँ",
+    "NO": "नहीं",
+    "CONFIRMATION": "पुष्टि"
+  },
+  "SHARED_UI": {
+    "ADD_ITEM_TOOLTIP": "आइटम जोड़ें",
+    "REMOVE_ITEM_TOOLTIP": "आइटम हटाएँ",
+    "SEE_DETAILS_TOOLTIP": "विवरण देखें",
+    "NO_ITEMS": "अभी तक कोई आइटम नहीं जोड़ा गया है",
+    "NO_OPTIONS": "कोई विकल्प उपलब्ध नहीं है",
+    "NO_ITEM_FOUND": "कोई आइटम नहीं मिला",
+    "NEW_ITEM": "नया {{ item }}",
+    "ADD_ITEM": "{{ item }} जोड़ें"
+  },
+  "USER_SETUP": {
+    "FIRST_NAME": "पहला नाम",
+    "FAMILY_NAME": "अंतिम नाम",
+    "FACULTY": "संकाय",
+    "PROGRAM": "कार्यक्रम",
+    "YEAR": "वर्ष",
+    "GROUP": "समूह",
+    "SEMIGROUP": "उपसमूह",
+    "NO_SEMIGROUP": "कोई उपसमूह नहीं",
+    "UPDATE_ACCOUNT": "खाता अपडेट करें"
+  },
+  "WEEK_PARITY": {
+    "BOTH": "दोनों सप्ताह",
+    "EVEN": "सम सप्ताह",
+    "ODD": "विषम सप्ताह"
+  },
+  "ADMIN_ACADEMIC_STRUCTURE": {
+    "FACULTIES": "संकाय"
+  }
+}

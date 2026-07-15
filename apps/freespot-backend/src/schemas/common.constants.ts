@@ -50,12 +50,15 @@ export const USER_ROLES = [
   "MEMBER",
 ] as const;
 
-export const PREFERRED_LANGUAGES = [
-  "en",
-  "ro",
-] as const;
+export const PREFERRED_LANGUAGES = ['en', 'ro', 'hi', 'zh-CN', 'ko'] as const;
 
 export const PREFERRED_THEMES = [
   "DARK",
   "LIGHT",
+] as const;
+
+export const TIMETABLE_ACTIVITY_ROLLOVER_JOB_STATUSES = [
+  "IDLE",
+  "RUNNING",
+  "FAILED",
 ] as const;

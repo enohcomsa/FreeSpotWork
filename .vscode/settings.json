@@ -7,4 +7,5 @@
   "prettier.singleQuote": true,
   "prettier.singleAttributePerLine": true,
   "prettier.trailingComma": "none",
+  "js/ts.tsdk.path": "node_modules\\typescript\\lib",
 }

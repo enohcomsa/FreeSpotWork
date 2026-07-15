@@ -1,0 +1,270 @@
+{
+  "FORM_ERROR": {
+    "FIELD_REQUIRED": "이 필드는 필수입니다!",
+    "EMAIL": "유효하지 않은 이메일입니다!",
+    "MIN_CHARACTERS": "최소 {{charNumber}}자 이상 입력해야 합니다!"
+  },
+  "NAV": {
+    "HOME": "홈",
+    "SCHEDULE": "시간표",
+    "MY_BOOKINGS": "내 예약",
+    "ADMIN": "관리자",
+    "LOGOUT": "로그아웃"
+  },
+  "PROFILE_MENU": {
+    "LANGUAGE": "언어",
+    "THEME": "테마",
+    "LIGHT_MODE": "라이트 모드",
+    "DARK_MODE": "다크 모드"
+  },
+  "LOGIN": {
+    "WELCOME": "다시 오신 것을 환영합니다",
+    "CREATE_ACCOUNT": "계정 만들기",
+    "NO_ACCOUNT": "계정이 없으신가요?",
+    "ALREADY_ACCOUNT": "이미 계정이 있으신가요?",
+    "FIRST_NAME": "이름",
+    "LAST_NAME": "성",
+    "EMAIL": "이메일",
+    "PASSWORD": "비밀번호",
+    "USERNAME": "사용자 이름",
+    "USERNAME_OR_EMAIL": "사용자 이름 또는 이메일",
+    "PASSWORD_HINT": "8자 이상 입력하세요",
+    "SIGNUP": "회원가입",
+    "LOGIN": "로그인"
+  },
+  "DYNAMIC_FORM": {
+    "SELECT_BOOKING": "예약 선택",
+    "LABORATORY": "실험실",
+    "COURSE": "강의",
+    "PROJECT": "프로젝트",
+    "SEMINAR": "세미나",
+    "SPECIAL_EVENT": "특별 행사",
+    "EVENT_NAME": "행사 이름",
+    "NO_EV_FOUND": "행사를 찾을 수 없습니다",
+    "NO_BOOKINGS_FOUND": "예약을 찾을 수 없습니다",
+    "SUBJECT": "과목",
+    "NO_FREE_SPOTS": "이용 가능한 자리가 없습니다.",
+    "SELECT_BOOKING_HINT": "예약을 선택한 후 검색하세요.",
+    "SEARCH": "검색",
+    "BOOK": "예약"
+  },
+  "BOOKING_SEARCH_RESULT": {
+    "FREE_SPOTS": "남은 자리",
+    "BOOK_SPOT": "자리 예약"
+  },
+  "BUILDING_PAGE": {
+    "BUILDINGS": "건물",
+    "NO_BUILDINGS_MESSAGE": "아직 등록된 건물이 없습니다.",
+    "EVENTS": "행사",
+    "NO_EVENTS_MESSAGE": "아직 등록된 행사가 없습니다."
+  },
+  "BUILDING_CARD": {
+    "FLOOR": "층",
+    "TOTAL": "전체",
+    "UNAVAILABLE": "사용 불가",
+    "NO_FLOOR_MSG": "등록된 층이 없습니다",
+    "ROOM": "강의실",
+    "FREE_DESK": "빈자리",
+    "BOOKED": "예약됨",
+    "RESERVED": "예약 전용",
+    "SEE_FLOOR_TOOLTIP": "층 보기"
+  },
+  "DASH_FLOOR_DETAIL": {
+    "NO_ROOM_MSG": "등록된 강의실이 없습니다.",
+    "ROOM_NAME": "강의실 이름:",
+    "BOOK_SPOT": "자리 예약",
+    "ROOM": "강의실:"
+  },
+  "TIMETABLE_ITEM": {
+    "MONDAY": "월요일",
+    "TUESDAY": "화요일",
+    "WEDNESDAY": "수요일",
+    "THURSDAY": "목요일",
+    "FRIDAY": "금요일",
+    "SATURDAY": "토요일",
+    "SUNDAY": "일요일"
+  },
+  "BOOKINGS_PAGE": {
+    "MY_BOOKINGS": "내 예약",
+    "ALL": "전체 예약",
+    "LABORATORY": "실험실",
+    "COURSE": "강의",
+    "PROJECT": "프로젝트",
+    "SEMINAR": "세미나",
+    "MY_EVENTS": "내 행사",
+    "NO_BOOKINGS_MSG": "예약이 없습니다.",
+    "NO_EVENTS_MSG": "등록한 행사가 없습니다.",
+    "DELETE": "삭제",
+    "UPCOMING_THIS_WEEK": "이번 주 예정",
+    "PAST_THIS_WEEK": "이번 주 지난 일정",
+    "NEXT_WEEK": "다음 주",
+    "RESCHEDULE": "일정 변경"
+  },
+  "FACULTY": {
+    "SUBJECTS": "과목",
+    "PROGRAMS": "학과",
+    "YEARS": "학년",
+    "PROGRAM_NAME": "학과 이름",
+    "PROGRAM": "학과",
+    "PROGRAM_HINT": "해당 학년의 학과를 선택하세요",
+    "DEGREE": "학위",
+    "YEAR_LABEL": "학년 이름",
+    "YEAR": "학년",
+    "ADD_PROGRAM": "학과 추가",
+    "EDIT_PROGRAM": "학과 수정",
+    "ADD_YEAR": "학년 추가",
+    "EDIT_YEAR": "학년 수정",
+    "NO_YEARS": "등록된 학년이 없습니다",
+    "TOOLTIP": {
+      "ADD_ITEM": "항목 추가",
+      "REMOVE_ITEM": "항목 삭제",
+      "EDIT_YEAR": "학년 수정",
+      "DELETE_YEAR": "학년 삭제"
+    }
+  },
+  "GROUP": {
+    "TITLE": "그룹",
+    "STUDENTS": "학생",
+    "TIMETABLE": "시간표",
+    "ENABLE_SEMIGROUPS": "세부 그룹 사용",
+    "TIMETABLE_SEMIGROUP_1": "시간표 - 세부 그룹 1",
+    "TIMETABLE_SEMIGROUP_2": "시간표 - 세부 그룹 2",
+    "TAB": {
+      "GROUP": "그룹",
+      "SEMIGROUP_1": "세부 그룹 1",
+      "SEMIGROUP_2": "세부 그룹 2"
+    },
+    "TOOLTIP": {
+      "REMOVE_STUDENTS_BEFORE_TOGGLE": "세부 그룹을 활성화하기 전에 학생을 그룹에서 제거하세요.",
+      "TOGGLE_SEMIGROUPS": "세부 그룹을 활성화하거나 비활성화합니다."
+    }
+  },
+  "ADMIN_EVENTS": {
+    "TITLE": "행사",
+    "NO_EVENTS": "등록된 행사가 없습니다.",
+    "NEW_EVENT": "새 행사",
+    "EVENT_NAME_HINT": "행사 이름을 입력하세요",
+    "EVENT_DATE": "행사 날짜",
+    "EVENT_START_HOUR": "행사 시작 시간",
+    "EVENT_BUILDING": "행사 건물",
+    "EVENT_LOCATION": "행사 위치",
+    "EVENT_ROOM": "행사 강의실",
+    "EVENT_RESERVED_SPOTS": "예약된 자리",
+    "ADD_EVENT": "행사 추가",
+    "EDIT_EVENT": "행사 수정"
+  },
+  "EVENT_CARD": {
+    "ROOM": "강의실",
+    "FREE_DESK": "빈자리",
+    "BOOKED": "예약됨",
+    "RESERVED": "예약 전용",
+    "EDIT": "수정",
+    "DELETE": "삭제",
+    "REGISTER": "등록",
+    "REGISTERED": "등록 완료"
+  },
+  "ADMIN_TIMETABLE": {
+    "NO_ITEMS": "등록된 시간표 항목이 없습니다",
+    "WEEK_DAY": "요일",
+    "SUBJECT_NAME": "과목명",
+    "ACTIVITY": "활동",
+    "ADD_ITEM": "시간표 항목 추가",
+    "TOOLTIP": {
+      "ADD_ACTIVITY": "시간표 활동 추가",
+      "REMOVE_ACTIVITY": "시간표 활동 삭제"
+    }
+  },
+  "ADMIN_BUILDING": {
+    "TITLE": "건물",
+    "BUILDING_FLOORS": "건물 층",
+    "NEW_FLOOR": "새 층",
+    "FLOOR_NAME_HINT": "층 이름을 입력하세요",
+    "ADD_FLOOR": "층 추가",
+    "EDIT_FLOOR": "층 수정"
+  },
+  "ADMIN_FLOOR": {
+    "TITLE": "층",
+    "FLOOR_ROOMS": "층의 강의실",
+    "NEW_ROOM": "새 강의실",
+    "ROOM_NAME_HINT": "강의실 이름을 입력하세요",
+    "TOTAL_SPOTS": "전체 자리",
+    "UNAVAILABLE_SPOTS": "사용 불가 자리",
+    "ADD_ROOM": "강의실 추가",
+    "EDIT_ROOM": "강의실 수정"
+  },
+  "ADMIN_ROOM": {
+    "TITLE": "강의실",
+    "ROOM_SUBJECTS": "강의실 과목",
+    "ROOM_TIMETABLE_ITEMS": "강의실 시간표 항목",
+    "ROOM_TIMETABLE": "강의실 시간표"
+  },
+  "ADMIN_UNIVERSITY_MAP": {
+    "TITLE": "건물",
+    "NO_BUILDINGS": "등록된 건물이 없습니다.",
+    "BUILDING_NAME": "건물 이름",
+    "BUILDING_NAME_HINT": "건물 이름을 입력하세요",
+    "BUILDING_ADDRESS": "건물 주소",
+    "BUILDING_ADDRESS_HINT": "건물 주소를 입력하세요",
+    "ADD_BUILDING": "건물 추가",
+    "EDIT_BUILDING": "건물 수정"
+  },
+  "ADMIN_CARD": {
+    "OPEN": "열기",
+    "EDIT": "수정",
+    "DELETE": "삭제",
+    "ROOMS": "강의실",
+    "TOTAL_SPOTS": "전체 자리",
+    "UNAVAILABLE_SPOTS": "사용 불가 자리",
+    "TOOLTIP": {
+      "REMOVE_BUILDING": "건물을 삭제하기 전에 모든 층을 삭제하세요.",
+      "REMOVE_FLOOR": "층을 삭제하기 전에 모든 강의실을 삭제하세요."
+    }
+  },
+  "ADMIN_ROOM_TIMETABLE": {
+    "START_HOUR": "시작 시간",
+    "SUBJECT_NAME": "과목명",
+    "ACTIVITY_TYPE": "활동 유형",
+    "WEEK_PARITY": "주차 구분",
+    "ADD_ITEM": "시간표 항목 추가"
+  },
+  "ADMIN_USER_ACCESS": {
+    "TITLE": "관리자 목록",
+    "NO_ADMINS": "등록된 관리자가 없습니다",
+    "ADD_ADMIN": "관리자 추가",
+    "NO_USERS_FOUND": "사용자를 찾을 수 없습니다"
+  },
+  "COMMON": {
+    "YES": "예",
+    "NO": "아니오",
+    "CONFIRMATION": "확인"
+  },
+  "SHARED_UI": {
+    "ADD_ITEM_TOOLTIP": "항목 추가",
+    "REMOVE_ITEM_TOOLTIP": "항목 삭제",
+    "SEE_DETAILS_TOOLTIP": "세부 정보 보기",
+    "NO_ITEMS": "등록된 항목이 없습니다",
+    "NO_OPTIONS": "사용 가능한 옵션이 없습니다",
+    "NO_ITEM_FOUND": "항목을 찾을 수 없습니다",
+    "NEW_ITEM": "새 {{ item }}",
+    "ADD_ITEM": "{{ item }} 추가"
+  },
+  "USER_SETUP": {
+    "FIRST_NAME": "이름",
+    "FAMILY_NAME": "성",
+    "FACULTY": "학부",
+    "PROGRAM": "학과",
+    "YEAR": "학년",
+    "GROUP": "그룹",
+    "SEMIGROUP": "세부 그룹",
+    "NO_SEMIGROUP": "세부 그룹 없음",
+    "UPDATE_ACCOUNT": "계정 업데이트"
+  },
+  "WEEK_PARITY": {
+    "BOTH": "매주",
+    "EVEN": "짝수 주",
+    "ODD": "홀수 주"
+  },
+  "ADMIN_ACADEMIC_STRUCTURE": {
+    "FACULTIES": "학부"
+  }
+}

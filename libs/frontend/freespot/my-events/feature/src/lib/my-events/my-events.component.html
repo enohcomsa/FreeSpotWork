@@ -6,6 +6,6 @@
   @for (event of events(); track event.id) {
   <free-spot-my-event-card [vm]="event" (remove)="remove($event)"></free-spot-my-event-card>
   } @empty {
-  <h3>{{ 'BOOKINGS_PAGE.NO_BOOKINGS_MSG' | translate }}</h3>
+  <h3>{{ 'BOOKINGS_PAGE.NO_EVENTS_MSG' | translate }}.</h3>
   }
 </div>

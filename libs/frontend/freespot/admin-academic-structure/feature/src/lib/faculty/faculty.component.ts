@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, Signal, viewChild, input } from '@angular/core';
 import { AbstractControl, FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
@@ -9,6 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { TranslateModule } from '@ngx-translate/core';
 import { ConfirmModalService } from '@free-spot/shared/ui';
 import { DynamicChipListComponent, AddItemCardComponent } from '@free-spot/shared/ui';
 import { FormErrorMessage } from '@free-spot/shared/util';
@@ -46,6 +48,7 @@ import {
     MatButtonModule,
     MatChipsModule,
     AddItemCardComponent,
+    TranslateModule,
   ],
   templateUrl: './faculty.component.html',
   styleUrl: './faculty.component.scss',
@@ -56,6 +59,7 @@ export class FacultyComponent {
   private readonly formErrorMessage = inject(FormErrorMessage);
   private readonly confirmService = inject(ConfirmModalService);
   private readonly store = inject(AdminAcademicStructureStore);
+  private readonly router = inject(Router);
 
   editProgramRef = viewChild.required<ElementRef>('editProgram');
   editYearRef = viewChild.required<ElementRef>('editYear');
@@ -261,6 +265,10 @@ export class FacultyComponent {
     if (removedCohort) {
       this.store.deleteCohort(removedCohort.id);
     }
+  }
+
+  navigateToGroup(group: AdminCohort) {
+    this.router.navigate(['/admin', 'group', group.id]);
   }
 
   private resetProgramFormState(): void {

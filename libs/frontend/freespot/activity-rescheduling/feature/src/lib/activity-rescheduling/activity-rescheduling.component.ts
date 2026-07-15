@@ -92,20 +92,11 @@ export class ActivityReschedulingComponent implements OnInit, OnChanges {
 
 
   private readonly _bookingOptions = computed<ReschedulableBookingVm[]>(() =>
-    this._store.bookings()
-      .filter((booking) => booking.activityType !== 'SPECIAL_EVENT')
-      // .filter((b) => { //TODO: uncomment after timetable date autoupdate
-      //   const activity = this.timetableActivityService.getSignalById(b.activityId)();
-      //   if (!activity?.date) return false;
+    this._store.reschedulableBookings().map((booking) => {
 
-      //   const start = new Date(activity.date);
-      //   start.setHours(activity.startHour, 0, 0, 0);
 
-      //   return start.getTime() > Date.now();
-      // })
-      .map((booking) => {
-        return mapToReschedulableBookingVm(booking, this._store.subjects(), this._store.activities());
-      })
+      return mapToReschedulableBookingVm(booking, this._store.subjects(), this._store.activities());
+    })
   );
   private readonly autocompleteOptionSelected = signal(false);
 

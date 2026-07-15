@@ -1,6 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "ignoreDeprecations": "5.0",//Remove after TS 6 upgrade
     "rootDir": ".",
     "sourceMap": true,
     "declaration": false,

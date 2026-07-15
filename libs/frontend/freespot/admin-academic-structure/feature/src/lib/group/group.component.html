@@ -1,17 +1,24 @@
 <div class="container">
   @if (groupSig(); as group) {
-  <h1 class="pt-4 text-3xl font-bold md:pb-8 md:pt-12">Group: {{ group.name }}</h1>
+  <h1 class="pt-4 text-3xl font-bold md:pb-8 md:pt-12">
+    {{ 'GROUP.TITLE' | translate }}: {{ group.name }}
+  </h1>
   }
 
-  <mat-slide-toggle #semigroupsToggle [matTooltip]="(true)? 'remove students from group before toggle semigroups' : 'click to toogle semigoups'
-    " matTooltipPosition="below" matTooltipPositionAtOrigin="true" matTooltipShowDelay="500" [disabled]=" false"
+  <mat-slide-toggle #semigroupsToggle [matTooltip]="
+      true
+        ? ('GROUP.TOOLTIP.REMOVE_STUDENTS_BEFORE_TOGGLE' | translate)
+        : ('GROUP.TOOLTIP.TOGGLE_SEMIGROUPS' | translate)
+    " matTooltipPosition="below" matTooltipPositionAtOrigin="true" matTooltipShowDelay="500" [disabled]="false"
     class="pb-8" [checked]="semigroupsEnabledSig()" (change)="toggleSemigroups($event.checked)">
-    Enable semigroups
+    {{ 'GROUP.ENABLE_SEMIGROUPS' | translate }}
   </mat-slide-toggle>
 
   <mat-tab-group dynamicHeight>
-    <mat-tab label="Group">
-      <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Students</h1>
+    <mat-tab [label]="'GROUP.TAB.GROUP' | translate">
+      <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">
+        {{ 'GROUP.STUDENTS' | translate }}
+      </h1>
 
       @if (!semigroupsEnabledSig()) {
       <free-spot-dynamic-chip-list [itemListSig]="groupUserListSig()"
@@ -24,8 +31,10 @@
         [itemKeyDysplay]="'firstName'" [itemKeyDysplay2]="'familyName'">
       </free-spot-dynamic-chip-list>
 
-      @if ( semigroupListSig().length) {
-      <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Timetable semigroup 1</h1>
+      @if (semigroupListSig().length) {
+      <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">
+        {{ 'GROUP.TIMETABLE_SEMIGROUP_1' | translate }}
+      </h1>
       <div class="flex flex-wrap gap-4 lg:gap-0">
         @for (dayItem of timetableSemigroup1PerDay(); track dayItem.day) {
         <free-spot-timetable-item class="grow" [day]="dayItem.day"
@@ -33,7 +42,9 @@
         }
       </div>
 
-      <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Timetable semigroup 2</h1>
+      <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">
+        {{ 'GROUP.TIMETABLE_SEMIGROUP_2' | translate }}
+      </h1>
       <div class="flex flex-wrap gap-4 lg:gap-0">
         @for (dayItem of timetableSemigroup2PerDay(); track dayItem.day) {
         <free-spot-timetable-item class="grow" [day]="dayItem.day"
@@ -44,7 +55,9 @@
       }
 
       @if (!semigroupsEnabledSig()) {
-      <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Timetable</h1>
+      <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">
+        {{ 'GROUP.TIMETABLE' | translate }}
+      </h1>
       <free-spot-admin-group-timetable [groupIdSig]="groupIdSig()" [subjectListSig]="facultySubjectListSig() || []">
       </free-spot-admin-group-timetable>
       <div class="flex flex-wrap gap-4 lg:gap-0">
@@ -56,15 +69,19 @@
       }
     </mat-tab>
 
-    <mat-tab label="Semigroup 1" [disabled]="!semigroupsEnabledSig()">
+    <mat-tab [label]="'GROUP.TAB.SEMIGROUP_1' | translate" [disabled]="!semigroupsEnabledSig()">
       @if (semigroupListSig().length) {
-      <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Students</h1>
+      <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">
+        {{ 'GROUP.STUDENTS' | translate }}
+      </h1>
       <free-spot-dynamic-chip-list [itemListSig]="semigroup1UserListSig()"
         (itemListSigChange)="updateSemigroup1StudentList($event)" [optionListSig]="availableSemigroup1UserListSig()"
         itemLabelSig="student" [itemKeyDysplay]="'firstName'" [itemKeyDysplay2]="'familyName'">
       </free-spot-dynamic-chip-list>
 
-      <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Timetable</h1>
+      <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">
+        {{ 'GROUP.TIMETABLE' | translate }}
+      </h1>
       <free-spot-admin-semigroup-timetable [semiGroupIdSig]="semiGroup1IdSig()"
         [subjectListSig]="facultySubjectListSig() || []">
       </free-spot-admin-semigroup-timetable>
@@ -77,15 +94,19 @@
       }
     </mat-tab>
 
-    <mat-tab label="Semigroup 2" [disabled]="!semigroupsEnabledSig()">
+    <mat-tab [label]="'GROUP.TAB.SEMIGROUP_2' | translate" [disabled]="!semigroupsEnabledSig()">
       @if (semigroupListSig().length) {
-      <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Students</h1>
+      <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">
+        {{ 'GROUP.STUDENTS' | translate }}
+      </h1>
       <free-spot-dynamic-chip-list [itemListSig]="semigroup2UserListSig()"
         (itemListSigChange)="updateSemigroup2StudentList($event)" [optionListSig]="availableSemigroup2UserListSig()"
         itemLabelSig="student" [itemKeyDysplay]="'firstName'" [itemKeyDysplay2]="'familyName'">
       </free-spot-dynamic-chip-list>
 
-      <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Timetable</h1>
+      <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">
+        {{ 'GROUP.TIMETABLE' | translate }}
+      </h1>
       <free-spot-admin-semigroup-timetable [semiGroupIdSig]="semiGroup2IdSig()"
         [subjectListSig]="facultySubjectListSig() || []">
       </free-spot-admin-semigroup-timetable>

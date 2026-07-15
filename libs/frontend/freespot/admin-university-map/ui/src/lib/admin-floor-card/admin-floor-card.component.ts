@@ -6,10 +6,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AdminUniversityMapFloorVm } from './admin-floor-card.vm'
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'free-spot-admin-floor-card',
-  imports: [MatCardModule, MatIconModule, MatButtonModule, MatDividerModule, MatTooltipModule],
+  imports: [MatCardModule, MatIconModule, MatButtonModule, MatDividerModule, MatTooltipModule, TranslateModule],
   templateUrl: './admin-floor-card.component.html',
   styleUrl: './admin-floor-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

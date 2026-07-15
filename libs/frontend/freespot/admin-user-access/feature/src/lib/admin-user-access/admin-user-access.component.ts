@@ -10,7 +10,8 @@ import { MatInputModule } from '@angular/material/input';
 import { AdminUserAccessStore } from '@free-spot/admin-user-access/data-access';
 import { type AdminUser } from '@free-spot/admin-user-access/domain';
 import { ConfirmModalService } from '@free-spot/shared/ui';
-import { FormErrorMessage } from  '@free-spot/shared/util';
+import { FormErrorMessage } from '@free-spot/shared/util';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'free-spot-admin-user-access',
@@ -23,6 +24,7 @@ import { FormErrorMessage } from  '@free-spot/shared/util';
     MatChipsModule,
     MatAutocompleteModule,
     MatIconModule,
+    TranslateModule,
   ],
   templateUrl: './admin-user-access.component.html',
   styleUrl: './admin-user-access.component.scss',

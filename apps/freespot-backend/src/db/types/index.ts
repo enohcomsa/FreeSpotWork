@@ -11,3 +11,4 @@ export * from "./timetable-activities.db";
 export * from "./users.db";
 export * from "./events.db";
 export * from "./refresh-tokens.db";
+export * from './timetable-activity-rollover-job.db';

@@ -10,6 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ConfirmModalService } from "../confirm-modal.service";
 import { FormErrorMessage } from '@free-spot/shared/util';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'free-spot-dynamic-chip-list',
@@ -24,6 +25,7 @@ import { FormErrorMessage } from '@free-spot/shared/util';
     MatInputModule,
     MatFormFieldModule,
     MatTooltipModule,
+    TranslateModule,
   ],
   templateUrl: './dynamic-chip-list.component.html',
   styleUrl: './dynamic-chip-list.component.scss',

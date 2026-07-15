@@ -3,10 +3,11 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { AdminFaculty } from '@free-spot/admin-academic-structure/domain';
 import { AdminAcademicStructureStore } from '@free-spot/admin-academic-structure/data-access';
 import { FacultyComponent } from '../faculty/faculty.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'free-spot-admin-academic-structure',
-  imports: [MatExpansionModule, FacultyComponent],
+  imports: [MatExpansionModule, FacultyComponent, TranslateModule],
   templateUrl: './admin-academic-structure.component.html',
   styleUrl: './admin-academic-structure.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

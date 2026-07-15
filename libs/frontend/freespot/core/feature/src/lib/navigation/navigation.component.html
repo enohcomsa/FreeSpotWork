@@ -8,7 +8,7 @@
     <div class="flex items-center">
       <a mat-flat-button class="!hidden !text-sm !tracking-tight md:!flex lg:!text-base" routerLink="/home"
         routerLinkActive="free-spot-toolbar-active-link">
-        {{ 'NAV.home' | translate }}
+        {{ 'NAV.HOME' | translate }}
       </a>
 
       <a mat-flat-button class="!hidden !text-sm !tracking-tight md:!flex lg:!text-base" routerLink="/schedule"
@@ -113,32 +113,43 @@
 </main>
 
 <mat-menu #profileMenu="matMenu" xPosition="after">
-  <button mat-menu-item (click)="onLangChange('en')">
+  <div class="px-4 py-2 text-xs font-semibold opacity-70">
+    {{ 'PROFILE_MENU.LANGUAGE' | translate }}
+  </div>
+
+  @for (language of languages; track language.code) {
+  <button mat-menu-item (click)="onLangChange(language.code)">
     <mat-icon>language</mat-icon>
-    <span [ngClass]="{ 'lang-color': currentUserSig()?.preferredLanguage === 'en' }">EN</span>
+    <span [ngClass]="{ 'lang-color': currentUserSig()?.preferredLanguage === language.code }">
+      {{ language.label }}
+    </span>
+  </button>
+  }
+
+  <mat-divider></mat-divider>
+
+  <div class="px-4 py-2 text-xs font-semibold opacity-70">
+    {{ 'PROFILE_MENU.THEME' | translate }}
+  </div>
+
+  <button mat-menu-item (click)="onThemeChange('LIGHT')">
+    <mat-icon [ngClass]="{ 'primary-icon': currentUserSig()?.preferredTheme === 'LIGHT' }">
+      light_mode
+    </mat-icon>
+    <span>{{ 'PROFILE_MENU.LIGHT_MODE' | translate }}</span>
   </button>
 
-  <button mat-menu-item (click)="onLangChange('ro')">
-    <mat-icon>language</mat-icon>
-    <span [ngClass]="{ 'lang-color': currentUserSig()?.preferredLanguage === 'ro' }">RO</span>
+  <button mat-menu-item (click)="onThemeChange('DARK')">
+    <mat-icon [ngClass]="{ 'primary-icon': currentUserSig()?.preferredTheme === 'DARK' }">
+      dark_mode
+    </mat-icon>
+    <span>{{ 'PROFILE_MENU.DARK_MODE' | translate }}</span>
   </button>
 
-  <button class="theme-menu-button h-12 w-full px-3">
-    <div class="flex w-full items-center justify-between">
-      <mat-icon [ngClass]="{ 'primary-icon': currentUserSig()?.preferredTheme === 'LIGHT' }" class="mr-3 cursor-pointer"
-        (click)="onThemeChange('LIGHT')">
-        light_mode
-      </mat-icon>
-
-      <mat-icon [ngClass]="{ 'primary-icon': currentUserSig()?.preferredTheme === 'DARK' }" class="mr-5 cursor-pointer"
-        (click)="onThemeChange('DARK')">
-        dark_mode
-      </mat-icon>
-    </div>
-  </button>
+  <mat-divider></mat-divider>
 
   <button mat-menu-item (click)="logout()">
     <mat-icon>logout</mat-icon>
-    <span class="mx-2">Logout</span>
+    <span>{{ 'NAV.LOGOUT' | translate }}</span>
   </button>
 </mat-menu>

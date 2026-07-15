@@ -1,20 +1,25 @@
-<h2 class="pb-2 pt-4 text-xl font-bold md:pb-4 md:pt-8">Subjects</h2>
+<h2 class="pb-2 pt-4 text-xl font-bold md:pb-4 md:pt-8">
+  {{ 'FACULTY.SUBJECTS' | translate }}
+</h2>
 
 <free-spot-dynamic-chip-list [itemListSig]="facultySubjectListSig()" (itemListSigChange)="onSubjectListChanged($event)"
   [optionListSig]="subjectListSig()" itemLabelSig="subject" itemKeyDysplay="name">
 </free-spot-dynamic-chip-list>
 
-<h2 class="pb-4 pt-4 text-xl font-bold md:pb-4 md:pt-8">Programs</h2>
+<h2 class="pb-4 pt-4 text-xl font-bold md:pb-4 md:pt-8">
+  {{ 'FACULTY.PROGRAMS' | translate }}
+</h2>
+
 <mat-chip-set>
   @for (program of facultyProgramsSig(); track program.id) {
   <mat-chip removable="true" (click)="onEditingProgram(program)">{{program.name}}
-    <button matChipRemove (click)="onDeleteProgram(program.id)" matTooltip="click to remove item"
+    <button matChipRemove (click)="onDeleteProgram(program.id)" [matTooltip]="'FACULTY.TOOLTIP.REMOVE_ITEM' | translate"
       matTooltipPosition="right" matTooltipShowDelay="500">
       <mat-icon class="delete-icon">cancel</mat-icon>
     </button>
   </mat-chip>
   }
-  <button mat-icon-button class="ml-2" (click)="onAddingProgram()" matTooltip="click to add item"
+  <button mat-icon-button class="ml-2" (click)="onAddingProgram()" [matTooltip]="'FACULTY.TOOLTIP.ADD_ITEM' | translate"
     matTooltipPosition="right" matTooltipShowDelay="500">
     <mat-icon class="primary-icon mb-2">add</mat-icon>
   </button>
@@ -26,13 +31,13 @@
     (ngSubmit)="editingProgram ? onEditProgram() : onAddProgram()">
 
     <mat-form-field>
-      <mat-label>Program name</mat-label>
+      <mat-label>{{ 'FACULTY.PROGRAM_NAME' | translate }}</mat-label>
       <input matInput formControlName="name" />
       <mat-error>{{ displayError(addProgramFormGroup.controls['name']) }}</mat-error>
     </mat-form-field>
 
     <mat-form-field>
-      <mat-label>Degree</mat-label>
+      <mat-label>{{ 'FACULTY.DEGREE' | translate }}</mat-label>
       <mat-select formControlName="degree">
         @for( degree of degreeOptions; track degree){
         <mat-option [value]="degree">{{ degree }}</mat-option>
@@ -42,37 +47,44 @@
 
     <div class="flex flex-auto flex-col md:flex-row md:items-center md:gap-4">
       <button mat-flat-button type="submit" class="sm:mb-5" [disabled]="!addProgramFormGroup.valid">
-        {{ editingProgram ? 'Edit program' : 'Add program' }}
+        {{ (editingProgram ? 'FACULTY.EDIT_PROGRAM' : 'FACULTY.ADD_PROGRAM') | translate }}
       </button>
     </div>
   </form>
   }
 </div>
 
-<h2 class="pb-2 pt-4 text-xl font-bold md:pb-4 md:pt-8">Years</h2>
+<h2 class="pb-2 pt-4 text-xl font-bold md:pb-4 md:pt-8">
+  {{ 'FACULTY.YEARS' | translate }}
+</h2>
+
 @for (year of facultyProgramYearsSig(); track year.id) {
 <mat-list>
   <div mat-subheader class="flex cursor-pointer items-center gap-2 text-lg font-bold">
-    <button type="button" (click)="onEditingYear(year)" class="inline text-left cursor-pointer" matTooltip="click to edit year"
-      matTooltipPosition="right" matTooltipPositionAtOrigin="true" matTooltipShowDelay="500">
+    <button type="button" (click)="onEditingYear(year)" class="inline text-left cursor-pointer"
+      [matTooltip]="'FACULTY.TOOLTIP.EDIT_YEAR' | translate" matTooltipPosition="right"
+      matTooltipPositionAtOrigin="true" matTooltipShowDelay="500">
       {{ getProgramById(year.programId)?.name }} ({{ getProgramById(year.programId)?.degree }})-{{ year.label }}
     </button>
-    <mat-icon class="delete-icon cursor-pointer" (click)="onDeleteYear(year.id)" matTooltip="click to delete year"
-      matTooltipPosition="right" matTooltipPositionAtOrigin="true" matTooltipShowDelay="500">
+    <mat-icon class="delete-icon cursor-pointer" (click)="onDeleteYear(year.id)"
+      [matTooltip]="'FACULTY.TOOLTIP.DELETE_YEAR' | translate" matTooltipPosition="right"
+      matTooltipPositionAtOrigin="true" matTooltipShowDelay="500">
       cancel
     </mat-icon>
   </div>
 
-  <free-spot-dynamic-chip-list [itemListSig]="getCohortNameListSignalByYearId(year.id)()"
+  <free-spot-dynamic-chip-list [selectable]="true" [itemListSig]="getCohortNameListSignalByYearId(year.id)()"
     (itemListSigChange)="onYearGroupListChange($event, year.id)" itemKeyDysplay="name" itemLabelSig="group"
-    itemDinamicRoute="group/">
+    (itemSelected)="navigateToGroup($event)">
   </free-spot-dynamic-chip-list>
 
   <mat-divider></mat-divider>
 </mat-list>
 } @empty {
 <mat-list>
-  <div mat-subheader class="text-lg font-bold">No year added yet</div>
+  <div mat-subheader class="text-lg font-bold">
+    {{ 'FACULTY.NO_YEARS' | translate }}
+  </div>
   <mat-divider></mat-divider>
 </mat-list>
 }
@@ -83,8 +95,8 @@
     (ngSubmit)="editingYear ? onEditYear() : onAddYear()">
 
     <mat-form-field>
-      <mat-label>Program</mat-label>
-      <mat-hint>Enter faculty year name</mat-hint>
+      <mat-label>{{ 'FACULTY.PROGRAM' | translate }}</mat-label>
+      <mat-hint>{{ 'FACULTY.PROGRAM_HINT' | translate }}</mat-hint>
       <mat-select formControlName="programId">
         @for( program of facultyProgramsSig(); track program.id){
         <mat-option [value]="program.id">{{ program.name }}</mat-option>
@@ -93,19 +105,19 @@
     </mat-form-field>
 
     <mat-form-field>
-      <mat-label>Year label</mat-label>
+      <mat-label>{{ 'FACULTY.YEAR_LABEL' | translate }}</mat-label>
       <input matInput formControlName="label" />
       <mat-error>{{ displayError(addYearFormGroup.controls['label']) }}</mat-error>
     </mat-form-field>
 
     <mat-form-field>
-      <mat-label>Year</mat-label>
+      <mat-label>{{ 'FACULTY.YEAR' | translate }}</mat-label>
       <input matInput type="number" formControlName="yearNumber">
     </mat-form-field>
 
     <div class="flex flex-auto flex-col md:flex-row md:items-center md:gap-4">
       <button mat-flat-button type="submit" class="sm:mb-5" [disabled]="!addYearFormGroup.valid">
-        {{ editingYear ? 'Edit year' : 'Add year' }}
+        {{ (editingYear ? 'FACULTY.EDIT_YEAR' : 'FACULTY.ADD_YEAR') | translate }}
       </button>
     </div>
   </form>

@@ -4,7 +4,10 @@
   "peerDependencies": {
     "@angular/core": "21",
     "@ngx-translate/core": "^16.0.4",
-    "@angular/forms": "21"
+    "@angular/forms": "21",
+    "vite": "^7.3.2",
+    "@analogjs/vite-plugin-angular": "~2.1.2",
+    "vite-tsconfig-paths": "^6.1.1"
   },
   "sideEffects": false
 }

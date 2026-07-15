@@ -1,29 +1,38 @@
 {
   "FORM_ERROR": {
-    "FIELD_REQUIRED": "Acest camp e obligatoriu!",
+    "FIELD_REQUIRED": "Acest câmp este obligatoriu!",
     "EMAIL": "Email invalid!",
-    "MIN_CHARACTERS": "Minin {{charNumber}} caractere sunt necesare!"
+    "MIN_CHARACTERS": "Sunt necesare minimum {{charNumber}} caractere!"
   },
   "NAV": {
-    "DASHBOARD": "Dashboard",
+    "HOME": "Acasă",
     "SCHEDULE": "Orar",
     "MY_BOOKINGS": "Rezervările mele",
-    "ADMIN": "Administrator"
+    "ADMIN": "Admin",
+    "LOGOUT": "Deconectare"
+  },
+  "PROFILE_MENU": {
+    "LANGUAGE": "Limbă",
+    "THEME": "Temă",
+    "LIGHT_MODE": "Temă luminoasă",
+    "DARK_MODE": "Temă întunecată"
   },
   "LOGIN": {
     "WELCOME": "Bine ai revenit",
     "CREATE_ACCOUNT": "Creează un cont",
-    "NO_ACCOUNT": "Nu ai un cont?",
+    "NO_ACCOUNT": "Nu ai cont?",
     "ALREADY_ACCOUNT": "Ai deja un cont?",
     "FIRST_NAME": "Prenume",
     "LAST_NAME": "Nume",
     "EMAIL": "Email",
     "PASSWORD": "Parolă",
-    "PASSWORD_HINT": "Folosește 6 sau mai multe caractere",
+    "USERNAME": "Nume de utilizator",
+    "USERNAME_OR_EMAIL": "Nume de utilizator sau email",
+    "PASSWORD_HINT": "Folosește 8 sau mai multe caractere",
     "SIGNUP": "Înscrie-te",
     "LOGIN": "Conectează-te"
   },
-  "DINAMIC_FORM": {
+  "DYNAMIC_FORM": {
     "SELECT_BOOKING": "Selectează rezervarea",
     "LABORATORY": "Laborator",
     "COURSE": "Curs",
@@ -32,16 +41,18 @@
     "SPECIAL_EVENT": "Eveniment special",
     "EVENT_NAME": "Numele evenimentului",
     "NO_EV_FOUND": "Niciun eveniment găsit",
+    "NO_BOOKINGS_FOUND": "Nicio rezervare găsită",
     "SUBJECT": "Materie",
     "NO_FREE_SPOTS": "Nu sunt locuri disponibile.",
     "SELECT_BOOKING_HINT": "Selectează o rezervare și caută.",
-    "SEARCH": "Caută"
+    "SEARCH": "Caută",
+    "BOOK": "Rezervă"
   },
   "BOOKING_SEARCH_RESULT": {
-    "FREE_SPOTS": "locuri libere:",
+    "FREE_SPOTS": "locuri libere",
     "BOOK_SPOT": "Rezervă loc"
   },
-  "BUILDIG_PAGE": {
+  "BUILDING_PAGE": {
     "BUILDINGS": "Clădiri",
     "NO_BUILDINGS_MESSAGE": "Nu a fost adăugată nicio clădire încă.",
     "EVENTS": "Evenimente",
@@ -55,11 +66,12 @@
     "ROOM": "Sală",
     "FREE_DESK": "Liber",
     "BOOKED": "Ocupat",
-    "RESERVED": "Rezervat"
+    "RESERVED": "Rezervat",
+    "SEE_FLOOR_TOOLTIP": "Vezi etajul"
   },
   "DASH_FLOOR_DETAIL": {
-    "NO_ROOM_MSG": "Nu a fost adăugat încă nici-o sală.",
-    "ROOM_NAME": "Numele sălii :",
+    "NO_ROOM_MSG": "Nu a fost adăugată nicio sală încă.",
+    "ROOM_NAME": "Numele sălii:",
     "BOOK_SPOT": "Rezervă loc",
     "ROOM": "Sala:"
   },
@@ -78,9 +90,181 @@
     "LABORATORY": "Laborator",
     "COURSE": "Curs",
     "PROJECT": "Proiect",
-    "SEMINARY": "Seminar",
+    "SEMINAR": "Seminar",
     "MY_EVENTS": "Evenimentele mele",
     "NO_BOOKINGS_MSG": "Nu au fost găsite rezervări.",
-    "DELETE": "Șterge"
+    "NO_EVENTS_MSG": "Nu au fost găsite evenimente înregistrate.",
+    "DELETE": "Șterge",
+    "UPCOMING_THIS_WEEK": "Urmează săptămâna aceasta",
+    "PAST_THIS_WEEK": "Trecute săptămâna aceasta",
+    "NEXT_WEEK": "Săptămâna viitoare",
+    "RESCHEDULE": "Reprogramează"
+  },
+  "FACULTY": {
+    "SUBJECTS": "Materii",
+    "PROGRAMS": "Programe",
+    "YEARS": "Ani",
+    "PROGRAM_NAME": "Numele programului",
+    "PROGRAM": "Program",
+    "PROGRAM_HINT": "Selectează programul pentru acest an",
+    "DEGREE": "Nivel de studii",
+    "YEAR_LABEL": "Eticheta anului",
+    "YEAR": "An",
+    "ADD_PROGRAM": "Adaugă program",
+    "EDIT_PROGRAM": "Editează program",
+    "ADD_YEAR": "Adaugă an",
+    "EDIT_YEAR": "Editează an",
+    "NO_YEARS": "Nu au fost adăugați ani încă",
+    "TOOLTIP": {
+      "ADD_ITEM": "Adaugă element",
+      "REMOVE_ITEM": "Elimină element",
+      "EDIT_YEAR": "Editează anul",
+      "DELETE_YEAR": "Șterge anul"
+    }
+  },
+  "GROUP": {
+    "TITLE": "Grupă",
+    "STUDENTS": "Studenți",
+    "TIMETABLE": "Orar",
+    "ENABLE_SEMIGROUPS": "Activează semigrupele",
+    "TIMETABLE_SEMIGROUP_1": "Orar - Semigrupa 1",
+    "TIMETABLE_SEMIGROUP_2": "Orar - Semigrupa 2",
+    "TAB": {
+      "GROUP": "Grupă",
+      "SEMIGROUP_1": "Semigrupa 1",
+      "SEMIGROUP_2": "Semigrupa 2"
+    },
+    "TOOLTIP": {
+      "REMOVE_STUDENTS_BEFORE_TOGGLE": "Elimină studenții din grupă înainte de activarea semigrupelor.",
+      "TOGGLE_SEMIGROUPS": "Activează sau dezactivează semigrupele."
+    }
+  },
+  "ADMIN_EVENTS": {
+    "TITLE": "Evenimente",
+    "NO_EVENTS": "Nu au fost adăugate evenimente încă.",
+    "NEW_EVENT": "Eveniment nou",
+    "EVENT_NAME_HINT": "Introdu numele evenimentului",
+    "EVENT_DATE": "Data evenimentului",
+    "EVENT_START_HOUR": "Ora de început",
+    "EVENT_BUILDING": "Clădirea evenimentului",
+    "EVENT_LOCATION": "Locația evenimentului",
+    "EVENT_ROOM": "Sala evenimentului",
+    "EVENT_RESERVED_SPOTS": "Locuri rezervate",
+    "ADD_EVENT": "Adaugă eveniment",
+    "EDIT_EVENT": "Editează eveniment"
+  },
+  "EVENT_CARD": {
+    "ROOM": "Sală",
+    "FREE_DESK": "Liber",
+    "BOOKED": "Ocupat",
+    "RESERVED": "Rezervat",
+    "EDIT": "Editează",
+    "DELETE": "Șterge",
+    "REGISTER": "Înregistrează-te",
+    "REGISTERED": "Înregistrat"
+  },
+  "ADMIN_TIMETABLE": {
+    "NO_ITEMS": "Nu au fost adăugate elemente în orar încă",
+    "WEEK_DAY": "Ziua săptămânii",
+    "SUBJECT_NAME": "Numele materiei",
+    "ACTIVITY": "Activitate",
+    "ADD_ITEM": "Adaugă element în orar",
+    "TOOLTIP": {
+      "ADD_ACTIVITY": "Adaugă activitate în orar",
+      "REMOVE_ACTIVITY": "Elimină activitatea din orar"
+    }
+  },
+  "ADMIN_BUILDING": {
+    "TITLE": "Clădire",
+    "BUILDING_FLOORS": "Etajele clădirii",
+    "NEW_FLOOR": "Etaj nou",
+    "FLOOR_NAME_HINT": "Introdu numele etajului",
+    "ADD_FLOOR": "Adaugă etaj",
+    "EDIT_FLOOR": "Editează etaj"
+  },
+  "ADMIN_FLOOR": {
+    "TITLE": "Etaj",
+    "FLOOR_ROOMS": "Sălile etajului",
+    "NEW_ROOM": "Sală nouă",
+    "ROOM_NAME_HINT": "Introdu numele sălii",
+    "TOTAL_SPOTS": "Locuri totale",
+    "UNAVAILABLE_SPOTS": "Locuri indisponibile",
+    "ADD_ROOM": "Adaugă sală",
+    "EDIT_ROOM": "Editează sală"
+  },
+  "ADMIN_ROOM": {
+    "TITLE": "Sală",
+    "ROOM_SUBJECTS": "Materiile sălii",
+    "ROOM_TIMETABLE_ITEMS": "Elementele orarului sălii",
+    "ROOM_TIMETABLE": "Orarul sălii"
+  },
+  "ADMIN_UNIVERSITY_MAP": {
+    "TITLE": "Clădiri",
+    "NO_BUILDINGS": "Nu au fost adăugate clădiri încă.",
+    "BUILDING_NAME": "Numele clădirii",
+    "BUILDING_NAME_HINT": "Introdu numele clădirii",
+    "BUILDING_ADDRESS": "Adresa clădirii",
+    "BUILDING_ADDRESS_HINT": "Introdu adresa clădirii",
+    "ADD_BUILDING": "Adaugă clădire",
+    "EDIT_BUILDING": "Editează clădire"
+  },
+  "ADMIN_CARD": {
+    "OPEN": "Deschide",
+    "EDIT": "Editează",
+    "DELETE": "Șterge",
+    "ROOMS": "Săli",
+    "TOTAL_SPOTS": "Locuri totale",
+    "UNAVAILABLE_SPOTS": "Locuri indisponibile",
+    "TOOLTIP": {
+      "REMOVE_BUILDING": "Elimină toate etajele înainte de a șterge clădirea.",
+      "REMOVE_FLOOR": "Elimină toate sălile înainte de a șterge etajul."
+    }
+  },
+  "ADMIN_ROOM_TIMETABLE": {
+    "START_HOUR": "Ora de început",
+    "SUBJECT_NAME": "Numele materiei",
+    "ACTIVITY_TYPE": "Tipul activității",
+    "WEEK_PARITY": "Paritatea săptămânii",
+    "ADD_ITEM": "Adaugă element în orar"
+  },
+  "ADMIN_USER_ACCESS": {
+    "TITLE": "Lista administratorilor",
+    "NO_ADMINS": "Nu au fost adăugați administratori încă",
+    "ADD_ADMIN": "Adaugă administrator",
+    "NO_USERS_FOUND": "Nu au fost găsiți utilizatori"
+  },
+  "COMMON": {
+    "YES": "Da",
+    "NO": "Nu",
+    "CONFIRMATION": "Confirmare"
+  },
+  "SHARED_UI": {
+    "ADD_ITEM_TOOLTIP": "Adaugă element",
+    "REMOVE_ITEM_TOOLTIP": "Elimină element",
+    "SEE_DETAILS_TOOLTIP": "Vezi detalii",
+    "NO_ITEMS": "Nu au fost adăugate elemente încă",
+    "NO_OPTIONS": "Nu au fost găsite opțiuni",
+    "NO_ITEM_FOUND": "Nu a fost găsit niciun element",
+    "NEW_ITEM": "{{ item }} nou",
+    "ADD_ITEM": "Adaugă {{ item }}"
+  },
+  "USER_SETUP": {
+    "FIRST_NAME": "Prenume",
+    "FAMILY_NAME": "Nume",
+    "FACULTY": "Facultate",
+    "PROGRAM": "Program",
+    "YEAR": "An",
+    "GROUP": "Grupă",
+    "SEMIGROUP": "Semigrupă",
+    "NO_SEMIGROUP": "Fără semigrupă",
+    "UPDATE_ACCOUNT": "Actualizează contul"
+  },
+  "WEEK_PARITY": {
+    "BOTH": "Ambele săptămâni",
+    "EVEN": "Săptămâni pare",
+    "ODD": "Săptămâni impare"
+  },
+  "ADMIN_ACADEMIC_STRUCTURE": {
+    "FACULTIES": "Facultăți"
   }
 }

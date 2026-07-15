@@ -1,6 +1,6 @@
 @if (buildingCardsSig().length) {
   <h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">
-    {{ 'BUILDIG_PAGE.BUILDINGS' | translate }}
+    {{ 'BUILDING_PAGE.BUILDINGS' | translate }}
   </h1>
 
   <div class="flex flex-col gap-8 pb-4 lg:grid lg:grid-cols-2">
@@ -10,7 +10,7 @@
         (floorClicked)="onFloorClick($event)">
       </free-spot-building-card>
     } @empty {
-      <h3>{{ 'BUILDIG_PAGE.NO_BUILDINGS_MESSAGE' | translate }}</h3>
+      <h3>{{ 'BUILDING_PAGE.NO_BUILDINGS_MESSAGE' | translate }}</h3>
     }
   </div>
 }

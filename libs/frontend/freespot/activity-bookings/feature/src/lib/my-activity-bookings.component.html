@@ -2,22 +2,36 @@
   {{ 'BOOKINGS_PAGE.MY_BOOKINGS' | translate }}
 </h1>
 
+<mat-chip-listbox multiple [value]="selectedBookingRanges()" (change)="setBookingRangeFilters($event.value)">
+  <mat-chip-option value="THIS_WEEK_FUTURE">
+    {{ 'BOOKINGS_PAGE.UPCOMING_THIS_WEEK' | translate }}
+  </mat-chip-option>
+
+  <mat-chip-option value="THIS_WEEK_PAST">
+    {{ 'BOOKINGS_PAGE.PAST_THIS_WEEK' | translate }}
+  </mat-chip-option>
+
+  <mat-chip-option value="NEXT_WEEK">
+    {{ 'BOOKINGS_PAGE.NEXT_WEEK' | translate }}
+  </mat-chip-option>
+</mat-chip-listbox>
+
 <mat-chip-listbox class="mb-4">
   <mat-chip-option selected (click)="setFilter(null)">
     {{ 'BOOKINGS_PAGE.ALL' | translate }}
   </mat-chip-option>
 
   @for (activityType of activityTypes; track activityType) {
-    <mat-chip-option (click)="setFilter(activityType)">
-      {{ 'BOOKINGS_PAGE.' + activityType | translate }}
-    </mat-chip-option>
+  <mat-chip-option (click)="setFilter(activityType)">
+    {{ 'BOOKINGS_PAGE.' + activityType | translate }}
+  </mat-chip-option>
   }
 </mat-chip-listbox>
 
 <div class="grid grid-cols-1 gap-8 pb-4 md:grid-cols-2 xl:grid-cols-3">
   @for (booking of bookings(); track booking.id) {
-    <free-spot-activity-booking-card [vm]="booking" (reschedule)="selectBooking($event)" />
+  <free-spot-activity-booking-card [vm]="booking" (reschedule)="selectBooking($event)" />
   } @empty {
-    <h3>{{ 'BOOKINGS_PAGE.NO_BOOKINGS_MSG' | translate }}</h3>
+  <h3>{{ 'BOOKINGS_PAGE.NO_BOOKINGS_MSG' | translate }}</h3>
   }
 </div>

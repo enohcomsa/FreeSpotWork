@@ -28,6 +28,7 @@ import { LoadingComponent } from '../loading/loading.component';
     MatMenuModule,
     MatIconModule,
     TranslateModule,
+    MatDividerModule,
   ],
   templateUrl: './navigation.component.html',
   styleUrl: './navigation.component.scss',
@@ -41,7 +42,13 @@ export class NavigationComponent {
 
   opened = false;
 
-  readonly languages: Language[] = ['ro', 'en'];
+  readonly languages = [
+    { code: 'en', label: 'English' },
+    { code: 'ro', label: 'Română' },
+    { code: 'hi', label: 'हिन्दी' },
+    { code: 'zh-CN', label: '中文' },
+    { code: 'ko', label: '한국어' },
+  ] as const;
 
   readonly themes: Theme[] = [
     'LIGHT',

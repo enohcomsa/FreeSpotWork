@@ -15,6 +15,7 @@ import {
   type AdminRoomTimetableSubjectVm,
   type CreateAdminRoomTimetableActivityVm,
 } from './admin-room-timetable-item.vm';
+import { TranslateModule } from '@ngx-translate/core';
 
 type AddTimetableActivityForm = FormGroup<{
   startHour: FormControl<number>;
@@ -36,6 +37,7 @@ type AddTimetableActivityForm = FormGroup<{
     MatFormFieldModule,
     MatSelectModule,
     MatTooltipModule,
+    TranslateModule,
   ],
   templateUrl: './admin-room-timetable-item.component.html',
   styleUrl: './admin-room-timetable-item.component.scss',

@@ -60,3 +60,28 @@ export async function findFutureActivitiesForCohorts(cohortIds: string[]): Promi
     cohortIds: { $in: cohortIds.map(toObjectId) },
   }).sort({ date: 1, startHour: 1 }).toArray();
 }
+
+export async function listTimetableActivitiesBeforeDate(date: Date): Promise<TimetableActivityDbDoc[]> {
+  const collection = await getCollection<TimetableActivityDbDoc>(TIMETABLE_ACTIVITIES_COLLECTION);
+
+  return collection
+    .find({
+      activityType: { $ne: "SPECIAL_EVENT" },
+      date: { $lt: date.toISOString() },
+    })
+    .sort({ date: 1, startHour: 1 })
+    .toArray();
+}
+
+export async function updateTimetableActivityDate(id: string, date: Date): Promise<void> {
+  const collection = await getCollection<TimetableActivityDbDoc>(TIMETABLE_ACTIVITIES_COLLECTION);
+
+  await collection.updateOne(
+    { _id: toObjectId(id) },
+    {
+      $set: {
+        date: date.toISOString(),
+      },
+    },
+  );
+}

@@ -26,6 +26,7 @@ import { ConfirmModalService } from '@free-spot/shared/ui';
 import { FormErrorMessage } from '@free-spot/shared/util';
 import { debounceTime } from 'rxjs';
 import { WeekDay, ActivityType } from '@free-spot/shared/domain';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'free-spot-admin-semigroup-timetable',
@@ -40,6 +41,7 @@ import { WeekDay, ActivityType } from '@free-spot/shared/domain';
     MatFormFieldModule,
     MatSelectModule,
     MatTooltipModule,
+    TranslateModule,
   ],
   templateUrl: './admin-semigroup-timetable.component.html',
   styleUrl: './admin-semigroup-timetable.component.scss',
