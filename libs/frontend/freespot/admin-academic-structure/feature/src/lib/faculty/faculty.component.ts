@@ -10,6 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { TranslateModule } from '@ngx-translate/core';
 import { ConfirmModalService } from '@free-spot/shared/ui';
 import { DynamicChipListComponent, AddItemCardComponent } from '@free-spot/shared/ui';
 import { FormErrorMessage } from '@free-spot/shared/util';
@@ -47,6 +48,7 @@ import {
     MatButtonModule,
     MatChipsModule,
     AddItemCardComponent,
+    TranslateModule,
   ],
   templateUrl: './faculty.component.html',
   styleUrl: './faculty.component.scss',

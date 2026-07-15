@@ -1,37 +1,36 @@
-<h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">Admin List</h1>
+<h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">
+  {{ 'ADMIN_USER_ACCESS.TITLE' | translate }}
+</h1>
 
 <mat-chip-set class="pb-4">
   @for (admin of adminUserListSig(); track admin.id) {
-    <mat-chip removable="true">
-      <div class="flex gap-2">
-        <p>{{ getUserDisplayName(admin) }}</p>
-        <p>{{ admin.email }}</p>
-      </div>
-      <button matChipRemove (click)="onRemoveAdmin(admin.id)">
-        <mat-icon class="delete-icon">cancel</mat-icon>
-      </button>
-    </mat-chip>
+  <mat-chip removable="true">
+    <div class="flex gap-2">
+      <p>{{ getUserDisplayName(admin) }}</p>
+      <p>{{ admin.email }}</p>
+    </div>
+    <button matChipRemove (click)="onRemoveAdmin(admin.id)">
+      <mat-icon class="delete-icon">cancel</mat-icon>
+    </button>
+  </mat-chip>
   } @empty {
-    <mat-chip>No admins added yet</mat-chip>
+  <mat-chip>{{ 'ADMIN_USER_ACCESS.NO_ADMINS' | translate }}</mat-chip>
   }
 </mat-chip-set>
 
-<form
-  [formGroup]="addAdminFormGroup"
-  class="flex flex-col gap-4 pb-4 sm:flex-row sm:items-center"
-  (ngSubmit)="onAddAdmin()"
->
+<form [formGroup]="addAdminFormGroup" class="flex flex-col gap-4 pb-4 sm:flex-row sm:items-center"
+  (ngSubmit)="onAddAdmin()">
   <mat-form-field class="grow">
-    <mat-label>Add admin</mat-label>
+    <mat-label>{{ 'ADMIN_USER_ACCESS.ADD_ADMIN' | translate }}</mat-label>
     <input matInput formControlName="user" [matAutocomplete]="autoAdminUser" />
 
     <mat-autocomplete #autoAdminUser="matAutocomplete" [displayWith]="displayUser">
       @for (user of foundMemberUserListSig(); track user.id) {
-        <mat-option [value]="user">
-          {{ getUserDisplayName(user) }} | {{ user.email }}
-        </mat-option>
+      <mat-option [value]="user">
+        {{ getUserDisplayName(user) }} | {{ user.email }}
+      </mat-option>
       } @empty {
-        <mat-option disabled>No users found</mat-option>
+      <mat-option disabled>{{ 'ADMIN_USER_ACCESS.NO_USERS_FOUND' | translate }}</mat-option>
       }
     </mat-autocomplete>
 
@@ -39,6 +38,6 @@
   </mat-form-field>
 
   <button mat-flat-button type="submit" class="sm:mb-5" [disabled]="!addAdminFormGroup.valid">
-    Add admin
+    {{ 'ADMIN_USER_ACCESS.ADD_ADMIN' | translate }}
   </button>
 </form>

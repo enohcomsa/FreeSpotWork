@@ -14,6 +14,7 @@ import { AdminGroupTimetableComponent, AdminSemisemiGroupTimetableComponent } fr
 import { ConfirmModalService } from '@free-spot/shared/ui';
 import { type TimetableActivityVm, TimetableItemComponent, DynamicChipListComponent } from '@free-spot/shared/ui';
 import { WeekDay } from '@free-spot/shared/domain';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'free-spot-group',
@@ -27,6 +28,7 @@ import { WeekDay } from '@free-spot/shared/domain';
     AdminSemisemiGroupTimetableComponent,
     MatTooltipModule,
     TimetableItemComponent,
+    TranslateModule,
   ],
   templateUrl: './group.component.html',
   styleUrl: './group.component.scss',

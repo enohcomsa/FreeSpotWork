@@ -22,8 +22,9 @@ import {
 import { AdminRoomCardComponent, AdminUniversityMapRoomVm } from '@free-spot/admin-university-map/ui';
 import { ConfirmModalService } from '@free-spot/shared/ui';
 import { AddItemCardComponent } from '@free-spot/shared/ui';
-import { FormErrorMessage } from  '@free-spot/shared/util';
+import { FormErrorMessage } from '@free-spot/shared/util';
 import { toAdminUniversityMapRoomVm } from './admin-room-card.vm.mapper';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'free-spot-admin-floor-detail',
@@ -35,6 +36,7 @@ import { toAdminUniversityMapRoomVm } from './admin-room-card.vm.mapper';
     MatButtonModule,
     AdminRoomCardComponent,
     AddItemCardComponent,
+    TranslateModule,
   ],
   templateUrl: './admin-floor-detail.component.html',
   styleUrl: './admin-floor-detail.component.scss',
@@ -53,10 +55,10 @@ export class AdminFloorDetailComponent implements OnInit {
   readonly editingRoomIdSig: WritableSignal<string | null> = signal(null);
   readonly floorRoomListSig = computed(() => this.store.selectRoomsByFloorId(this.floorIdSig())());
   readonly roomCardVMs = computed<AdminUniversityMapRoomVm[]>(() =>
-  this.store
-    .selectRoomsByFloorId(this.floorIdSig())()
-    .map(toAdminUniversityMapRoomVm),
-);
+    this.store
+      .selectRoomsByFloorId(this.floorIdSig())()
+      .map(toAdminUniversityMapRoomVm),
+  );
 
   addingRoom = false;
   editingRoom = false;

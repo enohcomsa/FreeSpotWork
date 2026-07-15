@@ -50,10 +50,7 @@ export const USER_ROLES = [
   "MEMBER",
 ] as const;
 
-export const PREFERRED_LANGUAGES = [
-  "en",
-  "ro",
-] as const;
+export const PREFERRED_LANGUAGES = ['en', 'ro', 'hi', 'zh-CN', 'ko'] as const;
 
 export const PREFERRED_THEMES = [
   "DARK",

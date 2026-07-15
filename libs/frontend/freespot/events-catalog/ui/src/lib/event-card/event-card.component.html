@@ -50,13 +50,14 @@
   </mat-card-content>
 
   <mat-card-actions class="px-4 pb-4">
-    <button
-      mat-flat-button
-      type="button"
-      class="w-full"
-      [disabled]="eventCardVm().isRegistered"
+    <button mat-flat-button type="button" class="w-full" [disabled]="eventCardVm().isRegistered"
       (click)="onRegister(); $event.stopPropagation()">
-      {{ eventCardVm().isRegistered ? 'Registered' : 'Register' }}
+      {{
+      (eventCardVm().isRegistered
+      ? 'EVENT_CARD.REGISTERED'
+      : 'EVENT_CARD.REGISTER')
+      | translate
+      }}
     </button>
   </mat-card-actions>
 </mat-card>

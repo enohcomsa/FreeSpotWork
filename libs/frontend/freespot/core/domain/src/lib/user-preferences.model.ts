@@ -4,7 +4,7 @@ export type Theme =
   | 'COLORBLIND_LIGHT'
   | 'COLORBLIND_DARK';
 
-export type Language = 'ro' | 'en';
+export type Language = 'en' | 'ro' | 'hi' | 'zh-CN' | 'ko';
 
 export type UpdateMyPreferencesCmd = {
   preferredLanguage?: Language | null;

@@ -24,6 +24,7 @@ import { ConfirmModalService } from '@free-spot/shared/ui';
 import { AddItemCardComponent } from '@free-spot/shared/ui';
 import { FormErrorMessage } from '@free-spot/shared/util';
 import { toAdminUniversityMapFloorVm } from './admin-floor-card.vm.mapper';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'free-spot-admin-building-detail',
@@ -35,6 +36,7 @@ import { toAdminUniversityMapFloorVm } from './admin-floor-card.vm.mapper';
     MatButtonModule,
     AdminFloorCardComponent,
     AddItemCardComponent,
+    TranslateModule,
   ],
   templateUrl: './admin-building-detail.component.html',
   styleUrl: './admin-building-detail.component.scss',

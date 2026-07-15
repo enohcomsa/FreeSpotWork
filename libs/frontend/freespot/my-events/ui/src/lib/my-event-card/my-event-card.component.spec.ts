@@ -99,7 +99,7 @@ describe('TimetableItemComponent', () => {
 
     const text = fixture.nativeElement.textContent;
 
-    expect(text).toContain('DINAMIC_FORM.SPECIAL_EVENT');
+    expect(text).toContain('DYNAMIC_FORM.SPECIAL_EVENT');
   });
 
   it('should emit the event id when the delete button is clicked', () => {

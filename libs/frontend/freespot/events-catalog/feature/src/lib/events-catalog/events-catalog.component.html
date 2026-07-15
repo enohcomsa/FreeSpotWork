@@ -1,5 +1,5 @@
 @if (eventCardVmsSig().length) {
-  <h1 class="py-4 text-3xl font-bold md:py-8">{{ 'BUILDIG_PAGE.EVENTS' | translate }}</h1>
+  <h1 class="py-4 text-3xl font-bold md:py-8">{{ 'BUILDING_PAGE.EVENTS' | translate }}</h1>
   <div class="flex flex-col gap-8 pb-4 lg:grid lg:grid-cols-2">
     @for (eventCardVm of eventCardVmsSig(); track eventCardVm.id) {
       <free-spot-event-card
@@ -7,7 +7,7 @@
         (registerClicked)="onRegister($event)">
       </free-spot-event-card>
     } @empty {
-      <h3>{{ 'BUILDIG_PAGE.NO_EVENTS_MESSAGE' | translate }}</h3>
+      <h3>{{ 'BUILDING_PAGE.NO_EVENTS_MESSAGE' | translate }}</h3>
     }
   </div>
 }

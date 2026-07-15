@@ -35,7 +35,7 @@
           class="flex w-full flex-col gap-4 pb-8 @3xs:px-4">
           @if (isLoginMode) {
           <mat-form-field>
-            <mat-label>Username or email</mat-label>
+            <mat-label>{{ 'LOGIN.USERNAME_OR_EMAIL' | translate }}</mat-label>
             <input matInput formControlName="identifier" />
             <mat-error>{{ displayError(authForm.controls['identifier']) }}</mat-error>
           </mat-form-field>
@@ -47,7 +47,7 @@
           </mat-form-field>
 
           <mat-form-field>
-            <mat-label>Username</mat-label>
+            <mat-label>{{ 'LOGIN.USERNAME' | translate }}</mat-label>
             <input matInput formControlName="username" />
             <mat-error>{{ displayError(authForm.controls['username']) }}</mat-error>
           </mat-form-field>
@@ -55,7 +55,7 @@
 
           <mat-form-field>
             <mat-label>{{ 'LOGIN.PASSWORD' | translate }}</mat-label>
-            <mat-hint>Minimum 8 characters</mat-hint>
+            <mat-hint>{{ 'LOGIN.PASSWORD_HINT' | translate }}</mat-hint>
             <input [type]="hide ? 'password' : 'text'" matInput formControlName="password" />
             <mat-icon class="primary-icon cursor-pointer" matSuffix (click)="hide = !hide">
               {{ hide ? 'visibility_off' : 'visibility' }}

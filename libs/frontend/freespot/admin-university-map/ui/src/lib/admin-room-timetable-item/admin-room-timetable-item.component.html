@@ -6,17 +6,27 @@
       <div class="flex gap-2">
         <p>{{ getTimeInterval(timetableItemActivity.startHour) }}</p>
         <p>{{ getSubjectShortName(timetableItemActivity.subjectId) }}</p>
-        <p>{{ timetableItemActivity.activityType }}</p>
+        <p>{{ 'DYNAMIC_FORM.' + timetableItemActivity.activityType | translate }}</p>
         <p>{{ vm().roomName }}</p>
       </div>
-      <button matChipRemove (click)="onRemoveTimetableActivity(timetableItemActivity.id)"
-        matTooltip="click to remove timetable activity" matTooltipPosition="right" matTooltipPositionAtOrigin="true"
+      <button
+        matChipRemove
+        (click)="onRemoveTimetableActivity(timetableItemActivity.id)"
+        [matTooltip]="'ADMIN_TIMETABLE.TOOLTIP.REMOVE_ACTIVITY' | translate"
+        matTooltipPosition="right"
+        matTooltipPositionAtOrigin="true"
         matTooltipShowDelay="500">
         <mat-icon class="delete-icon">cancel</mat-icon>
       </button>
     </mat-chip>
-    <button mat-icon-button class="ml-2" (click)="addingTimetableActivity = true"
-      matTooltip="click to add timetable activity" matTooltipPosition="right" matTooltipPositionAtOrigin="true"
+
+    <button
+      mat-icon-button
+      class="ml-2"
+      (click)="addingTimetableActivity = true"
+      [matTooltip]="'ADMIN_TIMETABLE.TOOLTIP.ADD_ACTIVITY' | translate"
+      matTooltipPosition="right"
+      matTooltipPositionAtOrigin="true"
       matTooltipShowDelay="500">
       <mat-icon class="primary-icon mb-2">add</mat-icon>
     </button>
@@ -26,20 +36,29 @@
     <div class="flex gap-2">
       <p>{{ getTimeInterval(timetableItemActivity.startHour) }}</p>
       <p>{{ getSubjectShortName(timetableItemActivity.subjectId) }}</p>
-      <p>{{ timetableItemActivity.activityType }}</p>
+      <p>{{ 'DYNAMIC_FORM.' + timetableItemActivity.activityType | translate }}</p>
       <p>{{ vm().roomName }}</p>
     </div>
-    <button matChipRemove (click)="onRemoveTimetableActivity(timetableItemActivity.id)"
-      matTooltip="click to remove timetable activity" matTooltipPosition="right" matTooltipPositionAtOrigin="true"
+    <button
+      matChipRemove
+      (click)="onRemoveTimetableActivity(timetableItemActivity.id)"
+      [matTooltip]="'ADMIN_TIMETABLE.TOOLTIP.REMOVE_ACTIVITY' | translate"
+      matTooltipPosition="right"
+      matTooltipPositionAtOrigin="true"
       matTooltipShowDelay="500">
       <mat-icon class="delete-icon">cancel</mat-icon>
     </button>
   </mat-chip>
   }
   } @empty {
-  <mat-chip>No timetable items added yet</mat-chip>
-  <button mat-icon-button class="ml-2" (click)="addingTimetableActivity = true"
-    matTooltip="click to add timetable activity" matTooltipPosition="right" matTooltipPositionAtOrigin="true"
+  <mat-chip>{{ 'ADMIN_TIMETABLE.NO_ITEMS' | translate }}</mat-chip>
+  <button
+    mat-icon-button
+    class="ml-2"
+    (click)="addingTimetableActivity = true"
+    [matTooltip]="'ADMIN_TIMETABLE.TOOLTIP.ADD_ACTIVITY' | translate"
+    matTooltipPosition="right"
+    matTooltipPositionAtOrigin="true"
     matTooltipShowDelay="500">
     <mat-icon class="primary-icon mb-2">add</mat-icon>
   </button>
@@ -47,11 +66,14 @@
 </mat-chip-set>
 
 @if (addingTimetableActivity) {
-<form [formGroup]="addTimetableActivityFormGroup"
-  class="flex flex-col flex-wrap py-4 lg:flex-row lg:items-center lg:gap-4" (ngSubmit)="onAddTimetableActivity()">
+<form
+  [formGroup]="addTimetableActivityFormGroup"
+  class="flex flex-col flex-wrap py-4 lg:flex-row lg:items-center lg:gap-4"
+  (ngSubmit)="onAddTimetableActivity()">
+
   <div class="flex flex-auto flex-col md:flex-row md:items-center md:gap-4">
     <mat-form-field class="flex-auto">
-      <mat-label>Start hour</mat-label>
+      <mat-label>{{ 'ADMIN_ROOM_TIMETABLE.START_HOUR' | translate }}</mat-label>
       <mat-select formControlName="startHour">
         @for (startHour of startHourList; track startHour) {
         <mat-option [value]="startHour">{{ startHour }}</mat-option>
@@ -61,7 +83,7 @@
     </mat-form-field>
 
     <mat-form-field class="flex-auto">
-      <mat-label>Subject name</mat-label>
+      <mat-label>{{ 'ADMIN_ROOM_TIMETABLE.SUBJECT_NAME' | translate }}</mat-label>
       <input type="text" matInput formControlName="subject" [matAutocomplete]="autoSubject" />
       <mat-autocomplete autoActiveFirstOption #autoSubject="matAutocomplete" [displayWith]="displaySubject">
         @for (subject of subjects(); track subject.id) {
@@ -72,11 +94,11 @@
     </mat-form-field>
 
     <mat-form-field class="flex-auto">
-      <mat-label>Activity type</mat-label>
+      <mat-label>{{ 'ADMIN_ROOM_TIMETABLE.ACTIVITY_TYPE' | translate }}</mat-label>
       <input type="text" matInput formControlName="activityType" [matAutocomplete]="autoType" />
       <mat-autocomplete autoActiveFirstOption #autoType="matAutocomplete">
         @for (event of eventList; track $index) {
-        <mat-option [value]="event">{{ event }}</mat-option>
+        <mat-option [value]="event">{{ 'DYNAMIC_FORM.' + event | translate }}</mat-option>
         }
       </mat-autocomplete>
       <mat-error>{{ displayError(addTimetableActivityFormGroup.controls.activityType) }}</mat-error>
@@ -85,17 +107,18 @@
 
   <div class="flex flex-auto flex-col md:flex-row md:items-center md:gap-4">
     <mat-form-field class="flex-auto">
-      <mat-label>Week parity</mat-label>
+      <mat-label>{{ 'ADMIN_ROOM_TIMETABLE.WEEK_PARITY' | translate }}</mat-label>
       <input type="text" matInput formControlName="weekParity" [matAutocomplete]="autoParity" />
       <mat-autocomplete autoActiveFirstOption #autoParity="matAutocomplete">
         @for (weekParity of weekParityList; track $index) {
-        <mat-option [value]="weekParity">{{ weekParity }}</mat-option>
+        <mat-option [value]="weekParity">{{ 'WEEK_PARITY.' + weekParity | translate }}</mat-option>
         }
       </mat-autocomplete>
       <mat-error>{{ displayError(addTimetableActivityFormGroup.controls.weekParity) }}</mat-error>
     </mat-form-field>
+
     <button mat-flat-button type="submit" class="flex-auto sm:mb-5" [disabled]="!addTimetableActivityFormGroup.valid">
-      Add timetable item
+      {{ 'ADMIN_ROOM_TIMETABLE.ADD_ITEM' | translate }}
     </button>
   </div>
 </form>

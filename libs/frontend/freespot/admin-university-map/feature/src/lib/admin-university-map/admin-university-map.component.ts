@@ -22,7 +22,8 @@ import {
 import { AdminBuildingCardComponent } from '@free-spot/admin-university-map/ui';
 import { ConfirmModalService } from '@free-spot/shared/ui';
 import { AddItemCardComponent } from '@free-spot/shared/ui';
-import { FormErrorMessage } from  '@free-spot/shared/util';
+import { FormErrorMessage } from '@free-spot/shared/util';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'free-spot-admin-university-map',
@@ -34,6 +35,7 @@ import { FormErrorMessage } from  '@free-spot/shared/util';
     MatButtonModule,
     AdminBuildingCardComponent,
     AddItemCardComponent,
+    TranslateModule,
   ],
   templateUrl: './admin-university-map.component.html',
   styleUrl: './admin-university-map.component.scss',

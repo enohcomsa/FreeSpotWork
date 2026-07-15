@@ -7,10 +7,11 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { type AdminUniversityMapBuildingCardVm } from './admin-building-card.vm';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'free-spot-admin-building-card',
-  imports: [MatCardModule, MatDividerModule, MatListModule, MatIconModule, MatButtonModule, MatTooltipModule],
+  imports: [MatCardModule, MatDividerModule, MatListModule, MatIconModule, MatButtonModule, MatTooltipModule, TranslateModule],
   templateUrl: './admin-building-card.component.html',
   styleUrl: './admin-building-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

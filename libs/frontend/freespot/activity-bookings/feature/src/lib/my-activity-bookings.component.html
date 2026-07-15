@@ -2,18 +2,17 @@
   {{ 'BOOKINGS_PAGE.MY_BOOKINGS' | translate }}
 </h1>
 
-<mat-chip-listbox multiple [value]="selectedBookingRanges()"
-  (change)="setBookingRangeFilters($event.value)">
+<mat-chip-listbox multiple [value]="selectedBookingRanges()" (change)="setBookingRangeFilters($event.value)">
   <mat-chip-option value="THIS_WEEK_FUTURE">
-    Upcoming this week
+    {{ 'BOOKINGS_PAGE.UPCOMING_THIS_WEEK' | translate }}
   </mat-chip-option>
 
   <mat-chip-option value="THIS_WEEK_PAST">
-    Past this week
+    {{ 'BOOKINGS_PAGE.PAST_THIS_WEEK' | translate }}
   </mat-chip-option>
 
   <mat-chip-option value="NEXT_WEEK">
-    Next week
+    {{ 'BOOKINGS_PAGE.NEXT_WEEK' | translate }}
   </mat-chip-option>
 </mat-chip-listbox>
 

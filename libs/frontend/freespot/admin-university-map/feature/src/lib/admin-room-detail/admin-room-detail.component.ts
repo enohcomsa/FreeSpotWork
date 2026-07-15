@@ -14,10 +14,11 @@ import {
   createAdminRoomTimetableActivityVmToCmd,
   toAdminRoomTimetableItemVm,
 } from './admin-room-timetable-item.vm.mapper';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'free-spot-admin-room-detail',
-  imports: [DynamicChipListComponent, AdminRoomTimetableItemComponent, TimetableItemComponent],
+  imports: [DynamicChipListComponent, AdminRoomTimetableItemComponent, TimetableItemComponent, TranslateModule],
   templateUrl: './admin-room-detail.component.html',
   styleUrl: './admin-room-detail.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -87,13 +88,13 @@ export class AdminRoomDetailComponent implements OnInit {
       day,
       vm: room
         ? toAdminRoomTimetableItemVm({
-            roomId: room.id,
-            roomName: room.name,
-            roomCapacity: room.totalSpotsNumber - room.unavailableSpots,
-            day,
-            subjects: this.subjectListSig(),
-            activities: this.roomTimetableActivitiesSig().filter((activity) => activity.weekDay === day),
-          })
+          roomId: room.id,
+          roomName: room.name,
+          roomCapacity: room.totalSpotsNumber - room.unavailableSpots,
+          day,
+          subjects: this.subjectListSig(),
+          activities: this.roomTimetableActivitiesSig().filter((activity) => activity.weekDay === day),
+        })
         : null,
     }));
   });

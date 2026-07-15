@@ -1,0 +1,270 @@
+{
+  "FORM_ERROR": {
+    "FIELD_REQUIRED": "此字段为必填项！",
+    "EMAIL": "邮箱格式无效！",
+    "MIN_CHARACTERS": "至少需要 {{charNumber}} 个字符！"
+  },
+  "NAV": {
+    "HOME": "首页",
+    "SCHEDULE": "课表",
+    "MY_BOOKINGS": "我的预约",
+    "ADMIN": "管理员",
+    "LOGOUT": "退出登录"
+  },
+  "PROFILE_MENU": {
+    "LANGUAGE": "语言",
+    "THEME": "主题",
+    "LIGHT_MODE": "浅色模式",
+    "DARK_MODE": "深色模式"
+  },
+  "LOGIN": {
+    "WELCOME": "欢迎回来",
+    "CREATE_ACCOUNT": "创建账户",
+    "NO_ACCOUNT": "还没有账户？",
+    "ALREADY_ACCOUNT": "已有账户？",
+    "FIRST_NAME": "名字",
+    "LAST_NAME": "姓氏",
+    "EMAIL": "邮箱",
+    "PASSWORD": "密码",
+    "USERNAME": "用户名",
+    "USERNAME_OR_EMAIL": "用户名或邮箱",
+    "PASSWORD_HINT": "请使用至少 8 个字符",
+    "SIGNUP": "注册",
+    "LOGIN": "登录"
+  },
+  "DYNAMIC_FORM": {
+    "SELECT_BOOKING": "选择预约",
+    "LABORATORY": "实验课",
+    "COURSE": "课程",
+    "PROJECT": "项目",
+    "SEMINAR": "研讨课",
+    "SPECIAL_EVENT": "特别活动",
+    "EVENT_NAME": "活动名称",
+    "NO_EV_FOUND": "未找到活动",
+    "NO_BOOKINGS_FOUND": "未找到预约",
+    "SUBJECT": "课程",
+    "NO_FREE_SPOTS": "没有可用座位。",
+    "SELECT_BOOKING_HINT": "选择预约后开始搜索。",
+    "SEARCH": "搜索",
+    "BOOK": "预约"
+  },
+  "BOOKING_SEARCH_RESULT": {
+    "FREE_SPOTS": "空余座位",
+    "BOOK_SPOT": "预约座位"
+  },
+  "BUILDING_PAGE": {
+    "BUILDINGS": "建筑",
+    "NO_BUILDINGS_MESSAGE": "尚未添加任何建筑。",
+    "EVENTS": "活动",
+    "NO_EVENTS_MESSAGE": "尚未添加任何活动。"
+  },
+  "BUILDING_CARD": {
+    "FLOOR": "楼层",
+    "TOTAL": "总数",
+    "UNAVAILABLE": "不可用",
+    "NO_FLOOR_MSG": "尚未添加楼层",
+    "ROOM": "教室",
+    "FREE_DESK": "空闲",
+    "BOOKED": "已预约",
+    "RESERVED": "已预留",
+    "SEE_FLOOR_TOOLTIP": "查看楼层"
+  },
+  "DASH_FLOOR_DETAIL": {
+    "NO_ROOM_MSG": "尚未添加教室。",
+    "ROOM_NAME": "教室名称：",
+    "BOOK_SPOT": "预约座位",
+    "ROOM": "教室："
+  },
+  "TIMETABLE_ITEM": {
+    "MONDAY": "星期一",
+    "TUESDAY": "星期二",
+    "WEDNESDAY": "星期三",
+    "THURSDAY": "星期四",
+    "FRIDAY": "星期五",
+    "SATURDAY": "星期六",
+    "SUNDAY": "星期日"
+  },
+  "BOOKINGS_PAGE": {
+    "MY_BOOKINGS": "我的预约",
+    "ALL": "所有预约",
+    "LABORATORY": "实验课",
+    "COURSE": "课程",
+    "PROJECT": "项目",
+    "SEMINAR": "研讨课",
+    "MY_EVENTS": "我的活动",
+    "NO_BOOKINGS_MSG": "未找到预约。",
+    "NO_EVENTS_MSG": "未找到已报名活动。",
+    "DELETE": "删除",
+    "UPCOMING_THIS_WEEK": "本周即将开始",
+    "PAST_THIS_WEEK": "本周已结束",
+    "NEXT_WEEK": "下周",
+    "RESCHEDULE": "重新安排"
+  },
+  "FACULTY": {
+    "SUBJECTS": "课程",
+    "PROGRAMS": "专业",
+    "YEARS": "年级",
+    "PROGRAM_NAME": "专业名称",
+    "PROGRAM": "专业",
+    "PROGRAM_HINT": "请选择对应年级的专业",
+    "DEGREE": "学位",
+    "YEAR_LABEL": "年级标签",
+    "YEAR": "年级",
+    "ADD_PROGRAM": "添加专业",
+    "EDIT_PROGRAM": "编辑专业",
+    "ADD_YEAR": "添加年级",
+    "EDIT_YEAR": "编辑年级",
+    "NO_YEARS": "尚未添加年级",
+    "TOOLTIP": {
+      "ADD_ITEM": "添加项目",
+      "REMOVE_ITEM": "删除项目",
+      "EDIT_YEAR": "编辑年级",
+      "DELETE_YEAR": "删除年级"
+    }
+  },
+  "GROUP": {
+    "TITLE": "班级",
+    "STUDENTS": "学生",
+    "TIMETABLE": "课表",
+    "ENABLE_SEMIGROUPS": "启用小组",
+    "TIMETABLE_SEMIGROUP_1": "课表 - 小组 1",
+    "TIMETABLE_SEMIGROUP_2": "课表 - 小组 2",
+    "TAB": {
+      "GROUP": "班级",
+      "SEMIGROUP_1": "小组 1",
+      "SEMIGROUP_2": "小组 2"
+    },
+    "TOOLTIP": {
+      "REMOVE_STUDENTS_BEFORE_TOGGLE": "启用小组前，请先将学生移出班级。",
+      "TOGGLE_SEMIGROUPS": "启用或禁用小组。"
+    }
+  },
+  "ADMIN_EVENTS": {
+    "TITLE": "活动",
+    "NO_EVENTS": "尚未添加任何活动。",
+    "NEW_EVENT": "新活动",
+    "EVENT_NAME_HINT": "输入活动名称",
+    "EVENT_DATE": "活动日期",
+    "EVENT_START_HOUR": "活动开始时间",
+    "EVENT_BUILDING": "活动所在建筑",
+    "EVENT_LOCATION": "活动地点",
+    "EVENT_ROOM": "活动教室",
+    "EVENT_RESERVED_SPOTS": "预留座位",
+    "ADD_EVENT": "添加活动",
+    "EDIT_EVENT": "编辑活动"
+  },
+  "EVENT_CARD": {
+    "ROOM": "教室",
+    "FREE_DESK": "空闲",
+    "BOOKED": "已预约",
+    "RESERVED": "已预留",
+    "EDIT": "编辑",
+    "DELETE": "删除",
+    "REGISTER": "报名",
+    "REGISTERED": "已报名"
+  },
+  "ADMIN_TIMETABLE": {
+    "NO_ITEMS": "尚未添加课表项目",
+    "WEEK_DAY": "星期",
+    "SUBJECT_NAME": "课程名称",
+    "ACTIVITY": "活动",
+    "ADD_ITEM": "添加课表项目",
+    "TOOLTIP": {
+      "ADD_ACTIVITY": "添加课表活动",
+      "REMOVE_ACTIVITY": "删除课表活动"
+    }
+  },
+  "ADMIN_BUILDING": {
+    "TITLE": "建筑",
+    "BUILDING_FLOORS": "建筑楼层",
+    "NEW_FLOOR": "新增楼层",
+    "FLOOR_NAME_HINT": "输入楼层名称",
+    "ADD_FLOOR": "添加楼层",
+    "EDIT_FLOOR": "编辑楼层"
+  },
+  "ADMIN_FLOOR": {
+    "TITLE": "楼层",
+    "FLOOR_ROOMS": "楼层教室",
+    "NEW_ROOM": "新增教室",
+    "ROOM_NAME_HINT": "输入教室名称",
+    "TOTAL_SPOTS": "总座位数",
+    "UNAVAILABLE_SPOTS": "不可用座位",
+    "ADD_ROOM": "添加教室",
+    "EDIT_ROOM": "编辑教室"
+  },
+  "ADMIN_ROOM": {
+    "TITLE": "教室",
+    "ROOM_SUBJECTS": "教室课程",
+    "ROOM_TIMETABLE_ITEMS": "教室课表项目",
+    "ROOM_TIMETABLE": "教室课表"
+  },
+  "ADMIN_UNIVERSITY_MAP": {
+    "TITLE": "建筑",
+    "NO_BUILDINGS": "尚未添加任何建筑。",
+    "BUILDING_NAME": "建筑名称",
+    "BUILDING_NAME_HINT": "输入建筑名称",
+    "BUILDING_ADDRESS": "建筑地址",
+    "BUILDING_ADDRESS_HINT": "输入建筑地址",
+    "ADD_BUILDING": "添加建筑",
+    "EDIT_BUILDING": "编辑建筑"
+  },
+  "ADMIN_CARD": {
+    "OPEN": "打开",
+    "EDIT": "编辑",
+    "DELETE": "删除",
+    "ROOMS": "教室",
+    "TOTAL_SPOTS": "总座位数",
+    "UNAVAILABLE_SPOTS": "不可用座位",
+    "TOOLTIP": {
+      "REMOVE_BUILDING": "删除建筑前请先删除所有楼层。",
+      "REMOVE_FLOOR": "删除楼层前请先删除所有教室。"
+    }
+  },
+  "ADMIN_ROOM_TIMETABLE": {
+    "START_HOUR": "开始时间",
+    "SUBJECT_NAME": "课程名称",
+    "ACTIVITY_TYPE": "活动类型",
+    "WEEK_PARITY": "单双周",
+    "ADD_ITEM": "添加课表项目"
+  },
+  "ADMIN_USER_ACCESS": {
+    "TITLE": "管理员列表",
+    "NO_ADMINS": "尚未添加管理员",
+    "ADD_ADMIN": "添加管理员",
+    "NO_USERS_FOUND": "未找到用户"
+  },
+  "COMMON": {
+    "YES": "是",
+    "NO": "否",
+    "CONFIRMATION": "确认"
+  },
+  "SHARED_UI": {
+    "ADD_ITEM_TOOLTIP": "添加项目",
+    "REMOVE_ITEM_TOOLTIP": "删除项目",
+    "SEE_DETAILS_TOOLTIP": "查看详情",
+    "NO_ITEMS": "尚未添加任何项目",
+    "NO_OPTIONS": "没有可用选项",
+    "NO_ITEM_FOUND": "未找到项目",
+    "NEW_ITEM": "新{{ item }}",
+    "ADD_ITEM": "添加{{ item }}"
+  },
+  "USER_SETUP": {
+    "FIRST_NAME": "名字",
+    "FAMILY_NAME": "姓氏",
+    "FACULTY": "学院",
+    "PROGRAM": "专业",
+    "YEAR": "年级",
+    "GROUP": "班级",
+    "SEMIGROUP": "小组",
+    "NO_SEMIGROUP": "无小组",
+    "UPDATE_ACCOUNT": "更新账户"
+  },
+  "WEEK_PARITY": {
+    "BOTH": "单双周",
+    "EVEN": "双周",
+    "ODD": "单周"
+  },
+  "ADMIN_ACADEMIC_STRUCTURE": {
+    "FACULTIES": "学院"
+  }
+}

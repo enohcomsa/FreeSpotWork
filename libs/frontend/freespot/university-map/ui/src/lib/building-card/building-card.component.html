@@ -18,27 +18,23 @@
       <mat-divider></mat-divider>
 
       @for (floor of buildingCardVm().floors; track floor.name; let last = $last) {
-        <mat-list-item
-          class="!cursor-pointer !p-0"
-          (click)="onFloorClick(floor.name)"
-          matTooltip="click to see floor"
-          matTooltipPosition="right"
-          matTooltipShowDelay="300"
-        >
-          <div class="flex justify-between text-sm tracking-tighter">
-            <p class="card-link min-w-24 truncate">
-              {{ floor.name }}
-            </p>
-          </div>
-        </mat-list-item>
-
-        @if (!last) {
-          <mat-divider></mat-divider>
-        }
-      } @empty {
-        <div class="flex h-12 items-center text-sm">
-          {{ 'BUILDING_CARD.NO_FLOOR_MSG' | translate }}
+      <mat-list-item class="!cursor-pointer !p-0" (click)="onFloorClick(floor.name)"
+        [matTooltip]="'BUILDING_CARD.SEE_FLOOR_TOOLTIP' | translate" matTooltipPosition="right"
+        matTooltipShowDelay="300">
+        <div class="flex justify-between text-sm tracking-tighter">
+          <p class="card-link min-w-24 truncate">
+            {{ floor.name }}
+          </p>
         </div>
+      </mat-list-item>
+
+      @if (!last) {
+      <mat-divider></mat-divider>
+      }
+      } @empty {
+      <div class="flex h-12 items-center text-sm">
+        {{ 'BUILDING_CARD.NO_FLOOR_MSG' | translate }}
+      </div>
       }
     </mat-list>
   </mat-card-content>

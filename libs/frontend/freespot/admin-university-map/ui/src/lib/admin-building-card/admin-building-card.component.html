@@ -11,10 +11,10 @@
     <mat-list class="!pb-0">
       <mat-list-item class="!p-0">
         <div class="flex text-xs tracking-tighter justify-between">
-          <p class="min-w-24">Floor</p>
+          <p class="min-w-24">{{ 'BUILDING_CARD.FLOOR' | translate }}</p>
           <div class="flex gap-4 [&>p]:w-14 [&>p]:text-center">
-            <p>Total</p>
-            <p>Unavailable</p>
+            <p>{{ 'BUILDING_CARD.TOTAL' | translate }}</p>
+            <p>{{ 'BUILDING_CARD.UNAVAILABLE' | translate }}</p>
           </div>
         </div>
       </mat-list-item>
@@ -33,7 +33,7 @@
       @if (!last) { <mat-divider></mat-divider> }
       } @empty {
       <div class="flex h-12 items-center justify-between text-sm tracking-tighter">
-        <p class="min-w-24">No floors added yet</p>
+        <p class="min-w-24">{{ 'BUILDING_CARD.NO_FLOOR_MSG' | translate }}</p>
       </div>
       }
     </mat-list>
@@ -44,21 +44,23 @@
   <mat-card-actions class="justify-between gap-4 !p-4 lg:!p-8">
     <button mat-flat-button class="grow" (click)="addingBuildingSig.set(true); editBuilding.emit(adminBuildingSig())">
       <mat-icon class="@3xs:!mr-2 @3xs:!-ml-2 !m-0">edit</mat-icon>
-      <span class="@3xs:inline-block hidden">Edit</span>
+      <span class="@3xs:inline-block hidden">{{ 'ADMIN_CARD.EDIT' | translate }}</span>
     </button>
 
     <button mat-stroked-button class="grow" (click)="onOpenClick()">
       <mat-icon class="@3xs:!mr-2 @3xs:!-ml-2 !m-0">open_in_browser</mat-icon>
-      <span class="@3xs:inline-block hidden">Open</span>
+      <span class="@3xs:inline-block hidden">{{ 'ADMIN_CARD.OPEN' | translate }}</span>
     </button>
 
-    <div class="grow" matTooltip="Remove building floors before deleting building" matTooltipPosition="right"
+    <div class="grow" [matTooltip]="'ADMIN_CARD.TOOLTIP.REMOVE_BUILDING' | translate" matTooltipPosition="right"
       matTooltipPositionAtOrigin="true" matTooltipShowDelay="500"
       [matTooltipDisabled]="adminBuildingSig().floors.length === 0">
+
       <button [disabled]="adminBuildingSig().floors.length > 0" mat-flat-button class="delete-button w-full grow"
         (click)="deleteBuilding.emit(adminBuildingSig())">
+
         <mat-icon class="@3xs:!mr-2 @3xs:!-ml-2 !m-0">delete</mat-icon>
-        <span class="@3xs:inline-block hidden">Delete</span>
+        <span class="@3xs:inline-block hidden">{{ 'ADMIN_CARD.DELETE' | translate }}</span>
       </button>
     </div>
   </mat-card-actions>
