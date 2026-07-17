@@ -1,28 +1,29 @@
-<h1 class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">
+<h1 data-automation-id="title" class="pb-4 pt-8 text-3xl font-bold md:pb-8 md:pt-12">
   {{ 'BOOKINGS_PAGE.MY_BOOKINGS' | translate }}
 </h1>
 
-<mat-chip-listbox multiple [value]="selectedBookingRanges()" (change)="setBookingRangeFilters($event.value)">
-  <mat-chip-option value="THIS_WEEK_FUTURE">
+<mat-chip-listbox data-automation-id="select-time-chip-listbox" multiple [value]="selectedBookingRanges()"
+  (change)="setBookingRangeFilters($event.value)">
+  <mat-chip-option data-automation-id="upcoming-this-week-chip" value="THIS_WEEK_FUTURE">
     {{ 'BOOKINGS_PAGE.UPCOMING_THIS_WEEK' | translate }}
   </mat-chip-option>
 
-  <mat-chip-option value="THIS_WEEK_PAST">
+  <mat-chip-option data-automation-id="past-this-week-chip" value="THIS_WEEK_PAST">
     {{ 'BOOKINGS_PAGE.PAST_THIS_WEEK' | translate }}
   </mat-chip-option>
 
-  <mat-chip-option value="NEXT_WEEK">
+  <mat-chip-option data-automation-id="next-week-chip" value="NEXT_WEEK">
     {{ 'BOOKINGS_PAGE.NEXT_WEEK' | translate }}
   </mat-chip-option>
 </mat-chip-listbox>
 
-<mat-chip-listbox class="mb-4">
-  <mat-chip-option selected (click)="setFilter(null)">
+<mat-chip-listbox data-automation-id="select-type-chip-listbox" class="mb-4">
+  <mat-chip-option data-automation-id="all-bookings-chip" selected (click)="setFilter(null)">
     {{ 'BOOKINGS_PAGE.ALL' | translate }}
   </mat-chip-option>
 
   @for (activityType of activityTypes; track activityType) {
-  <mat-chip-option (click)="setFilter(activityType)">
+  <mat-chip-option data-automation-id="type-chip" (click)="setFilter(activityType)">
     {{ 'BOOKINGS_PAGE.' + activityType | translate }}
   </mat-chip-option>
   }
@@ -30,8 +31,9 @@
 
 <div class="grid grid-cols-1 gap-8 pb-4 md:grid-cols-2 xl:grid-cols-3">
   @for (booking of bookings(); track booking.id) {
-  <free-spot-activity-booking-card [vm]="booking" (reschedule)="selectBooking($event)" />
+  <free-spot-activity-booking-card data-automation-id="booking-card" [vm]="booking"
+    (reschedule)="selectBooking($event)" />
   } @empty {
-  <h3>{{ 'BOOKINGS_PAGE.NO_BOOKINGS_MSG' | translate }}</h3>
+  <h3 data-automation-id="empty-booking-list">{{ 'BOOKINGS_PAGE.NO_BOOKINGS_MSG' | translate }}</h3>
   }
 </div>
