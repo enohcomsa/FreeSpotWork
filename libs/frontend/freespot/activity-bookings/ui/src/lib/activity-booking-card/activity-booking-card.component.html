@@ -5,20 +5,20 @@
         <mat-icon class="primary-icon scale-125">event_available</mat-icon>
 
         <div class="flex-col">
-          <p class="-mt-2 grow text-lg font-bold">
+          <p data-automation-id="activity-type" class="-mt-2 grow text-lg font-bold">
             {{ 'DYNAMIC_FORM.' + vm().activityType | translate }}
             <span class="mx-1">:</span>
-            {{ vm().subjectName }}
+            <span data-automation-id="subject-name">{{ vm().subjectName }}</span>
           </p>
 
           <div class="flex items-center text-sm tracking-tighter">
-            <p class="max-w-40 truncate sm:max-w-fit md:max-w-48 lg:max-w-44 xl:max-w-fit">{{ vm().buildingName }}</p>
+            <p data-automation-id="building-name" class="max-w-40 truncate sm:max-w-fit md:max-w-48 lg:max-w-44 xl:max-w-fit">{{ vm().buildingName }}</p>
             <p class="flex flex-nowrap">
               <span class="mx-1">|</span>
-              <span class="max-w-28 truncate sm:max-w-fit">{{ vm().floorName }}</span>
+              <span data-automation-id="floor-name" class="max-w-28 truncate sm:max-w-fit">{{ vm().floorName }}</span>
               <span class="mx-1">|</span>
             </p>
-            <p>{{ vm().roomName }}</p>
+            <p data-automation-id="room-name">{{ vm().roomName }}</p>
           </div>
         </div>
       </div>
@@ -29,14 +29,14 @@
     <mat-divider></mat-divider>
 
     <div class="flex items-center font-bold">
-      <p>{{ vm().date | date: 'EEEE, dd MMM, yyyy' }}<span class="mx-1">|</span></p>
-      <p>{{ vm().startHour }}-</p>
-      <p>{{ vm().endHour }}</p>
+      <p data-automation-id="booking-date">{{ vm().date | date: 'EEEE, dd MMM, yyyy' }}<span class="mx-1">|</span></p>
+      <p data-automation-id="start-hour">{{ vm().startHour }}-</p>
+      <p data-automation-id="end-hour">{{ vm().endHour }}</p>
     </div>
   </mat-card-content>
 
   <mat-card-actions>
-    <button mat-flat-button class="w-full" (click)="onReschedule()">
+    <button data-automation-id="reschedule-button" mat-flat-button class="w-full" (click)="onReschedule()">
       {{ 'BOOKINGS_PAGE.RESCHEDULE' | translate }}
     </button>
   </mat-card-actions>
