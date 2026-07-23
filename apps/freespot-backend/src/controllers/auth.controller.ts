@@ -1,6 +1,6 @@
 import type { AuthOkResponseT, LoginRequestT, MeResponseT, RefreshResponseT, SignupRequestT } from "../schemas/auth.zod";
 import * as svc from "../services/auth.service";
-import { withBody, withParams } from "../utils/async-handler";
+import { withBody, withAuthenticatedRequest } from "../utils/async-handler";
 
 export const signup = withBody<SignupRequestT, AuthOkResponseT>()(async (req, res) => {
   const data = await svc.signup(req, res, req.body);
@@ -17,12 +17,12 @@ export const refresh = withBody<unknown, RefreshResponseT>()(async (req, res) =>
   res.json(data);
 });
 
-export const logout = withBody<unknown, { ok: true }>()(async (req, res) => {
+export const logout = withAuthenticatedRequest< { ok: true }>()(async (req, res) => {
   const data = await svc.logout(req, res);
   res.json(data);
 });
 
-export const me = withParams<Record<string, string>, MeResponseT>()(async (req, res) => {
+export const me = withAuthenticatedRequest< MeResponseT>()(async (req, res) => {
   const data = await svc.me(req);
   res.json(data);
 });

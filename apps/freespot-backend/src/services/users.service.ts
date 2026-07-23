@@ -19,6 +19,8 @@ import {
   UnauthorizedError,
 } from "../errors/app-errors";
 import { mapMongoError } from "../errors/mongo-error.mapper";
+import { UserAuthProjection } from "../db/types";
+import { SignupRequestT } from "../schemas/auth.zod";
 
 export async function getUsers(): Promise<UserResponseDto[]> {
   return repo.listUsers();
@@ -35,9 +37,9 @@ export async function getUser(id: string): Promise<UserResponseDto> {
 }
 
 export async function createUser(
-  input: UserCreateRequest,
+  input: SignupRequestT,
   passwordHash: string,
-): Promise<UserResponseDto> {
+): Promise<UserAuthProjection> {
   try {
     return await repo.createUser(input, passwordHash);
   } catch (error) {

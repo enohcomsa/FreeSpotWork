@@ -2,8 +2,8 @@
   "name": "@free-spot/activity-rescheduling/feature",
   "version": "0.0.1",
   "peerDependencies": {
-    "@angular/core": "21",
-    "@angular/forms": "21",
+    "@angular/core": "22.0.7",
+    "@angular/forms": "22.0.7",
     "@angular/material": "21",
     "@ngx-translate/core": "^16.0.4",
     "@free-spot/activity-rescheduling/data-access": "0.0.1",
@@ -13,7 +13,7 @@
     "rxjs": "^7.8.2",
     "@free-spot/activity-rescheduling/domain": "0.0.1",
     "vite": "^7.3.2",
-    "@analogjs/vite-plugin-angular": "~2.1.2",
+    "@analogjs/vite-plugin-angular": "2.6.3",
     "vite-tsconfig-paths": "^6.1.1"
   },
   "sideEffects": false
