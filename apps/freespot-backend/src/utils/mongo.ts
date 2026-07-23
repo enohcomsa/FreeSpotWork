@@ -1,4 +1,4 @@
-import { Collection, Db, ObjectId } from "mongodb";
+import { Collection, Db, ObjectId, Document } from "mongodb";
 import { connectToDatabase } from "../db";
 
 /**
@@ -17,7 +17,7 @@ export type MongoRecord<TBase> = TBase & { _id?: ObjectId };
  * Get a strongly typed MongoDB collection.
  * @param name - Collection name.
  */
-export async function getCollection<TDoc>(name: string): Promise<Collection<TDoc>> {
+export async function getCollection<TDoc extends Document>(name: string): Promise<Collection<TDoc>> {
   const db: Db = await connectToDatabase();
   return db.collection<TDoc>(name);
 }
@@ -71,4 +71,5 @@ export function stripUndefined<T extends object>(obj: T): StripUndef<T> {
  */
 export function isEmptySet<T extends Record<string, unknown>>(obj: T): boolean {
   return Object.keys(obj).length === 0;
+
 }

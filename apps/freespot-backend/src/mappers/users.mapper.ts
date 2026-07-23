@@ -56,19 +56,19 @@ export function userToDbRecord(input: UserBaseT): UserDbRecord {
   return {
     email: input.email.trim().toLowerCase(),
     username: input.username ? input.username.trim().toLowerCase() : null,
-    firstName: input.firstName.trim(),
-    familyName: input.familyName.trim(),
+    firstName: input.firstName?.trim() ?? null,
+    familyName: input.familyName?.trim() ?? null,
     role: input.role,
 
 
     preferredLanguage: input.preferredLanguage ?? null,
     preferredTheme: input.preferredTheme ?? null,
 
-    facultyId: toObjectId(input.facultyId),
-    programId: toObjectId(input.programId),
-    programYearId: toObjectId(input.programYearId),
-    groupCohortId: toObjectId(input.groupCohortId),
-    semigroupCohortId: input.semigroupCohortId === null ? null : toObjectId(input.semigroupCohortId),
+    facultyId: input.facultyId === null ? null : toObjectId(input.facultyId),
+    programId: input.programId === null ? null : toObjectId(input.programId),
+    programYearId: input.programYearId === null ? null : toObjectId(input.programYearId),
+    groupCohortId: input.groupCohortId === null ? null : toObjectId(input.groupCohortId),
+    semigroupCohortId: (input.semigroupCohortId === null || input.semigroupCohortId === undefined) ? null : toObjectId(input.semigroupCohortId),
 
     emailVerified: false,
     auth: {},
@@ -103,8 +103,8 @@ export function userPatchToDbSet(patch: UserUpdateRequest): Partial<UserDbRecord
   const cleaned = stripUndefined(patch);
   const set: Partial<UserDbRecord> = {};
 
-  if (cleaned.firstName !== undefined) set.firstName = cleaned.firstName.trim();
-  if (cleaned.familyName !== undefined) set.familyName = cleaned.familyName.trim();
+  if (cleaned.firstName !== undefined) set.firstName = cleaned.firstName?.trim();
+  if (cleaned.familyName !== undefined) set.familyName = cleaned.familyName?.trim();
   if (cleaned.role !== undefined) set.role = cleaned.role;
 
   if (cleaned.preferredLanguage !== undefined) set.preferredLanguage = cleaned.preferredLanguage ?? null;

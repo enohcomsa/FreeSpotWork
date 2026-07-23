@@ -1,4 +1,4 @@
-import { provideHttpClient, withInterceptors, HttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors, HttpClient, withXhr } from '@angular/common/http';
 import { ApplicationConfig, importProvidersFrom, provideZonelessChangeDetection } from '@angular/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
@@ -15,7 +15,7 @@ export const appConfig: ApplicationConfig = {
     provideZonelessChangeDetection(),
     provideRouter(appRoutes, withComponentInputBinding()),
     provideAnimationsAsync(),
-    provideHttpClient(withInterceptors([loadingInterceptor, authInterceptor, refreshInterceptor])),
+    provideHttpClient(withXhr(), withInterceptors([loadingInterceptor, authInterceptor, refreshInterceptor])),
     provideAnimations(),
     provideToastr(),
     importProvidersFrom(

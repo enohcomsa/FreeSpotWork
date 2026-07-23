@@ -14,7 +14,7 @@ export const rateLimitLogin = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   keyGenerator: (req) =>
-    `${readIdentifier(req)}|${ipKeyGenerator(req.ip)}`,
+    `${readIdentifier(req)}|${ipKeyGenerator(req.ip as string)}`,
 });
 
 export const rateLimitSignup = rateLimit({
@@ -22,7 +22,7 @@ export const rateLimitSignup = rateLimit({
   limit: 5,
   standardHeaders: true,
   legacyHeaders: false,
-  keyGenerator: (req) => ipKeyGenerator(req.ip),
+  keyGenerator: (req) => ipKeyGenerator(req.ip as string),
 });
 
 export const rateLimitRefresh = rateLimit({
@@ -30,5 +30,5 @@ export const rateLimitRefresh = rateLimit({
   limit: 30,
   standardHeaders: true,
   legacyHeaders: false,
-  keyGenerator: (req) => ipKeyGenerator(req.ip),
+  keyGenerator: (req) => ipKeyGenerator(req.ip as string),
 });

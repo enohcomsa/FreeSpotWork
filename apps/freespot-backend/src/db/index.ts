@@ -11,13 +11,13 @@ const dbName = process.env.MONGODB_DB;
 
 export async function connectToDatabase(): Promise<Db> {
   if (!client) {
-    client = new MongoClient(uri);
+    client = new MongoClient(uri as string);
     await client.connect();
     db = dbName ? client.db(dbName) : client.db();
 
     console.log(`[db] Connected to MongoDB — db=${db.databaseName}`);
   }
-  return db;
+  return db as Db;
 }
 
 export function getClient(): MongoClient {

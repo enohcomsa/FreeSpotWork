@@ -50,7 +50,8 @@ async function bootstrap() {
 
   app.use(
     cors({
-      origin: (origin, callback) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      origin: (origin:any, callback:any) => {
         if (!origin) return callback(null, true);
         if (allowedOrigins.includes(origin)) {
           return callback(null, true);

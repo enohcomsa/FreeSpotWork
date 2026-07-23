@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { RouterModule } from '@angular/router';
 import { LanguageService, ThemeService } from '@free-spot/core/data-access';
@@ -9,6 +9,7 @@ import { TranslateService } from '@ngx-translate/core';
 @Component({
   imports: [RouterModule],
   selector: 'free-spot-app-root',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<router-outlet></router-outlet>',
 })
 export class AppComponent implements OnInit {

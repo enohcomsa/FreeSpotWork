@@ -1,6 +1,6 @@
 import "../swagger/zod-openapi";
 import { Express } from "express";
-import type { Request } from "express";
+import type { NextFunction, Request, Response } from 'express';
 import swaggerUi from "swagger-ui-express";
 import { OpenAPIRegistry, OpenApiGeneratorV3 } from "@asteasolutions/zod-to-openapi";
 import {
@@ -100,7 +100,7 @@ export function setupSwagger(app: Express) {
   app.use(
     "/api-docs",
     swaggerUi.serve,
-    (req, res, next) =>
+    (req: Request, res: Response, next: NextFunction) =>
       swaggerUi.setup(makeDoc(req), {
         explorer: true,
         swaggerOptions: { withCredentials: true },
