@@ -4,7 +4,7 @@ import { EventRegistrationStore } from '@free-spot/event-registration/data-acces
 import { EventsCatalogComponent } from '@free-spot/events-catalog/feature';
 import { UniversityMapComponent } from '@free-spot/university-map/feature';
 import { UserSetupFlow } from '@free-spot/user-setup/feature';
-import { ToastrService } from 'ngx-toastr';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'free-spot-home',
@@ -18,7 +18,7 @@ export class HomeComponent implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly userSetupFlow = inject(UserSetupFlow);
   private readonly eventRegistrationStore = inject(EventRegistrationStore);
-  private readonly toastr = inject(ToastrService);
+  private readonly snackBar = inject(MatSnackBar);
 
   ngOnInit(): void {
     if (!this.authService.initializedSignal()) {
@@ -30,12 +30,9 @@ export class HomeComponent implements OnInit {
 
   onRegisterEvent(eventId: string): void {
     this.eventRegistrationStore.register(eventId).subscribe(() => {
-      this.toastr.success('Successfully registered for event', '', {
-        closeButton: true,
-        progressBar: true,
-        timeOut: 5000,
-        onActivateTick: true,
-        positionClass: 'toast-bottom-center',
+      this.snackBar.open('Successfully registered for event', '', {
+        duration: 5000,
+        panelClass: ['success-snackbar'],
       });
     });
   }

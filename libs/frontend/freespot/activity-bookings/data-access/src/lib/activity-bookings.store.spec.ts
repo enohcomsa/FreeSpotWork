@@ -1,14 +1,17 @@
-import { describe, it, expect, Mock } from "vitest";
+import { TestBed } from '@angular/core/testing';
+import { of } from 'rxjs';
+import { beforeEach, describe, expect, it, Mock, vi } from 'vitest';
+
+import { HttpActivityBookingsService } from './http-activity-bookings.service';
 import { ActivityBookingsStore } from './activity-bookings.store';
-import { of } from "rxjs";
-import { TestBed } from "@angular/core/testing";
-import { HttpActivityBookingsService } from "./http-activity-bookings.service";
 
 describe('ActivityBookingsStore', () => {
   let store: ActivityBookingsStore;
   let loadActivityBookingsContextMock: Mock;
 
   beforeEach(() => {
+    TestBed.resetTestingModule();
+
     loadActivityBookingsContextMock = vi.fn(() =>
       of({
         bookings: [],
@@ -34,15 +37,16 @@ describe('ActivityBookingsStore', () => {
     store = TestBed.inject(ActivityBookingsStore);
   });
 
-  it('should should expose subjects, activities, rooms, buildings, floors after load', () => {
+  it('should expose subjects, activities, rooms, buildings and floors after load', () => {
     loadActivityBookingsContextMock.mockReturnValue(
       of({
+        bookings: [],
         subjects: [{ id: '1', name: 'subj' }],
         timetableActivities: [{ id: '1' }],
         rooms: [{ id: 'room-1', name: 'A101' }],
         buildings: [{ id: 'buid-1', name: 'A1' }],
-        floors: [{ id: 'floor-1', name: 'A11' }]
-      })
+        floors: [{ id: 'floor-1', name: 'A11' }],
+      }),
     );
 
     store.load();
@@ -54,7 +58,7 @@ describe('ActivityBookingsStore', () => {
     expect(store.floors()).toEqual([{ id: 'floor-1', name: 'A11' }]);
   });
 
-  it('should expose empty state initially', () => {
+  it('should expose empty state when the API returns no data', () => {
     store.load();
 
     expect(store.subjects()).toEqual([]);
@@ -64,57 +68,65 @@ describe('ActivityBookingsStore', () => {
     expect(store.floors()).toEqual([]);
   });
 
-  it('should expose bookings after load', () => {
-    loadActivityBookingsContextMock.mockReturnValue(
-      of({
-        bookings: [{ id: '1' }]
-      })
-    );
+  it('should expose visible bookings after load', () => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
 
-    store.load();
-
-    expect(store.bookings()).toEqual([{ id: '1' }]);
-  });
-
-  it('should filter out bookings with activity type SPECIAL_EVENT', () => {
     loadActivityBookingsContextMock.mockReturnValue(
       of({
         bookings: [
-          { id: '1', activityType: 'LABORATORY' },
-          { id: '1', activityType: 'SPECIAL_EVENT' },
+          {
+            id: 'booking-1',
+            activityId: 'activity-1',
+            activityType: 'LABORATORY',
+          },
         ],
-      })
+        timetableActivities: [
+          {
+            id: 'activity-1',
+            roomId: 'room-1',
+            subjectId: 'subject-1',
+            date: tomorrow.toISOString().split('T')[0],
+            weekDay: 'MONDAY',
+            activityType: 'LABORATORY',
+            cohortIds: [],
+            startHour: 10,
+            endHour: 12,
+            weekParity: 'BOTH',
+            capacity: 30,
+            reservedSpots: 10,
+            busySpots: 10,
+            freeSpots: 20,
+          },
+        ],
+        subjects: [],
+        rooms: [],
+        buildings: [],
+        floors: [],
+      }),
     );
 
     store.load();
 
-    expect(store.bookings()).toEqual([{ id: '1', activityType: 'LABORATORY' }]);
-  });
-
-  it('should expose an empty bookings list when no bookings are returned', () => {
-    loadActivityBookingsContextMock.mockReturnValue(
-      of({
-        bookings: [
-
-          { id: '1', activityType: 'SPECIAL_EVENT' },
-        ],
-      })
-    );
-
-    store.load();
-
-    expect(store.bookings()).toEqual([]);
+    expect(store.visibleBookings()).toEqual([
+      {
+        id: 'booking-1',
+        activityId: 'activity-1',
+        activityType: 'LABORATORY',
+      },
+    ]);
   });
 
   it('should expose empty subjects, activities, rooms, buildings and floors when no data is returned', () => {
     loadActivityBookingsContextMock.mockReturnValue(
       of({
+        bookings: [],
         subjects: [],
         timetableActivities: [],
         rooms: [],
         buildings: [],
         floors: [],
-      })
+      }),
     );
 
     store.load();
@@ -133,7 +145,6 @@ describe('ActivityBookingsStore', () => {
 
     expect(loadSpy).toHaveBeenCalledOnce();
   });
-
 
   it('should call the API once when load is called', () => {
     store.load();

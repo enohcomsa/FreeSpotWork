@@ -1,0 +1,38 @@
+@use 'sass:map';
+@use '@angular/material' as mat;
+
+@mixin color($theme) {
+  $is-dark: mat.get-theme-type($theme)==dark;
+
+  .success-snackbar {
+    @if $is-dark {
+      --mat-snack-bar-container-color: #{mat.get-theme-color($theme, primary, 30)};
+    }
+
+    @else {
+      --mat-snack-bar-container-color: #{mat.get-theme-color($theme, primary, 40)};
+    }
+
+    --mat-snack-bar-supporting-text-color: #{mat.get-theme-color($theme, primary, 100)};
+    --mat-snack-bar-button-color: #{mat.get-theme-color($theme, primary, 90)};
+  }
+
+  .error-snackbar {
+    @if $is-dark {
+      --mat-snack-bar-container-color: #{mat.get-theme-color($theme, error, 30)};
+    }
+
+    @else {
+      --mat-snack-bar-container-color: #{mat.get-theme-color($theme, error, 40)};
+    }
+
+    --mat-snack-bar-supporting-text-color: #{mat.get-theme-color($theme, error, 100)};
+    --mat-snack-bar-button-color: #{mat.get-theme-color($theme, error, 90)};
+  }
+}
+
+@mixin theme($theme) {
+  @if mat.theme-has($theme, color) {
+    @include color($theme);
+  }
+}

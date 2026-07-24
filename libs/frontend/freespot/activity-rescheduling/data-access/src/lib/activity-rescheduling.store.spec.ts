@@ -1,9 +1,9 @@
-import { describe, it, expect, Mock } from "vitest";
-import { ActivityReschedulingStore } from './activity-rescheduling.store';
-import { of, firstValueFrom } from "rxjs";
-import { TestBed } from "@angular/core/testing";
-import { HttpActivityReschedulingService } from './http-activity-rescheduling.service';
+import { TestBed } from '@angular/core/testing';
+import { firstValueFrom, of } from 'rxjs';
+import { beforeEach, describe, expect, it, Mock, vi } from 'vitest';
 
+import { ActivityReschedulingStore } from './activity-rescheduling.store';
+import { HttpActivityReschedulingService } from './http-activity-rescheduling.service';
 
 describe('ActivityReschedulingStore', () => {
   let store: ActivityReschedulingStore;
@@ -11,7 +11,48 @@ describe('ActivityReschedulingStore', () => {
   let rescheduleBookingMock: Mock;
   let getRescheduleOptionsMock: Mock;
 
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
+  const activity = {
+    id: 'activity-1',
+    roomId: 'room-1',
+    subjectId: 'subject-1',
+    date: tomorrow.toISOString().split('T')[0],
+    weekDay: 'MONDAY' as const,
+    activityType: 'LABORATORY' as const,
+    cohortIds: ['group-1'],
+    startHour: 10,
+    endHour: 12,
+    weekParity: 'BOTH' as const,
+    capacity: 30,
+    reservedSpots: 5,
+    busySpots: 5,
+    freeSpots: 25,
+  };
+
+  const booking = {
+    id: 'booking-1',
+    activityId: 'activity-1',
+    userId: 'user-1',
+    facultyId: null,
+    programId: null,
+    programYearId: null,
+    groupCohortId: 'group-1',
+    semigroupCohortId: null,
+    subjectId: null,
+    activityType: 'LABORATORY' as const,
+    status: 'CONFIRMED' as const,
+    originalActivityId: null,
+    isRescheduled: null,
+    rescheduledAt: null,
+    createdAt: null,
+    updatedAt: null,
+  };
+
   beforeEach(() => {
+    TestBed.resetTestingModule();
+
     loadActivityReschedulingContextMock = vi.fn(() =>
       of({
         bookings: [],
@@ -20,7 +61,7 @@ describe('ActivityReschedulingStore', () => {
         rooms: [],
         buildings: [],
         floors: [],
-      })
+      }),
     );
 
     rescheduleBookingMock = vi.fn(() => of(true));
@@ -35,48 +76,92 @@ describe('ActivityReschedulingStore', () => {
             loadActivityReschedulingContext$: loadActivityReschedulingContextMock,
             getRescheduleOptions$: getRescheduleOptionsMock,
             rescheduleBooking$: rescheduleBookingMock,
-          }
+          },
         },
-      ]
+      ],
     });
 
     store = TestBed.inject(ActivityReschedulingStore);
   });
 
-
-  it('should expose bookings, subjects, activities, rooms, floors, buildings after load', () => {
+  it('should expose subjects, activities, rooms, buildings and floors after load', () => {
     loadActivityReschedulingContextMock.mockReturnValue(
       of({
-        bookings: [{ id: '1' }],
+        bookings: [],
         subjects: [{ id: '1', name: 'subj' }],
         activities: [{ id: '1' }],
         rooms: [{ id: 'room-1', name: 'A101' }],
-        buildings: [{ id: 'buid-1', name: 'A1' }],
-        floors: [{ id: 'floor-1', name: 'A11' }]
-      })
+        buildings: [{ id: 'building-1', name: 'A1' }],
+        floors: [{ id: 'floor-1', name: 'A11' }],
+      }),
     );
-
 
     store.load();
 
-    expect(store.bookings()).toEqual([{ id: '1' }]);
     expect(store.subjects()).toEqual([{ id: '1', name: 'subj' }]);
     expect(store.activities()).toEqual([{ id: '1' }]);
     expect(store.rooms()).toEqual([{ id: 'room-1', name: 'A101' }]);
-    expect(store.buildings()).toEqual([{ id: 'buid-1', name: 'A1' }]);
+    expect(store.buildings()).toEqual([{ id: 'building-1', name: 'A1' }]);
     expect(store.floors()).toEqual([{ id: 'floor-1', name: 'A11' }]);
-
   });
 
-  it('should expose empty state initially', () => {
+  it('should expose empty state when the API returns no data', () => {
     store.load();
 
-    expect(store.bookings()).toEqual([]);
+    expect(store.reschedulableBookings()).toEqual([]);
     expect(store.subjects()).toEqual([]);
     expect(store.activities()).toEqual([]);
     expect(store.rooms()).toEqual([]);
     expect(store.buildings()).toEqual([]);
     expect(store.floors()).toEqual([]);
+  });
+
+  it('should expose reschedulable bookings after load', () => {
+    loadActivityReschedulingContextMock.mockReturnValue(
+      of({
+        bookings: [booking],
+        subjects: [],
+        activities: [activity],
+        rooms: [],
+        buildings: [],
+        floors: [],
+      }),
+    );
+
+    store.load();
+
+    expect(store.reschedulableBookings()).toEqual([booking]);
+  });
+
+  it('should not expose special event bookings', () => {
+    loadActivityReschedulingContextMock.mockReturnValue(
+      of({
+        bookings: [
+          booking,
+          {
+            ...booking,
+            id: 'booking-2',
+            activityType: 'SPECIAL_EVENT',
+          },
+        ],
+        subjects: [],
+        activities: [
+          activity,
+          {
+            ...activity,
+            id: 'activity-2',
+            activityType: 'SPECIAL_EVENT',
+          },
+        ],
+        rooms: [],
+        buildings: [],
+        floors: [],
+      }),
+    );
+
+    store.load();
+
+    expect(store.reschedulableBookings()).toEqual([booking]);
   });
 
   it('should call the API once when load is called', () => {
@@ -91,7 +176,6 @@ describe('ActivityReschedulingStore', () => {
     expect(store.rescheduleOptions()).toBeNull();
   });
 
-
   it('should not call the API when loadOptions is called without a selected booking', () => {
     store.loadOptions();
 
@@ -104,14 +188,13 @@ describe('ActivityReschedulingStore', () => {
     store.loadOptions();
 
     expect(getRescheduleOptionsMock).toHaveBeenCalledWith('1');
-
   });
 
   it('should clear reschedule options when clearOptions is called', () => {
     getRescheduleOptionsMock.mockReturnValue(
       of({
         items: [{ id: '1' }],
-      })
+      }),
     );
 
     store.selectBooking('1');
@@ -124,67 +207,55 @@ describe('ActivityReschedulingStore', () => {
     expect(store.rescheduleOptions()).toBeNull();
   });
 
-
   it('should return false when rescheduleBooking is called without a selected booking', async () => {
-    const result = await firstValueFrom(
-      store.rescheduleBooking('1')
-    );
+    const result = await firstValueFrom(store.rescheduleBooking('1'));
 
     expect(result).toBe(false);
   });
 
-
   it('should call the reschedule API with the selected booking id and activity id', async () => {
     store.selectBooking('1');
 
-    await firstValueFrom(
-      store.rescheduleBooking('2')
-    );
+    await firstValueFrom(store.rescheduleBooking('2'));
 
     expect(rescheduleBookingMock).toHaveBeenCalledWith(
       '1',
-      { activityId: '2' }
+      { activityId: '2' },
     );
   });
-
 
   it('should reload the context after a successful reschedule', async () => {
     store.selectBooking('1');
 
-    await firstValueFrom(
-      store.rescheduleBooking('2')
-    );
+    await firstValueFrom(store.rescheduleBooking('2'));
 
     expect(rescheduleBookingMock).toHaveBeenCalledOnce();
     expect(loadActivityReschedulingContextMock).toHaveBeenCalledOnce();
-    expect(rescheduleBookingMock.mock.invocationCallOrder[0])
-      .toBeLessThan(loadActivityReschedulingContextMock.mock.invocationCallOrder[0]);
+
+    expect(
+      rescheduleBookingMock.mock.invocationCallOrder[0],
+    ).toBeLessThan(
+      loadActivityReschedulingContextMock.mock.invocationCallOrder[0],
+    );
   });
 
-
   it('should clear the selected booking after a successful reschedule', async () => {
-
     store.selectBooking('1');
 
-    await firstValueFrom(
-      store.rescheduleBooking('2')
-    );
+    await firstValueFrom(store.rescheduleBooking('2'));
 
     store.loadOptions();
 
     expect(getRescheduleOptionsMock).not.toHaveBeenCalled();
   });
 
-
   it('should return true after a successful reschedule', async () => {
     store.selectBooking('1');
 
     const result = await firstValueFrom(
-      store.rescheduleBooking('1')
+      store.rescheduleBooking('2'),
     );
 
-    expect(rescheduleBookingMock).toHaveBeenCalledOnce();
     expect(result).toBe(true);
   });
-
 });

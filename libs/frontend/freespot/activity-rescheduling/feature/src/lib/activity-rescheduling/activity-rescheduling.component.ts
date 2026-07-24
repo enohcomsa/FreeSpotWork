@@ -24,7 +24,7 @@ import { ActivityReschedulingStore } from '@free-spot/activity-rescheduling/data
 import { RescheduleOptionCardComponent, RescheduleOptionCardVm } from '@free-spot/activity-rescheduling/ui';
 import { mapToReschedulableBookingVm, mapToRescheduleOptionCardVm } from './activity-rescheduling.vm.mapper';
 import { ConfirmModalService } from '@free-spot/shared/ui';
-import { ToastrService } from 'ngx-toastr';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { filter, switchMap, take } from 'rxjs';
 import { ReschedulableBookingVm } from './reschedulable-booking.vm';
 
@@ -50,7 +50,7 @@ export class ActivityReschedulingComponent implements OnInit, OnChanges {
   private readonly _store = inject(ActivityReschedulingStore);
   private readonly destroyRef = inject(DestroyRef);
   private readonly confirmService = inject(ConfirmModalService);
-  private readonly toastr = inject(ToastrService);
+  private readonly snackBar = inject(MatSnackBar);
   private readonly translate = inject(TranslateService);
 
   readonly selectedBookingId = input<string | null>(null);
@@ -172,12 +172,9 @@ export class ActivityReschedulingComponent implements OnInit, OnChanges {
           return;
         }
 
-        this.toastr.success('Booking successfully rescheduled', '', {
-          closeButton: true,
-          progressBar: true,
-          timeOut: 5000,
-          onActivateTick: true,
-          positionClass: 'toast-bottom-center',
+        this.snackBar.open('Booking successfully rescheduled', '', {
+          duration: 5000,
+          panelClass: ['success-snackbar'],
         });
 
         this.searchActive.set(false);

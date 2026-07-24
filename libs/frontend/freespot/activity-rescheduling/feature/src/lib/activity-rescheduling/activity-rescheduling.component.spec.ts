@@ -8,7 +8,6 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ActivityReschedulingComponent } from './activity-rescheduling.component';
 import { ActivityReschedulingStore } from '@free-spot/activity-rescheduling/data-access';
 import { ConfirmModalService } from '@free-spot/shared/ui';
-import { ToastrService } from 'ngx-toastr';
 
 import {
   ActivityReschedulingActivity,
@@ -19,6 +18,7 @@ import {
   ActivityReschedulingRoom,
   ActivityReschedulingSubject,
 } from '@free-spot/activity-rescheduling/domain';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 describe('ActivityReschedulingComponent', () => {
   let fixture: ComponentFixture<ActivityReschedulingComponent>;
@@ -32,7 +32,7 @@ describe('ActivityReschedulingComponent', () => {
   const openConfirmDialogMock = vi.fn(() => ({
     afterClosed: () => of(true),
   }));
-  const toastrSuccessMock = vi.fn();
+  const snackBarOpenMock = vi.fn();
 
   const initialBookings: ActivityReschedulingBooking[] = [
     {
@@ -190,9 +190,9 @@ describe('ActivityReschedulingComponent', () => {
           },
         },
         {
-          provide: ToastrService,
+          provide: MatSnackBar,
           useValue: {
-            success: toastrSuccessMock,
+            open: snackBarOpenMock,
           },
         },
         TranslateService,
@@ -313,7 +313,7 @@ describe('ActivityReschedulingComponent', () => {
 
     expect(openConfirmDialogMock).toHaveBeenCalledWith('COMMON.CONFIRM_RESCHEDULE_BOOKING');
     expect(rescheduleBookingMock).toHaveBeenCalledWith('activity-2');
-    expect(toastrSuccessMock).toHaveBeenCalled();
+    expect(snackBarOpenMock).toHaveBeenCalled();
     expect(component.searchActive()).toBe(false);
   });
 
@@ -337,7 +337,7 @@ describe('ActivityReschedulingComponent', () => {
     component.onBook('activity-2');
 
     expect(rescheduleBookingMock).not.toHaveBeenCalled();
-    expect(toastrSuccessMock).not.toHaveBeenCalled();
+    expect(snackBarOpenMock).not.toHaveBeenCalled();
   });
 
   it('should not reset form when reschedule fails', () => {
@@ -347,7 +347,7 @@ describe('ActivityReschedulingComponent', () => {
 
     component.onBook('activity-2');
 
-    expect(toastrSuccessMock).not.toHaveBeenCalled();
+    expect(snackBarOpenMock).not.toHaveBeenCalled();
     expect(component.searchActive()).toBe(true);
     expect(component.bookingForm.controls.bookingQuery.value).toBe('Math');
   });
