@@ -3,7 +3,7 @@
 @use './styles/free-spot-m3-theme.scss';
 @use './styles/toolbar-theme' as toolBar;
 @use './styles/card-theme' as card;
-@use 'ngx-toastr/toastr';
+@use './styles/snackbar' as snakBar;
 @use 'tailwindcss';
 
 
@@ -20,12 +20,14 @@ html {
   @include mat.all-component-themes(free-spot-m3-theme.$light-theme);
   @include toolBar.theme(free-spot-m3-theme.$light-theme);
   @include card.theme(free-spot-m3-theme.$light-theme);
+  @include snakBar.theme(free-spot-m3-theme.$light-theme);
 }
 
 .dark-mode {
   @include mat.all-component-colors(free-spot-m3-theme.$dark-theme);
   @include toolBar.color(free-spot-m3-theme.$dark-theme);
   @include card.color(free-spot-m3-theme.$dark-theme);
+  @include snakBar.color(free-spot-m3-theme.$dark-theme);
 }
 
 body {

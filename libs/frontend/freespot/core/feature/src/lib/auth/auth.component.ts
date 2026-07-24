@@ -17,9 +17,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
 import { AuthService, ThemeService } from '@free-spot/core/data-access';
-import { FormErrorMessage } from  '@free-spot/shared/util';
+import { FormErrorMessage } from '@free-spot/shared/util';
 import { TranslateModule } from '@ngx-translate/core';
-import { ToastrService } from 'ngx-toastr';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'free-spot-app-auth',
@@ -42,7 +42,7 @@ export class AuthComponent {
   private readonly formBuilder = inject(FormBuilder);
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
-  private readonly toastrService = inject(ToastrService);
+  private readonly snackBar = inject(MatSnackBar);
   private readonly formErrorMessage = inject(FormErrorMessage);
   private readonly themeService = inject(ThemeService);
 
@@ -138,12 +138,9 @@ export class AuthComponent {
       errorMessage = error.error.message;
     }
 
-    this.toastrService.error(errorMessage, '', {
-      closeButton: true,
-      progressBar: true,
-      timeOut: 5000,
-      onActivateTick: true,
-      positionClass: 'toast-bottom-center',
+    this.snackBar.open(errorMessage, '', {
+      duration: 5000,
+      panelClass: ['error-snackbar'],
     });
   }
 }

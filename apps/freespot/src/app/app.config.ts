@@ -7,7 +7,6 @@ import { authInterceptor, provideAuthApi, refreshInterceptor } from '@free-spot/
 import { loadingInterceptor } from '@free-spot/core/data-access';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { provideToastr } from 'ngx-toastr';
 import { appRoutes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
@@ -17,7 +16,6 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     provideHttpClient(withXhr(), withInterceptors([loadingInterceptor, authInterceptor, refreshInterceptor])),
     provideAnimations(),
-    provideToastr(),
     importProvidersFrom(
       TranslateModule.forRoot({
         loader: {
