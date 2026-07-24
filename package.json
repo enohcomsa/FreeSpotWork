@@ -11,7 +11,7 @@
     "start": "nx serve freespot",
     "start:backend": "nx serve freespot-backend",
     "build:freespot": "npx nx build freespot",
-    "build:backend": "npm ci && npx nx build freespot-backend --configuration=production",
+    "build:backend": "npm ci --include=dev && npx nx build freespot-backend --configuration=production",
     "start:backend:prod": "node dist/apps/freespot-backend/main.js",
     "db:migrate": "tsx apps/freespot-backend/src/db/migrate/index.ts",
     "openapi-generate:free-spot-app": "npx ts-node tools/scripts/openapi-free-spot.ts"
