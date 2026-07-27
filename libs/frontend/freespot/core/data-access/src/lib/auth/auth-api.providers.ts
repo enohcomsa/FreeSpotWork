@@ -1,19 +1,20 @@
 import { Provider } from '@angular/core';
 import { BASE_PATH, Configuration } from '@free-spot/api-client';
-
-const API_BASE_URL = 'https://freespotwork.onrender.com/api/v1';
+import { APP_CONFIG, AppConfig } from '@free-spot/core/domain';
 
 export function provideAuthApi(): Provider[] {
   return [
     {
       provide: BASE_PATH,
-      useValue: API_BASE_URL,
+      deps: [APP_CONFIG],
+      useFactory: (config: AppConfig) => config.apiBaseUrl,
     },
     {
       provide: Configuration,
-      useFactory: () =>
+      deps: [APP_CONFIG],
+      useFactory: (config: AppConfig) =>
         new Configuration({
-          basePath: API_BASE_URL,
+          basePath: config.apiBaseUrl,
           withCredentials: true,
         }),
     },

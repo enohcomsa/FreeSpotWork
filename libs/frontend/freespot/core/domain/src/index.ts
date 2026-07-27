@@ -2,3 +2,4 @@ export { Role, type AuthOk, type RefreshSessionResult, type LoginCmd, type Signu
 export { Language, Theme, type UpdateMyPreferencesCmd } from './lib/user-preferences.model';
 export { type User } from './lib/user.model';
 export { type UpdateUserCmd } from './lib/user.commands';
+export { APP_CONFIG, AppConfig } from './lib/app-config.token';

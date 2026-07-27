@@ -4,11 +4,18 @@
   "projectType": "application",
   "prefix": "free-spot",
   "sourceRoot": "apps/freespot/src",
-  "tags": ["platform:frontend", "product:freespot", "layer:app", "role:app-shell"],
+  "tags": [
+    "platform:frontend",
+    "product:freespot",
+    "layer:app",
+    "role:app-shell"
+  ],
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:application",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "defaultConfiguration": "production",
       "options": {
         "outputPath": "dist/apps/freespot",
@@ -22,14 +29,24 @@
             "input": "apps/freespot/public"
           }
         ],
-        "styles": ["apps/freespot/src/styles.scss"],
+        "styles": [
+          "apps/freespot/src/styles.scss"
+        ],
         "stylePreprocessorOptions": {
-          "includePaths": ["node_modules/"]
+          "includePaths": [
+            "node_modules/"
+          ]
         },
         "scripts": []
       },
       "configurations": {
         "production": {
+          "fileReplacements": [
+            {
+              "replace": "apps/freespot/src/environment/environment.ts",
+              "with": "apps/freespot/src/environment/environment.prod.ts"
+            }
+          ],
           "budgets": [
             {
               "type": "initial",
@@ -45,9 +62,23 @@
           "outputHashing": "all"
         },
         "development": {
+          "fileReplacements": [
+            {
+              "replace": "apps/freespot/src/environment/environment.ts",
+              "with": "apps/freespot/src/environment/environment.ts"
+            }
+          ],
           "optimization": false,
           "extractLicenses": false,
           "sourceMap": true
+        },
+        "e2e": {
+          "fileReplacements": [
+            {
+              "replace": "apps/freespot/src/environment/environment.ts",
+              "with": "apps/freespot/src/environment/environment.e2e.ts"
+            }
+          ]
         }
       }
     },
@@ -79,7 +110,9 @@
         "{workspaceRoot}/eslint.config.mjs",
         "{workspaceRoot}/tools/eslint/**/*",
         {
-          "externalDependencies": ["eslint"]
+          "externalDependencies": [
+            "eslint"
+          ]
         }
       ]
     },
@@ -93,7 +126,10 @@
       }
     },
     "test": {
-      "outputs": ["{projectRoot}/{options.coverage.reportsDirectory}", "{workspaceRoot}/coverage/apps/freespot"],
+      "outputs": [
+        "{projectRoot}/{options.coverage.reportsDirectory}",
+        "{workspaceRoot}/coverage/apps/freespot"
+      ],
       "options": {
         "coverage.reportsDirectory": "../../coverage/apps/freespot"
       }
