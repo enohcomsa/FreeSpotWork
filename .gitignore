@@ -50,3 +50,8 @@ Thumbs.db
 .nx/polygraph
 .nx/self-healing
 vitest.config.*.timestamp*
+
+
+# Backend environment files
+apps/freespot-backend/.env*
+!apps/freespot-backend/.env.example
