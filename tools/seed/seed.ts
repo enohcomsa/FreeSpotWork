@@ -1,3 +1,4 @@
+import { seedAcademic } from './academic.seed';
 import { seedAuth } from './auth.seed';
 import { createSeedContext, disposeSeedContext } from './context';
 import { resetDatabase } from './reset';
@@ -12,6 +13,7 @@ async function main(): Promise<void> {
     await resetDatabase(context);
 
     await seedSystem(context);
+    await seedAcademic(context);
     await seedAuth(context);
 
     console.log('Seed completed.');
