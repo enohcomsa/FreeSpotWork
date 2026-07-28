@@ -36,7 +36,7 @@
           @if (isLoginMode) {
           <mat-form-field>
             <mat-label>{{ 'LOGIN.USERNAME_OR_EMAIL' | translate }}</mat-label>
-            <input matInput formControlName="identifier" />
+            <input data-automation-id="login-identifier" matInput formControlName="identifier" />
             <mat-error>{{ displayError(authForm.controls['identifier']) }}</mat-error>
           </mat-form-field>
           } @else {
@@ -56,7 +56,8 @@
           <mat-form-field>
             <mat-label>{{ 'LOGIN.PASSWORD' | translate }}</mat-label>
             <mat-hint>{{ 'LOGIN.PASSWORD_HINT' | translate }}</mat-hint>
-            <input [type]="hide ? 'password' : 'text'" matInput formControlName="password" />
+            <input data-automation-id="login-password" [type]="hide ? 'password' : 'text'" matInput
+              formControlName="password" />
             <mat-icon class="primary-icon cursor-pointer" matSuffix (click)="hide = !hide">
               {{ hide ? 'visibility_off' : 'visibility' }}
             </mat-icon>
@@ -80,7 +81,8 @@
             </h2>
             }
 
-            <button mat-flat-button type="submit" [disabled]="!authForm.valid" class="w-full text-nowrap @3xs:w-fit">
+            <button data-automation-id="login-submit" mat-flat-button type="submit" [disabled]="!authForm.valid"
+              class="w-full text-nowrap @3xs:w-fit">
               {{ (isLoginMode ? 'LOGIN.LOGIN' : 'LOGIN.CREATE_ACCOUNT') | translate }}
             </button>
           </div>

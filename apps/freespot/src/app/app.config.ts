@@ -8,6 +8,8 @@ import { loadingInterceptor } from '@free-spot/core/data-access';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { appRoutes } from './app.routes';
+import { environment } from '../environment/environment';
+import { APP_CONFIG } from '@free-spot/core/domain';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -26,6 +28,12 @@ export const appConfig: ApplicationConfig = {
         defaultLanguage: 'en',
       }),
     ),
+    {
+      provide: APP_CONFIG,
+      useValue: {
+        apiBaseUrl: environment.apiBaseUrl,
+      },
+    },
     provideAuthApi(),
   ],
 };
