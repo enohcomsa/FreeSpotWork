@@ -1,12 +1,13 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 
+import { ObjectId } from 'mongodb';
 import { signupToDbRecord } from '../../apps/freespot-backend/src/mappers';
 import { hashPassword } from '../../apps/freespot-backend/src/utils/password';
 
 import { E2E_STUDENT } from './auth.fixtures';
 import { SeedContext } from './context';
 
-export async function seedAuth(context: SeedContext): Promise<void> {
+export async function seedAuth(context: SeedContext): Promise<ObjectId> {
   const passwordHash = await hashPassword(E2E_STUDENT.password);
 
   const record = signupToDbRecord(
@@ -27,9 +28,11 @@ export async function seedAuth(context: SeedContext): Promise<void> {
   record.groupCohortId = E2E_STUDENT.groupCohortId;
   record.semigroupCohortId = E2E_STUDENT.semigroupCohortId;
 
-  await context.db
+  const result = await context.db
     .collection('users')
     .insertOne(record);
 
   console.log(`✓ Seeded user '${E2E_STUDENT.email}'`);
+
+  return result.insertedId;
 }
