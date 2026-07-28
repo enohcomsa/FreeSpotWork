@@ -1,4 +1,5 @@
 import { nxE2EPreset } from '@nx/cypress/plugins/cypress-preset';
+import { execSync } from 'child_process';
 
 import { defineConfig } from 'cypress';
 
@@ -13,5 +14,16 @@ export default defineConfig({
       ciWebServerCommand: 'nx run freespot:serve-static',
     }),
     baseUrl: 'http://localhost:4200',
+    setupNodeEvents(on) {
+      on('task', {
+        seedDb() {
+          execSync('npm run seed:freespot:e2e', {
+            stdio: 'inherit',
+          });
+
+          return null;
+        },
+      });
+    },
   },
 });
