@@ -8,15 +8,17 @@
     "libs/*/*/*"
   ],
   "scripts": {
-    "start": "nx serve freespot",
-    "start:backend": "nx serve freespot-backend",
-    "start:backend:e2e": "nx serve freespot-backend --configuration=e2e",
+    "connect:freespot:db:e2e": "mongosh mongodb://127.0.0.1:27017/freespot_e2e",
+    "start:freespot": "nx serve freespot",
+    "start:freespot:backend": "nx serve freespot-backend",
+    "start:freespot:backend:e2e": "nx serve freespot-backend --configuration=e2e",
+    "start:freespot:backend:prod": "node dist/apps/freespot-backend/main.js",
+    "start:freespot:e2e": "npm run seed:freespot:e2e && concurrently \"npm run start:freespot\" \"npm run start:freespot:backend:e2e\"",
     "build:freespot": "npx nx build freespot",
-    "build:backend": "npm ci --include=dev && npx nx build freespot-backend --configuration=production",
-    "start:backend:prod": "node dist/apps/freespot-backend/main.js",
+    "build:freespot:backend": "npm ci --include=dev && npx nx build freespot-backend --configuration=production",
     "seed:freespot:e2e": "tsx --env-file=apps/freespot-backend/.env.serve.e2e tools/seed/seed.ts",
-    "db:migrate": "tsx apps/freespot-backend/src/db/migrate/index.ts",
-    "openapi-generate:free-spot-app": "npx ts-node tools/scripts/openapi-free-spot.ts"
+    "migrate:freespot:db": "tsx apps/freespot-backend/src/db/migrate/index.ts",
+    "generate:freespot:api-client": "npx ts-node tools/scripts/openapi-free-spot.ts"
   },
   "private": true,
   "dependencies": {
