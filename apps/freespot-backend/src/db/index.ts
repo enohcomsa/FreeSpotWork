@@ -7,6 +7,18 @@ let db: Db | null = null;
 const uri = process.env.MONGODB_URI;
 if (!uri) throw new Error('MONGODB_URI missing');
 
+const provider: 'local' | 'atlas' = (() => {
+  if (uri.startsWith('mongodb://')) {
+    return 'local';
+  }
+
+  if (uri.startsWith('mongodb+srv://')) {
+    return 'atlas';
+  }
+
+  throw new Error('Unsupported MongoDB URI scheme.');
+})();
+
 const dbName = process.env.MONGODB_DB;
 
 export async function connectToDatabase(): Promise<Db> {
@@ -15,7 +27,7 @@ export async function connectToDatabase(): Promise<Db> {
     await client.connect();
     db = dbName ? client.db(dbName) : client.db();
 
-    console.log(`[db] Connected to MongoDB — db=${db.databaseName}`);
+    console.log(`[startup] env=${process.env.APP_ENV} provider=${provider} db=${db.databaseName}`,);
   }
   return db as Db;
 }

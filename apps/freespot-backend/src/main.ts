@@ -51,7 +51,7 @@ async function bootstrap() {
   app.use(
     cors({
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      origin: (origin:any, callback:any) => {
+      origin: (origin: any, callback: any) => {
         if (!origin) return callback(null, true);
         if (allowedOrigins.includes(origin)) {
           return callback(null, true);
@@ -78,10 +78,16 @@ async function bootstrap() {
 
   app.use(errorHandler);
 
+  const enableTimetableRollover = process.env.ENABLE_TIMETABLE_ROLLOVER === 'true';
+
   try {
     await connectToDatabase();
-    await runTimetableRolloverOnStartup();
-    startTimetableRolloverScheduler();
+
+    if (enableTimetableRollover) {
+      await runTimetableRolloverOnStartup();
+      startTimetableRolloverScheduler();
+    }
+
     const port = Number(process.env.PORT) || 3333;
     app.listen(port, () => {
       console.log(`API running on port ${port}`);

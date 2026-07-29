@@ -16,7 +16,7 @@
       "outputs": [
         "{options.outputPath}"
       ],
-      "defaultConfiguration": "production",
+      "defaultConfiguration": "local-dev",
       "options": {
         "outputPath": "dist/apps/freespot",
         "index": "apps/freespot/src/index.html",
@@ -40,6 +40,60 @@
         "scripts": []
       },
       "configurations": {
+        "local-dev": {
+          "fileReplacements": [
+            {
+              "replace": "apps/freespot/src/environment/environment.ts",
+              "with": "apps/freespot/src/environment/environment.local-dev.ts"
+            }
+          ],
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true
+        },
+        "dev-atlas": {
+          "fileReplacements": [
+            {
+              "replace": "apps/freespot/src/environment/environment.ts",
+              "with": "apps/freespot/src/environment/environment.dev-atlas.ts"
+            }
+          ],
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true
+        },
+        "e2e": {
+          "fileReplacements": [
+            {
+              "replace": "apps/freespot/src/environment/environment.ts",
+              "with": "apps/freespot/src/environment/environment.e2e.ts"
+            }
+          ],
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true
+        },
+        "staging": {
+          "fileReplacements": [
+            {
+              "replace": "apps/freespot/src/environment/environment.ts",
+              "with": "apps/freespot/src/environment/environment.staging.ts"
+            }
+          ],
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "575kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "2kb",
+              "maximumError": "4kb"
+            }
+          ],
+          "outputHashing": "all"
+        },
         "production": {
           "fileReplacements": [
             {
@@ -60,37 +114,27 @@
             }
           ],
           "outputHashing": "all"
-        },
-        "development": {
-          "fileReplacements": [
-            {
-              "replace": "apps/freespot/src/environment/environment.ts",
-              "with": "apps/freespot/src/environment/environment.ts"
-            }
-          ],
-          "optimization": false,
-          "extractLicenses": false,
-          "sourceMap": true
-        },
-        "e2e": {
-          "fileReplacements": [
-            {
-              "replace": "apps/freespot/src/environment/environment.ts",
-              "with": "apps/freespot/src/environment/environment.e2e.ts"
-            }
-          ]
         }
       }
     },
     "serve": {
       "executor": "@angular-devkit/build-angular:dev-server",
-      "defaultConfiguration": "development",
+      "defaultConfiguration": "local-dev",
       "configurations": {
+        "local-dev": {
+          "buildTarget": "freespot:build:local-dev"
+        },
+        "dev-atlas": {
+          "buildTarget": "freespot:build:dev-atlas"
+        },
+        "e2e": {
+          "buildTarget": "freespot:build:e2e"
+        },
+        "staging": {
+          "buildTarget": "freespot:build:staging"
+        },
         "production": {
           "buildTarget": "freespot:build:production"
-        },
-        "development": {
-          "buildTarget": "freespot:build:development"
         }
       }
     },

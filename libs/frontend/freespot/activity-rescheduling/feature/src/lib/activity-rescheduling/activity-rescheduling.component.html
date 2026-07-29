@@ -35,7 +35,7 @@
     <div data-automation-id="search-results">
       @for (option of optionCards(); track option.id; let last = $last) {
       <free-spot-reschedule-option-card data-automation-id="reschedule-option-card" [vm]="option"
-        (book)="onBook($event)">
+       (book)="onBook($event)">
       </free-spot-reschedule-option-card>
 
       @if (!last) {
