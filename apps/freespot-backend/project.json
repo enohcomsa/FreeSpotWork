@@ -12,7 +12,7 @@
     "serve": {
       "continuous": true,
       "executor": "@nx/js:node",
-      "defaultConfiguration": "development",
+      "defaultConfiguration": "local-dev",
       "dependsOn": [
         "build"
       ],
@@ -21,10 +21,16 @@
         "runBuildTargetDependencies": false
       },
       "configurations": {
-        "development": {
+        "local-dev": {
+          "buildTarget": "freespot-backend:build:development"
+        },
+        "dev-atlas": {
           "buildTarget": "freespot-backend:build:development"
         },
         "e2e": {
+          "buildTarget": "freespot-backend:build:development"
+        },
+        "staging": {
           "buildTarget": "freespot-backend:build:development"
         },
         "production": {

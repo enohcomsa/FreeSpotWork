@@ -15,7 +15,7 @@ export async function connectToDatabase(): Promise<Db> {
     await client.connect();
     db = dbName ? client.db(dbName) : client.db();
 
-    console.log(`[db] Connected to MongoDB — db=${db.databaseName}`);
+    console.log(`[startup] env=${process.env.APP_ENV} db=${db.databaseName}`);
   }
   return db as Db;
 }
