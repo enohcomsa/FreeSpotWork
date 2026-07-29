@@ -1,6 +1,8 @@
 <h1 mat-dialog-title>{{ 'COMMON.CONFIRMATION' | translate }}</h1>
 <div mat-dialog-content>{{ message }}</div>
 <div mat-dialog-actions align="center">
-  <button mat-button [mat-dialog-close]="false">{{ 'COMMON.NO' | translate }}</button>
-  <button mat-flat-button [mat-dialog-close]="true">{{ 'COMMON.YES' | translate }}</button>
+  <button data-automation-id="confirm-dialog-no" mat-button [mat-dialog-close]="false">{{ 'COMMON.NO' | translate
+    }}</button>
+  <button data-automation-id="confirm-dialog-yes" mat-flat-button [mat-dialog-close]="true">{{ 'COMMON.YES' | translate
+    }}</button>
 </div>

@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card data-automation-id="booking-card-ui" [attr.data-booking-id]="vm().id">
   <mat-card-header>
     <mat-card-title>
       <div class="flex items-start gap-4">
@@ -12,7 +12,8 @@
           </p>
 
           <div class="flex items-center text-sm tracking-tighter">
-            <p data-automation-id="building-name" class="max-w-40 truncate sm:max-w-fit md:max-w-48 lg:max-w-44 xl:max-w-fit">{{ vm().buildingName }}</p>
+            <p data-automation-id="building-name"
+              class="max-w-40 truncate sm:max-w-fit md:max-w-48 lg:max-w-44 xl:max-w-fit">{{ vm().buildingName }}</p>
             <p class="flex flex-nowrap">
               <span class="mx-1">|</span>
               <span data-automation-id="floor-name" class="max-w-28 truncate sm:max-w-fit">{{ vm().floorName }}</span>
@@ -28,7 +29,7 @@
   <mat-card-content class="!flex flex-col gap-2 !pb-8 !pt-2">
     <mat-divider></mat-divider>
 
-    <div class="flex items-center font-bold">
+    <div data-automation-id="booking-slot" class="flex items-center font-bold">
       <p data-automation-id="booking-date">{{ vm().date | date: 'EEEE, dd MMM, yyyy' }}<span class="mx-1">|</span></p>
       <p data-automation-id="start-hour">{{ vm().startHour }}-</p>
       <p data-automation-id="end-hour">{{ vm().endHour }}</p>
