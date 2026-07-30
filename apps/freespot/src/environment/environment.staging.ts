@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiBaseUrl: 'https://<your-staging-render-url>/api/v1',
+  apiBaseUrl: 'https://freespotwork-staging.onrender.com/api/v1',
 } as const;
