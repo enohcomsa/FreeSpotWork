@@ -62,11 +62,11 @@
           "extractLicenses": false,
           "sourceMap": true
         },
-        "e2e": {
+        "local-e2e": {
           "fileReplacements": [
             {
               "replace": "apps/freespot/src/environment/environment.ts",
-              "with": "apps/freespot/src/environment/environment.e2e.ts"
+              "with": "apps/freespot/src/environment/environment.local-e2e.ts"
             }
           ],
           "optimization": false,
@@ -127,8 +127,8 @@
         "dev-atlas": {
           "buildTarget": "freespot:build:dev-atlas"
         },
-        "e2e": {
-          "buildTarget": "freespot:build:e2e"
+        "local-e2e": {
+          "buildTarget": "freespot:build:local-e2e"
         },
         "staging": {
           "buildTarget": "freespot:build:staging"

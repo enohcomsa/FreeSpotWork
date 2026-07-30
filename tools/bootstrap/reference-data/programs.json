@@ -1,0 +1,35 @@
+[
+  {
+    "_id": {
+      "$oid": "694ebf7f5a6fd325198a3230"
+    },
+    "facultyId": {
+      "$oid": "6944251284429b0a8aaedaa7"
+    },
+    "name": "Tehnologii si Sisteme de Telecomunicatii (TST)",
+    "degree": "lic",
+    "active": true
+  },
+  {
+    "_id": {
+      "$oid": "694ebfbd5a6fd325198a3231"
+    },
+    "facultyId": {
+      "$oid": "6944251284429b0a8aaedaa7"
+    },
+    "name": "Inginerie Electronica, Telecomunicatii si Tehnologia Informatiei (EA,TST)",
+    "degree": "lic",
+    "active": true
+  },
+  {
+    "_id": {
+      "$oid": "694ebfd95a6fd325198a3232"
+    },
+    "facultyId": {
+      "$oid": "6944251284429b0a8aaedaa7"
+    },
+    "name": "Tehnologii si Sisteme de Telecomunicatii (in limba engleza)",
+    "degree": "lic",
+    "active": true
+  }
+]
