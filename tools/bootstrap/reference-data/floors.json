@@ -1,0 +1,101 @@
+[
+  {
+    "_id": {
+      "$oid": "68d67aa079503b1c49748a61"
+    },
+    "buildingId": {
+      "$oid": "68d676cd79503b1c49748a60"
+    },
+    "name": "Obs ground floor"
+  },
+  {
+    "_id": {
+      "$oid": "699d8c92146f07fcd459602b"
+    },
+    "buildingId": {
+      "$oid": "68ee23d6f9afa2e86a5d3809"
+    },
+    "name": "Corp A ground floor"
+  },
+  {
+    "_id": {
+      "$oid": "699d8d1a146f07fcd459602e"
+    },
+    "buildingId": {
+      "$oid": "68d676cd79503b1c49748a60"
+    },
+    "name": "Obs 5 th floor"
+  },
+  {
+    "_id": {
+      "$oid": "699d8d58146f07fcd4596030"
+    },
+    "buildingId": {
+      "$oid": "68ee23d6f9afa2e86a5d3809"
+    },
+    "name": "Corp A 1 st floor"
+  },
+  {
+    "_id": {
+      "$oid": "69cce2c84ba18b2f4a88f02b"
+    },
+    "buildingId": {
+      "$oid": "68d676cd79503b1c49748a60"
+    },
+    "name": "Obs 1 st floor"
+  },
+  {
+    "_id": {
+      "$oid": "69cce2d04ba18b2f4a88f02c"
+    },
+    "buildingId": {
+      "$oid": "68d676cd79503b1c49748a60"
+    },
+    "name": "Obs 2 nd floor"
+  },
+  {
+    "_id": {
+      "$oid": "69cce2d54ba18b2f4a88f02d"
+    },
+    "buildingId": {
+      "$oid": "68d676cd79503b1c49748a60"
+    },
+    "name": "Obs 3 rd floor"
+  },
+  {
+    "_id": {
+      "$oid": "69cce2e44ba18b2f4a88f02e"
+    },
+    "buildingId": {
+      "$oid": "68d676cd79503b1c49748a60"
+    },
+    "name": "Obs 4 th floor"
+  },
+  {
+    "_id": {
+      "$oid": "69cce2e84ba18b2f4a88f02f"
+    },
+    "buildingId": {
+      "$oid": "68d676cd79503b1c49748a60"
+    },
+    "name": "Obs 6 th floor"
+  },
+  {
+    "_id": {
+      "$oid": "69cce6a64ba18b2f4a88f053"
+    },
+    "buildingId": {
+      "$oid": "68ee23ebf9afa2e86a5d380a"
+    },
+    "name": "dorobanti ground"
+  },
+  {
+    "_id": {
+      "$oid": "69cce6b54ba18b2f4a88f054"
+    },
+    "buildingId": {
+      "$oid": "68ee23ebf9afa2e86a5d380a"
+    },
+    "name": "dorobanti 3 rd floor"
+  }
+]

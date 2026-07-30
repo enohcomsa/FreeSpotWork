@@ -1,0 +1,102 @@
+[
+  {
+    "_id": {
+      "$oid": "68d67eb979503b1c49748a64"
+    },
+    "name": "Facultatea de Automatică și Calculatoare",
+    "shortName": "AC",
+    "subjectList": []
+  },
+  {
+    "_id": {
+      "$oid": "694424e184429b0a8aaedaa4"
+    },
+    "name": "Facultatea de Arhitectură și Urbanism",
+    "shortName": "Arhitectura",
+    "subjectList": []
+  },
+  {
+    "_id": {
+      "$oid": "694424fe84429b0a8aaedaa5"
+    },
+    "name": "Facultatea de Autovehicule Rutiere, Mecatronică si Mecanică",
+    "shortName": "ARMM",
+    "subjectList": []
+  },
+  {
+    "_id": {
+      "$oid": "6944250a84429b0a8aaedaa6"
+    },
+    "name": "Facultatea de Construcții",
+    "shortName": "Constructii",
+    "subjectList": []
+  },
+  {
+    "_id": {
+      "$oid": "6944251284429b0a8aaedaa7"
+    },
+    "name": "Facultatea de Electronica, Telecomunicații si Tehnologia Informației",
+    "shortName": "ETTI",
+    "subjectList": [
+      {
+        "$oid": "690de71756135fca783f41a7"
+      },
+      {
+        "$oid": "690de69756135fca783f41a3"
+      },
+      {
+        "$oid": "690de6f856135fca783f41a5"
+      },
+      {
+        "$oid": "690de72856135fca783f41a9"
+      },
+      {
+        "$oid": "690de72056135fca783f41a8"
+      },
+      {
+        "$oid": "690de6a756135fca783f41a4"
+      },
+      {
+        "$oid": "690de65c56135fca783f41a2"
+      },
+      {
+        "$oid": "68d67d2d79503b1c49748a62"
+      },
+      {
+        "$oid": "690de70f56135fca783f41a6"
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$oid": "6944251f84429b0a8aaedaa8"
+    },
+    "name": "Facultatea de Ingineria Materialelor și a Mediului",
+    "shortName": "IMM",
+    "subjectList": []
+  },
+  {
+    "_id": {
+      "$oid": "6944252884429b0a8aaedaa9"
+    },
+    "name": "Facultatea de Inginerie a Instalațiilor",
+    "shortName": "II",
+    "subjectList": []
+  },
+  {
+    "_id": {
+      "$oid": "6944252d84429b0a8aaedaaa"
+    },
+    "name": "Facultatea de Inginerie Electrică",
+    "shortName": "IE",
+    "subjectList": []
+  },
+  {
+    "_id": {
+      "$oid": "6944253384429b0a8aaedaab"
+    },
+    "name": "Facultatea de Inginerie Industrială, Robotică și Managementul Producției",
+    "shortName": "IIRMP",
+    "subjectList": []
+  }
+]

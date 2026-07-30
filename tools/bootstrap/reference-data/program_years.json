@@ -1,0 +1,62 @@
+[
+  {
+    "_id": {
+      "$oid": "694ecf225a6fd325198a3234"
+    },
+    "programId": {
+      "$oid": "694ebfbd5a6fd325198a3231"
+    },
+    "yearNumber": {
+      "$numberInt": "1"
+    },
+    "label": "1"
+  },
+  {
+    "_id": {
+      "$oid": "694ecf765a6fd325198a3235"
+    },
+    "programId": {
+      "$oid": "694ebfbd5a6fd325198a3231"
+    },
+    "yearNumber": {
+      "$numberInt": "2"
+    },
+    "label": "2"
+  },
+  {
+    "_id": {
+      "$oid": "694ecf905a6fd325198a3236"
+    },
+    "programId": {
+      "$oid": "694ebf7f5a6fd325198a3230"
+    },
+    "yearNumber": {
+      "$numberInt": "3"
+    },
+    "label": "3"
+  },
+  {
+    "_id": {
+      "$oid": "694ecf965a6fd325198a3237"
+    },
+    "programId": {
+      "$oid": "694ebf7f5a6fd325198a3230"
+    },
+    "yearNumber": {
+      "$numberInt": "4"
+    },
+    "label": "4"
+  },
+  {
+    "_id": {
+      "$oid": "694ecf9e5a6fd325198a3238"
+    },
+    "programId": {
+      "$oid": "694ebfd95a6fd325198a3232"
+    },
+    "yearNumber": {
+      "$numberInt": "4"
+    },
+    "label": "4"
+  }
+]

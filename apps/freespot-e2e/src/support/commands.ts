@@ -24,7 +24,7 @@ Cypress.Commands.add('login', () => {
 
   cy.visit('/auth');
   cy.get('[data-automation-id="login-identifier"]').click();
-  cy.get('[data-automation-id="login-identifier"]').type('student@test.com');
+  cy.get('[data-automation-id="login-identifier"]').type('student@local.e2e');
   cy.get('[data-automation-id="login-password"]').type('Password123!');
   cy.get('[data-automation-id="login-submit"]').click();
   cy.wait('@login').its('response.statusCode').should('eq', 200);

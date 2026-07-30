@@ -1,0 +1,65 @@
+[
+  {
+    "_id": {
+      "$oid": "68d67d2d79503b1c49748a62"
+    },
+    "name": "Tehnologii Multimedia si Medii Virtuale",
+    "shortName": "TM"
+  },
+  {
+    "_id": {
+      "$oid": "690de65c56135fca783f41a2"
+    },
+    "name": "Sist. optoelectronice in telecomunicatii ",
+    "shortName": "SOT"
+  },
+  {
+    "_id": {
+      "$oid": "690de69756135fca783f41a3"
+    },
+    "name": "Managementul financiar al firmei",
+    "shortName": "MFF"
+  },
+  {
+    "_id": {
+      "$oid": "690de6a756135fca783f41a4"
+    },
+    "name": "Procesoare media",
+    "shortName": "PM"
+  },
+  {
+    "_id": {
+      "$oid": "690de6f856135fca783f41a5"
+    },
+    "name": "Managementul proiectelor/ Educatie antreprenoriala",
+    "shortName": "MP/EA"
+  },
+  {
+    "_id": {
+      "$oid": "690de70f56135fca783f41a6"
+    },
+    "name": "Procesoare de semnal",
+    "shortName": "PS"
+  },
+  {
+    "_id": {
+      "$oid": "690de71756135fca783f41a7"
+    },
+    "name": "Electronica aplicata",
+    "shortName": "EA"
+  },
+  {
+    "_id": {
+      "$oid": "690de72056135fca783f41a8"
+    },
+    "name": "Prel.semn. vocal",
+    "shortName": "PSV"
+  },
+  {
+    "_id": {
+      "$oid": "690de72856135fca783f41a9"
+    },
+    "name": "Marketing",
+    "shortName": "MK"
+  }
+]

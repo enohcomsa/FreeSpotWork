@@ -1,0 +1,23 @@
+[
+  {
+    "_id": {
+      "$oid": "68d676cd79503b1c49748a60"
+    },
+    "name": "Laboratoare Observator",
+    "address": "Observatorului, 400347"
+  },
+  {
+    "_id": {
+      "$oid": "68ee23d6f9afa2e86a5d3809"
+    },
+    "name": "Baritiu corp A",
+    "address": "Baritiu 24-26"
+  },
+  {
+    "_id": {
+      "$oid": "68ee23ebf9afa2e86a5d380a"
+    },
+    "name": "Laboraore dorobanti",
+    "address": "Dorobantilor 71-73"
+  }
+]

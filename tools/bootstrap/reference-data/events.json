@@ -1,0 +1,122 @@
+[
+  {
+    "_id": {
+      "$oid": "699d94fb33f21102c67d8b4c"
+    },
+    "type": "SPECIAL",
+    "name": "Prezentare sist. fibra optica",
+    "date": {
+      "$date": {
+        "$numberLong": "1920794400000"
+      }
+    },
+    "startHour": {
+      "$numberInt": "12"
+    },
+    "buildingId": {
+      "$oid": "68ee23d6f9afa2e86a5d3809"
+    },
+    "roomId": {
+      "$oid": "699d8cb4146f07fcd459602c"
+    },
+    "reservedSpots": {
+      "$numberInt": "3"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "699d971333f21102c67d8b4d"
+    },
+    "type": "SPECIAL",
+    "name": "Licenta comisie 4",
+    "date": {
+      "$date": {
+        "$numberLong": "1844074800000"
+      }
+    },
+    "startHour": {
+      "$numberInt": "14"
+    },
+    "buildingId": {
+      "$oid": "68ee23d6f9afa2e86a5d3809"
+    },
+    "roomId": {
+      "$oid": "699d8ce3146f07fcd459602d"
+    },
+    "reservedSpots": {
+      "$numberInt": "16"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "699d974633f21102c67d8b4e"
+    },
+    "type": "SPECIAL",
+    "name": "Simpozion",
+    "date": {
+      "$date": {
+        "$numberLong": "1794470400000"
+      }
+    },
+    "startHour": {
+      "$numberInt": "10"
+    },
+    "buildingId": {
+      "$oid": "68ee23d6f9afa2e86a5d3809"
+    },
+    "roomId": {
+      "$oid": "699d8ce3146f07fcd459602d"
+    },
+    "reservedSpots": {
+      "$numberInt": "6"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "699d977e33f21102c67d8b4f"
+    },
+    "type": "SPECIAL",
+    "name": "Prezentare A.I.",
+    "date": {
+      "$date": {
+        "$numberLong": "1778749200000"
+      }
+    },
+    "startHour": {
+      "$numberInt": "12"
+    },
+    "buildingId": {
+      "$oid": "68d676cd79503b1c49748a60"
+    },
+    "roomId": {
+      "$oid": "699d8d2f146f07fcd459602f"
+    },
+    "reservedSpots": {
+      "$numberInt": "8"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "699d97a033f21102c67d8b50"
+    },
+    "type": "SPECIAL",
+    "name": "Prezentare MIT up",
+    "date": {
+      "$date": {
+        "$numberLong": "1780059600000"
+      }
+    },
+    "startHour": {
+      "$numberInt": "16"
+    },
+    "buildingId": {
+      "$oid": "68ee23d6f9afa2e86a5d3809"
+    },
+    "roomId": {
+      "$oid": "699d8d6e146f07fcd4596031"
+    },
+    "reservedSpots": {
+      "$numberInt": "2"
+    }
+  }
+]

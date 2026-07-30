@@ -1,0 +1,188 @@
+[
+  {
+    "_id": {
+      "$oid": "699d8cb4146f07fcd459602c"
+    },
+    "buildingId": {
+      "$oid": "68ee23d6f9afa2e86a5d3809"
+    },
+    "floorId": {
+      "$oid": "699d8c92146f07fcd459602b"
+    },
+    "name": "328 ",
+    "totalSpotsNumber": {
+      "$numberInt": "15"
+    },
+    "unavailableSpots": {
+      "$numberInt": "1"
+    },
+    "subjectList": [
+      {
+        "$oid": "690de65c56135fca783f41a2"
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$oid": "699d8ce3146f07fcd459602d"
+    },
+    "buildingId": {
+      "$oid": "68ee23d6f9afa2e86a5d3809"
+    },
+    "floorId": {
+      "$oid": "699d8c92146f07fcd459602b"
+    },
+    "name": "P03",
+    "totalSpotsNumber": {
+      "$numberInt": "120"
+    },
+    "unavailableSpots": {
+      "$numberInt": "5"
+    },
+    "subjectList": [
+      {
+        "$oid": "690de69756135fca783f41a3"
+      },
+      {
+        "$oid": "690de6f856135fca783f41a5"
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$oid": "699d8d2f146f07fcd459602f"
+    },
+    "buildingId": {
+      "$oid": "68d676cd79503b1c49748a60"
+    },
+    "floorId": {
+      "$oid": "699d8d1a146f07fcd459602e"
+    },
+    "name": "506",
+    "totalSpotsNumber": {
+      "$numberInt": "15"
+    },
+    "unavailableSpots": {
+      "$numberInt": "0"
+    },
+    "subjectList": [
+      {
+        "$oid": "68d67d2d79503b1c49748a62"
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$oid": "699d8d6e146f07fcd4596031"
+    },
+    "buildingId": {
+      "$oid": "68ee23d6f9afa2e86a5d3809"
+    },
+    "floorId": {
+      "$oid": "699d8d58146f07fcd4596030"
+    },
+    "name": "41 ",
+    "totalSpotsNumber": {
+      "$numberInt": "90"
+    },
+    "unavailableSpots": {
+      "$numberInt": "3"
+    },
+    "subjectList": [
+      {
+        "$oid": "690de6a756135fca783f41a4"
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$oid": "69cce31a4ba18b2f4a88f030"
+    },
+    "buildingId": {
+      "$oid": "68d676cd79503b1c49748a60"
+    },
+    "floorId": {
+      "$oid": "699d8d1a146f07fcd459602e"
+    },
+    "name": "507",
+    "totalSpotsNumber": {
+      "$numberInt": "23"
+    },
+    "unavailableSpots": {
+      "$numberInt": "4"
+    },
+    "subjectList": [
+      {
+        "$oid": "690de6a756135fca783f41a4"
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$oid": "69cce4744ba18b2f4a88f03e"
+    },
+    "buildingId": {
+      "$oid": "68d676cd79503b1c49748a60"
+    },
+    "floorId": {
+      "$oid": "69cce2e84ba18b2f4a88f02f"
+    },
+    "name": "600",
+    "totalSpotsNumber": {
+      "$numberInt": "16"
+    },
+    "unavailableSpots": {
+      "$numberInt": "0"
+    },
+    "subjectList": [
+      {
+        "$oid": "690de72856135fca783f41a9"
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$oid": "69cce5f24ba18b2f4a88f04f"
+    },
+    "buildingId": {
+      "$oid": "68ee23d6f9afa2e86a5d3809"
+    },
+    "floorId": {
+      "$oid": "699d8d58146f07fcd4596030"
+    },
+    "name": "368",
+    "totalSpotsNumber": {
+      "$numberInt": "100"
+    },
+    "unavailableSpots": {
+      "$numberInt": "2"
+    },
+    "subjectList": [
+      {
+        "$oid": "690de65c56135fca783f41a2"
+      },
+      {
+        "$oid": "68d67d2d79503b1c49748a62"
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$oid": "69cce6c84ba18b2f4a88f055"
+    },
+    "buildingId": {
+      "$oid": "68ee23ebf9afa2e86a5d380a"
+    },
+    "floorId": {
+      "$oid": "69cce6b54ba18b2f4a88f054"
+    },
+    "name": "212",
+    "totalSpotsNumber": {
+      "$numberInt": "30"
+    },
+    "unavailableSpots": {
+      "$numberInt": "0"
+    },
+    "subjectList": []
+  }
+]
