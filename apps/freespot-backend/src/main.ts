@@ -44,7 +44,8 @@ async function bootstrap() {
     "http://localhost:3333",
     "https://free-spot.vercel.app",
     "https://freespotwork.onrender.com",
-    "https://shimmering-frangollo-07e558.netlify.app",
+    "https://freespotwork-staging.onrender.com",
+    "https://freespot-staging.netlify.app",
     "https://free-spot-work.vercel.app"
   ];
 
