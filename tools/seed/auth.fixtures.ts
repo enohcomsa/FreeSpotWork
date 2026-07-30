@@ -2,7 +2,7 @@ import { ACADEMIC_IDS } from './academic.fixtures';
 
 export const E2E_STUDENT = {
   email: 'student@local.e2e',
-  username: 'student',
+  username: 'Student',
   password: 'Password123!',
 
   firstName: 'Student',
