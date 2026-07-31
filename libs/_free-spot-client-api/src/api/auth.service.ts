@@ -67,7 +67,7 @@ export class AuthHttpService extends BaseService {
     public authLogin(requestParameters?: AuthLoginRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<AuthOkResponseDTO>;
     public authLogin(requestParameters?: AuthLoginRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<AuthOkResponseDTO>>;
     public authLogin(requestParameters?: AuthLoginRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<AuthOkResponseDTO>>;
-    public authLogin(requestParameters?: AuthLoginRequestParams, observe: any = 'body', reportProgress = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public authLogin(requestParameters?: AuthLoginRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         const loginRequestDTO = requestParameters?.loginRequestDTO;
 
         let localVarHeaders = this.defaultHeaders;
@@ -104,7 +104,7 @@ export class AuthHttpService extends BaseService {
             }
         }
 
-        const localVarPath = `/auth/login`;
+        let localVarPath = `/auth/login`;
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<AuthOkResponseDTO>('post', `${basePath}${localVarPath}`,
             {
@@ -128,7 +128,7 @@ export class AuthHttpService extends BaseService {
     public authLogout(requestParameters?: AuthLogoutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any>;
     public authLogout(requestParameters?: AuthLogoutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
     public authLogout(requestParameters?: AuthLogoutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
-    public authLogout(requestParameters?: AuthLogoutRequestParams, observe: any = 'body', reportProgress = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public authLogout(requestParameters?: AuthLogoutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
         const body = requestParameters?.body;
 
         let localVarHeaders = this.defaultHeaders;
@@ -169,7 +169,7 @@ export class AuthHttpService extends BaseService {
             }
         }
 
-        const localVarPath = `/auth/logout`;
+        let localVarPath = `/auth/logout`;
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<any>('post', `${basePath}${localVarPath}`,
             {
@@ -192,7 +192,7 @@ export class AuthHttpService extends BaseService {
     public authMe(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<MeResponseDTO>;
     public authMe(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<MeResponseDTO>>;
     public authMe(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<MeResponseDTO>>;
-    public authMe(observe: any = 'body', reportProgress = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public authMe(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -221,7 +221,7 @@ export class AuthHttpService extends BaseService {
             }
         }
 
-        const localVarPath = `/auth/me`;
+        let localVarPath = `/auth/me`;
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<MeResponseDTO>('get', `${basePath}${localVarPath}`,
             {
@@ -244,7 +244,7 @@ export class AuthHttpService extends BaseService {
     public authRefresh(requestParameters?: AuthRefreshRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<RefreshResponseDTO>;
     public authRefresh(requestParameters?: AuthRefreshRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<RefreshResponseDTO>>;
     public authRefresh(requestParameters?: AuthRefreshRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<RefreshResponseDTO>>;
-    public authRefresh(requestParameters?: AuthRefreshRequestParams, observe: any = 'body', reportProgress = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public authRefresh(requestParameters?: AuthRefreshRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         const body = requestParameters?.body;
 
         let localVarHeaders = this.defaultHeaders;
@@ -286,7 +286,7 @@ export class AuthHttpService extends BaseService {
             }
         }
 
-        const localVarPath = `/auth/refresh`;
+        let localVarPath = `/auth/refresh`;
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<RefreshResponseDTO>('post', `${basePath}${localVarPath}`,
             {
@@ -310,7 +310,7 @@ export class AuthHttpService extends BaseService {
     public authSignup(requestParameters?: AuthSignupRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<AuthOkResponseDTO>;
     public authSignup(requestParameters?: AuthSignupRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<AuthOkResponseDTO>>;
     public authSignup(requestParameters?: AuthSignupRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<AuthOkResponseDTO>>;
-    public authSignup(requestParameters?: AuthSignupRequestParams, observe: any = 'body', reportProgress = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public authSignup(requestParameters?: AuthSignupRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         const signupRequestDTO = requestParameters?.signupRequestDTO;
 
         let localVarHeaders = this.defaultHeaders;
@@ -347,7 +347,7 @@ export class AuthHttpService extends BaseService {
             }
         }
 
-        const localVarPath = `/auth/signup`;
+        let localVarPath = `/auth/signup`;
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<AuthOkResponseDTO>('post', `${basePath}${localVarPath}`,
             {

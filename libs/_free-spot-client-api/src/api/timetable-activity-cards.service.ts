@@ -51,7 +51,7 @@ export class TimetableActivityCardsHttpService extends BaseService {
     public getTimetableActivityCardsByRoomId(requestParameters: GetTimetableActivityCardsByRoomIdRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<TimetableActivityCardDTO>>;
     public getTimetableActivityCardsByRoomId(requestParameters: GetTimetableActivityCardsByRoomIdRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<TimetableActivityCardDTO>>>;
     public getTimetableActivityCardsByRoomId(requestParameters: GetTimetableActivityCardsByRoomIdRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<TimetableActivityCardDTO>>>;
-    public getTimetableActivityCardsByRoomId(requestParameters: GetTimetableActivityCardsByRoomIdRequestParams, observe: any = 'body', reportProgress = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public getTimetableActivityCardsByRoomId(requestParameters: GetTimetableActivityCardsByRoomIdRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling getTimetableActivityCardsByRoomId.');
@@ -84,7 +84,7 @@ export class TimetableActivityCardsHttpService extends BaseService {
             }
         }
 
-        const localVarPath = `/timetable-activities-cards/room/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        let localVarPath = `/timetable-activities-cards/room/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<Array<TimetableActivityCardDTO>>('get', `${basePath}${localVarPath}`,
             {
@@ -106,7 +106,7 @@ export class TimetableActivityCardsHttpService extends BaseService {
     public timetableActivityCardsGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<TimetableActivityCardDTO>>;
     public timetableActivityCardsGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<TimetableActivityCardDTO>>>;
     public timetableActivityCardsGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<TimetableActivityCardDTO>>>;
-    public timetableActivityCardsGet(observe: any = 'body', reportProgress = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public timetableActivityCardsGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -135,7 +135,7 @@ export class TimetableActivityCardsHttpService extends BaseService {
             }
         }
 
-        const localVarPath = `/timetable-activities-cards`;
+        let localVarPath = `/timetable-activities-cards`;
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<Array<TimetableActivityCardDTO>>('get', `${basePath}${localVarPath}`,
             {
@@ -158,7 +158,7 @@ export class TimetableActivityCardsHttpService extends BaseService {
     public timetableActivityCardsIdGet(requestParameters: TimetableActivityCardsIdGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<TimetableActivityCardDTO>;
     public timetableActivityCardsIdGet(requestParameters: TimetableActivityCardsIdGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<TimetableActivityCardDTO>>;
     public timetableActivityCardsIdGet(requestParameters: TimetableActivityCardsIdGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<TimetableActivityCardDTO>>;
-    public timetableActivityCardsIdGet(requestParameters: TimetableActivityCardsIdGetRequestParams, observe: any = 'body', reportProgress = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public timetableActivityCardsIdGet(requestParameters: TimetableActivityCardsIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling timetableActivityCardsIdGet.');
@@ -191,7 +191,7 @@ export class TimetableActivityCardsHttpService extends BaseService {
             }
         }
 
-        const localVarPath = `/timetable-activities-cards/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        let localVarPath = `/timetable-activities-cards/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<TimetableActivityCardDTO>('get', `${basePath}${localVarPath}`,
             {
