@@ -47,7 +47,7 @@ export class AvailabilityHttpService extends BaseService {
     public availabilityRescheduleOptionsGet(requestParameters: AvailabilityRescheduleOptionsGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<RescheduleOptionsResponseDTO>;
     public availabilityRescheduleOptionsGet(requestParameters: AvailabilityRescheduleOptionsGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<RescheduleOptionsResponseDTO>>;
     public availabilityRescheduleOptionsGet(requestParameters: AvailabilityRescheduleOptionsGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<RescheduleOptionsResponseDTO>>;
-    public availabilityRescheduleOptionsGet(requestParameters: AvailabilityRescheduleOptionsGetRequestParams, observe: any = 'body', reportProgress = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public availabilityRescheduleOptionsGet(requestParameters: AvailabilityRescheduleOptionsGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         const bookingId = requestParameters?.bookingId;
         if (bookingId === null || bookingId === undefined) {
             throw new Error('Required parameter bookingId was null or undefined when calling availabilityRescheduleOptionsGet.');
@@ -84,7 +84,7 @@ export class AvailabilityHttpService extends BaseService {
             }
         }
 
-        const localVarPath = `/availability/reschedule-options`;
+        let localVarPath = `/availability/reschedule-options`;
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<RescheduleOptionsResponseDTO>('get', `${basePath}${localVarPath}`,
             {

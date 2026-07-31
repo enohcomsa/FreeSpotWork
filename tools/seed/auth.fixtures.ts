@@ -1,7 +1,15 @@
 import { ACADEMIC_IDS } from './academic.fixtures';
 
+
+const APP_ENV = process.env.APP_ENV;
+
+const isStaging = APP_ENV === 'staging';
+
 export const E2E_STUDENT = {
-  email: 'student@local.e2e',
+  email: isStaging
+    ? 'student@staging.freespot'
+    : 'student@local.e2e',
+
   username: 'Student',
   password: 'Password123!',
 
@@ -14,3 +22,4 @@ export const E2E_STUDENT = {
   groupCohortId: ACADEMIC_IDS.group2211,
   semigroupCohortId: ACADEMIC_IDS.semigroup2211A,
 } as const;
+

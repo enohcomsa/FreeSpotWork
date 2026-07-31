@@ -27,7 +27,7 @@
         "dev-atlas": {
           "buildTarget": "freespot-backend:build:development"
         },
-        "e2e": {
+        "local-e2e": {
           "buildTarget": "freespot-backend:build:development"
         },
         "staging": {

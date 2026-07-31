@@ -1,7 +1,11 @@
 describe('Booking rescheduling', () => {
+  const isStaging = Cypress.config('baseUrl')?.includes('netlify');
+  const email = isStaging ? 'student@staging.freespot' : 'student@local.e2e';
+
+
   beforeEach(() => {
     cy.task('seedDb');
-    cy.login();
+    cy.login(email, 'Password123!');
     cy.visit('/my-bookings');
   });
 
