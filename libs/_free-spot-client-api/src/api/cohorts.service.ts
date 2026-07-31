@@ -63,7 +63,7 @@ export class CohortsHttpService extends BaseService {
     public cohortsGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<CohortResponseDTO>>;
     public cohortsGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<CohortResponseDTO>>>;
     public cohortsGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<CohortResponseDTO>>>;
-    public cohortsGet(observe: any = 'body', reportProgress = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public cohortsGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -92,7 +92,7 @@ export class CohortsHttpService extends BaseService {
             }
         }
 
-        const localVarPath = `/cohorts`;
+        let localVarPath = `/cohorts`;
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<Array<CohortResponseDTO>>('get', `${basePath}${localVarPath}`,
             {
@@ -115,7 +115,7 @@ export class CohortsHttpService extends BaseService {
     public cohortsIdDelete(requestParameters: CohortsIdDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any>;
     public cohortsIdDelete(requestParameters: CohortsIdDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
     public cohortsIdDelete(requestParameters: CohortsIdDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
-    public cohortsIdDelete(requestParameters: CohortsIdDeleteRequestParams, observe: any = 'body', reportProgress = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public cohortsIdDelete(requestParameters: CohortsIdDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
         const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling cohortsIdDelete.');
@@ -147,7 +147,7 @@ export class CohortsHttpService extends BaseService {
             }
         }
 
-        const localVarPath = `/cohorts/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        let localVarPath = `/cohorts/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<any>('delete', `${basePath}${localVarPath}`,
             {
@@ -170,7 +170,7 @@ export class CohortsHttpService extends BaseService {
     public cohortsIdGet(requestParameters: CohortsIdGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<CohortResponseDTO>;
     public cohortsIdGet(requestParameters: CohortsIdGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<CohortResponseDTO>>;
     public cohortsIdGet(requestParameters: CohortsIdGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<CohortResponseDTO>>;
-    public cohortsIdGet(requestParameters: CohortsIdGetRequestParams, observe: any = 'body', reportProgress = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public cohortsIdGet(requestParameters: CohortsIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling cohortsIdGet.');
@@ -203,7 +203,7 @@ export class CohortsHttpService extends BaseService {
             }
         }
 
-        const localVarPath = `/cohorts/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        let localVarPath = `/cohorts/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<CohortResponseDTO>('get', `${basePath}${localVarPath}`,
             {
@@ -226,7 +226,7 @@ export class CohortsHttpService extends BaseService {
     public cohortsIdPatch(requestParameters: CohortsIdPatchRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<CohortResponseDTO>;
     public cohortsIdPatch(requestParameters: CohortsIdPatchRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<CohortResponseDTO>>;
     public cohortsIdPatch(requestParameters: CohortsIdPatchRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<CohortResponseDTO>>;
-    public cohortsIdPatch(requestParameters: CohortsIdPatchRequestParams, observe: any = 'body', reportProgress = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public cohortsIdPatch(requestParameters: CohortsIdPatchRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling cohortsIdPatch.');
@@ -269,7 +269,7 @@ export class CohortsHttpService extends BaseService {
             }
         }
 
-        const localVarPath = `/cohorts/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        let localVarPath = `/cohorts/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<CohortResponseDTO>('patch', `${basePath}${localVarPath}`,
             {
@@ -293,7 +293,7 @@ export class CohortsHttpService extends BaseService {
     public cohortsPost(requestParameters?: CohortsPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<CohortResponseDTO>;
     public cohortsPost(requestParameters?: CohortsPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<CohortResponseDTO>>;
     public cohortsPost(requestParameters?: CohortsPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<CohortResponseDTO>>;
-    public cohortsPost(requestParameters?: CohortsPostRequestParams, observe: any = 'body', reportProgress = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public cohortsPost(requestParameters?: CohortsPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         const cohortCreateDTO = requestParameters?.cohortCreateDTO;
 
         let localVarHeaders = this.defaultHeaders;
@@ -332,7 +332,7 @@ export class CohortsHttpService extends BaseService {
             }
         }
 
-        const localVarPath = `/cohorts`;
+        let localVarPath = `/cohorts`;
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<CohortResponseDTO>('post', `${basePath}${localVarPath}`,
             {

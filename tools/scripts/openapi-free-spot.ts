@@ -1,40 +1,56 @@
 import { execSync } from "child_process";
+import fs from "node:fs";
 import * as path from "path";
 
-const DEPLOYED = "https://freespotwork.onrender.com/openapi.json";
-const LOCAL = "http://localhost:3333/openapi.json";
-
-function pickOpenApiUrl(): string {
-  try {
-    execSync(`curl -fsS "${DEPLOYED}"`, { stdio: "ignore" });
-    return DEPLOYED;
-  } catch {
-    return LOCAL;
-  }
-}
-
-const OPENAPI_URL = pickOpenApiUrl();
+const OPENAPI_URL = "https://freespotwork.onrender.com/openapi.json";
 
 const ROOT = process.env.INIT_CWD || process.cwd();
 const OUT_LIB = path.join(ROOT, "libs", "_free-spot-client-api");
 const OUT_DIR = path.join(OUT_LIB, "src");
-const ADDITIONAL = [
-  "ngVersion=20.3.3",
+
+const ADDITIONAL_PROPERTIES = [
+  "ngVersion=22.0.7",
   "fileNaming=kebab-case",
   "stringEnums=true",
   "enumPropertyNaming=UPPERCASE",
   "serviceSuffix=HttpService",
   "modelSuffix=DTO",
   "providedIn=root",
-  "useSingleRequestParameter=true"
+  "useSingleRequestParameter=true",
 ].join(",");
 
-console.log("▶ Generating Angular client from:", OPENAPI_URL);
+const GENERATOR = [
+  'npx openapi-generator-cli generate',
+  `-i "${OPENAPI_URL}"`,
+  "-g typescript-angular",
+  `-o "${OUT_DIR}"`,
+  `--additional-properties=${ADDITIONAL_PROPERTIES}`,
+  "--global-property apis,models,supportingFiles,apiTests=false,modelTests=false",
+  "--generate-alias-as-model",
+].join(" ");
 
-execSync(`rm -rf "${OUT_DIR}"`, { stdio: "inherit" });
-execSync(
-  `npx openapi-generator-cli generate -i ${OPENAPI_URL} -g typescript-angular -o "${OUT_DIR}" --additional-properties=${ADDITIONAL} --global-property apis,models,supportingFiles,apiTests=false,modelTests=false --generate-alias-as-model`,
-  { stdio: "inherit" }
-);
+console.log(`▶ Generating Angular client from ${OPENAPI_URL}`);
 
-console.log("✅ Done. Generated at libs/_free-spot-api-client/src");
+fs.rmSync(OUT_DIR, {
+  recursive: true,
+  force: true,
+});
+
+try {
+  execSync(GENERATOR, {
+    stdio: "inherit",
+  });
+} catch {
+  console.error(
+    [
+      "Failed to generate the Angular API client.",
+      `Source: ${OPENAPI_URL}`,
+      "Ensure the backend is running and the OpenAPI specification is available.",
+    ].join("\n")
+  );
+
+  process.exit(1);
+}
+
+console.log("✅ Angular API client generated successfully.");
+console.log(`📁 Output: ${OUT_DIR}`);

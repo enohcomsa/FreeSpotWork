@@ -63,7 +63,7 @@ export class ProgramYearsHttpService extends BaseService {
     public programYearsGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<ProgramYearResponseDTO>>;
     public programYearsGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<ProgramYearResponseDTO>>>;
     public programYearsGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<ProgramYearResponseDTO>>>;
-    public programYearsGet(observe: any = 'body', reportProgress = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public programYearsGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -92,7 +92,7 @@ export class ProgramYearsHttpService extends BaseService {
             }
         }
 
-        const localVarPath = `/program-years`;
+        let localVarPath = `/program-years`;
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<Array<ProgramYearResponseDTO>>('get', `${basePath}${localVarPath}`,
             {
@@ -115,7 +115,7 @@ export class ProgramYearsHttpService extends BaseService {
     public programYearsIdDelete(requestParameters: ProgramYearsIdDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any>;
     public programYearsIdDelete(requestParameters: ProgramYearsIdDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
     public programYearsIdDelete(requestParameters: ProgramYearsIdDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
-    public programYearsIdDelete(requestParameters: ProgramYearsIdDeleteRequestParams, observe: any = 'body', reportProgress = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public programYearsIdDelete(requestParameters: ProgramYearsIdDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
         const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling programYearsIdDelete.');
@@ -147,7 +147,7 @@ export class ProgramYearsHttpService extends BaseService {
             }
         }
 
-        const localVarPath = `/program-years/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        let localVarPath = `/program-years/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<any>('delete', `${basePath}${localVarPath}`,
             {
@@ -170,7 +170,7 @@ export class ProgramYearsHttpService extends BaseService {
     public programYearsIdGet(requestParameters: ProgramYearsIdGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<ProgramYearResponseDTO>;
     public programYearsIdGet(requestParameters: ProgramYearsIdGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ProgramYearResponseDTO>>;
     public programYearsIdGet(requestParameters: ProgramYearsIdGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ProgramYearResponseDTO>>;
-    public programYearsIdGet(requestParameters: ProgramYearsIdGetRequestParams, observe: any = 'body', reportProgress = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public programYearsIdGet(requestParameters: ProgramYearsIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling programYearsIdGet.');
@@ -203,7 +203,7 @@ export class ProgramYearsHttpService extends BaseService {
             }
         }
 
-        const localVarPath = `/program-years/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        let localVarPath = `/program-years/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<ProgramYearResponseDTO>('get', `${basePath}${localVarPath}`,
             {
@@ -226,7 +226,7 @@ export class ProgramYearsHttpService extends BaseService {
     public programYearsIdPatch(requestParameters: ProgramYearsIdPatchRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<ProgramYearResponseDTO>;
     public programYearsIdPatch(requestParameters: ProgramYearsIdPatchRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ProgramYearResponseDTO>>;
     public programYearsIdPatch(requestParameters: ProgramYearsIdPatchRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ProgramYearResponseDTO>>;
-    public programYearsIdPatch(requestParameters: ProgramYearsIdPatchRequestParams, observe: any = 'body', reportProgress = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public programYearsIdPatch(requestParameters: ProgramYearsIdPatchRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling programYearsIdPatch.');
@@ -269,7 +269,7 @@ export class ProgramYearsHttpService extends BaseService {
             }
         }
 
-        const localVarPath = `/program-years/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        let localVarPath = `/program-years/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<ProgramYearResponseDTO>('patch', `${basePath}${localVarPath}`,
             {
@@ -293,7 +293,7 @@ export class ProgramYearsHttpService extends BaseService {
     public programYearsPost(requestParameters?: ProgramYearsPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<ProgramYearResponseDTO>;
     public programYearsPost(requestParameters?: ProgramYearsPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ProgramYearResponseDTO>>;
     public programYearsPost(requestParameters?: ProgramYearsPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ProgramYearResponseDTO>>;
-    public programYearsPost(requestParameters?: ProgramYearsPostRequestParams, observe: any = 'body', reportProgress = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public programYearsPost(requestParameters?: ProgramYearsPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         const programYearCreateDTO = requestParameters?.programYearCreateDTO;
 
         let localVarHeaders = this.defaultHeaders;
@@ -332,7 +332,7 @@ export class ProgramYearsHttpService extends BaseService {
             }
         }
 
-        const localVarPath = `/program-years`;
+        let localVarPath = `/program-years`;
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<ProgramYearResponseDTO>('post', `${basePath}${localVarPath}`,
             {

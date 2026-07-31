@@ -75,7 +75,7 @@ export class BookingsHttpService extends BaseService {
     public bookingsAdminUserIdGet(requestParameters: BookingsAdminUserIdGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<BookingResponseDTO>>;
     public bookingsAdminUserIdGet(requestParameters: BookingsAdminUserIdGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<BookingResponseDTO>>>;
     public bookingsAdminUserIdGet(requestParameters: BookingsAdminUserIdGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<BookingResponseDTO>>>;
-    public bookingsAdminUserIdGet(requestParameters: BookingsAdminUserIdGetRequestParams, observe: any = 'body', reportProgress = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public bookingsAdminUserIdGet(requestParameters: BookingsAdminUserIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         const userId = requestParameters?.userId;
         if (userId === null || userId === undefined) {
             throw new Error('Required parameter userId was null or undefined when calling bookingsAdminUserIdGet.');
@@ -108,7 +108,7 @@ export class BookingsHttpService extends BaseService {
             }
         }
 
-        const localVarPath = `/bookings/admin/user/${this.configuration.encodeParam({name: "userId", value: userId, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        let localVarPath = `/bookings/admin/user/${this.configuration.encodeParam({name: "userId", value: userId, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<Array<BookingResponseDTO>>('get', `${basePath}${localVarPath}`,
             {
@@ -130,7 +130,7 @@ export class BookingsHttpService extends BaseService {
     public bookingsGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<BookingResponseDTO>>;
     public bookingsGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<BookingResponseDTO>>>;
     public bookingsGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<BookingResponseDTO>>>;
-    public bookingsGet(observe: any = 'body', reportProgress = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public bookingsGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -159,7 +159,7 @@ export class BookingsHttpService extends BaseService {
             }
         }
 
-        const localVarPath = `/bookings`;
+        let localVarPath = `/bookings`;
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<Array<BookingResponseDTO>>('get', `${basePath}${localVarPath}`,
             {
@@ -182,7 +182,7 @@ export class BookingsHttpService extends BaseService {
     public bookingsIdAdminPatch(requestParameters: BookingsIdAdminPatchRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<BookingResponseDTO>;
     public bookingsIdAdminPatch(requestParameters: BookingsIdAdminPatchRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<BookingResponseDTO>>;
     public bookingsIdAdminPatch(requestParameters: BookingsIdAdminPatchRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<BookingResponseDTO>>;
-    public bookingsIdAdminPatch(requestParameters: BookingsIdAdminPatchRequestParams, observe: any = 'body', reportProgress = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public bookingsIdAdminPatch(requestParameters: BookingsIdAdminPatchRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling bookingsIdAdminPatch.');
@@ -225,7 +225,7 @@ export class BookingsHttpService extends BaseService {
             }
         }
 
-        const localVarPath = `/bookings/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}/admin`;
+        let localVarPath = `/bookings/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}/admin`;
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<BookingResponseDTO>('patch', `${basePath}${localVarPath}`,
             {
@@ -249,7 +249,7 @@ export class BookingsHttpService extends BaseService {
     public bookingsIdDelete(requestParameters: BookingsIdDeleteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any>;
     public bookingsIdDelete(requestParameters: BookingsIdDeleteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
     public bookingsIdDelete(requestParameters: BookingsIdDeleteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
-    public bookingsIdDelete(requestParameters: BookingsIdDeleteRequestParams, observe: any = 'body', reportProgress = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public bookingsIdDelete(requestParameters: BookingsIdDeleteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
         const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling bookingsIdDelete.');
@@ -281,7 +281,7 @@ export class BookingsHttpService extends BaseService {
             }
         }
 
-        const localVarPath = `/bookings/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        let localVarPath = `/bookings/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<any>('delete', `${basePath}${localVarPath}`,
             {
@@ -304,7 +304,7 @@ export class BookingsHttpService extends BaseService {
     public bookingsIdGet(requestParameters: BookingsIdGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<BookingResponseDTO>;
     public bookingsIdGet(requestParameters: BookingsIdGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<BookingResponseDTO>>;
     public bookingsIdGet(requestParameters: BookingsIdGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<BookingResponseDTO>>;
-    public bookingsIdGet(requestParameters: BookingsIdGetRequestParams, observe: any = 'body', reportProgress = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public bookingsIdGet(requestParameters: BookingsIdGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling bookingsIdGet.');
@@ -337,7 +337,7 @@ export class BookingsHttpService extends BaseService {
             }
         }
 
-        const localVarPath = `/bookings/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        let localVarPath = `/bookings/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<BookingResponseDTO>('get', `${basePath}${localVarPath}`,
             {
@@ -360,7 +360,7 @@ export class BookingsHttpService extends BaseService {
     public bookingsIdPatch(requestParameters: BookingsIdPatchRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<BookingResponseDTO>;
     public bookingsIdPatch(requestParameters: BookingsIdPatchRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<BookingResponseDTO>>;
     public bookingsIdPatch(requestParameters: BookingsIdPatchRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<BookingResponseDTO>>;
-    public bookingsIdPatch(requestParameters: BookingsIdPatchRequestParams, observe: any = 'body', reportProgress = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public bookingsIdPatch(requestParameters: BookingsIdPatchRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling bookingsIdPatch.');
@@ -403,7 +403,7 @@ export class BookingsHttpService extends BaseService {
             }
         }
 
-        const localVarPath = `/bookings/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        let localVarPath = `/bookings/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<BookingResponseDTO>('patch', `${basePath}${localVarPath}`,
             {
@@ -427,7 +427,7 @@ export class BookingsHttpService extends BaseService {
     public bookingsPost(requestParameters?: BookingsPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<BookingResponseDTO>;
     public bookingsPost(requestParameters?: BookingsPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<BookingResponseDTO>>;
     public bookingsPost(requestParameters?: BookingsPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<BookingResponseDTO>>;
-    public bookingsPost(requestParameters?: BookingsPostRequestParams, observe: any = 'body', reportProgress = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public bookingsPost(requestParameters?: BookingsPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         const bookingCreateDTO = requestParameters?.bookingCreateDTO;
 
         let localVarHeaders = this.defaultHeaders;
@@ -466,7 +466,7 @@ export class BookingsHttpService extends BaseService {
             }
         }
 
-        const localVarPath = `/bookings`;
+        let localVarPath = `/bookings`;
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<BookingResponseDTO>('post', `${basePath}${localVarPath}`,
             {

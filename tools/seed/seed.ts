@@ -5,15 +5,22 @@ import { seedBookings } from './bookings.seed';
 import { seedCampus } from './campus.seed';
 import { createSeedContext, disposeSeedContext } from './context';
 import { resetDatabase } from './reset';
+import { resetE2ECollections } from './reset-e2e';
 import { seedSystem } from './system.seed';
 
 async function main(): Promise<void> {
   const context = await createSeedContext();
+  const isStaging = process.env.APP_ENV === 'staging';
 
   try {
     console.log(`Seeding database '${context.db.databaseName}'...`);
 
-    await resetDatabase(context);
+
+    if (isStaging) {
+      await resetE2ECollections(context);
+    } else {
+      await resetDatabase(context);
+    }
 
     await seedSystem(context);
 

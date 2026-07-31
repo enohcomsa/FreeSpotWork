@@ -13,6 +13,12 @@ export enum PreferredLanguageDTO {
 
     EN = 'en',
 
-    RO = 'ro'
+    RO = 'ro',
+
+    HI = 'hi',
+
+    ZH_CN = 'zh-CN',
+
+    KO = 'ko'
 }
 
