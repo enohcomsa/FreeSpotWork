@@ -7,31 +7,43 @@
     "libs/*/*",
     "libs/*/*/*"
   ],
-  "scripts": {
-    "connect:freespot:db:local-e2e": "mongosh mongodb://127.0.0.1:27017/freespot_e2e",
-    "start:freespot:local-dev": "npx nx serve freespot --configuration=local-dev",
-    "start:freespot:dev-atlas": "npx nx serve freespot --configuration=dev-atlas",
-    "start:freespot:local-e2e": "npx nx serve freespot --configuration=local-e2e",
-    "start:freespot:backend:local-dev": "npx nx serve freespot-backend --configuration=local-dev",
-    "start:freespot:backend:dev-atlas": "npx nx serve freespot-backend --configuration=dev-atlas",
-    "start:freespot:backend:local-e2e": "npx nx serve freespot-backend --configuration=local-e2e",
-    "start:freespot:backend:staging": "npx nx serve freespot-backend --configuration=staging",
-    "start:freespot:backend:production": "node dist/apps/freespot-backend/main.js",
-    "start:freespot:stack:local-dev": "concurrently \"npm run start:freespot:local-dev\" \"npm run start:freespot:backend:local-dev\"",
-    "start:freespot:stack:dev-atlas": "concurrently \"npm run start:freespot:dev-atlas\" \"npm run start:freespot:backend:dev-atlas\"",
-    "start:freespot:stack:local-e2e": "npm run seed:freespot:local-e2e && concurrently \"npm run start:freespot:local-e2e\" \"npm run start:freespot:backend:local-e2e\"",
-    "build:freespot:staging": "npx nx build freespot --configuration=staging",
-    "build:freespot:production": "npx nx build freespot --configuration=production",
-    "build:freespot:backend:staging": "npm ci --include=dev && npx nx build freespot-backend",
-    "build:freespot:backend:production": "npm ci --include=dev && npx nx build freespot-backend",
-    "seed:freespot:local-e2e": "tsx --env-file=apps/freespot-backend/.env.serve.local-e2e tools/seed/seed.ts",
-    "migrate:freespot:local-dev": "tsx --env-file=apps/freespot-backend/.env.serve.local-dev apps/freespot-backend/src/db/migrate/index.ts",
-    "migrate:freespot:dev-atlas": "tsx --env-file=apps/freespot-backend/.env.serve.dev-atlas apps/freespot-backend/src/db/migrate/index.ts",
-    "migrate:freespot:local-e2e": "tsx --env-file=apps/freespot-backend/.env.serve.local-e2e apps/freespot-backend/src/db/migrate/index.ts",
-    "migrate:freespot:staging": "tsx --env-file=apps/freespot-backend/.env.serve.staging apps/freespot-backend/src/db/migrate/index.ts",
-    "migrate:freespot:production": "tsx --env-file=apps/freespot-backend/.env.serve.production apps/freespot-backend/src/db/migrate/index.ts",
-    "generate:freespot:api-client": "npx ts-node tools/scripts/openapi-free-spot.ts"
-  },
+"scripts": {
+  "connect:freespot:db:local-e2e": "mongosh mongodb://127.0.0.1:27017/freespot_e2e",
+
+  "start:freespot:local-dev": "nx serve freespot --configuration=local-dev",
+  "start:freespot:dev-atlas": "nx serve freespot --configuration=dev-atlas",
+  "start:freespot:local-e2e": "nx serve freespot --configuration=local-e2e",
+
+  "start:freespot:backend:local-dev": "nx serve freespot-backend --configuration=local-dev",
+  "start:freespot:backend:dev-atlas": "nx serve freespot-backend --configuration=dev-atlas",
+  "start:freespot:backend:local-e2e": "nx serve freespot-backend --configuration=local-e2e",
+  "start:freespot:backend:staging": "nx serve freespot-backend --configuration=staging",
+  "start:freespot:backend:production": "node dist/apps/freespot-backend/main.js",
+
+  "start:freespot:stack:local-dev": "concurrently \"npm run start:freespot:local-dev\" \"npm run start:freespot:backend:local-dev\"",
+  "start:freespot:stack:dev-atlas": "concurrently \"npm run start:freespot:dev-atlas\" \"npm run start:freespot:backend:dev-atlas\"",
+  "start:freespot:stack:local-e2e": "npm run seed:freespot:local-e2e && concurrently \"npm run start:freespot:local-e2e\" \"npm run start:freespot:backend:local-e2e\"",
+
+  "build:freespot:staging": "nx build freespot --configuration=staging",
+  "build:freespot:production": "nx build freespot --configuration=production",
+
+  "build:freespot:backend:staging": "npm ci --include=dev && nx build freespot-backend",
+  "build:freespot:backend:production": "npm ci --include=dev && nx build freespot-backend",
+
+  "seed:freespot:local-e2e": "tsx --env-file=apps/freespot-backend/.env.serve.local-e2e tools/seed/seed.ts",
+  "seed:freespot:staging": "tsx --env-file=apps/freespot-backend/.env.serve.staging tools/seed/seed.ts",
+
+  "migrate:freespot:local-dev": "tsx --env-file=apps/freespot-backend/.env.serve.local-dev apps/freespot-backend/src/db/migrate/index.ts",
+  "migrate:freespot:dev-atlas": "tsx --env-file=apps/freespot-backend/.env.serve.dev-atlas apps/freespot-backend/src/db/migrate/index.ts",
+  "migrate:freespot:local-e2e": "tsx --env-file=apps/freespot-backend/.env.serve.local-e2e apps/freespot-backend/src/db/migrate/index.ts",
+  "migrate:freespot:staging": "tsx --env-file=apps/freespot-backend/.env.serve.staging apps/freespot-backend/src/db/migrate/index.ts",
+  "migrate:freespot:production": "tsx --env-file=apps/freespot-backend/.env.serve.production apps/freespot-backend/src/db/migrate/index.ts",
+
+  "e2e:freespot:local-e2e": "cross-env CYPRESS_TARGET=local-e2e nx run freespot-e2e:open-cypress",
+  "e2e:freespot:staging": "cross-env CYPRESS_TARGET=staging nx run freespot-e2e:open-cypress",
+
+  "generate:freespot:api-client": "ts-node tools/scripts/openapi-free-spot.ts"
+},
   "private": true,
   "dependencies": {
     "@angular/animations": "22.0.7",
@@ -108,6 +120,7 @@
     "@vitest/ui": "^4.1.9",
     "angular-eslint": "22.1.0",
     "autoprefixer": "^10.4.0",
+    "cross-env": "^10.1.0",
     "cypress": "^15.19.0",
     "eslint": "^10.7.0",
     "eslint-config-prettier": "^10.1.5",
