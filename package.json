@@ -58,6 +58,7 @@
     "dotenv": "^17.2.2",
     "express": "^4.21.2",
     "express-rate-limit": "^8.2.1",
+    "jsonwebtoken": "^9.0.3",
     "mongodb": "^6.20.0",
     "rxjs": "^7.8.2",
     "swagger-ui-express": "^5.0.1",
@@ -137,17 +138,6 @@
     "webpack": "^5.108.4",
     "webpack-cli": "^6.0.1"
   },
-  "nx": {
-    "includedScripts": [
-      "connect:freespot:db:local-e2e",
-      "start:freespot:stack:local-dev",
-      "start:freespot:stack:dev-atlas",
-      "start:freespot:stack:local-e2e",
-      "e2e:freespot:local-e2e",
-      "e2e:freespot:staging",
-      "generate:freespot:api-client"
-    ]
-  },
   "allowScripts": {
     "esbuild@0.27.7": true,
     "esbuild@0.28.1": true,
@@ -163,5 +153,16 @@
     "msgpackr-extract@3.0.4": true,
     "nx@23.1.0": true,
     "unrs-resolver@1.12.2": true
+  },
+  "nx": {
+    "includedScripts": [
+      "connect:freespot:db:local-e2e",
+      "start:freespot:stack:local-dev",
+      "start:freespot:stack:dev-atlas",
+      "start:freespot:stack:local-e2e",
+      "e2e:freespot:local-e2e",
+      "e2e:freespot:staging",
+      "generate:freespot:api-client"
+    ]
   }
 }
