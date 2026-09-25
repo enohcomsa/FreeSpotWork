@@ -1,7 +1,7 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 
 import { ObjectId } from 'mongodb';
-import { signupToDbRecord } from '../../apps/freespot-backend/src/mappers';
+import { signupToDbRecord } from '../../apps/freespot-backend/src/mappers/users.mapper';
 import { hashPassword } from '../../apps/freespot-backend/src/utils/password';
 
 import { E2E_STUDENT } from './auth.fixtures';
